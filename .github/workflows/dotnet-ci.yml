@@ -24,11 +24,11 @@ jobs:
 
     # 3. Chạy lệnh restore (Tải các thư viện NuGet về)
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./FashionShop.Backend
 
     # 4. Chạy lệnh Build (Xem có lỗi cú pháp không)
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./FashionShop.Backend --no-restore
     
     # 5. (Tùy chọn) Chạy Test nếu bạn có viết Unit Test
     # - name: Test
