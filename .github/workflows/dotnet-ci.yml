@@ -1,0 +1,35 @@
+name: .NET Build & Test
+
+# Robot sẽ chạy khi nào? -> Khi có code push vào nhánh main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # Robot dùng máy tính hệ điều hành Ubuntu để chạy
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Robot tải code của bạn về máy nó
+    - uses: actions/checkout@v3
+
+    # 2. Cài đặt .NET SDK 8.0 (Sửa thành version bạn đang dùng)
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+
+    # 3. Chạy lệnh restore (Tải các thư viện NuGet về)
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # 4. Chạy lệnh Build (Xem có lỗi cú pháp không)
+    - name: Build
+      run: dotnet build --no-restore
+    
+    # 5. (Tùy chọn) Chạy Test nếu bạn có viết Unit Test
+    # - name: Test
+    #   run: dotnet test --no-build --verbosity normal
