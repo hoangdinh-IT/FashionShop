@@ -22,17 +22,9 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<SizeDTO?> CreateSizeAsync(CreateSizeDTO dto)
-        {
-            var newSize = _mapper.Map<Size>(dto);
-            var createdSize = await _sizeRepository.CreateSizeAsync(newSize);
-            return _mapper.Map<SizeDTO>(newSize);
-        }
-
+        // --- READ METHODS --- //
         public async Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request)
-        {
-            return await _sizeRepository.GetPagedSizesAsync(request);
-        }
+            => await _sizeRepository.GetPagedSizesAsync(request);
 
         public async Task<SizeDTO?> GetSizeByIdAsync(int sizeId)
         {
@@ -41,6 +33,14 @@ namespace FashionShop.API.Services.Implements
             if (size == null) throw new KeyNotFoundException("Không tìm thấy size!");
 
             return size;
+        }
+
+        // --- WRITE METHODS --- //
+        public async Task<SizeDTO?> CreateSizeAsync(CreateSizeDTO dto)
+        {
+            var newSize = _mapper.Map<Size>(dto);
+            var createdSize = await _sizeRepository.CreateSizeAsync(newSize);
+            return _mapper.Map<SizeDTO>(newSize);
         }
 
         public async Task<SizeDTO?> UpdateSizeAsync(int sizeId, UpdateSizeDTO dto)

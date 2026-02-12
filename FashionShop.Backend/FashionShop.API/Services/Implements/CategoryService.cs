@@ -23,6 +23,38 @@ namespace FashionShop.API.Services.Implements
             _photoService = photoService;
         }
 
+        // --- READ METHODS --- //
+        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync()
+            => await _categoryRepository.GetAllCategoriesAsync();
+
+        public async Task<PagedResult<CategoryDTO>> GetPagedCategoriesAsync(CategoryListRequest request)
+            => await _categoryRepository.GetPagedCategoriesAsync(request);
+
+        public async Task<IEnumerable<CategoryDTO>> GetLeafCategoriesAsync()
+        {
+            var leafCategories = await _categoryRepository.GetLeafCategoriesAsync();
+            return _mapper.Map<IEnumerable<CategoryDTO>>(leafCategories);
+        }
+
+        public async Task<CategoryDTO> GetCategoryByIdAsync(Guid categoryId)
+        {
+            var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
+
+            if (category == null) throw new KeyNotFoundException("Không tìm thấy danh mục!");
+
+            return category;
+        }
+
+        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByParentIdAsync(Guid parentId)
+        {
+            var parentCategory = await _categoryRepository.GetCategoryByIdAsync(parentId);
+
+            if (parentCategory == null) throw new KeyNotFoundException("Không tìm thấy danh mục!");
+
+            return await _categoryRepository.GetCategoriesByParentIdAsync(parentId);
+        }
+
+        // --- WRITE METHODS --- //
         public async Task<CategoryDTO?> CreateCategoryAsync(CreateCategoryDTO dto)
         {
             if (dto.ParentId.HasValue && dto.ParentId != Guid.Empty)
@@ -50,40 +82,6 @@ namespace FashionShop.API.Services.Implements
 
             var createdCategory = await _categoryRepository.CreateCategoryAsync(newCategory);
             return _mapper.Map<CategoryDTO>(newCategory);
-        }
-
-        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync()
-        {
-            return await _categoryRepository.GetAllCategoriesAsync();
-        }
-
-        public async Task<PagedResult<CategoryDTO>> GetPagedCategoriesAsync(CategoryListRequest request)
-        {
-            return await _categoryRepository.GetPagedCategoriesAsync(request);
-        }
-
-        public async Task<IEnumerable<CategoryDTO>> GetLeafCategoriesAsync()
-        {
-            var leafCategories = await _categoryRepository.GetLeafCategoriesAsync();
-            return _mapper.Map<IEnumerable<CategoryDTO>>(leafCategories);
-        }
-
-        public async Task<CategoryDTO> GetCategoryByIdAsync(Guid categoryId)
-        {
-            var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
-
-            if (category == null) throw new KeyNotFoundException("Không tìm thấy danh mục!");
-
-            return category;
-        }
-
-        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByParentIdAsync(Guid parentId)
-        {
-            var parentCategory = await _categoryRepository.GetCategoryByIdAsync(parentId);
-
-            if (parentCategory == null) throw new KeyNotFoundException("Không tìm thấy danh mục!");
-
-            return await _categoryRepository.GetCategoriesByParentIdAsync(parentId);
         }
 
         public async Task<CategoryDTO?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDTO dto)

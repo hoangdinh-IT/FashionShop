@@ -7,11 +7,16 @@ namespace FashionShop.API.Repositories.Interfaces
 {
     public interface ISizeRepository
     {
-        Task<Size?> CreateSizeAsync(Size size);
+        // --- READ METHODS --- //
         Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request);
-        Task<Size?> FindSizeByIdAsync(int sizeId);
         Task<SizeDTO?> GetSizeByIdAsync(int sizeId);
+        Task<Size?> FindSizeByIdAsync(int sizeId);
+
+        // --- VALIDATION METHODS --- //
         Task<bool> IsSafeToActionAsync(int sizeId);
+
+        // --- WRITE METHODS --- //
+        Task<Size?> CreateSizeAsync(Size size);
         Task<Size> UpdateSizeAsync(Size size);
         Task DeleteSizeAsync(Size size);
     }

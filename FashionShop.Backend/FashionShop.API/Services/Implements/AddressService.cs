@@ -19,6 +19,15 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+        // --- READ METHODS --- //
+        public async Task<IEnumerable<AddressDTO>> GetAddressesByUserIdAsync(Guid userId)
+        {
+            var addresses = await _addressRepository.GetAddressesByUserIdAsync(userId);
+
+            return _mapper.Map<IEnumerable<AddressDTO>>(addresses);
+        }
+
+        // --- WRITE METHODS --- //
         public async Task<AddressDTO> CreateAddressAsync(CreateAddressDTO dto)
         {
             if (await _userRepository.GetUserByIdAsync(dto.UserId) == null)
@@ -31,15 +40,12 @@ namespace FashionShop.API.Services.Implements
 
             var addressCount = await _addressRepository.CountAddressesByUserIdAsync(dto.UserId);
 
-            if (addressCount == 0)
-            {
-                newAddress.IsDefault = true;
-            } 
+            if (addressCount == 0) newAddress.IsDefault = true;
             else
             {
                 if (newAddress.IsDefault)
                 {
-                    await _addressRepository.RemoveDefaultAddressAsync(dto.UserId);
+                    await _addressRepository.UnsetDefaultAddressAsync(dto.UserId);
                 }
             }
 
@@ -48,31 +54,18 @@ namespace FashionShop.API.Services.Implements
             return _mapper.Map<AddressDTO>(createdAddress);
         }
 
-        public async Task<IEnumerable<AddressDTO>> GetAddressesByUserIdAsync(Guid userId)
-        {
-            if (await _userRepository.GetUserByIdAsync(userId) == null)
-            {
-                throw new KeyNotFoundException("Không tìm thấy người dùng!");
-            }
-
-            var addresses = await _addressRepository.GetAddressesByUserIdAsync(userId);
-
-            return _mapper.Map<IEnumerable<AddressDTO>>(addresses);
-        }
 
         public async Task<AddressDTO?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressDTO dto)
         {
             var existingAddress = await _addressRepository.GetAddressByUserIdAsync(userId, addressId);
 
-            if (existingAddress == null)
-            {
-                throw new KeyNotFoundException("Không tìm thấy dữ liệu!");
-            }
+            if (existingAddress == null) throw new KeyNotFoundException("Không tìm thấy dữ liệu!");
 
             if (!existingAddress.IsDefault && dto.IsDefault)
             {
-                await _addressRepository.RemoveDefaultAddressAsync(userId);
-            } else if (existingAddress.IsDefault && !dto.IsDefault)
+                await _addressRepository.UnsetDefaultAddressAsync(userId);
+            }
+            else if (existingAddress.IsDefault && !dto.IsDefault)
             {
                 dto.IsDefault = true;
             }
@@ -87,10 +80,7 @@ namespace FashionShop.API.Services.Implements
         {
             var existingAddress = await _addressRepository.GetAddressByUserIdAsync(userId, addressId);
 
-            if (existingAddress == null)
-            {
-                throw new KeyNotFoundException("Không tìm thấy dữ liệu!");
-            }
+            if (existingAddress == null) throw new KeyNotFoundException("Không tìm thấy dữ liệu!");
 
             if (existingAddress.IsDefault && await _addressRepository.CountAddressesByUserIdAsync(userId) >= 2)
             {

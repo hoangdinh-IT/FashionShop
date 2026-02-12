@@ -18,6 +18,7 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+        // --- READ METHODS --- //
         public async Task<IEnumerable<UserDTO>> GetUsersAsync()
         {
             var users = await _userRepository.GetUsersAsync();
@@ -28,22 +29,17 @@ namespace FashionShop.API.Services.Implements
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
 
-            if (user == null)
-            {
-                throw new KeyNotFoundException("Không tìm thấy người dùng");
-            }
+            if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
             return _mapper.Map<UserDTO>(user);
         }
 
+        // --- WRITE METHODS --- //
         public async Task<UserDTO> UpdateUserAsync(Guid userId, UpdateUserDTO dto)
         {
             var existingUser = await _userRepository.GetUserByIdAsync(userId);
 
-            if (existingUser == null)
-            {
-                throw new KeyNotFoundException("Không tìm thấy người dùng");
-            }
+            if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
             if (dto.Email != existingUser.Email && await _userRepository.IsUserExistsAsync(dto.Email))
             {
@@ -60,10 +56,7 @@ namespace FashionShop.API.Services.Implements
         {
             var existingUser = await _userRepository.GetUserByIdAsync(userId);
 
-            if (existingUser == null)
-            {
-                throw new KeyNotFoundException("Không tìm thấy người dùng");
-            }
+            if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
             await _userRepository.DeleteUserAsync(existingUser);
         }

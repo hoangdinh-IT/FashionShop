@@ -4,8 +4,11 @@ namespace FashionShop.API.Services.Interfaces
 {
     public interface IAddressService
     {
-        Task<AddressDTO> CreateAddressAsync(CreateAddressDTO dto);
+        // --- READ METHODS --- //
         Task<IEnumerable<AddressDTO>> GetAddressesByUserIdAsync(Guid userId);
+
+        // --- WRITE METHODS --- //
+        Task<AddressDTO> CreateAddressAsync(CreateAddressDTO dto);
         Task<AddressDTO?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressDTO dto);
         Task DeleteAddressAsync(Guid userId, Guid addressId);
     }

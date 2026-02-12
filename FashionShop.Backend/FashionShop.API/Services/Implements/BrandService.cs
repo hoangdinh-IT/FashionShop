@@ -23,6 +23,26 @@ namespace FashionShop.API.Services.Implements
             _photoService = photoService;
         }
 
+        // --- READ METHODS --- //
+        public async Task<IEnumerable<BrandDTO>> GetAllBrandsAsync()
+        {
+            var brands = await _brandRepository.GetAllBrandsAsync();
+            return _mapper.Map<IEnumerable<BrandDTO>>(brands);
+        }
+
+        public async Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request)
+            => await _brandRepository.GetPagedBrandsAsync(request);
+
+        public async Task<BrandDTO?> GetBrandByIdAsync(Guid brandId)
+        {
+            var brand = await _brandRepository.GetBrandByIdAsync(brandId);
+
+            if (brand == null) throw new KeyNotFoundException("Không tìm thấy thương hiệu!");
+
+            return brand;
+        }
+
+        // --- WRITE METHODS --- //
         public async Task<BrandDTO?> CreateBrandAsync(CreateBrandDTO dto)
         {
             var isExistSlug = await _brandRepository.CheckExistSlugAsync(dto.Slug);
@@ -43,26 +63,6 @@ namespace FashionShop.API.Services.Implements
 
             var createdBrand = await _brandRepository.CreateBrandAsync(newBrand);
             return _mapper.Map<BrandDTO>(createdBrand);
-        }
-
-        public async Task<IEnumerable<BrandDTO>> GetAllBrandsAsync()
-        {
-            var brands = await _brandRepository.GetAllBrandsAsync();
-            return _mapper.Map<IEnumerable<BrandDTO>>(brands);
-        }
-
-        public async Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request)
-        {
-            return await _brandRepository.GetPagedBrandsAsync(request);
-        }
-
-        public async Task<BrandDTO?> GetBrandByIdAsync(Guid brandId)
-        {
-            var brand = await _brandRepository.GetBrandByIdAsync(brandId);
-
-            if (brand == null) throw new KeyNotFoundException("Không tìm thấy thương hiệu!");
-
-            return brand;
         }
 
         public async Task<BrandDTO?> UpdateBrandAsync(Guid brandId, UpdateBrandDTO dto)

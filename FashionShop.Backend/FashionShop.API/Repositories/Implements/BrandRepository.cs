@@ -7,6 +7,7 @@ using FashionShop.Core.Models.Paging;
 using Microsoft.EntityFrameworkCore;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Brands;
+using System.Linq.Expressions;
 
 namespace FashionShop.API.Repositories.Implements
 {
@@ -14,26 +15,36 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
+        private static readonly Expression<Func<Brand, BrandDTO>> _brandSelector =
+            x => new BrandDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Slug = x.Slug,
+                ProductCount = x.Products.Count(),
+                LogoUrl = x.LogoUrl,
+                IsActive = x.IsActive,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+                IsDeleted = x.IsDeleted,
+            };
+
         public BrandRepository(FashionDbContext context)
         {
             _context = context;
         }
 
+        // --- READ METHODS --- //
         public async Task<bool> CheckExistSlugAsync(string slug)
-        {
-            return await _context.Brands.AnyAsync(brand => brand.Slug == slug);
-        }
-
-        public async Task<Brand?> CreateBrandAsync(Brand brand)
-        {
-            _context.Brands.Add(brand);
-            await _context.SaveChangesAsync();
-            return brand;
-        }
+            => await _context.Brands.AnyAsync(x => x.Slug == slug);
 
         public async Task<IEnumerable<Brand>> GetAllBrandsAsync()
         {
-            return await _context.Brands.AsNoTracking().ToListAsync();
+            return await _context.Brands
+                .AsNoTracking()
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
 
         public async Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request)
@@ -48,19 +59,7 @@ namespace FashionShop.API.Repositories.Implements
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                                   .Take(request.PageSize)
-                                  .Select(brand => new BrandDTO
-                                  {
-                                      Id = brand.Id,
-                                      Name = brand.Name,
-                                      Description = brand.Description,
-                                      Slug = brand.Slug,
-                                      ProductCount = brand.Products.Count(),
-                                      LogoUrl = brand.LogoUrl,
-                                      IsActive = brand.IsActive,
-                                      CreatedDate = brand.CreatedDate,
-                                      UpdatedDate = brand.UpdatedDate,
-                                      IsDeleted = brand.IsDeleted,
-                                  })
+                                  .Select(_brandSelector)
                                   .ToListAsync();
 
             return new PagedResult<BrandDTO>()
@@ -74,38 +73,36 @@ namespace FashionShop.API.Repositories.Implements
 
         public async Task<BrandDTO?> GetBrandByIdAsync(Guid brandId)
         {
-            return await _context.Brands.Where(brand => brand.Id == brandId)
-                                        .Select(brand => new BrandDTO
-                                        {
-                                            Id = brand.Id,
-                                            Name = brand.Name,
-                                            Description = brand.Description,
-                                            Slug = brand.Slug,
-                                            ProductCount = brand.Products.Count(),
-                                            LogoUrl = brand.LogoUrl,
-                                            IsActive = brand.IsActive,
-                                            CreatedDate = brand.CreatedDate,
-                                            UpdatedDate = brand.UpdatedDate,
-                                            IsDeleted = brand.IsDeleted,
-                                        })
-                                        .FirstOrDefaultAsync();
+            return await _context.Brands
+                .AsNoTracking()
+                .Where(x => x.Id == brandId)
+                .Select(_brandSelector)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Brand?> FindBrandByIdAsync(Guid brandId)
-        {
-            return await _context.Brands.FindAsync(brandId);
-        }
+            => await _context.Brands.FindAsync(brandId);
 
-        public async Task<Brand?> UpdateBrandAsync(Brand brand)
-        {
-            await _context.SaveChangesAsync();
-            return brand;
-        }
-
+        // --- VALIDATION METHODS --- //
         public async Task<bool> IsSafeToActionAsync(Guid brandId)
         {
             var hasProduct = await _context.Products.AnyAsync(x => x.BrandId == brandId);
             return !hasProduct;
+        }
+
+        // --- WRITE METHODS --- //
+        public async Task<Brand?> CreateBrandAsync(Brand brand)
+        {
+            _context.Brands.Add(brand);
+            await _context.SaveChangesAsync();
+            return brand;
+        }
+
+        public async Task<Brand?> UpdateBrandAsync(Brand brand)
+        {
+            _context.Brands.Update(brand);
+            await _context.SaveChangesAsync();
+            return brand;
         }
 
         public async Task DeleteBrandAsync(Brand brand)

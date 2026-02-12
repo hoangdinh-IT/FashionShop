@@ -6,6 +6,7 @@ using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Colors;
 using FashionShop.Core.Models.Paging;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FashionShop.API.Repositories.Implements
 {
@@ -13,28 +14,26 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
+        private static readonly Expression<Func<Color, ColorDTO>> _colorSelector =
+            x => new ColorDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                HexCode = x.HexCode,
+                Slug = x.Slug,
+                ProductCount = x.ProductVariants.Count(),
+                IsActive = x.IsActive,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+                IsDeleted = x.IsDeleted,
+            };
+
         public ColorRepository(FashionDbContext context)
         {
             _context = context;
         }
 
-        public async Task<bool> CheckExistHexCodeAsync(string hexCode)
-        {
-            return await _context.Colors.AnyAsync(color => color.HexCode == hexCode);
-        }
-
-        public async Task<bool> CheckExistSlugAsync(string slug)
-        {
-            return await _context.Colors.AnyAsync(color => color.Slug == slug);
-        }
-
-        public async Task<Color?> CreateColorAsync(Color color)
-        {
-            _context.Colors.Add(color);
-            await _context.SaveChangesAsync();
-            return color;
-        }
-
+        // --- READ METHODS --- //
         public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
         {
             var query = _context.Colors.AsNoTracking().AsQueryable();
@@ -47,18 +46,7 @@ namespace FashionShop.API.Repositories.Implements
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                                   .Take(request.PageSize)
-                                  .Select(color => new ColorDTO
-                                  {
-                                      Id = color.Id,
-                                      Name = color.Name,
-                                      HexCode = color.HexCode,
-                                      Slug = color.Slug,
-                                      ProductCount = color.ProductVariants.Count(),
-                                      IsActive = color.IsActive,
-                                      CreatedDate = color.CreatedDate,
-                                      UpdatedDate = color.UpdatedDate,
-                                      IsDeleted = color.IsDeleted,
-                                  })
+                                  .Select(_colorSelector)
                                   .ToListAsync();
 
             return new PagedResult<ColorDTO>
@@ -70,27 +58,39 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<Color?> FindColorByIdAsync(int colorId)
-        {
-            return await _context.Colors.FindAsync(colorId);
-        }
-
         public async Task<ColorDTO?> GetColorByIdAsync(int colorId)
         {
-            return await _context.Colors.Where(color => color.Id == colorId)
-                                        .Select(color => new ColorDTO
-                                        {
-                                            Id = color.Id,
-                                            Name = color.Name,
-                                            HexCode = color.HexCode,
-                                            Slug = color.Slug,
-                                            ProductCount = color.ProductVariants.Count(),
-                                            IsActive = color.IsActive,
-                                            CreatedDate = color.CreatedDate,
-                                            UpdatedDate = color.UpdatedDate,
-                                            IsDeleted = color.IsDeleted,
-                                        })
-                                        .FirstOrDefaultAsync();
+            return await _context.Colors
+                .AsNoTracking()
+                .Where(x => x.Id == colorId)
+                .Select(_colorSelector)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Color?> FindColorByIdAsync(int colorId)
+            => await _context.Colors.FindAsync(colorId);
+
+        // --- VALIDATION METHODS --- //
+
+        public async Task<bool> CheckExistHexCodeAsync(string hexCode)
+            => await _context.Colors.AnyAsync(x => x.HexCode == hexCode);
+
+        public async Task<bool> CheckExistSlugAsync(string slug)
+            => await _context.Colors.AnyAsync(x => x.Slug == slug);
+
+        public async Task<bool> IsSafeToActionAsync(int colorId)
+        {
+            var hasProduct = await _context.ProductVariants.AnyAsync(x => x.ColorId == colorId);
+
+            return !hasProduct;
+        }
+
+        // --- WRITE METHODS --- //
+        public async Task<Color?> CreateColorAsync(Color color)
+        {
+            _context.Colors.Add(color);
+            await _context.SaveChangesAsync();
+            return color;
         }
 
         public async Task<Color> UpdateColorAsync(Color color)
@@ -98,13 +98,6 @@ namespace FashionShop.API.Repositories.Implements
             _context.Colors.Update(color);
             await _context.SaveChangesAsync();
             return color;
-        }
-
-        public async Task<bool> IsSafeToActionAsync(int colorId)
-        {
-            var hasProduct = await _context.ProductVariants.AnyAsync(x => x.ColorId == colorId);
-
-            return !hasProduct;
         }
 
         public async Task DeleteColorAsync(Color color)

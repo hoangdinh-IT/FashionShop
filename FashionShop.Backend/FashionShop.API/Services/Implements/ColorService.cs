@@ -21,6 +21,20 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+        // --- READ METHODS --- //
+        public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
+            => await _colorRepository.GetPagedColorsAsync(request);
+
+        public async Task<ColorDTO?> GetColorByIdAsync(int colorId)
+        {
+            var color = await _colorRepository.GetColorByIdAsync(colorId);
+
+            if (color == null) throw new KeyNotFoundException("Không tìm thấy màu sắc!");
+
+            return color;
+        }
+
+        // --- WRITE METHODS --- //
         public async Task<ColorDTO?> CreateColorAsync(CreateColorDTO dto)
         {
             var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(dto.HexCode);
@@ -34,20 +48,6 @@ namespace FashionShop.API.Services.Implements
             var newColor = _mapper.Map<Color>(dto);
             var createdColor = await _colorRepository.CreateColorAsync(newColor);
             return _mapper.Map<ColorDTO>(createdColor);
-        }
-
-        public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
-        {
-            return await _colorRepository.GetPagedColorsAsync(request);
-        }
-
-        public async Task<ColorDTO?> GetColorByIdAsync(int colorId)
-        {
-            var color = await _colorRepository.GetColorByIdAsync(colorId);
-
-            if (color == null) throw new KeyNotFoundException("Không tìm thấy màu sắc!");
-
-            return color;
         }
 
         public async Task<ColorDTO?> UpdateColorAsync(int colorId, UpdateColorDTO dto)

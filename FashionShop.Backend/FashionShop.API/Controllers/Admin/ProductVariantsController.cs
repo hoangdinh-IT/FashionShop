@@ -9,45 +9,45 @@ namespace FashionShop.API.Controllers.Admin
     [Route("api/admin/product-variants")]
     public class ProductVariantsController : AdminBaseApiControllers
     {
-        private readonly IProductVariantService _productVariantService;
+        private readonly IProductService _productService;
 
-        public ProductVariantsController(IProductVariantService productVariantService)
+        public ProductVariantsController(IProductService productService)
         {
-            _productVariantService = productVariantService;
+            _productService = productService;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateProductVariant([FromForm] CreateProductVariantDTO request)
         {
-            var result = await _productVariantService.CreateProductVariantAsync(request);
+            var result = await _productService.CreateProductVariantAsync(request);
             return Created(result, "Thêm sản phẩm biến thể thành công!");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetPagedProductVariants([FromQuery] ProductVariantListRequest request)
         {
-            var result = await _productVariantService.GetPagedProductVariantsAsync(request);
+            var result = await _productService.GetPagedProductVariantsAsync(request);
             return Success(result, "Lấy danh sách sản phẩm biến thể thành công!");
         }
 
         [HttpGet("{productVariantId}")]
         public async Task<IActionResult> GetProductVariantById(Guid productVariantId)
         {
-            var result = await _productVariantService.GetProductVariantByIdAsync(productVariantId);
+            var result = await _productService.GetProductVariantByIdAsync(productVariantId);
             return Success(result, "Lấy sản phẩm biến thể thành công!");
         }
 
         [HttpPut("{productVariantId}")]
         public async Task<IActionResult> UpdateProductVariant(Guid productVariantId, UpdateProductVariantDTO request)
         {
-            var result = await _productVariantService.UpdateProductVariantAsync(productVariantId, request);
+            var result = await _productService.UpdateProductVariantAsync(productVariantId, request);
             return Success(result, "Cập nhật sản phẩm biến thể thành công!");
         }
 
         [HttpDelete("{productVariantId}")]
         public async Task<IActionResult> DeleteProductVariant(Guid productVariantId)
         {
-            await _productVariantService.DeleteProductVariantAsync(productVariantId);
+            await _productService.DeleteProductVariantAsync(productVariantId);
             return Success<object?>(null, "Xoá sản phẩm biến thể thành công!");
         }
     }

@@ -7,14 +7,19 @@ namespace FashionShop.API.Repositories.Interfaces
 {
     public interface IColorRepository
     {
+        // --- READ METHODS --- //
+        Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request);
+        Task<ColorDTO?> GetColorByIdAsync(int colorId);
+        Task<Color?> FindColorByIdAsync(int colorId);
+
+        // --- VALIDATION METHODS --- //
         Task<bool> CheckExistHexCodeAsync(string hexCode);
         Task<bool> CheckExistSlugAsync(string slug);
-        Task<Color?> CreateColorAsync(Color color);
-        Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request);
-        Task<Color?> FindColorByIdAsync(int colorId); 
-        Task<ColorDTO?> GetColorByIdAsync(int colorId);
-        Task<Color> UpdateColorAsync(Color color);
         Task<bool> IsSafeToActionAsync(int colorId);
+
+        // --- WRITE METHODS --- //
+        Task<Color?> CreateColorAsync(Color color);
+        Task<Color> UpdateColorAsync(Color color);
         Task DeleteColorAsync(Color color);
     }
 }

@@ -7,14 +7,19 @@ namespace FashionShop.API.Repositories.Interfaces
 {
     public interface IBrandRepository
     {
+        // --- READ METHODS --- //
         Task<bool> CheckExistSlugAsync(string slug);
-        Task<Brand?> CreateBrandAsync(Brand brand);
         Task<IEnumerable<Brand>> GetAllBrandsAsync();
         Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request);
         Task<BrandDTO?> GetBrandByIdAsync(Guid brandId);
         Task<Brand?> FindBrandByIdAsync(Guid brandId);
-        Task<Brand?> UpdateBrandAsync(Brand brand);
+
+        // --- VALIDATION METHODS --- //
         Task<bool> IsSafeToActionAsync(Guid brandId);
+
+        // --- WRITE METHODS --- //
+        Task<Brand?> CreateBrandAsync(Brand brand);
+        Task<Brand?> UpdateBrandAsync(Brand brand);
         Task DeleteBrandAsync(Brand brand);
     }
 }

@@ -6,9 +6,12 @@ namespace FashionShop.API.Services.Interfaces
 {
     public interface IColorService
     {
-        Task<ColorDTO?> CreateColorAsync(CreateColorDTO dto);
+        // --- READ METHODS --- //
         Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request);
         Task<ColorDTO?> GetColorByIdAsync(int colorId);
+
+        // --- WRITE METHODS --- //
+        Task<ColorDTO?> CreateColorAsync(CreateColorDTO dto);
         Task<ColorDTO?> UpdateColorAsync(int colorId, UpdateColorDTO dto);
         Task DeleteColorAsync(int colorId);
     }

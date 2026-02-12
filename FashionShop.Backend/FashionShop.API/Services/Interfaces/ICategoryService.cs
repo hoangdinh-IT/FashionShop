@@ -7,12 +7,15 @@ namespace FashionShop.API.Services.Interfaces
 {
     public interface ICategoryService
     {
-        Task<CategoryDTO?> CreateCategoryAsync(CreateCategoryDTO dto);
+        // --- READ METHODS --- //
         Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync();
         Task<PagedResult<CategoryDTO>> GetPagedCategoriesAsync(CategoryListRequest request);
         Task<IEnumerable<CategoryDTO>> GetLeafCategoriesAsync();
         Task<CategoryDTO> GetCategoryByIdAsync(Guid categoryId);
         Task<IEnumerable<CategoryDTO>> GetCategoriesByParentIdAsync(Guid parentId);
+
+        // --- WRITE METHODS --- //
+        Task<CategoryDTO?> CreateCategoryAsync(CreateCategoryDTO dto);
         Task<CategoryDTO?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDTO dto);
         Task DeleteCategoryAsync(Guid categoryId);
     }

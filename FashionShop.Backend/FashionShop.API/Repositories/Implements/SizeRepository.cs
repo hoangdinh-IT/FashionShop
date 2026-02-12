@@ -6,6 +6,7 @@ using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Paging;
 using FashionShop.Core.Models.Sizes;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FashionShop.API.Repositories.Implements
 {
@@ -13,18 +14,26 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
+        private static readonly Expression<Func<Size, SizeDTO>> _sizeSelector =
+            x => new SizeDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                SortOrder = x.SortOrder,
+                Type = x.Type,
+                productCount = x.ProductVariants.Count(),
+                IsActive = x.IsActive,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+                IsDeleted = x.IsDeleted,
+            };
+
         public SizeRepository(FashionDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Size?> CreateSizeAsync(Size size)
-        {
-            _context.Sizes.Add(size);
-            await _context.SaveChangesAsync();
-            return size;
-        }
-
+        // --- READ METHODS --- //
         public async Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request)
         {
             var query = _context.Sizes.AsNoTracking().AsQueryable();
@@ -37,20 +46,9 @@ namespace FashionShop.API.Repositories.Implements
             var totalRecord = await query.CountAsync();
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-                            .Take(request.PageSize)
-                            .Select(size => new SizeDTO()
-                            {
-                                Id = size.Id,
-                                Name = size.Name,
-                                SortOrder = size.SortOrder,
-                                Type = size.Type,
-                                productCount = size.ProductVariants.Count(),
-                                IsActive = size.IsActive,
-                                CreatedDate = size.CreatedDate,
-                                UpdatedDate = size.UpdatedDate,
-                                IsDeleted = size.IsDeleted,
-                            })
-                            .ToListAsync();
+                                  .Take(request.PageSize)
+                                  .Select(_sizeSelector)
+                                  .ToListAsync();
 
             return new PagedResult<SizeDTO>()
             {
@@ -61,33 +59,31 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<Size?> FindSizeByIdAsync(int sizeId)
-        {
-            return await _context.Sizes.FindAsync(sizeId);
-        }
-
         public async Task<SizeDTO?> GetSizeByIdAsync(int sizeId)
         {
-            return await _context.Sizes.Where(size => size.Id == sizeId)
-                                       .Select(size => new SizeDTO()
-                                       {
-                                           Id = size.Id,
-                                           Name = size.Name,
-                                           SortOrder = size.SortOrder,
-                                           Type = size.Type,
-                                           productCount = size.ProductVariants.Count(),
-                                           IsActive = size.IsActive,
-                                           CreatedDate = size.CreatedDate,
-                                           UpdatedDate = size.UpdatedDate,
-                                           IsDeleted = size.IsDeleted,
-                                       })
-                                       .FirstOrDefaultAsync();
+            return await _context.Sizes
+                .AsNoTracking()
+                .Where(x => x.Id == sizeId)
+                .Select(_sizeSelector)
+                .FirstOrDefaultAsync();
         }
 
+        public async Task<Size?> FindSizeByIdAsync(int sizeId)
+            => await _context.Sizes.FindAsync(sizeId);
+
+        // --- VALIDATION METHODS --- //
         public async Task<bool> IsSafeToActionAsync(int sizeId)
         {
             var hasProduct = await _context.ProductVariants.AnyAsync(x => x.SizeId == sizeId);
             return !hasProduct;
+        }
+
+        // --- WRITE METHODS --- //
+        public async Task<Size?> CreateSizeAsync(Size size)
+        {
+            _context.Sizes.Add(size);
+            await _context.SaveChangesAsync();
+            return size;
         }
 
         public async Task<Size> UpdateSizeAsync(Size size)
