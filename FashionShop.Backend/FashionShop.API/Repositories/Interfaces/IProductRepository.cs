@@ -55,6 +55,7 @@ namespace FashionShop.API.Repositories.Interfaces
         Task<IEnumerable<ProductImageDTO>> GetProductImagesAsync(Guid productId, int? colorId);
         Task<ProductImageDTO?> GetProductImageByIdAsync(Guid productImageId);
         Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId);
+        Task<int> GetMaxSortOrder(Guid productId, int colorId);
 
         // --- VALIDATION METHODS --- //
         Task<bool> CheckExistProductVariant(Guid productId, int colorId);

@@ -17,9 +17,6 @@ namespace FashionShop.Core.DTOs.ProductImage
         public int? ColorId { get; set; }
 
         [Required]
-        public IFormFile Image { get; set; }
-
-        [Required]
-        public int SortOrder { get; set; } = 0;
+        public List<IFormFile> Images { get; set; }
     }
 }

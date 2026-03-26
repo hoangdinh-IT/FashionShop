@@ -47,7 +47,7 @@ namespace FashionShop.API.Services.Interfaces
         Task<ProductImageDTO?> GetProductImageByIdAsync(Guid productImageId);
 
         // --- WRITE METHODS --- //
-        Task<ProductImageDTO> CreateProductImageAsync(CreateProductImageDTO dto);
+        Task<List<ProductImageDTO>> CreateProductImageAsync(CreateProductImageDTO dto);
         Task<ProductImageDTO?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageDTO dto);
         Task DeleteProductImageAsync(Guid productImageId);
         #endregion

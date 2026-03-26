@@ -24,8 +24,6 @@ namespace FashionShop.API.Repositories.Implements
                 Id = x.Id,
                 CategoryId = x.CategoryId,
                 BrandId = x.BrandId,
-                CategoryName = x.Category.Name,
-                BrandName = x.Brand.Name,
                 Name = x.Name,
                 Slug = x.Slug,
                 Description = x.Description,
@@ -63,8 +61,6 @@ namespace FashionShop.API.Repositories.Implements
                 Id = x.Id,
                 ProductId = x.ProductId,
                 ColorId = x.ColorId,
-                ColorName = x.Color.Name,
-                ColorCode = x.Color.HexCode,
                 ImageUrl = x.ImageUrl,
                 SortOrder = x.SortOrder,
                 CreatedDate = x.CreatedDate,
@@ -77,8 +73,6 @@ namespace FashionShop.API.Repositories.Implements
                 Id = x.Id,
                 CategoryId = x.CategoryId,
                 BrandId = x.BrandId,
-                CategoryName = x.Category.Name,
-                BrandName = x.Brand.Name,
                 Name = x.Name,
                 Slug = x.Slug,
                 Description = x.Description,
@@ -302,6 +296,13 @@ namespace FashionShop.API.Repositories.Implements
 
         public async Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId)
             => await _context.ProductImages.FindAsync(productImageId);
+
+        public async Task<int> GetMaxSortOrder(Guid productId, int colorId)
+        {
+            return await _context.ProductImages
+                .Where(x => x.ProductId == productId && x.ColorId == colorId)
+                .MaxAsync(x => (int?)x.SortOrder) ?? 0;
+        }
 
         // --- VALIDATION METHODS --- //
         public async Task<bool> CheckExistProductVariant(Guid productId, int colorId)
