@@ -27,7 +27,7 @@ const SizePage = () => {
     });
 
     const {
-        sizes,
+        pagedSizes,
         isLoading,
         totalRecord,
         isFetching,
@@ -125,7 +125,7 @@ const SizePage = () => {
                     style={tableContainerStyle}
                 >
                     <SizeTable 
-                        data={sizes} 
+                        data={pagedSizes} 
                         isLoading={isLoading || isFetching}
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
@@ -135,7 +135,7 @@ const SizePage = () => {
                     />
                 </div>
                 
-                {!isLoading && sizes.length > 0 && (
+                {!isLoading && pagedSizes.length > 0 && (
                     <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3 mt-auto">
                         <Pagination
                             totalRecord={totalRecord} 

@@ -9,6 +9,7 @@ using FashionShop.Core.Models.Paging;
 using FashionShop.Core.Models.Products;
 using FashionShop.Core.Models.ProductVariants;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
 namespace FashionShop.API.Repositories.Implements
@@ -50,11 +51,6 @@ namespace FashionShop.API.Repositories.Implements
                 SKU = x.SKU,
                 Quantity = x.Quantity,
                 Price = x.Price,
-                ProductName = x.Product.Name,
-                ColorName = x.Color.Name,
-                ColorCode = x.Color.HexCode,
-                SizeName = x.Size.Name,
-                VariantImageUrl = x.VariantImageUrl,
                 IsActive = x.IsActive,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
@@ -75,9 +71,52 @@ namespace FashionShop.API.Repositories.Implements
                 UpdatedDate = x.UpdatedDate,
             };
 
+        private static readonly Expression<Func<Product, ProductDetailDTO>> _productDetailSelector =
+            x => new ProductDetailDTO
+            {
+                Id = x.Id,
+                CategoryId = x.CategoryId,
+                BrandId = x.BrandId,
+                CategoryName = x.Category.Name,
+                BrandName = x.Brand.Name,
+                Name = x.Name,
+                Slug = x.Slug,
+                Description = x.Description,
+                Content = x.Content,
+                Material = x.Material,
+                Price = x.Price,
+                ThumbnailUrl = x.ThumbnailUrl,
+                IsActive = x.IsActive,
+                IsBestSeller = x.IsBestSeller,
+                IsNew = x.IsNew,
+                ViewCount = x.ViewCount,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+                ProductVariants = x.ProductVariants.Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    ProductId = v.ProductId,
+                    ColorId = v.ColorId,
+                    SizeId = v.SizeId,
+                    SKU = v.SKU,
+                    Quantity = v.Quantity,
+                    Price = v.Price,
+                    IsActive = v.IsActive,
+                    CreatedDate = v.CreatedDate,
+                    UpdatedDate = v.UpdatedDate,
+                    IsDeleted = v.IsDeleted,
+                }).ToList()
+            };
+
         public ProductRepository(FashionDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            // Mở Transaction từ Database Context
+            return await _context.Database.BeginTransactionAsync();
         }
 
         #region 1. PRODUCTS
@@ -122,6 +161,14 @@ namespace FashionShop.API.Repositories.Implements
 
         public async Task<Product?> FindProductByIdAsync(Guid productId)
             => await _context.Products.FindAsync(productId);
+
+        public async Task<ProductDetailDTO?> GetProductDetailByIdAsync(Guid productId)
+        {
+            return await _context.Products
+                .Where(prod => prod.Id == productId)
+                .Select(_productDetailSelector)
+                .FirstOrDefaultAsync();
+        }
 
         // --- VALIDATION METHODS --- //
         public async Task<bool> CheckExistSlugAsync(string slug)
@@ -188,6 +235,14 @@ namespace FashionShop.API.Repositories.Implements
 
         public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)
             => await _context.ProductVariants.FindAsync(productVariantId);
+
+        public async Task<List<ProductVariantDTO>> GetProductVariantsByProductIdAsync(Guid productId)
+        {
+            return await _context.ProductVariants
+                .Where(pv => pv.ProductId == productId)
+                .Select(_productVariantSelector)
+                .ToListAsync();
+        }
 
         // --- VALIDATION METHODS --- //
         public async Task<bool> CheckExistSKUAsync(string sku)

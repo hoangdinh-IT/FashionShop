@@ -34,6 +34,15 @@ namespace FashionShop.API.Repositories.Implements
         }
 
         // --- READ METHODS --- //
+
+        public async Task<IEnumerable<ColorDTO>> GetAllColorsAsync()
+        {
+            return await _context.Colors
+                .AsNoTracking()
+                .OrderBy(x => x.Id)
+                .Select(_colorSelector)
+                .ToListAsync();
+        }
         public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
         {
             var query = _context.Colors.AsNoTracking().AsQueryable();

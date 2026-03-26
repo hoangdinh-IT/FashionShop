@@ -14,11 +14,15 @@ namespace FashionShop.API.Services.Interfaces
         // --- READ METHODS --- //
         Task<PagedResult<ProductDTO>> GetPagedProductsAsync(ProductListRequest request);
         Task<ProductDTO?> GetProductByIdAsync(Guid productId);
+        Task<ProductDetailDTO?> GetProductDetailByIdAsync(Guid productId);
 
         // --- WRITE METHODS --- //
-        Task<ProductDTO> CreateProductAsync(CreateProductDTO dto);
+        Task<ProductDTO?> CreateProductAsync(CreateProductDTO dto);
+        Task<ProductDetailDTO?> CreateProductDetailAsync(CreateProductDetailDTO dto);
         Task<ProductDTO?> UpdateProductAsync(Guid productId, UpdateProductDTO dto);
+        Task<ProductDetailDTO?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailDTO dto);
         Task DeleteProductAsync(Guid productId);
+        Task DeleteProductDetailAsync(Guid productId);
         #endregion
 
 
@@ -27,6 +31,7 @@ namespace FashionShop.API.Services.Interfaces
         // --- READ METHODS --- //
         Task<PagedResult<ProductVariantDTO>> GetPagedProductVariantsAsync(ProductVariantListRequest request);
         Task<ProductVariantDTO?> GetProductVariantByIdAsync(Guid productVariantId);
+        Task<List<ProductVariantDTO>> GetProductVariantsByProductIdAsync(Guid productId);
 
         // --- WRITE METHODS --- //
         Task<ProductVariantDTO> CreateProductVariantAsync(CreateProductVariantDTO dto);

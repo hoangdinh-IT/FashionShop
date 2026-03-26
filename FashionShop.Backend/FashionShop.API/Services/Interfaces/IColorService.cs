@@ -7,6 +7,7 @@ namespace FashionShop.API.Services.Interfaces
     public interface IColorService
     {
         // --- READ METHODS --- //
+        Task<IEnumerable<ColorDTO>> GetAllColorsAsync();
         Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request);
         Task<ColorDTO?> GetColorByIdAsync(int colorId);
 

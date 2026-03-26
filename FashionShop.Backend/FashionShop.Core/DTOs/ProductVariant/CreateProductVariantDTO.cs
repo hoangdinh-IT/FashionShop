@@ -24,6 +24,5 @@ namespace FashionShop.Core.DTOs.ProductVariant
 
         [Required]
         public decimal Price { get; set; }
-        public IFormFile? VariantImage { get; set; }
     }
 }

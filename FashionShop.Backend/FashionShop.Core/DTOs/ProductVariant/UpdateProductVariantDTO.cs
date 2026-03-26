@@ -10,6 +10,7 @@ namespace FashionShop.Core.DTOs.ProductVariant
 {
     public class UpdateProductVariantDTO
     {
+        public Guid? Id { get; set; }
         [Required]
         public int ColorId { get; set; }
 
@@ -18,7 +19,7 @@ namespace FashionShop.Core.DTOs.ProductVariant
 
         [Required]
         [MaxLength(50, ErrorMessage = "SKU không được quá 50 kí tự!")]
-        public string SKU { get; set; }
+        public string sku { get; set; }
 
         [Required]
         [Range(0, int.MaxValue)]
@@ -26,7 +27,6 @@ namespace FashionShop.Core.DTOs.ProductVariant
 
         [Required]
         public decimal Price { get; set; }
-        public IFormFile? VariantImage { get; set; }
         public bool IsActive { get; set; }
     }
 }

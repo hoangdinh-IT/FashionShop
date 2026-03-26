@@ -34,6 +34,15 @@ namespace FashionShop.API.Repositories.Implements
         }
 
         // --- READ METHODS --- //
+
+        public async Task<IEnumerable<SizeDTO>> GetAllSizesAsync()
+        {
+            return await _context.Sizes
+                .AsNoTracking()
+                .OrderBy(x => x.Id)
+                .Select(_sizeSelector)
+                .ToListAsync();
+        }
         public async Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request)
         {
             var query = _context.Sizes.AsNoTracking().AsQueryable();

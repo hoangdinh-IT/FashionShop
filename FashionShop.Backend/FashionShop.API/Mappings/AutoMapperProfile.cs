@@ -77,6 +77,8 @@ namespace FashionShop.API.Mappings
 
             CreateMap<ProductVariant, ProductVariantDTO>();
 
+            CreateMap<UpdateProductVariantDTO, CreateProductVariantDTO>();
+
             // ProductImage
             CreateMap<CreateProductImageDTO, ProductImage>();
 

@@ -1,4 +1,5 @@
-﻿using FashionShop.API.Services.Implements;
+﻿using Azure.Core;
+using FashionShop.API.Services.Implements;
 using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.DTOs.Color;
 using FashionShop.Core.DTOs.Size;
@@ -21,6 +22,13 @@ namespace FashionShop.API.Controllers.Admin
         {
             var result = await _sizeService.CreateSizeAsync(request);
             return Created(result, "Thêm kích thước thành công!");
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllSizes()
+        {
+            var result = await _sizeService.GetAllSizesAsync();
+            return Success(result, "Lấy tất cả kích thước thành công!");
         }
 
         [HttpGet]

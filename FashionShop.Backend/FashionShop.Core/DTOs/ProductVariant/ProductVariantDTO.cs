@@ -17,11 +17,6 @@ namespace FashionShop.Core.DTOs.ProductVariant
         public string SKU { get; set; }
         public int Quantity { get; set; } = 0;
         public decimal Price { get; set; }
-        public string ProductName { get; set; }
-        public string ColorName { get; set; }  
-        public string ColorCode { get; set; }  
-        public string SizeName { get; set; }
-        public string? VariantImageUrl { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }

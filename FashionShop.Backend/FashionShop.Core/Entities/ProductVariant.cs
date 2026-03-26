@@ -25,10 +25,6 @@ namespace FashionShop.Core.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
-        [MaxLength(500)]
-        [Column(TypeName = "varchar(500)")]
-        public string? VariantImageUrl { get; set; }
-
         [Required]
         public Guid ProductId { get; set; }
 

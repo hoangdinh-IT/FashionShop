@@ -22,6 +22,12 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
+
+        public async Task<IEnumerable<ColorDTO>> GetAllColorsAsync()
+        {
+            return await _colorRepository.GetAllColorsAsync();
+        }
+
         public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
             => await _colorRepository.GetPagedColorsAsync(request);
 

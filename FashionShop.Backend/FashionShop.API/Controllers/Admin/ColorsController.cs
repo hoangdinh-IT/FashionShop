@@ -22,6 +22,13 @@ namespace FashionShop.API.Controllers.Admin
             return Created(result, "Thêm màu sắc thành công!");
         }
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllColors()
+        {
+            var result = await _colorService.GetAllColorsAsync();
+            return Success(result, "Lấy tất cả màu sắc thành công!");
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetColors([FromQuery] ColorListRequest request)
         {

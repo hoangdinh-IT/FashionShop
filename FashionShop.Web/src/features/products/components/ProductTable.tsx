@@ -11,8 +11,8 @@ interface ProductTableProps {
     sortBy: string;
     isAscending: boolean;
     onSort: (colKey: string, direction: boolean) => void;
-    onEdit?: (product: Product) => void;
-    onDelete?: (id: string) => void;
+    onEdit?: (productId: string) => void;
+    onDelete?: (productId: string) => void;
 }
 
 const ProductTable: React.FC<ProductTableProps> = ({
@@ -252,7 +252,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                                             <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                                                 {/* Nút Sửa */}
                                                 <button 
-                                                    onClick={(e) => { e.stopPropagation(); onEdit?.(item); }} 
+                                                    onClick={(e) => { e.stopPropagation(); onEdit?.(item.id); }} 
                                                     className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-violet-500 rounded-xl transition-all duration-200 shadow-sm hover:shadow-violet-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95" 
                                                     title="Chỉnh sửa sản phẩm"
                                                 >

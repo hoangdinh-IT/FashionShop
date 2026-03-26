@@ -7,6 +7,7 @@ namespace FashionShop.API.Services.Interfaces
     public interface ISizeService
     {
         // --- READ METHODS --- //
+        Task<IEnumerable<SizeDTO>> GetAllSizesAsync();
         Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request);
         Task<SizeDTO?> GetSizeByIdAsync(int sizeId);
 

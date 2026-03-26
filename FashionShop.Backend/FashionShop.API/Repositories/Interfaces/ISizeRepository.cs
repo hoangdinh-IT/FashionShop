@@ -8,6 +8,7 @@ namespace FashionShop.API.Repositories.Interfaces
     public interface ISizeRepository
     {
         // --- READ METHODS --- //
+        Task<IEnumerable<SizeDTO>> GetAllSizesAsync();
         Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request);
         Task<SizeDTO?> GetSizeByIdAsync(int sizeId);
         Task<Size?> FindSizeByIdAsync(int sizeId);

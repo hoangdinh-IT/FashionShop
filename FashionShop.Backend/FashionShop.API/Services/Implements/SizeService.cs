@@ -23,6 +23,11 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
+        public async Task<IEnumerable<SizeDTO>> GetAllSizesAsync()
+        {
+            return await _sizeRepository.GetAllSizesAsync();
+        }
+
         public async Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request)
             => await _sizeRepository.GetPagedSizesAsync(request);
 

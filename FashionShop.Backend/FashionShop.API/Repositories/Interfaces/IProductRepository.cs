@@ -5,17 +5,21 @@ using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
 using FashionShop.Core.Models.Products;
 using FashionShop.Core.Models.ProductVariants;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
     public interface IProductRepository
     {
+        Task<IDbContextTransaction> BeginTransactionAsync();
+
         #region 1. PRODUCTS
 
         // --- READ METHODS --- //
         Task<PagedResult<ProductDTO>> GetPagedProductsAsync(ProductListRequest request);
         Task<ProductDTO?> GetProductByIdAsync(Guid productId);
         Task<Product?> FindProductByIdAsync(Guid productId);
+        Task<ProductDetailDTO?> GetProductDetailByIdAsync(Guid productId);
 
         // --- VALIDATION METHODS --- //
         Task<bool> CheckExistSlugAsync(string slug);
@@ -33,6 +37,7 @@ namespace FashionShop.API.Repositories.Interfaces
         Task<PagedResult<ProductVariantDTO>> GetPagedProductVariantsAsync(ProductVariantListRequest request);
         Task<ProductVariantDTO?> GetProductVariantByIdAsync(Guid productVariantId);
         Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId);
+        Task<List<ProductVariantDTO>> GetProductVariantsByProductIdAsync(Guid productId);
 
         // --- VALIDATION METHODS --- //
         Task<bool> CheckExistSKUAsync(string sku);

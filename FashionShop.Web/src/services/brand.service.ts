@@ -1,5 +1,5 @@
 import type { Brand } from "../features/brands/types/brand";
-import type { BrandListRequest } from "../features/brands/types/requests";
+import type { BrandQueryParams } from "../features/brands/types/requests";
 import type { ApiResponse } from "../models/apiResponse";
 import type { PagedResult } from "../models/PagedResult";
 import apiClient from "./api.client";
@@ -19,7 +19,7 @@ const brandService = {
         return response.data;
     },
 
-    getList: async (params: BrandListRequest): Promise<ApiResponse<PagedResult<Brand>>> => {
+    getList: async (params: BrandQueryParams): Promise<ApiResponse<PagedResult<Brand>>> => {
         const response = await apiClient.get<ApiResponse<PagedResult<Brand>>>("/admin/brands", {
             params: params
         });

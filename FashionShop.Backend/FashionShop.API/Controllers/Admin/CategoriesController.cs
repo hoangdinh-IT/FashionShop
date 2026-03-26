@@ -26,7 +26,7 @@ namespace FashionShop.API.Controllers.Admin
         public async Task<IActionResult> GetAllCategories()
         {
             var result = await _categoryService.GetAllCategoriesAsync();
-            return Success(result, "Lấy danh sách danh mục thành công!");
+            return Success(result, "Lấy tất cả danh mục thành công!");
         }
 
         [HttpGet]

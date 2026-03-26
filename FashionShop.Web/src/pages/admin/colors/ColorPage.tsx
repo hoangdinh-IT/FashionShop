@@ -27,7 +27,7 @@ const ColorPage: React.FC = () => {
     });
 
     const {
-        colors,
+        pagedColors,
         isLoading,
         totalRecord,
         isFetching,
@@ -124,7 +124,7 @@ const ColorPage: React.FC = () => {
                     style={tableContainerStyle}
                 >
                     <ColorTable 
-                        data={colors} 
+                        data={pagedColors} 
                         isLoading={isLoading || isFetching}
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
@@ -134,7 +134,7 @@ const ColorPage: React.FC = () => {
                     />
                 </div>
                 
-                {!isLoading && colors.length > 0 && (
+                {!isLoading && pagedColors.length > 0 && (
                     <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3">
                         <Pagination
                             totalRecord={totalRecord}

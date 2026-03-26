@@ -1,4 +1,4 @@
-import type { SizeFormInputs, SizeListRequest } from "../features/sizes/types/requests";
+import type { SizeFormInputs, SizeQueryParams } from "../features/sizes/types/requests";
 import type { Size } from "../features/sizes/types/size";
 import type { ApiResponse } from "../models/apiResponse";
 import type { PagedResult } from "../models/PagedResult";
@@ -10,7 +10,12 @@ export const sizeService = {
         return response.data;
     },
 
-    getList: async(params: SizeListRequest): Promise<ApiResponse<PagedResult<Size>>> => {
+    getAll: async(): Promise<ApiResponse<Size[]>> => {
+        const response = await apiClient.get<ApiResponse<Size[]>>("/admin/sizes/all");
+        return response.data;
+    },
+
+    getList: async(params: SizeQueryParams): Promise<ApiResponse<PagedResult<Size>>> => {
         const response = await apiClient.get<ApiResponse<PagedResult<Size>>>("/admin/sizes", {
             params: params
         });

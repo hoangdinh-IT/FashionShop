@@ -25,7 +25,7 @@ namespace FashionShop.API.Controllers.Admin
         public async Task<IActionResult> GetAllBrands()
         {
             var result = await _brandService.GetAllBrandsAsync();
-            return Success(result, "Lấy danh sách thương hiệu thành công!");
+            return Success(result, "Lấy tất cả thương hiệu thành công!");
         }
 
         [HttpGet]

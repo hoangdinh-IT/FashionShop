@@ -1,6 +1,6 @@
 import type { ApiResponse } from "../models/apiResponse";
 import apiClient from "./api.client";
-import type { CategoryListRequest } from "../features/categories/types/requests";
+import type { CategoryQueryParams } from "../features/categories/types/requests";
 import type { PagedResult } from "../models/PagedResult";
 import type { Category } from "../features/categories/types/category";
 
@@ -19,7 +19,7 @@ const categoryService = {
         return response.data;
     },
 
-    getList: async(params: CategoryListRequest): Promise<ApiResponse<PagedResult<Category>>> => {
+    getList: async(params: CategoryQueryParams): Promise<ApiResponse<PagedResult<Category>>> => {
         const response = await apiClient.get<ApiResponse<PagedResult<Category>>>("/admin/categories", {
             params: params
         });

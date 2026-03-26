@@ -15,12 +15,17 @@ export const useColors = (params?: ColorQueryParams) => {
         })
     })
 
+    const allColorsQuery = useQuery({
+        queryKey: ["colors"],
+        queryFn: colorService.getAll,
+    })
+
     const colorsListQuery = useQuery({
         queryKey: ["colors", params],
         queryFn: () => colorService.getList(params!),
         staleTime: 1000 * 60 * 5,
         placeholderData: keepPreviousData,
-        enabled: !!params,
+        enabled: !!params
     })
 
     const updateMutation = useMutation({
@@ -45,9 +50,10 @@ export const useColors = (params?: ColorQueryParams) => {
         createColor: createMutation.mutate,
         isCreating: createMutation.isPending,
 
-        colors: colorsListQuery.data?.data?.items || [],
-        isLoading: colorsListQuery.isLoading,
+        colors: allColorsQuery.data?.data || [],
+        isLoading: allColorsQuery.isLoading,
 
+        pagedColors: colorsListQuery.data?.data?.items || [],
         totalRecord: colorsListQuery.data?.data?.totalRecord || 0,
         isFetching: colorsListQuery.isFetching,
 

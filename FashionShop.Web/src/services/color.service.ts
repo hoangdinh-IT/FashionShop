@@ -1,4 +1,4 @@
-import type { ColorFormInputs, ColorListRequest } from "../features/colors/types/requests";
+import type { ColorFormInputs, ColorQueryParams } from "../features/colors/types/requests";
 import type { ApiResponse } from "../models/apiResponse";
 import apiClient from "./api.client";
 import type { PagedResult } from "../models/PagedResult";
@@ -10,7 +10,12 @@ const colorService = {
         return response.data;
     },
 
-    getList: async(params: ColorListRequest): Promise<ApiResponse<PagedResult<Color>>> => {
+    getAll: async(): Promise<ApiResponse<Color[]>> => {
+        const response = await apiClient.get<ApiResponse<Color[]>>("/admin/colors/all");
+        return response.data;
+    },
+
+    getList: async(params: ColorQueryParams): Promise<ApiResponse<PagedResult<Color>>> => {
         const response = await apiClient.get<ApiResponse<PagedResult<Color>>>("/admin/colors", {
             params: params
         });

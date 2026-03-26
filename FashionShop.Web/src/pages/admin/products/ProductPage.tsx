@@ -1,7 +1,6 @@
 import type React from "react";
 import { useState } from "react";
-import type { Product } from "../../../features/products/types/product";
-import { useProducts } from "../../../features/products/hooks/useProducts";
+import { useProductMutations, useProducts } from "../../../features/products/hooks/useProducts";
 import { IoAdd } from "react-icons/io5";
 import { useCategories } from "../../../features/categories/hooks/useCategories";
 import { useBrands } from "../../../features/brands/hooks/useBrands";
@@ -17,7 +16,7 @@ const ProductPage: React.FC = () => {
     const { showDialog } = useDialog();
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
+    const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<ProductQueryParams>({
         keyword: "",
@@ -36,11 +35,12 @@ const ProductPage: React.FC = () => {
 
     const {
         products,
-        isLoading,
         totalRecord,
-        isFetching,
-        deleteProduct,
+        isLoadingProduct,
+        isFetchingProduct,
     } = useProducts(queryParams);
+
+    const { deleteDetail } = useProductMutations();
 
     const { leafCategories } = useCategories();
 
@@ -48,22 +48,22 @@ const ProductPage: React.FC = () => {
 
     const handleOpenCreate = () => {
         setIsDialogOpen(true);
-        setSelectedProduct(undefined);
+        setSelectedProductId(undefined);
     }
 
-    const handleOpenEdit = (product: Product) => {
+    const handleOpenEdit = (productId: string) => {
         setIsDialogOpen(true);
-        setSelectedProduct(product);
+        setSelectedProductId(productId);
     }
 
-    const handleDeleteProduct = (productId: string) => {
+    const handleDeleteDetail = (productId: string) => {
         showDialog({
             title: "XÁC NHẬN XOÁ SẢN PHẨM",
             message: "Sản phẩm này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
             confirmText: "Xoá",
             cancelText: "Hủy",
             confirmColor: "error",
-            onConfirm: () => deleteProduct(productId)
+            onConfirm: () => deleteDetail(productId)
         });
     }
 
@@ -139,16 +139,16 @@ const ProductPage: React.FC = () => {
                 >
                     <ProductTable 
                         data={products} 
-                        isLoading={isLoading || isFetching}
+                        isLoading={isLoadingProduct || isFetchingProduct}
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
                         onEdit={handleOpenEdit}
-                        onDelete={handleDeleteProduct}
+                        onDelete={handleDeleteDetail}
                     />
                 </div>
                 
-                {!isLoading && brands.length > 0 && (
+                {!isLoadingProduct && brands.length > 0 && (
                     <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3">
                         <Pagination
                             totalRecord={totalRecord}
@@ -163,7 +163,7 @@ const ProductPage: React.FC = () => {
             <ProductFormDialog 
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
-                initialData={selectedProduct}
+                productId={selectedProductId}
                 leafCategories={leafCategories}
                 brands={brands}
             />

@@ -15,12 +15,17 @@ export const useSizes = (params?: SizeQueryParams) => {
         })
     })
 
+    const allSizesQuery = useQuery({
+        queryKey: ["sizes"],
+        queryFn: sizeService.getAll,
+    })
+
     const sizesListQuery = useQuery({
         queryKey: ["sizes", params],
         queryFn: () => sizeService.getList(params!),
         staleTime: 1000 * 60 * 5,
         placeholderData: keepPreviousData,
-        enabled: !!params,
+        enabled: !!params
     })
 
     const updateMutation = useMutation({
@@ -45,9 +50,10 @@ export const useSizes = (params?: SizeQueryParams) => {
         createSize: createMutation.mutate,
         isCreating: createMutation.isPending,
 
-        sizes: sizesListQuery.data?.data?.items || [],
-        isLoading: sizesListQuery.isLoading,
+        sizes: allSizesQuery.data?.data || [],
+        isLoading: allSizesQuery.isLoading,
 
+        pagedSizes: sizesListQuery.data?.data?.items || [],
         totalRecord: sizesListQuery.data?.data?.totalRecord || 0,
         isFetching: sizesListQuery.isFetching,
 

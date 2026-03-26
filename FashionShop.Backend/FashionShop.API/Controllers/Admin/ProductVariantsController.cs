@@ -37,6 +37,13 @@ namespace FashionShop.API.Controllers.Admin
             return Success(result, "Lấy sản phẩm biến thể thành công!");
         }
 
+        [HttpGet("products/{productId}")]
+        public async Task<IActionResult> GetProductVariantsByProductId(Guid productId)
+        {
+            var result = await _productService.GetProductVariantsByProductIdAsync(productId);
+            return Success(result, "Lấy danh sách sản phẩm biến thể dựa vào sản phẩm thành công!");
+        }
+
         [HttpPut("{productVariantId}")]
         public async Task<IActionResult> UpdateProductVariant(Guid productVariantId, UpdateProductVariantDTO request)
         {

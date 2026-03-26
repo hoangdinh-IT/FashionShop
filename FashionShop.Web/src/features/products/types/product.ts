@@ -18,3 +18,20 @@ export interface Product {
     createdDate: Date;
     updatedDate: Date;
 }
+
+export interface ProductVariant {
+    id: string;
+    productId: string;
+    colorId: string;
+    sizeId: string;
+    sku: string;
+    quantity: number;
+    price: number;
+    isActive: boolean;
+    createdDate: Date;
+    updatedDate: Date;
+}
+
+export interface ProductDetail extends Product {
+    productVariants: ProductVariant[];
+}
