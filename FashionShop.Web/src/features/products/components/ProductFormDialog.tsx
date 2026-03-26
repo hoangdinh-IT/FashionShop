@@ -130,7 +130,7 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
     brands,
 }) => {
     const { showSnackbar } = useSnackbar();
-    const { createDetail, isCreatingProduct, updateProduct, isUpdatingProduct, updateDetail, isUpdatingDetail } = useProductMutations();
+    const { createDetail, isCreatingDetail, updateDetail, isUpdatingDetail } = useProductMutations();
     const { productDetail } = useProductDetail(productId);
 
     const {
@@ -153,7 +153,7 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const isProcessing = isCreatingProduct || isUpdatingProduct;
+    const isProcessing = isCreatingDetail || isUpdatingDetail;
 
     // --- EFFECTS ---
     useEffect(() => {
@@ -383,9 +383,8 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                 Tên sản phẩm <span className="text-red-500">*</span>
             </label>
             <input
-                {...register("name", { required: "Bắt buộc", maxLength: 200 })}
+                {...register("name", { required: "Vui lòng nhập Tên sản phẩm", maxLength: 200 })}
                 type="text"
-                placeholder="Nhập tên..."
                 className={getInputClassName(errors.name)}
                 onChange={(e) => {
                     register("name").onChange(e);
@@ -393,8 +392,10 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                 }}
             />
             <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500">{errors.name?.message}</span>
-                <span className="text-slate-400">{(watch("name") || "").length}/200</span>
+                <span className="text-red-500 text-[12px] font-semibold">{errors.name?.message}</span>
+                <span className={`${(watch("name") || "").length >= 200 ? "text-red-500 font-bold" : "text-slate-400"}`}>
+                    {(watch("name") || "").length}/200
+                </span>
             </div>
         </div>
 
@@ -408,14 +409,16 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                     /url/
                 </span>
                 <input
-                    {...register("slug", { required: "Bắt buộc", maxLength: 200 })}
+                    {...register("slug", { required: "Vui lòng nhập Slug", maxLength: 200 })}
                     type="text"
                     className={`flex-1 rounded-l-none ${getInputClassName(errors.slug)}`}
                 />
             </div>
             <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500">{errors.slug?.message}</span>
-                <span className="text-slate-400">{(watch("slug") || "").length}/200</span>
+                <span className="text-red-500 text-[12px] font-semibold">{errors.slug?.message}</span>
+                <span className={`${(watch("slug") || "").length >= 200 ? "text-red-500 font-bold" : "text-slate-400"}`}>
+                    {(watch("slug") || "").length}/200
+                </span>
             </div>
         </div>
 
@@ -425,13 +428,15 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                 Mô tả ngắn <span className="text-red-500">*</span>
             </label>
             <textarea
-                {...register("description", { required: "Bắt buộc", maxLength: 500 })}
+                {...register("description", { required: "Vui lòng nhập Mô tả ngắn", maxLength: 500 })}
                 rows={3}
                 className={`resize-none ${getInputClassName(errors.description)}`}
             />
             <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500">{errors.description?.message}</span>
-                <span className="text-slate-400">{(watch("description") || "").length}/500</span>
+                <span className="text-red-500 text-[12px] font-semibold">{errors.description?.message}</span>
+                <span className={`${(watch("description") || "").length >= 500 ? "text-red-500 font-bold" : "text-slate-400"}`}>
+                    {(watch("description") || "").length}/500
+                </span>
             </div>
         </div>
         <div>
@@ -439,16 +444,16 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                 Nội dung chi tiết <span className="text-red-500">*</span>
             </label>
             <textarea
-                {...register("content", { required: "Bắt buộc" })}
+                {...register("content", { required: "Vui lòng nhập Nội dung chi tiết" })}
                 rows={6}
                 className={`resize-none ${getInputClassName(errors.content)}`}
             />
-            <span className="text-xs text-red-500 mt-1.5 block">{errors.content?.message}</span>
+            <span className="text-red-500 text-[12px] font-semibold">{errors.content?.message}</span>
         </div>
     </div>
 );
 
-const AttributesSection = ({ register, errors, categories, brands }: any) => (
+const AttributesSection = ({ register, errors, watch, categories, brands }: any) => (
     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <h4 className="text-base font-bold text-slate-800 mb-5 flex items-center gap-2">
             <IoLayersOutline className="text-xl text-indigo-500" /> Tổ chức & Thuộc tính
@@ -459,46 +464,54 @@ const AttributesSection = ({ register, errors, categories, brands }: any) => (
                     Danh mục <span className="text-red-500">*</span>
                 </label>
                 <select
-                    {...register("categoryId", { required: "Bắt buộc" })}
+                    {...register("categoryId", { required: "Vui lòng chọn Danh mục" })}
                     className={getInputClassName(errors.categoryId)}
                 >
-                    <option value="" disabled hidden>
-                        -- Chọn danh mục --
-                    </option>
+                    <option value="" disabled hidden> -- Chọn danh mục -- </option>
                     {categories?.map((c: any) => (
                         <option key={c.id} value={c.id}>
                             {c.name}
                         </option>
                     ))}
                 </select>
+                <div className="flex justify-between mt-1.5 text-xs">
+                    <span className="text-red-500 text-[12px] font-semibold">{errors.categoryId?.message}</span>
+                </div>
             </div>
             <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                     Thương hiệu <span className="text-red-500">*</span>
                 </label>
                 <select
-                    {...register("brandId", { required: "Bắt buộc" })}
+                    {...register("brandId", { required: "Vui lòng chọn Thương hiệu" })}
                     className={getInputClassName(errors.brandId)}
                 >
-                    <option value="" disabled hidden>
-                        -- Chọn thương hiệu --
-                    </option>
+                    <option value="" disabled hidden> -- Chọn thương hiệu -- </option>
                     {brands?.map((c: any) => (
                         <option key={c.id} value={c.id}>
                             {c.name}
                         </option>
                     ))}
                 </select>
+                <div className="flex justify-between mt-1.5 text-xs">
+                    <span className="text-red-500 text-[12px] font-semibold">{errors.brandId?.message}</span>
+                </div>
             </div>
             <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                     Chất liệu <span className="text-red-500">*</span>
                 </label>
                 <input
-                    {...register("material", { required: "Bắt buộc" })}
+                    {...register("material", { required: "Vui lòng nhập Chất liệu", maxLength: 100 })}
                     type="text"
                     className={getInputClassName(errors.material)}
                 />
+                <div className="flex justify-between mt-1.5 text-xs">
+                    <span className="text-red-500 text-[12px] font-semibold">{errors.material?.message}</span>
+                    <span className={`${(watch("material") || "").length >= 100 ? "text-red-500 font-bold" : "text-slate-400"}`}>
+                        {(watch("material") || "").length}/100
+                    </span>
+                </div>
             </div>
             <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
@@ -536,7 +549,7 @@ const ThumbnailSection = ({
             type="file"
             className="hidden"
             accept="image/*"
-            {...register("thumbnail", { required: !isEdit ? "Bắt buộc" : false })}
+            {...register("thumbnail", { required: !isEdit ? "Vui lòng chọn Ảnh đại diện" : false })}
             ref={(e) => {
                 register("thumbnail").ref(e);
                 fileInputRef.current = e;
@@ -575,9 +588,12 @@ const ThumbnailSection = ({
                 </div>
             )}
         </div>
-        {errors.thumbnail && (
+        {/* {errors.thumbnail && (
             <p className="mt-2 text-xs text-red-500">{errors.thumbnail.message}</p>
-        )}
+        )} */}
+        <div className="flex justify-between mt-1.5 text-xs">
+            <span className="text-red-500 text-[12px] font-semibold">{errors.thumbnail?.message}</span>
+        </div>
     </div>
 );
 

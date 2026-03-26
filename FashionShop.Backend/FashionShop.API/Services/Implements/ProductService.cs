@@ -84,7 +84,7 @@ namespace FashionShop.API.Services.Implements
                 {
                     foreach (var variantDto in dto.ProductVariants)
                     {
-                        variantDto.ProductId = createdProduct.Id;
+                        variantDto.ProductId = createdProduct!.Id;
 
                         await CreateProductVariantAsync(variantDto);
                     }
@@ -92,7 +92,7 @@ namespace FashionShop.API.Services.Implements
 
                 await transaction.CommitAsync();
 
-                return await GetProductDetailByIdAsync(createdProduct.Id);
+                return await GetProductDetailByIdAsync(createdProduct!.Id);
             } 
             catch (Exception)
             {
@@ -157,7 +157,7 @@ namespace FashionShop.API.Services.Implements
 
                 var inputIDs = dto.ProductVariants
                                   .Where(v => v.Id.HasValue)
-                                  .Select(v => v.Id.Value)
+                                  .Select(v => v.Id!.Value)
                                   .ToList();
 
                 foreach (var variantDto in dto.ProductVariants)
