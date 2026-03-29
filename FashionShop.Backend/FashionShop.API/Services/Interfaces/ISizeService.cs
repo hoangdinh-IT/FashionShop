@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.DTOs.Size;
+﻿using FashionShop.Core.Contracts.Size;
 using FashionShop.Core.Models.Paging;
 using FashionShop.Core.Models.Sizes;
 

@@ -1,8 +1,8 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Implements;
 using FashionShop.API.Services.Interfaces;
+using FashionShop.Core.Contracts.Size;
 using FashionShop.Core.DTOs.Color;
-using FashionShop.Core.DTOs.Size;
 using FashionShop.Core.Models.Sizes;
 using Microsoft.AspNetCore.Mvc;
 

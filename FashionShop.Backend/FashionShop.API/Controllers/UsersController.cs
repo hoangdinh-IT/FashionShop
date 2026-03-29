@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Extensions;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.User;
+using FashionShop.Core.Contracts.User;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models;
 using Microsoft.AspNetCore.Mvc;

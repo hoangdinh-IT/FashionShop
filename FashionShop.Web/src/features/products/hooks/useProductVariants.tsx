@@ -3,11 +3,11 @@ import { useMutationSideEffects } from "../../../hooks/useMutationSideEffects";
 import type { ProductVariantFormInputs, ProductVariantQueryParams } from "../types/requests";
 import productVariantService from "../../../services/productVariant.service";
 
-export const useProductVariants = (params?: ProductVariantQueryParams) => {
+export const useProductVariants = (productId?: string, params?: ProductVariantQueryParams) => {
     const createSideEffects = useMutationSideEffects();
 
     const createMutation = useMutation({
-        mutationFn: (request: ProductVariantFormInputs) => productVariantService.create(request),
+        mutationFn: ({ productId, request }: { productId: string, request: ProductVariantFormInputs }) => productVariantService.create(productId, request),
         ...createSideEffects({
             successMessage: "Thêm biến thể sản phẩm thành công!",
             errorMessage: "Thêm biến thể sản phẩm thất bại!",
@@ -17,14 +17,14 @@ export const useProductVariants = (params?: ProductVariantQueryParams) => {
 
     const productVariantsListQuery = useQuery({
         queryKey: ["productVariants", params],
-        queryFn: () => productVariantService.getList(params!),
+        queryFn: () => productVariantService.getList(productId!, params!),
         staleTime: 1000 * 60 * 5,
         placeholderData: keepPreviousData,
         enabled: !!params,
     })
 
     const updateMutation = useMutation({
-        mutationFn: ({ productVariantId, request }: { productVariantId: string, request: ProductVariantFormInputs }) => productVariantService.update(productVariantId, request),
+        mutationFn: ({ productId, productVariantId, request }: { productId: string, productVariantId: string, request: ProductVariantFormInputs }) => productVariantService.update(productId, productVariantId, request),
         ...createSideEffects({
             successMessage: "Cập nhật biến thể sản phẩm thành công!",
             errorMessage: "Cập nhật biến thể sản phẩm thất bại!",
@@ -33,7 +33,7 @@ export const useProductVariants = (params?: ProductVariantQueryParams) => {
     })
 
     const deleteMutation = useMutation({
-        mutationFn: (productVariantId: string) => productVariantService.delete(productVariantId),
+        mutationFn: ({ productId, productVariantId }: { productId: string, productVariantId: string }) => productVariantService.delete(productId, productVariantId),
         ...createSideEffects({
             successMessage: "Xoá biến thể sản phẩm thành công!",
             errorMessage: "Xoá biến thể sản phẩm thất bại!",

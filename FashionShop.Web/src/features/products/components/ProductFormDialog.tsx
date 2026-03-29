@@ -17,7 +17,7 @@ import type { Brand } from "../../brands/types/brand";
 import { useProductDetail, useProductMutations } from "../hooks/useProducts";
 import { useSnackbar } from "../../../contexts";
 import RenderToggle from "../../../components/common/RenderToggle";
-import ProductVariantsManager from "./ProductVariansManager";
+import ProductVariantsManager from "./ProductVariantsManager";
 
 // ==========================================
 // 1. HELPERS & UTILS
@@ -160,6 +160,10 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
         if (isOpen) {
             reset(getDefaultValues(productDetail));
             setPreviewUrl(productDetail?.thumbnailUrl || null);
+            setSelectedFile(null);
+        } else {
+            reset(getDefaultValues(undefined));
+            setPreviewUrl(null);
             setSelectedFile(null);
         }
     }, [isOpen, productDetail, reset]);
@@ -588,9 +592,6 @@ const ThumbnailSection = ({
                 </div>
             )}
         </div>
-        {/* {errors.thumbnail && (
-            <p className="mt-2 text-xs text-red-500">{errors.thumbnail.message}</p>
-        )} */}
         <div className="flex justify-between mt-1.5 text-xs">
             <span className="text-red-500 text-[12px] font-semibold">{errors.thumbnail?.message}</span>
         </div>

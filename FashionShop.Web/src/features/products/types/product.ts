@@ -35,3 +35,13 @@ export interface ProductVariant {
 export interface ProductDetail extends Product {
     productVariants: ProductVariant[];
 }
+
+export interface ProductImage {
+    id: string;
+    productId: string;
+    colorId: number | null;
+    colorName: string;
+    colorHexCode: string;
+    imageUrl: string;
+    sortOrder: number;
+}

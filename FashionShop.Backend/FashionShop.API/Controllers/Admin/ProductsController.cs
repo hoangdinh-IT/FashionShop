@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Product;
+using FashionShop.Core.Contracts.Product.Requests;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Products;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +15,7 @@ namespace FashionShop.API.Controllers.Admin
             _productService = productService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromForm] CreateProductDTO request)
-        {
-            var result = await _productService.CreateProductAsync(request);
-            return Created(result, "Thêm sản phẩm thành công!");
-        }
-
-        [HttpPost("detail")]
-        public async Task<IActionResult> CreateProductDetail([FromForm] CreateProductDetailDTO request)
-        {
-            var result = await _productService.CreateProductDetailAsync(request);
-            return Created(result, "Thêm chi tiết sản phẩm thành công!");
-        }
+        // --- READ METHODS --- //
 
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] ProductListRequest request)
@@ -54,8 +42,31 @@ namespace FashionShop.API.Controllers.Admin
             return Success(result, "Lấy chi tiết sản phẩm thành công!");
         }
 
+        [HttpGet("{productId}/colors")]
+        public async Task<IActionResult> GetColorsByProductId([FromRoute] Guid productId)
+        {
+            var result = await _productService.GetColorsByProductIdAsync(productId);
+            return Success(result, "Lấy danh sách màu sắc dựa vào productId thành công!");
+        }
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequest request)
+        {
+            var result = await _productService.CreateProductAsync(request);
+            return Created(result, "Thêm sản phẩm thành công!");
+        }
+
+        [HttpPost("detail")]
+        public async Task<IActionResult> CreateProductDetail([FromForm] CreateProductDetailRequest request)
+        {
+            var result = await _productService.CreateProductDetailAsync(request);
+            return Created(result, "Thêm chi tiết sản phẩm thành công!");
+        }
+
         [HttpPut("{productId}")]
-        public async Task<IActionResult> UpdateProduct(Guid productId, [FromForm] UpdateProductDTO request)
+        public async Task<IActionResult> UpdateProduct(Guid productId, [FromForm] UpdateProductRequest request)
         {
             if (productId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
@@ -64,7 +75,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPut("detail/{productId}")]
-        public async Task<IActionResult> UpdateProductDetail(Guid productId, [FromForm] UpdateProductDetailDTO request)
+        public async Task<IActionResult> UpdateProductDetail(Guid productId, [FromForm] UpdateProductDetailRequest request)
         {
             if (productId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 

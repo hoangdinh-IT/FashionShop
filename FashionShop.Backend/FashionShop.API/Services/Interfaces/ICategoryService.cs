@@ -1,5 +1,4 @@
-﻿using FashionShop.Core.DTOs.Category;
-using FashionShop.Core.DTOs.Category.Category;
+﻿using FashionShop.Core.Contracts.Category;
 using FashionShop.Core.Models.Categories;
 using FashionShop.Core.Models.Paging;
 

@@ -1,7 +1,8 @@
 import type React from "react";
 import { useState } from "react";
-import { useProductMutations, useProducts } from "../../../features/products/hooks/useProducts";
 import { IoAdd } from "react-icons/io5";
+
+import { useProductMutations, useProducts } from "../../../features/products/hooks/useProducts";
 import { useCategories } from "../../../features/categories/hooks/useCategories";
 import { useBrands } from "../../../features/brands/hooks/useBrands";
 import ProductFormDialog from "../../../features/products/components/ProductFormDialog";
@@ -11,12 +12,22 @@ import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import { useDialog } from "../../../contexts";
 import ProductToolbar from "../../../features/products/components/ProductToolbar";
 import type { ProductFilters, ProductQueryParams } from "../../../features/products/types/requests";
+import ProductImageManagerDialog from "../../../features/products/components/ProductImagesManagerDialog";
 
 const ProductPage: React.FC = () => {
     const { showDialog } = useDialog();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
+    // const [isDialogOpen, setIsDialogOpen] = useState(false);
+    // const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
+    // const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
+
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: "FORM" | "IMAGE" | null;
+        productId: string | undefined;
+    }>({
+        isOpen: null,
+        productId: undefined,
+    })
 
     const [queryParams, setQueryParams] = useState<ProductQueryParams>({
         keyword: "",
@@ -46,15 +57,13 @@ const ProductPage: React.FC = () => {
 
     const { brands } = useBrands();
 
-    const handleOpenCreate = () => {
-        setIsDialogOpen(true);
-        setSelectedProductId(undefined);
-    }
+    const handleOpenCreate = () => setModalConfig({ isOpen: "FORM", productId: undefined })
 
-    const handleOpenEdit = (productId: string) => {
-        setIsDialogOpen(true);
-        setSelectedProductId(productId);
-    }
+    const handleOpenEdit = (productId: string) => setModalConfig({ isOpen: "FORM", productId: productId })
+
+    const handleOpenImage = (productId: string) => setModalConfig({ isOpen: "IMAGE", productId: productId })
+
+    const handleClose = () => setModalConfig({ isOpen: null, productId: undefined })
 
     const handleDeleteDetail = (productId: string) => {
         showDialog({
@@ -143,6 +152,7 @@ const ProductPage: React.FC = () => {
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
+                        openImageManagerModal={handleOpenImage}
                         onEdit={handleOpenEdit}
                         onDelete={handleDeleteDetail}
                     />
@@ -161,11 +171,17 @@ const ProductPage: React.FC = () => {
             </div>
 
             <ProductFormDialog 
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
-                productId={selectedProductId}
+                isOpen={modalConfig.isOpen === "FORM"}
+                onClose={handleClose}
+                productId={modalConfig.productId}
                 leafCategories={leafCategories}
                 brands={brands}
+            />
+
+            <ProductImageManagerDialog
+                isOpen={modalConfig.isOpen === "IMAGE"}
+                onClose={handleClose}
+                productId={modalConfig.productId}
             />
         </div>
     );

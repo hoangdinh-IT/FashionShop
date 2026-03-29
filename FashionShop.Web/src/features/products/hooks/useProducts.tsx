@@ -111,3 +111,16 @@ export const useProductMutations = () => {
         isDeletingDetail: deleteDetailMutation.isPending,
     }
 }
+
+export const useProductColors = (productId?: string) => {
+    const colorsListQuery = useQuery({
+        queryKey: ["products", "colors", productId],
+        queryFn: () => productService.getColors(productId!),
+        enabled: !!productId,
+    })
+
+    return {
+        colors: colorsListQuery.data?.data || [],
+        isLoadingColors: colorsListQuery.isLoading,
+    }
+}

@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Color;
+using FashionShop.Core.Contracts.Color;
 using FashionShop.Core.Models.Colors;
 using Microsoft.AspNetCore.Mvc;
 

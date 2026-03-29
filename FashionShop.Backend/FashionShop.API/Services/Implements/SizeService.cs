@@ -2,8 +2,8 @@
 using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
+using FashionShop.Core.Contracts.Size;
 using FashionShop.Core.DTOs.Color;
-using FashionShop.Core.DTOs.Size;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Paging;

@@ -2,7 +2,7 @@
 using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Color;
+using FashionShop.Core.Contracts.Color;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Colors;

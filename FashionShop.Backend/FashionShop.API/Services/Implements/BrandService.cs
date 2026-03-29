@@ -2,7 +2,7 @@
 using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Brand;
+using FashionShop.Core.Contracts.Brand;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Brands;

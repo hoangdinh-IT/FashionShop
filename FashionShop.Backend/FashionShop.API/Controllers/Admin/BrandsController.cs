@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Brand;
+using FashionShop.Core.Contracts.Brand;
 using FashionShop.Core.Models.Brands;
 using Microsoft.AspNetCore.Mvc;
 

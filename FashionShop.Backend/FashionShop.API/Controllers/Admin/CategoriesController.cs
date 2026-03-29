@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Category;
+using FashionShop.Core.Contracts.Category;
 using FashionShop.Core.Models.Categories;
 using Microsoft.AspNetCore.Mvc;
 

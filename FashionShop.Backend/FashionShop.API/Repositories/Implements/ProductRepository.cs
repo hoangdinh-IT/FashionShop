@@ -1,8 +1,9 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.DTOs.Product;
-using FashionShop.Core.DTOs.ProductImage;
-using FashionShop.Core.DTOs.ProductVariant;
+using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Product.Responses;
+using FashionShop.Core.Contracts.ProductImage.Responses;
+using FashionShop.Core.Contracts.ProductVariant.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Paging;
@@ -18,13 +19,15 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
-        private static readonly Expression<Func<Product, ProductDTO>> _productSelector =
-            x => new ProductDTO
+        private static readonly Expression<Func<Product, ProductResponse>> _productSelector =
+            x => new ProductResponse
             {
                 Id = x.Id,
                 CategoryId = x.CategoryId,
                 BrandId = x.BrandId,
                 Name = x.Name,
+                CategoryName = x.Category.Name,
+                BrandName = x.Brand.Name,
                 Slug = x.Slug,
                 Description = x.Description,
                 Content = x.Content,
@@ -39,13 +42,16 @@ namespace FashionShop.API.Repositories.Implements
                 UpdatedDate = x.UpdatedDate,
             };
 
-        private static readonly Expression<Func<ProductVariant, ProductVariantDTO>> _productVariantSelector =
-            x => new ProductVariantDTO
+        private static readonly Expression<Func<ProductVariant, ProductVariantResponse>> _productVariantSelector =
+            x => new ProductVariantResponse
             {
                 Id = x.Id,
                 ProductId = x.ProductId,
                 ColorId = x.ColorId,
                 SizeId = x.SizeId,
+                ColorName = x.Color.Name,
+                ColorHexCode = x.Color.HexCode,
+                SizeName = x.Size.Name,
                 SKU = x.SKU,
                 Quantity = x.Quantity,
                 Price = x.Price,
@@ -55,20 +61,22 @@ namespace FashionShop.API.Repositories.Implements
                 IsDeleted = x.IsDeleted,
             };
 
-        private static readonly Expression<Func<ProductImage, ProductImageDTO>> _productImageSelector =
-            x => new ProductImageDTO
+        private static readonly Expression<Func<ProductImage, ProductImageResponse>> _productImageSelector =
+            x => new ProductImageResponse
             {
                 Id = x.Id,
                 ProductId = x.ProductId,
                 ColorId = x.ColorId,
+                ColorName = x.Color.Name,
+                ColorHexCode = x.Color.HexCode,
                 ImageUrl = x.ImageUrl,
                 SortOrder = x.SortOrder,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
             };
 
-        private static readonly Expression<Func<Product, ProductDetailDTO>> _productDetailSelector =
-            x => new ProductDetailDTO
+        private static readonly Expression<Func<Product, ProductDetailResponse>> _productDetailSelector =
+            x => new ProductDetailResponse
             {
                 Id = x.Id,
                 CategoryId = x.CategoryId,
@@ -86,7 +94,7 @@ namespace FashionShop.API.Repositories.Implements
                 ViewCount = x.ViewCount,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
-                ProductVariants = x.ProductVariants.Select(v => new ProductVariantDTO
+                ProductVariants = x.ProductVariants.Select(v => new ProductVariantResponse
                 {
                     Id = v.Id,
                     ProductId = v.ProductId,
@@ -116,7 +124,7 @@ namespace FashionShop.API.Repositories.Implements
         #region 1. PRODUCTS
 
         // --- READ METHODS --- //
-        public async Task<PagedResult<ProductDTO>> GetPagedProductsAsync(ProductListRequest request)
+        public async Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request)
         {
             var query = _context.Products.AsNoTracking().AsQueryable();
 
@@ -135,7 +143,7 @@ namespace FashionShop.API.Repositories.Implements
                                   .Select(_productSelector)
                                   .ToListAsync();
 
-            return new PagedResult<ProductDTO>()
+            return new PagedResult<ProductResponse>()
             {
                 Items = data,
                 TotalRecord = totalRecorl,
@@ -144,7 +152,7 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<ProductDTO?> GetProductByIdAsync(Guid productId)
+        public async Task<ProductResponse?> GetProductByIdAsync(Guid productId)
         {
             return await _context.Products
                 .AsNoTracking()
@@ -156,12 +164,27 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<Product?> FindProductByIdAsync(Guid productId)
             => await _context.Products.FindAsync(productId);
 
-        public async Task<ProductDetailDTO?> GetProductDetailByIdAsync(Guid productId)
+        public async Task<ProductDetailResponse?> GetProductDetailByIdAsync(Guid productId)
         {
             return await _context.Products
                 .Where(prod => prod.Id == productId)
                 .Select(_productDetailSelector)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<ColorDTO>> GetColorsByProductIdAsync(Guid productId)
+        {
+            return await _context.ProductVariants
+                .Where(pv => pv.ProductId == productId)
+                .Select(pv => pv.Color)
+                .Distinct()
+                .Select(c => new ColorDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    HexCode = c.HexCode,
+                })
+                .ToListAsync();
         }
 
         // --- VALIDATION METHODS --- //
@@ -193,7 +216,7 @@ namespace FashionShop.API.Repositories.Implements
         #region 2. PRODUCT VARIANTS
 
         // --- READ METHODS --- //
-        public async Task<PagedResult<ProductVariantDTO>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
+        public async Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
         {
             var query = _context.ProductVariants.AsNoTracking().AsQueryable();
 
@@ -210,7 +233,7 @@ namespace FashionShop.API.Repositories.Implements
                             .Select(_productVariantSelector)
                             .ToListAsync();
 
-            return new PagedResult<ProductVariantDTO>()
+            return new PagedResult<ProductVariantResponse>()
             {
                 Items = data,
                 TotalRecord = totalRecord,
@@ -219,7 +242,7 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<ProductVariantDTO?> GetProductVariantByIdAsync(Guid productVariantId)
+        public async Task<ProductVariantResponse?> GetProductVariantByIdAsync(Guid productVariantId)
         {
             return await _context.ProductVariants
                 .Where(pv => pv.Id == productVariantId)
@@ -230,7 +253,7 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)
             => await _context.ProductVariants.FindAsync(productVariantId);
 
-        public async Task<List<ProductVariantDTO>> GetProductVariantsByProductIdAsync(Guid productId)
+        public async Task<List<ProductVariantResponse>> GetProductVariantsByProductIdAsync(Guid productId)
         {
             return await _context.ProductVariants
                 .Where(pv => pv.ProductId == productId)
@@ -269,7 +292,7 @@ namespace FashionShop.API.Repositories.Implements
         #region 3. PRODUCT IMAGES
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<ProductImageDTO>> GetProductImagesAsync(Guid productId, int? colorId)
+        public async Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId)
         {
             var query = _context.ProductImages
                                 .AsNoTracking()
@@ -285,7 +308,7 @@ namespace FashionShop.API.Repositories.Implements
                               .ToListAsync();
         }
 
-        public async Task<ProductImageDTO?> GetProductImageByIdAsync(Guid productImageId)
+        public async Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId)
         {
             return await _context.ProductImages
                 .AsNoTracking()
@@ -297,7 +320,7 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId)
             => await _context.ProductImages.FindAsync(productImageId);
 
-        public async Task<int> GetMaxSortOrder(Guid productId, int colorId)
+        public async Task<int> GetMaxSortOrder(Guid productId, int? colorId)
         {
             return await _context.ProductImages
                 .Where(x => x.ProductId == productId && x.ColorId == colorId)

@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Product;
-using FashionShop.Core.DTOs.ProductImage;
-using FashionShop.Core.DTOs.ProductVariant;
+using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Product.Requests;
+using FashionShop.Core.Contracts.Product.Responses;
+using FashionShop.Core.Contracts.ProductImage.Requests;
+using FashionShop.Core.Contracts.ProductImage.Responses;
+using FashionShop.Core.Contracts.ProductVariant.Requests;
+using FashionShop.Core.Contracts.ProductVariant.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Paging;
@@ -29,10 +33,10 @@ namespace FashionShop.API.Services.Implements
         #region 1. PRODUCTS
 
         // --- READ METHODS --- //
-        public async Task<PagedResult<ProductDTO>> GetPagedProductsAsync(ProductListRequest request)
+        public async Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request)
             => await _productRepository.GetPagedProductsAsync(request);
 
-        public async Task<ProductDTO?> GetProductByIdAsync(Guid productId)
+        public async Task<ProductResponse?> GetProductByIdAsync(Guid productId)
         {
             var product = await _productRepository.GetProductByIdAsync(productId);
 
@@ -41,17 +45,26 @@ namespace FashionShop.API.Services.Implements
             return product;
         }
 
-        public async Task<ProductDetailDTO?> GetProductDetailByIdAsync(Guid productId)
+        public async Task<ProductDetailResponse?> GetProductDetailByIdAsync(Guid productId)
         {
             var productDetail = await _productRepository.GetProductDetailByIdAsync(productId);
 
-            if (productDetail == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm");
+            if (productDetail == null) throw new KeyNotFoundException("Không tìm thấy chi tiết sản phẩm");
 
             return productDetail;
         }
 
+        public async Task<List<ColorDTO>> GetColorsByProductIdAsync(Guid productId)
+        {
+            var product = await _productRepository.GetProductByIdAsync(productId);
+
+            if (product == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm");
+
+            return await _productRepository.GetColorsByProductIdAsync(productId);
+        }
+
         // --- WRITE METHODS --- //
-        public async Task<ProductDTO?> CreateProductAsync(CreateProductDTO dto)
+        public async Task<ProductResponse?> CreateProductAsync(CreateProductRequest dto)
         {
             var isExistSlug = await _productRepository.CheckExistSlugAsync(dto.Slug);
 
@@ -69,10 +82,10 @@ namespace FashionShop.API.Services.Implements
             }
 
             var createdProduct = await _productRepository.CreateProductAsync(newProduct);
-            return _mapper.Map<ProductDTO>(createdProduct);
+            return _mapper.Map<ProductResponse>(createdProduct);
         }
 
-        public async Task<ProductDetailDTO?> CreateProductDetailAsync(CreateProductDetailDTO dto)
+        public async Task<ProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest dto)
         {
             using var transaction = await _productRepository.BeginTransactionAsync();
 
@@ -101,7 +114,7 @@ namespace FashionShop.API.Services.Implements
             }
         }
 
-        public async Task<ProductDTO?> UpdateProductAsync(Guid productId, UpdateProductDTO dto)
+        public async Task<ProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest dto)
         {
             var existingProduct = await _productRepository.FindProductByIdAsync(productId);
 
@@ -145,7 +158,7 @@ namespace FashionShop.API.Services.Implements
             return await _productRepository.GetProductByIdAsync(productId);
         }
 
-        public async Task<ProductDetailDTO?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailDTO dto)
+        public async Task<ProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest dto)
         {
             using var transaction = await _productRepository.BeginTransactionAsync();
 
@@ -165,7 +178,7 @@ namespace FashionShop.API.Services.Implements
                     // TH1: THÊM MỚI
                     if (!variantDto.Id.HasValue)
                     {
-                        var newVariant = _mapper.Map<CreateProductVariantDTO>(variantDto);
+                        var newVariant = _mapper.Map<CreateProductVariantRequest>(variantDto);
                         newVariant.ProductId = productId;
                         await CreateProductVariantAsync(newVariant);
                     } 
@@ -245,10 +258,10 @@ namespace FashionShop.API.Services.Implements
         #region 2. PRODUCT VARIANTS
 
         // --- READ METHODS --- //
-        public async Task<PagedResult<ProductVariantDTO>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
+        public async Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
             => await _productRepository.GetPagedProductVariantsAsync(request);
 
-        public async Task<ProductVariantDTO?> GetProductVariantByIdAsync(Guid productVariantId)
+        public async Task<ProductVariantResponse?> GetProductVariantByIdAsync(Guid productVariantId)
         {
             var productVariant = await _productRepository.GetProductVariantByIdAsync(productVariantId);
 
@@ -257,7 +270,7 @@ namespace FashionShop.API.Services.Implements
             return productVariant;
         }
 
-        public async Task<List<ProductVariantDTO>> GetProductVariantsByProductIdAsync(Guid productId)
+        public async Task<List<ProductVariantResponse>> GetProductVariantsByProductIdAsync(Guid productId)
         {
             var productVariants = await _productRepository.GetProductVariantsByProductIdAsync(productId);
 
@@ -265,7 +278,7 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<ProductVariantDTO> CreateProductVariantAsync(CreateProductVariantDTO dto)
+        public async Task<ProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest dto)
         {
             var isExistSKU = await _productRepository.CheckExistSKUAsync(dto.SKU);
 
@@ -274,10 +287,10 @@ namespace FashionShop.API.Services.Implements
             var newProductVariant = _mapper.Map<ProductVariant>(dto);
 
             var createdProductVariant = await _productRepository.CreateProductVariantAsync(newProductVariant);
-            return _mapper.Map<ProductVariantDTO>(createdProductVariant);
+            return _mapper.Map<ProductVariantResponse>(createdProductVariant);
         }
 
-        public async Task<ProductVariantDTO?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantDTO dto)
+        public async Task<ProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantRequest dto)
         {
             var existingProductVariant = await _productRepository.FindProductVariantByIdAsync(productVariantId);
 
@@ -311,7 +324,7 @@ namespace FashionShop.API.Services.Implements
         #region 3. PRODUCT IMAGES
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<ProductImageDTO>> GetProductImagesAsync(Guid productId, int? colorId)
+        public async Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId)
         {
             var existingProduct = await _productRepository.FindProductByIdAsync(productId);
 
@@ -320,7 +333,7 @@ namespace FashionShop.API.Services.Implements
             return await _productRepository.GetProductImagesAsync(productId, colorId);
         }
 
-        public async Task<ProductImageDTO?> GetProductImageByIdAsync(Guid productImageId)
+        public async Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId)
         {
             var existingProductImage = await _productRepository.FindProductImageByIdAsync(productImageId);
 
@@ -330,7 +343,7 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<List<ProductImageDTO>> CreateProductImageAsync(CreateProductImageDTO dto)
+        public async Task<List<ProductImageResponse>> CreateProductImageAsync(CreateProductImageRequest dto)
         {
             if (dto.ColorId.HasValue)
             {
@@ -339,9 +352,9 @@ namespace FashionShop.API.Services.Implements
                 if (!isExistProductVariant) throw new Exception("Lỗi: Bạn không thể upload ảnh màu này vì chưa có biến thể sản phẩm (Variant) tương ứng!");
             }
 
-            var listImages = new List<ProductImageDTO>();
+            var listImages = new List<ProductImageResponse>();
 
-            var currentMaxSortOrder = await _productRepository.GetMaxSortOrder(dto.ProductId, dto.ColorId!.Value);
+            var currentMaxSortOrder = await _productRepository.GetMaxSortOrder(dto.ProductId, dto.ColorId);
 
             for (int i = 0; i < dto.Images.Count; i++)
             {
@@ -359,13 +372,13 @@ namespace FashionShop.API.Services.Implements
 
                 var createdProductImage = await _productRepository.CreateProductImageAsync(newImage);
 
-                listImages.Add(_mapper.Map<ProductImageDTO>(createdProductImage));
+                listImages.Add(_mapper.Map<ProductImageResponse>(createdProductImage));
             }
 
             return listImages;
         }
 
-        public async Task<ProductImageDTO?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageDTO dto)
+        public async Task<ProductImageResponse?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageRequest dto)
         {
             var existingProductImage = await _productRepository.FindProductImageByIdAsync(productImageId);
 

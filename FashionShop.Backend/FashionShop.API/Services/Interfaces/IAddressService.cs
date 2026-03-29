@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.DTOs.Address;
+﻿using FashionShop.Core.Contracts.Address;
 
 namespace FashionShop.API.Services.Interfaces
 {

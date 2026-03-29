@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Implements;
-using FashionShop.Core.DTOs.Address;
+using FashionShop.Core.Contracts.Address;
 using FashionShop.Core.Entities;
 using Moq;
 

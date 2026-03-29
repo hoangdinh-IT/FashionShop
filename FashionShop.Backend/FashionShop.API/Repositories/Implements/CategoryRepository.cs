@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.DTOs.Category.Category;
+using FashionShop.Core.Contracts.Category;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Categories;

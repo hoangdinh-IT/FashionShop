@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.DTOs.Brand;
+﻿using FashionShop.Core.Contracts.Brand;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Brands;
 using FashionShop.Core.Models.Paging;

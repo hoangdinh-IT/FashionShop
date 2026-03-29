@@ -5,25 +5,25 @@ import type { PagedResult } from "../models/PagedResult";
 import apiClient from "./api.client";
 
 const productVariantService = {
-    create: async(request: ProductVariantFormInputs): Promise<ApiResponse<ProductVariant>> => {
-        const response = await apiClient.post<ApiResponse<ProductVariant>>("/admin/product-variants", request);
+    create: async(productId: string, request: ProductVariantFormInputs): Promise<ApiResponse<ProductVariant>> => {
+        const response = await apiClient.post<ApiResponse<ProductVariant>>(`/admin/products/${productId}/variants`, request);
         return response.data;
     },
 
-    getList: async(params: ProductVariantQueryParams): Promise<ApiResponse<PagedResult<ProductVariant>>> => {
-        const response = await apiClient.get<ApiResponse<PagedResult<ProductVariant>>>("/admin/product-variants", {
+    getList: async(productId: string, params: ProductVariantQueryParams): Promise<ApiResponse<PagedResult<ProductVariant>>> => {
+        const response = await apiClient.get<ApiResponse<PagedResult<ProductVariant>>>(`/admin/products/${productId}/variants`, {
             params: params
         })
         return response.data;
     },
 
-    update: async(productVariantId: string, request: ProductVariantFormInputs): Promise<ApiResponse<ProductVariant>> => {
-        const response = await apiClient.put<ApiResponse<ProductVariant>>(`/admin/product-variants/${productVariantId}`, request);
+    update: async(productId: string, productVariantId: string, request: ProductVariantFormInputs): Promise<ApiResponse<ProductVariant>> => {
+        const response = await apiClient.put<ApiResponse<ProductVariant>>(`/admin/products/${productId}/variants/${productVariantId}`, request);
         return response.data;
     },
 
-    delete: async(productVariantId: string): Promise<ApiResponse<ProductVariant>> => {
-        const response = await apiClient.delete<ApiResponse<ProductVariant>>(`/admin/product-variants/${productVariantId}`);
+    delete: async(productId: string, productVariantId: string): Promise<ApiResponse<ProductVariant>> => {
+        const response = await apiClient.delete<ApiResponse<ProductVariant>>(`/admin/products/${productId}/variants/${productVariantId}`);
         return response.data;
     }
 }

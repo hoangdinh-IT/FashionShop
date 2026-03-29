@@ -1,5 +1,5 @@
-﻿using FashionShop.Core.DTOs.Auth;
-using FashionShop.Core.DTOs.User;
+﻿using FashionShop.Core.Contracts.Auth;
+using FashionShop.Core.Contracts.User;
 
 namespace FashionShop.API.Services.Interfaces
 {

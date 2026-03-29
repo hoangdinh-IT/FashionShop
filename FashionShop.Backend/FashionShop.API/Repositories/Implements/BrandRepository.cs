@@ -1,6 +1,5 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.DTOs.Brand;
 using FashionShop.Core.DTOs.Category.Category;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
@@ -8,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Brands;
 using System.Linq.Expressions;
+using FashionShop.Core.Contracts.Brand;
 
 namespace FashionShop.API.Repositories.Implements
 {

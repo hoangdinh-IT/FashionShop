@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Category;
-using FashionShop.Core.DTOs.Category.Category;
+using FashionShop.Core.Contracts.Category;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Categories;

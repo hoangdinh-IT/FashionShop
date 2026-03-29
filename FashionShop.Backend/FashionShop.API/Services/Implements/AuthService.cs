@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Auth;
-using FashionShop.Core.DTOs.User;
+using FashionShop.Core.Contracts.Auth;
+using FashionShop.Core.Contracts.User;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Enums;
 using FashionShop.Core.Exceptions;

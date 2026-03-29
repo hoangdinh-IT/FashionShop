@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Extensions;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.DTOs.Address;
+using FashionShop.Core.Contracts.Address;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers

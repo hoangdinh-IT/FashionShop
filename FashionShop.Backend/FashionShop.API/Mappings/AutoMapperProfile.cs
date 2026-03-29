@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
-using FashionShop.Core.DTOs.Address;
-using FashionShop.Core.DTOs.Auth;
-using FashionShop.Core.DTOs.Brand;
-using FashionShop.Core.DTOs.Category;
-using FashionShop.Core.DTOs.Category.Category;
-using FashionShop.Core.DTOs.Color;
-using FashionShop.Core.DTOs.Product;
-using FashionShop.Core.DTOs.ProductImage;
-using FashionShop.Core.DTOs.ProductVariant;
-using FashionShop.Core.DTOs.Size;
-using FashionShop.Core.DTOs.User;
+using FashionShop.Core.Contracts.Address;
+using FashionShop.Core.Contracts.Auth;
+using FashionShop.Core.Contracts.Brand;
+using FashionShop.Core.Contracts.Category;
+using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Product.Requests;
+using FashionShop.Core.Contracts.Product.Responses;
+using FashionShop.Core.Contracts.ProductImage.Requests;
+using FashionShop.Core.Contracts.ProductImage.Responses;
+using FashionShop.Core.Contracts.ProductVariant.Requests;
+using FashionShop.Core.Contracts.ProductVariant.Responses;
+using FashionShop.Core.Contracts.Size;
+using FashionShop.Core.Contracts.User;
 using FashionShop.Core.Entities;
 
 namespace FashionShop.API.Mappings
@@ -64,28 +66,28 @@ namespace FashionShop.API.Mappings
             CreateMap<Size, SizeDTO>();
 
             // Product
-            CreateMap<CreateProductDTO, Product>();
+            CreateMap<CreateProductRequest, Product>();
 
-            CreateMap<UpdateProductDTO, Product>();
+            CreateMap<UpdateProductRequest, Product>();
 
-            CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ProductResponse>();
 
             // ProductVariant
-            CreateMap<CreateProductVariantDTO, ProductVariant>();
+            CreateMap<CreateProductVariantRequest, ProductVariant>();
             
-            CreateMap<UpdateProductVariantDTO, ProductVariant>();
+            CreateMap<UpdateProductVariantRequest, ProductVariant>();
 
-            CreateMap<ProductVariant, ProductVariantDTO>();
+            CreateMap<ProductVariant, ProductVariantResponse>();
 
-            CreateMap<UpdateProductVariantDTO, CreateProductVariantDTO>();
+            CreateMap<UpdateProductVariantRequest, CreateProductVariantRequest>();
 
             // ProductImage
-            CreateMap<CreateProductImageDTO, ProductImage>();
+            CreateMap<CreateProductImageRequest, ProductImage>();
 
-            CreateMap<UpdateProductImageDTO, ProductImage>()
+            CreateMap<UpdateProductImageRequest, ProductImage>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<ProductImage, ProductImageDTO>();
+            CreateMap<ProductImage, ProductImageResponse>();
         }
     }
 }
