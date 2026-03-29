@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.Contracts.Category;
+using FashionShop.Core.Contracts.Category.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Categories;
@@ -14,8 +14,8 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
-        private static readonly Expression<Func<Category, CategoryDTO>> _categorySelector =
-            x => new CategoryDTO
+        private static readonly Expression<Func<Category, CategoryResponse>> _categorySelector =
+            x => new CategoryResponse
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -36,7 +36,7 @@ namespace FashionShop.API.Repositories.Implements
         }
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync()
+        public async Task<IEnumerable<CategoryResponse>> GetAllCategoriesAsync()
         {
             return await _context.Categories
                 .AsNoTracking()
@@ -45,7 +45,7 @@ namespace FashionShop.API.Repositories.Implements
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<CategoryDTO>> GetPagedCategoriesAsync(CategoryListRequest request)
+        public async Task<PagedResult<CategoryResponse>> GetPagedCategoriesAsync(CategoryListRequest request)
         {
             var query = _context.Categories.AsNoTracking().AsQueryable();
 
@@ -61,7 +61,7 @@ namespace FashionShop.API.Repositories.Implements
                                   .Select(_categorySelector)
                                   .ToListAsync();
 
-            return new PagedResult<CategoryDTO>
+            return new PagedResult<CategoryResponse>
             {
                 Items = data,
                 TotalRecord = totalRecord,
@@ -77,7 +77,7 @@ namespace FashionShop.API.Repositories.Implements
                 .ToListAsync();
         }
 
-        public async Task<CategoryDTO?> GetCategoryByIdAsync(Guid categoryId)
+        public async Task<CategoryResponse?> GetCategoryByIdAsync(Guid categoryId)
         {
             return await _context.Categories
                 .AsNoTracking()
@@ -86,7 +86,7 @@ namespace FashionShop.API.Repositories.Implements
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByParentIdAsync(Guid parentId)
+        public async Task<IEnumerable<CategoryResponse>> GetCategoriesByParentIdAsync(Guid parentId)
         {
             return await _context.Categories
                 .AsNoTracking()

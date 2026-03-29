@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.Contracts.Size;
+using FashionShop.Core.Contracts.Size.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Paging;
@@ -14,8 +14,8 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
-        private static readonly Expression<Func<Size, SizeDTO>> _sizeSelector =
-            x => new SizeDTO
+        private static readonly Expression<Func<Size, SizeResponse>> _sizeSelector =
+            x => new SizeResponse
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -35,7 +35,7 @@ namespace FashionShop.API.Repositories.Implements
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<SizeDTO>> GetAllSizesAsync()
+        public async Task<IEnumerable<SizeResponse>> GetAllSizesAsync()
         {
             return await _context.Sizes
                 .AsNoTracking()
@@ -43,7 +43,7 @@ namespace FashionShop.API.Repositories.Implements
                 .Select(_sizeSelector)
                 .ToListAsync();
         }
-        public async Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request)
+        public async Task<PagedResult<SizeResponse>> GetPagedSizesAsync(SizeListRequest request)
         {
             var query = _context.Sizes.AsNoTracking().AsQueryable();
 
@@ -59,7 +59,7 @@ namespace FashionShop.API.Repositories.Implements
                                   .Select(_sizeSelector)
                                   .ToListAsync();
 
-            return new PagedResult<SizeDTO>()
+            return new PagedResult<SizeResponse>()
             {
                 Items = data,
                 TotalRecord = totalRecord,
@@ -68,7 +68,7 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<SizeDTO?> GetSizeByIdAsync(int sizeId)
+        public async Task<SizeResponse?> GetSizeByIdAsync(int sizeId)
         {
             return await _context.Sizes
                 .AsNoTracking()

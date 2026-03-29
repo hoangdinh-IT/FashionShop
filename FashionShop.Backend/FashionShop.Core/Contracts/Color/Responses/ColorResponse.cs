@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Color
+namespace FashionShop.Core.Contracts.Color.Responses
 {
-    public class ColorDTO
+    public class ColorResponse
     {
         public int Id { get; set; }
         public string Name { get; set; }

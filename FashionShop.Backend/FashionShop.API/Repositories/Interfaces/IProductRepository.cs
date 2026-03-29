@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.Contracts.Color;
+﻿using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Contracts.Product.Responses;
 using FashionShop.Core.Contracts.ProductImage.Responses;
 using FashionShop.Core.Contracts.ProductVariant.Responses;
@@ -21,7 +21,7 @@ namespace FashionShop.API.Repositories.Interfaces
         Task<ProductResponse?> GetProductByIdAsync(Guid productId);
         Task<Product?> FindProductByIdAsync(Guid productId);
         Task<ProductDetailResponse?> GetProductDetailByIdAsync(Guid productId);
-        Task<List<ColorDTO>> GetColorsByProductIdAsync(Guid productId);
+        Task<List<ColorResponse>> GetColorsByProductIdAsync(Guid productId);
 
         // --- VALIDATION METHODS --- //
         Task<bool> CheckExistSlugAsync(string slug);

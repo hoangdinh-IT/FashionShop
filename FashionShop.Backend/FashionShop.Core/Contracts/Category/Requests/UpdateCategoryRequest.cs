@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Category
+namespace FashionShop.Core.Contracts.Category.Requests
 {
-    public class UpdateCategoryDTO
+    public class UpdateCategoryRequest
     {
         [Required]
         [MaxLength(100, ErrorMessage = "Tên danh mục không được vượt quá 100 ký tự!")]

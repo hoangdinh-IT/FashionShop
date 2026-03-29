@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Contracts.Product.Requests;
 using FashionShop.Core.Contracts.Product.Responses;
 using FashionShop.Core.Contracts.ProductImage.Requests;
@@ -54,7 +54,7 @@ namespace FashionShop.API.Services.Implements
             return productDetail;
         }
 
-        public async Task<List<ColorDTO>> GetColorsByProductIdAsync(Guid productId)
+        public async Task<List<ColorResponse>> GetColorsByProductIdAsync(Guid productId)
         {
             var product = await _productRepository.GetProductByIdAsync(productId);
 

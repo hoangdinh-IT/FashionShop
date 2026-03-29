@@ -1,16 +1,16 @@
 ﻿using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
 using FashionShop.Core.Models.Sizes;
-using FashionShop.Core.Contracts.Size;
+using FashionShop.Core.Contracts.Size.Responses;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
     public interface ISizeRepository
     {
         // --- READ METHODS --- //
-        Task<IEnumerable<SizeDTO>> GetAllSizesAsync();
-        Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request);
-        Task<SizeDTO?> GetSizeByIdAsync(int sizeId);
+        Task<IEnumerable<SizeResponse>> GetAllSizesAsync();
+        Task<PagedResult<SizeResponse>> GetPagedSizesAsync(SizeListRequest request);
+        Task<SizeResponse?> GetSizeByIdAsync(int sizeId);
         Task<Size?> FindSizeByIdAsync(int sizeId);
 
         // --- VALIDATION METHODS --- //

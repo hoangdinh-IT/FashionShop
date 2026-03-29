@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.User
+namespace FashionShop.Core.Contracts.User.Requests
 {
-    public class UpdateUserDTO
+    public class UpdateUserRequest
     {
 
         [Required(ErrorMessage = "Email is required")]

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Brand
+namespace FashionShop.Core.Contracts.Brand.Requests
 {
-    public class CreateBrandDTO
+    public class CreateBrandRequest
     {
         [Required]
         [MaxLength(100, ErrorMessage = "Tên thương hiệu không được vượt quá 100 ký tự!")]

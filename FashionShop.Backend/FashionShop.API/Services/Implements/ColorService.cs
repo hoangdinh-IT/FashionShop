@@ -2,7 +2,8 @@
 using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Color.Requests;
+using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Colors;
@@ -23,15 +24,15 @@ namespace FashionShop.API.Services.Implements
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<ColorDTO>> GetAllColorsAsync()
+        public async Task<IEnumerable<ColorResponse>> GetAllColorsAsync()
         {
             return await _colorRepository.GetAllColorsAsync();
         }
 
-        public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
+        public async Task<PagedResult<ColorResponse>> GetPagedColorsAsync(ColorListRequest request)
             => await _colorRepository.GetPagedColorsAsync(request);
 
-        public async Task<ColorDTO?> GetColorByIdAsync(int colorId)
+        public async Task<ColorResponse?> GetColorByIdAsync(int colorId)
         {
             var color = await _colorRepository.GetColorByIdAsync(colorId);
 
@@ -41,7 +42,7 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<ColorDTO?> CreateColorAsync(CreateColorDTO dto)
+        public async Task<ColorResponse?> CreateColorAsync(CreateColorRequest dto)
         {
             var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(dto.HexCode);
 
@@ -53,10 +54,10 @@ namespace FashionShop.API.Services.Implements
 
             var newColor = _mapper.Map<Color>(dto);
             var createdColor = await _colorRepository.CreateColorAsync(newColor);
-            return _mapper.Map<ColorDTO>(createdColor);
+            return _mapper.Map<ColorResponse>(createdColor);
         }
 
-        public async Task<ColorDTO?> UpdateColorAsync(int colorId, UpdateColorDTO dto)
+        public async Task<ColorResponse?> UpdateColorAsync(int colorId, UpdateColorRequest dto)
         {
             var existingColor = await _colorRepository.FindColorByIdAsync(colorId);
 

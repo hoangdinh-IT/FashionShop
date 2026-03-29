@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.Contracts.Color;
+﻿using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Colors;
 using FashionShop.Core.Models.Paging;
@@ -8,9 +8,9 @@ namespace FashionShop.API.Repositories.Interfaces
     public interface IColorRepository
     {
         // --- READ METHODS --- //
-        Task<IEnumerable<ColorDTO>> GetAllColorsAsync();
-        Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request);
-        Task<ColorDTO?> GetColorByIdAsync(int colorId);
+        Task<IEnumerable<ColorResponse>> GetAllColorsAsync();
+        Task<PagedResult<ColorResponse>> GetPagedColorsAsync(ColorListRequest request);
+        Task<ColorResponse?> GetColorByIdAsync(int colorId);
         Task<Color?> FindColorByIdAsync(int colorId);
 
         // --- VALIDATION METHODS --- //

@@ -2,7 +2,7 @@
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.Auth;
-using FashionShop.Core.Contracts.User;
+using FashionShop.Core.Contracts.User.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Enums;
 using FashionShop.Core.Exceptions;
@@ -27,7 +27,7 @@ namespace FashionShop.API.Services.Implements
             _configuration = configuration;
         }
 
-        public async Task<UserDTO?> CreateUserAsync(RegisterDTO dto)
+        public async Task<UserResponse?> CreateUserAsync(RegisterRequest dto)
         {
             if (await _userRepository.IsUserExistsAsync(dto.Email))
             {
@@ -46,10 +46,10 @@ namespace FashionShop.API.Services.Implements
                 throw new Exception("Đăng ký tài khoản thất bại!");
             }
 
-            return _mapper.Map<UserDTO>(createdUser);
+            return _mapper.Map<UserResponse>(createdUser);
         }
 
-        public async Task<UserDTO?> LoginUserAsync(LoginDTO dto)
+        public async Task<UserResponse?> LoginUserAsync(LoginRequest dto)
         {
             var user = await _userRepository.GetUserByEmailAsync(dto.Email);
 
@@ -58,7 +58,7 @@ namespace FashionShop.API.Services.Implements
                 throw new UnauthorizedAccessException("Thông tin đăng nhập không chính xác.");
             }
 
-            var userDTO = _mapper.Map<UserDTO>(user);
+            var userDTO = _mapper.Map<UserResponse>(user);
             userDTO.Token = GenerateJwtToken(user);
             return userDTO;
         }

@@ -1,15 +1,16 @@
-﻿using FashionShop.Core.Contracts.User;
+﻿using FashionShop.Core.Contracts.User.Requests;
+using FashionShop.Core.Contracts.User.Responses;
 
 namespace FashionShop.API.Services.Interfaces
 {
     public interface IUserService
     {
         // --- READ METHODS --- //
-        Task<IEnumerable<UserDTO>> GetUsersAsync();
-        Task<UserDTO> GetUserByEmailAsync(string email);
+        Task<IEnumerable<UserResponse>> GetUsersAsync();
+        Task<UserResponse> GetUserByEmailAsync(string email);
 
         // --- WRITE METHODS --- //
-        Task<UserDTO> UpdateUserAsync(Guid userId, UpdateUserDTO dto);
+        Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest dto);
         Task DeleteUserAsync(Guid userId);
     }
 }

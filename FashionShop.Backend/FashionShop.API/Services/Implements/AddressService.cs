@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Address;
+using FashionShop.Core.Contracts.Address.Requests;
+using FashionShop.Core.Contracts.Address.Responses;
 using FashionShop.Core.Entities;
 
 namespace FashionShop.API.Services.Implements
@@ -20,15 +21,15 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<AddressDTO>> GetAddressesByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<AddressResponse>> GetAddressesByUserIdAsync(Guid userId)
         {
             var addresses = await _addressRepository.GetAddressesByUserIdAsync(userId);
 
-            return _mapper.Map<IEnumerable<AddressDTO>>(addresses);
+            return _mapper.Map<IEnumerable<AddressResponse>>(addresses);
         }
 
         // --- WRITE METHODS --- //
-        public async Task<AddressDTO> CreateAddressAsync(CreateAddressDTO dto)
+        public async Task<AddressResponse> CreateAddressAsync(CreateAddressRequest dto)
         {
             if (await _userRepository.GetUserByIdAsync(dto.UserId) == null)
             {
@@ -51,11 +52,11 @@ namespace FashionShop.API.Services.Implements
 
             var createdAddress = await _addressRepository.CreateAddressAsync(newAddress);
             
-            return _mapper.Map<AddressDTO>(createdAddress);
+            return _mapper.Map<AddressResponse>(createdAddress);
         }
 
 
-        public async Task<AddressDTO?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressDTO dto)
+        public async Task<AddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressRequest dto)
         {
             var existingAddress = await _addressRepository.GetAddressByUserIdAsync(userId, addressId);
 
@@ -73,7 +74,7 @@ namespace FashionShop.API.Services.Implements
             _mapper.Map(dto, existingAddress);
             existingAddress.UpdatedDate = DateTime.UtcNow;
             var updatedAddress = await _addressRepository.UpdateAddressByUserIdAsync(existingAddress);
-            return _mapper.Map<AddressDTO>(updatedAddress);
+            return _mapper.Map<AddressResponse>(updatedAddress);
         }
 
         public async Task DeleteAddressAsync(Guid userId, Guid addressId)

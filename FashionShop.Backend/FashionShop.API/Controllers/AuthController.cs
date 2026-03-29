@@ -16,14 +16,14 @@ namespace FashionShop.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _authService.CreateUserAsync(request);
             return Created(result, "Đăng ký tài khoản thành công!");
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginUserAsync(request);
             return Success(result, "Đăng nhập thành công!");

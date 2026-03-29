@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Size
+namespace FashionShop.Core.Contracts.Size.Requests
 {
-    public class CreateSizeDTO
+    public class CreateSizeRequest
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Tên kích thước không được quá 50 kí tự!")]

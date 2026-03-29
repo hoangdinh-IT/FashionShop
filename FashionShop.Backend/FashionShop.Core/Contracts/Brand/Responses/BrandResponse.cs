@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Brand
+namespace FashionShop.Core.Contracts.Brand.Responses
 {
-    public class BrandDTO
+    public class BrandResponse
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Category;
+using FashionShop.Core.Contracts.Category.Requests;
 using FashionShop.Core.Models.Categories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryDTO request)
+        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategoryAsync(request);
             return Created(result, "Thêm danh mục thành công!");
@@ -68,7 +68,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPut("{categoryId}")]
-        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromForm] UpdateCategoryDTO request)
+        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromForm] UpdateCategoryRequest request)
         {
             if (categoryId == Guid.Empty)
             {

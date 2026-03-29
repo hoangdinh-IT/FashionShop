@@ -1,11 +1,11 @@
 ﻿using FashionShop.Core.Contracts.Auth;
-using FashionShop.Core.Contracts.User;
+using FashionShop.Core.Contracts.User.Responses;
 
 namespace FashionShop.API.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<UserDTO?> CreateUserAsync(RegisterDTO dto);
-        Task<UserDTO?> LoginUserAsync(LoginDTO dto);
+        Task<UserResponse?> CreateUserAsync(RegisterRequest dto);
+        Task<UserResponse?> LoginUserAsync(LoginRequest dto);
     }
 }

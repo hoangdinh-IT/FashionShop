@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.User;
+using FashionShop.Core.Contracts.User.Requests;
+using FashionShop.Core.Contracts.User.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 
@@ -19,23 +20,23 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<UserDTO>> GetUsersAsync()
+        public async Task<IEnumerable<UserResponse>> GetUsersAsync()
         {
             var users = await _userRepository.GetUsersAsync();
-            return _mapper.Map<IEnumerable<UserDTO>>(users);
+            return _mapper.Map<IEnumerable<UserResponse>>(users);
         }
 
-        public async Task<UserDTO> GetUserByEmailAsync(string email)
+        public async Task<UserResponse> GetUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
 
             if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            return _mapper.Map<UserDTO>(user);
+            return _mapper.Map<UserResponse>(user);
         }
 
         // --- WRITE METHODS --- //
-        public async Task<UserDTO> UpdateUserAsync(Guid userId, UpdateUserDTO dto)
+        public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest dto)
         {
             var existingUser = await _userRepository.GetUserByIdAsync(userId);
 
@@ -49,7 +50,7 @@ namespace FashionShop.API.Services.Implements
             _mapper.Map(dto, existingUser);
             existingUser.UpdatedDate = DateTime.UtcNow;
             var updatedUser = await _userRepository.UpdateUserAsync(existingUser);
-            return _mapper.Map<UserDTO>(existingUser);
+            return _mapper.Map<UserResponse>(existingUser);
         }
 
         public async Task DeleteUserAsync(Guid userId)

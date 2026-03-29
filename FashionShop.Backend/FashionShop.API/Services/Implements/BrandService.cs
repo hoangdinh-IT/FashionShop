@@ -2,7 +2,8 @@
 using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Brand;
+using FashionShop.Core.Contracts.Brand.Requests;
+using FashionShop.Core.Contracts.Brand.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Brands;
@@ -24,16 +25,16 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<BrandDTO>> GetAllBrandsAsync()
+        public async Task<IEnumerable<BrandResponse>> GetAllBrandsAsync()
         {
             var brands = await _brandRepository.GetAllBrandsAsync();
-            return _mapper.Map<IEnumerable<BrandDTO>>(brands);
+            return _mapper.Map<IEnumerable<BrandResponse>>(brands);
         }
 
-        public async Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request)
+        public async Task<PagedResult<BrandResponse>> GetPagedBrandsAsync(BrandListRequest request)
             => await _brandRepository.GetPagedBrandsAsync(request);
 
-        public async Task<BrandDTO?> GetBrandByIdAsync(Guid brandId)
+        public async Task<BrandResponse?> GetBrandByIdAsync(Guid brandId)
         {
             var brand = await _brandRepository.GetBrandByIdAsync(brandId);
 
@@ -43,7 +44,7 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<BrandDTO?> CreateBrandAsync(CreateBrandDTO dto)
+        public async Task<BrandResponse?> CreateBrandAsync(CreateBrandRequest dto)
         {
             var isExistSlug = await _brandRepository.CheckExistSlugAsync(dto.Slug);
 
@@ -62,10 +63,10 @@ namespace FashionShop.API.Services.Implements
             }
 
             var createdBrand = await _brandRepository.CreateBrandAsync(newBrand);
-            return _mapper.Map<BrandDTO>(createdBrand);
+            return _mapper.Map<BrandResponse>(createdBrand);
         }
 
-        public async Task<BrandDTO?> UpdateBrandAsync(Guid brandId, UpdateBrandDTO dto)
+        public async Task<BrandResponse?> UpdateBrandAsync(Guid brandId, UpdateBrandRequest dto)
         {
             var existingBrand = await _brandRepository.FindBrandByIdAsync(brandId);
 

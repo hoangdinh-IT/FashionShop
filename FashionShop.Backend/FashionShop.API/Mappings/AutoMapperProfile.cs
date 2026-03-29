@@ -1,17 +1,23 @@
 ﻿using AutoMapper;
-using FashionShop.Core.Contracts.Address;
+using FashionShop.Core.Contracts.Address.Requests;
+using FashionShop.Core.Contracts.Address.Responses;
 using FashionShop.Core.Contracts.Auth;
-using FashionShop.Core.Contracts.Brand;
-using FashionShop.Core.Contracts.Category;
-using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Brand.Requests;
+using FashionShop.Core.Contracts.Brand.Responses;
+using FashionShop.Core.Contracts.Category.Requests;
+using FashionShop.Core.Contracts.Category.Responses;
+using FashionShop.Core.Contracts.Color.Requests;
+using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Contracts.Product.Requests;
 using FashionShop.Core.Contracts.Product.Responses;
 using FashionShop.Core.Contracts.ProductImage.Requests;
 using FashionShop.Core.Contracts.ProductImage.Responses;
 using FashionShop.Core.Contracts.ProductVariant.Requests;
 using FashionShop.Core.Contracts.ProductVariant.Responses;
-using FashionShop.Core.Contracts.Size;
-using FashionShop.Core.Contracts.User;
+using FashionShop.Core.Contracts.Size.Requests;
+using FashionShop.Core.Contracts.Size.Responses;
+using FashionShop.Core.Contracts.User.Requests;
+using FashionShop.Core.Contracts.User.Responses;
 using FashionShop.Core.Entities;
 
 namespace FashionShop.API.Mappings
@@ -21,49 +27,49 @@ namespace FashionShop.API.Mappings
         public AutoMapperProfile()
         {
             // User
-            CreateMap<RegisterDTO, User>()
+            CreateMap<RegisterRequest, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
-            CreateMap<UpdateUserDTO, User>();
+            CreateMap<UpdateUserRequest, User>();
 
-            CreateMap<User, UserDTO>()
+            CreateMap<User, UserResponse>()
                 .ReverseMap();
 
             // Address
-            CreateMap<CreateAddressDTO, Address>();
+            CreateMap<CreateAddressRequest, Address>();
 
-            CreateMap<UpdateAddressDTO, Address>();
+            CreateMap<UpdateAddressRequest, Address>();
 
-            CreateMap<Address, AddressDTO>();
+            CreateMap<Address, AddressResponse>();
 
             // Category
-            CreateMap<CreateCategoryDTO, Category>();
+            CreateMap<CreateCategoryRequest, Category>();
 
-            CreateMap<UpdateCategoryDTO, Category>();
+            CreateMap<UpdateCategoryRequest, Category>();
 
-            CreateMap<Category, CategoryDTO>();
+            CreateMap<Category, CategoryResponse>();
 
             // Brand
-            CreateMap<CreateBrandDTO, Brand>();
+            CreateMap<CreateBrandRequest, Brand>();
 
-            CreateMap<UpdateBrandDTO, Brand>();
+            CreateMap<UpdateBrandRequest, Brand>();
 
-            CreateMap<Brand, BrandDTO>();
+            CreateMap<Brand, BrandResponse>();
 
             // Color
-            CreateMap<CreateColorDTO, Color>();
+            CreateMap<CreateColorRequest, Color>();
 
-            CreateMap<UpdateColorDTO, Color>();
+            CreateMap<UpdateColorRequest, Color>();
 
-            CreateMap<Color, ColorDTO>();
+            CreateMap<Color, ColorResponse>();
 
             // Size
-            CreateMap<CreateSizeDTO, Size>();
+            CreateMap<CreateSizeRequest, Size>();
 
-            CreateMap<UpdateSizeDTO, Size>();
+            CreateMap<UpdateSizeRequest, Size>();
 
-            CreateMap<Size, SizeDTO>();
+            CreateMap<Size, SizeResponse>();
 
             // Product
             CreateMap<CreateProductRequest, Product>();

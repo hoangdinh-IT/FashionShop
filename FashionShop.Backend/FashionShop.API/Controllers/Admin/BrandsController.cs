@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Brand;
+using FashionShop.Core.Contracts.Brand.Requests;
 using FashionShop.Core.Models.Brands;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +15,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBrand([FromForm] CreateBrandDTO request)
+        public async Task<IActionResult> CreateBrand([FromForm] CreateBrandRequest request)
         {
             var result = await _brandService.CreateBrandAsync(request);
             return Created(result, "Thêm thương hiệu thành công!");
@@ -45,7 +45,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPut("{brandId}")]
-        public async Task<IActionResult> UpdateBrand(Guid brandId, [FromForm] UpdateBrandDTO request)
+        public async Task<IActionResult> UpdateBrand(Guid brandId, [FromForm] UpdateBrandRequest request)
         {
             if (brandId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 

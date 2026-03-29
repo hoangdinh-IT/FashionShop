@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.Contracts.Color;
+﻿using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Contracts.Product.Requests;
 using FashionShop.Core.Contracts.Product.Responses;
 using FashionShop.Core.Contracts.ProductImage.Requests;
@@ -19,7 +19,7 @@ namespace FashionShop.API.Services.Interfaces
         Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request);
         Task<ProductResponse?> GetProductByIdAsync(Guid productId);
         Task<ProductDetailResponse?> GetProductDetailByIdAsync(Guid productId);
-        Task<List<ColorDTO>> GetColorsByProductIdAsync(Guid productId);
+        Task<List<ColorResponse>> GetColorsByProductIdAsync(Guid productId);
 
         // --- WRITE METHODS --- //
         Task<ProductResponse?> CreateProductAsync(CreateProductRequest dto);

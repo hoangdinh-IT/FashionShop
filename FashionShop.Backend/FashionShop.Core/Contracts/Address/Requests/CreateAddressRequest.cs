@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Address
+namespace FashionShop.Core.Contracts.Address.Requests
 {
-    public class CreateAddressDTO
+    public class CreateAddressRequest
     {
         [Required]
         public Guid UserId { get; set; }

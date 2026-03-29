@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Implements;
-using FashionShop.Core.Contracts.Address;
+using FashionShop.Core.Contracts.Address.Responses;
 using FashionShop.Core.Entities;
 using Moq;
 
@@ -39,8 +39,8 @@ namespace FashionShop.Tests.Services
             _mockAddressRepo.Setup(x => x.GetAddressesByUserIdAsync(userId))
                             .ReturnsAsync(new List<Address>());
 
-            _mockMapper.Setup(m => m.Map<IEnumerable<AddressDTO>>(It.IsAny<List<Address>>()))
-                       .Returns(new List<AddressDTO>());
+            _mockMapper.Setup(m => m.Map<IEnumerable<AddressResponse>>(It.IsAny<List<Address>>()))
+                       .Returns(new List<AddressResponse>());
 
             // ACT
             var result = await _addressService.GetAddressesByUserIdAsync(userId);
@@ -71,12 +71,12 @@ namespace FashionShop.Tests.Services
                             .ReturnsAsync(fakeAddresses);
 
             // Giả lập 3: Mapper mapping từ Entity sang DTO
-            var fakeDtos = new List<AddressDTO>
+            var fakeDtos = new List<AddressResponse>
             {
-                new AddressDTO { Street = "Street 1" },
-                new AddressDTO { Street = "Street 2" }
+                new AddressResponse { Street = "Street 1" },
+                new AddressResponse { Street = "Street 2" }
             };
-            _mockMapper.Setup(m => m.Map<IEnumerable<AddressDTO>>(fakeAddresses))
+            _mockMapper.Setup(m => m.Map<IEnumerable<AddressResponse>>(fakeAddresses))
                        .Returns(fakeDtos);
 
             // ACT (Hành động)

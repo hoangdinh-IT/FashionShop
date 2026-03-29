@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Color.Requests;
 using FashionShop.Core.Models.Colors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateColor(CreateColorDTO request)
+        public async Task<IActionResult> CreateColor(CreateColorRequest request)
         {
             var result = await _colorService.CreateColorAsync(request);
             return Created(result, "Thêm màu sắc thành công!");
@@ -46,7 +46,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPut("{colorId}")]
-        public async Task<IActionResult> UpdateColor(int colorId, UpdateColorDTO request)
+        public async Task<IActionResult> UpdateColor(int colorId, UpdateColorRequest request)
         {
             if (string.IsNullOrWhiteSpace(Convert.ToString(colorId))) throw new ArgumentNullException(nameof(colorId));
 

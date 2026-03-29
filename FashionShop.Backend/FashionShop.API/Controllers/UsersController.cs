@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Extensions;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.User;
+using FashionShop.Core.Contracts.User.Requests;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +36,7 @@ namespace FashionShop.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(UpdateUserDTO request)
+        public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
         {
             Guid userId = User.GetUserId();
 

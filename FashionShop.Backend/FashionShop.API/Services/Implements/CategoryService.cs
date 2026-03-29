@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Category;
+using FashionShop.Core.Contracts.Category.Requests;
+using FashionShop.Core.Contracts.Category.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Categories;
@@ -23,19 +24,19 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync()
+        public async Task<IEnumerable<CategoryResponse>> GetAllCategoriesAsync()
             => await _categoryRepository.GetAllCategoriesAsync();
 
-        public async Task<PagedResult<CategoryDTO>> GetPagedCategoriesAsync(CategoryListRequest request)
+        public async Task<PagedResult<CategoryResponse>> GetPagedCategoriesAsync(CategoryListRequest request)
             => await _categoryRepository.GetPagedCategoriesAsync(request);
 
-        public async Task<IEnumerable<CategoryDTO>> GetLeafCategoriesAsync()
+        public async Task<IEnumerable<CategoryResponse>> GetLeafCategoriesAsync()
         {
             var leafCategories = await _categoryRepository.GetLeafCategoriesAsync();
-            return _mapper.Map<IEnumerable<CategoryDTO>>(leafCategories);
+            return _mapper.Map<IEnumerable<CategoryResponse>>(leafCategories);
         }
 
-        public async Task<CategoryDTO> GetCategoryByIdAsync(Guid categoryId)
+        public async Task<CategoryResponse> GetCategoryByIdAsync(Guid categoryId)
         {
             var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
 
@@ -44,7 +45,7 @@ namespace FashionShop.API.Services.Implements
             return category;
         }
 
-        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByParentIdAsync(Guid parentId)
+        public async Task<IEnumerable<CategoryResponse>> GetCategoriesByParentIdAsync(Guid parentId)
         {
             var parentCategory = await _categoryRepository.GetCategoryByIdAsync(parentId);
 
@@ -54,7 +55,7 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<CategoryDTO?> CreateCategoryAsync(CreateCategoryDTO dto)
+        public async Task<CategoryResponse?> CreateCategoryAsync(CreateCategoryRequest dto)
         {
             if (dto.ParentId.HasValue && dto.ParentId != Guid.Empty)
             {
@@ -80,10 +81,10 @@ namespace FashionShop.API.Services.Implements
             }
 
             var createdCategory = await _categoryRepository.CreateCategoryAsync(newCategory);
-            return _mapper.Map<CategoryDTO>(newCategory);
+            return _mapper.Map<CategoryResponse>(newCategory);
         }
 
-        public async Task<CategoryDTO?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDTO dto)
+        public async Task<CategoryResponse?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryRequest dto)
         {
             var existingCategory = await _categoryRepository.FindCategoryByIdAsync(categoryId);
 

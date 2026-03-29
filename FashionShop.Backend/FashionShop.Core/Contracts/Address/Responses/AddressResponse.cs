@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Address
+namespace FashionShop.Core.Contracts.Address.Responses
 {
-    public class AddressDTO
+    public class AddressResponse
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }

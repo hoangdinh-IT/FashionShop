@@ -1,4 +1,4 @@
-﻿using FashionShop.Core.Contracts.Brand;
+﻿using FashionShop.Core.Contracts.Brand.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Brands;
 using FashionShop.Core.Models.Paging;
@@ -10,8 +10,8 @@ namespace FashionShop.API.Repositories.Interfaces
         // --- READ METHODS --- //
         Task<bool> CheckExistSlugAsync(string slug);
         Task<IEnumerable<Brand>> GetAllBrandsAsync();
-        Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request);
-        Task<BrandDTO?> GetBrandByIdAsync(Guid brandId);
+        Task<PagedResult<BrandResponse>> GetPagedBrandsAsync(BrandListRequest request);
+        Task<BrandResponse?> GetBrandByIdAsync(Guid brandId);
         Task<Brand?> FindBrandByIdAsync(Guid brandId);
 
         // --- VALIDATION METHODS --- //

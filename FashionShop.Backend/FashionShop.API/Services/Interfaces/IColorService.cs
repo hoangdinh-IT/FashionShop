@@ -1,4 +1,5 @@
-﻿using FashionShop.Core.Contracts.Color;
+﻿using FashionShop.Core.Contracts.Color.Requests;
+using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Models.Colors;
 using FashionShop.Core.Models.Paging;
 
@@ -7,13 +8,13 @@ namespace FashionShop.API.Services.Interfaces
     public interface IColorService
     {
         // --- READ METHODS --- //
-        Task<IEnumerable<ColorDTO>> GetAllColorsAsync();
-        Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request);
-        Task<ColorDTO?> GetColorByIdAsync(int colorId);
+        Task<IEnumerable<ColorResponse>> GetAllColorsAsync();
+        Task<PagedResult<ColorResponse>> GetPagedColorsAsync(ColorListRequest request);
+        Task<ColorResponse?> GetColorByIdAsync(int colorId);
 
         // --- WRITE METHODS --- //
-        Task<ColorDTO?> CreateColorAsync(CreateColorDTO dto);
-        Task<ColorDTO?> UpdateColorAsync(int colorId, UpdateColorDTO dto);
+        Task<ColorResponse?> CreateColorAsync(CreateColorRequest dto);
+        Task<ColorResponse?> UpdateColorAsync(int colorId, UpdateColorRequest dto);
         Task DeleteColorAsync(int colorId);
     }
 }

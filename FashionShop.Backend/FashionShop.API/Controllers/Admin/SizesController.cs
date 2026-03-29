@@ -1,8 +1,7 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Implements;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Size;
-using FashionShop.Core.DTOs.Color;
+using FashionShop.Core.Contracts.Size.Requests;
 using FashionShop.Core.Models.Sizes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSize(CreateSizeDTO request)
+        public async Task<IActionResult> CreateSize(CreateSizeRequest request)
         {
             var result = await _sizeService.CreateSizeAsync(request);
             return Created(result, "Thêm kích thước thành công!");
@@ -48,7 +47,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPut("{sizeId}")]
-        public async Task<IActionResult> UpdateSize(int sizeId, UpdateSizeDTO request)
+        public async Task<IActionResult> UpdateSize(int sizeId, UpdateSizeRequest request)
         {
             if (string.IsNullOrWhiteSpace(Convert.ToString(sizeId))) throw new ArgumentNullException(nameof(sizeId));
 

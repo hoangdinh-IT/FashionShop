@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Colors;
@@ -14,8 +14,8 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
-        private static readonly Expression<Func<Color, ColorDTO>> _colorSelector =
-            x => new ColorDTO
+        private static readonly Expression<Func<Color, ColorResponse>> _colorSelector =
+            x => new ColorResponse
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -35,7 +35,7 @@ namespace FashionShop.API.Repositories.Implements
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<ColorDTO>> GetAllColorsAsync()
+        public async Task<IEnumerable<ColorResponse>> GetAllColorsAsync()
         {
             return await _context.Colors
                 .AsNoTracking()
@@ -43,7 +43,7 @@ namespace FashionShop.API.Repositories.Implements
                 .Select(_colorSelector)
                 .ToListAsync();
         }
-        public async Task<PagedResult<ColorDTO>> GetPagedColorsAsync(ColorListRequest request)
+        public async Task<PagedResult<ColorResponse>> GetPagedColorsAsync(ColorListRequest request)
         {
             var query = _context.Colors.AsNoTracking().AsQueryable();
 
@@ -58,7 +58,7 @@ namespace FashionShop.API.Repositories.Implements
                                   .Select(_colorSelector)
                                   .ToListAsync();
 
-            return new PagedResult<ColorDTO>
+            return new PagedResult<ColorResponse>
             {
                 Items = data,
                 TotalRecord = totalRecord,
@@ -67,7 +67,7 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<ColorDTO?> GetColorByIdAsync(int colorId)
+        public async Task<ColorResponse?> GetColorByIdAsync(int colorId)
         {
             return await _context.Colors
                 .AsNoTracking()

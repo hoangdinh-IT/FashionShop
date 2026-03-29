@@ -7,21 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Category
+namespace FashionShop.Core.Contracts.Brand.Requests
 {
-    public class CreateCategoryDTO
+    public class UpdateBrandRequest
     {
         [Required]
-        [MaxLength(100, ErrorMessage = "Tên danh mục không được vượt quá 100 ký tự!")]
+        [MaxLength(100, ErrorMessage = "Tên thương hiệu không được vượt quá 100 ký tự!")]
         public string Name { get; set; }
 
         [MaxLength(500, ErrorMessage = "Mô tả không được vượt quá 500 ký tự!")]
         public string? Description { get; set; }
 
         [Required]
-        [MaxLength(100, ErrorMessage = "Slug danh mục không được vượt quá 100 ký tự!")]
+        [MaxLength(200, ErrorMessage = "Slug thương hiệu không được vượt quá 100 ký tự!")]
         public string Slug { get; set; }
-        public Guid? ParentId { get; set; }
-        public IFormFile? Image { get; set; }
+        public IFormFile? Logo { get; set; }
+        public bool IsActive { get; set; }
     }
 }

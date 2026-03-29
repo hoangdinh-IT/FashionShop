@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Extensions;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Address;
+using FashionShop.Core.Contracts.Address.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers
@@ -15,7 +15,7 @@ namespace FashionShop.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAddress(CreateAddressDTO request)
+        public async Task<IActionResult> CreateAddress(CreateAddressRequest request)
         {
             request.UserId = User.GetUserId();
             var result = await _addressService.CreateAddressAsync(request);
@@ -37,7 +37,7 @@ namespace FashionShop.API.Controllers
         }
 
         [HttpPut("{addressId}")]
-        public async Task<IActionResult> UpdateAddressByUserId(Guid addressId, UpdateAddressDTO request)
+        public async Task<IActionResult> UpdateAddressByUserId(Guid addressId, UpdateAddressRequest request)
         {
             Guid userId = User.GetUserId();
 

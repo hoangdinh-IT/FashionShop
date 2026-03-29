@@ -2,8 +2,8 @@
 using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Size;
-using FashionShop.Core.DTOs.Color;
+using FashionShop.Core.Contracts.Size.Requests;
+using FashionShop.Core.Contracts.Size.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models.Paging;
@@ -23,15 +23,15 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- READ METHODS --- //
-        public async Task<IEnumerable<SizeDTO>> GetAllSizesAsync()
+        public async Task<IEnumerable<SizeResponse>> GetAllSizesAsync()
         {
             return await _sizeRepository.GetAllSizesAsync();
         }
 
-        public async Task<PagedResult<SizeDTO>> GetPagedSizesAsync(SizeListRequest request)
+        public async Task<PagedResult<SizeResponse>> GetPagedSizesAsync(SizeListRequest request)
             => await _sizeRepository.GetPagedSizesAsync(request);
 
-        public async Task<SizeDTO?> GetSizeByIdAsync(int sizeId)
+        public async Task<SizeResponse?> GetSizeByIdAsync(int sizeId)
         {
             var size = await _sizeRepository.GetSizeByIdAsync(sizeId);
 
@@ -41,14 +41,14 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<SizeDTO?> CreateSizeAsync(CreateSizeDTO dto)
+        public async Task<SizeResponse?> CreateSizeAsync(CreateSizeRequest dto)
         {
             var newSize = _mapper.Map<Size>(dto);
             var createdSize = await _sizeRepository.CreateSizeAsync(newSize);
-            return _mapper.Map<SizeDTO>(newSize);
+            return _mapper.Map<SizeResponse>(newSize);
         }
 
-        public async Task<SizeDTO?> UpdateSizeAsync(int sizeId, UpdateSizeDTO dto)
+        public async Task<SizeResponse?> UpdateSizeAsync(int sizeId, UpdateSizeRequest dto)
         {
             var existingSize = await _sizeRepository.FindSizeByIdAsync(sizeId);
 

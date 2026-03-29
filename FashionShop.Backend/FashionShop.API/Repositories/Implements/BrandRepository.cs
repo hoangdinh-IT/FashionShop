@@ -1,13 +1,12 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.DTOs.Category.Category;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
 using Microsoft.EntityFrameworkCore;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Brands;
 using System.Linq.Expressions;
-using FashionShop.Core.Contracts.Brand;
+using FashionShop.Core.Contracts.Brand.Responses;
 
 namespace FashionShop.API.Repositories.Implements
 {
@@ -15,8 +14,8 @@ namespace FashionShop.API.Repositories.Implements
     {
         private readonly FashionDbContext _context;
 
-        private static readonly Expression<Func<Brand, BrandDTO>> _brandSelector =
-            x => new BrandDTO
+        private static readonly Expression<Func<Brand, BrandResponse>> _brandSelector =
+            x => new BrandResponse
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -47,7 +46,7 @@ namespace FashionShop.API.Repositories.Implements
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<BrandDTO>> GetPagedBrandsAsync(BrandListRequest request)
+        public async Task<PagedResult<BrandResponse>> GetPagedBrandsAsync(BrandListRequest request)
         {
             var query = _context.Brands.AsNoTracking().AsQueryable();
 
@@ -62,7 +61,7 @@ namespace FashionShop.API.Repositories.Implements
                                   .Select(_brandSelector)
                                   .ToListAsync();
 
-            return new PagedResult<BrandDTO>()
+            return new PagedResult<BrandResponse>()
             {
                 Items = data,
                 TotalRecord = totalRecord,
@@ -71,7 +70,7 @@ namespace FashionShop.API.Repositories.Implements
             };
         }
 
-        public async Task<BrandDTO?> GetBrandByIdAsync(Guid brandId)
+        public async Task<BrandResponse?> GetBrandByIdAsync(Guid brandId)
         {
             return await _context.Brands
                 .AsNoTracking()

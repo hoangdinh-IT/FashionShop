@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Contracts.Address
+namespace FashionShop.Core.Contracts.Address.Requests
 {
-    public class UpdateAddressDTO
+    public class UpdateAddressRequest
     {
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ cụ thể")]
         [MaxLength(200)]

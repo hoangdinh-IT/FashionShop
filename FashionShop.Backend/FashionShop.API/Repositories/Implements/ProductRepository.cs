@@ -1,6 +1,6 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.Core.Contracts.Color;
+using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Contracts.Product.Responses;
 using FashionShop.Core.Contracts.ProductImage.Responses;
 using FashionShop.Core.Contracts.ProductVariant.Responses;
@@ -172,13 +172,13 @@ namespace FashionShop.API.Repositories.Implements
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<ColorDTO>> GetColorsByProductIdAsync(Guid productId)
+        public async Task<List<ColorResponse>> GetColorsByProductIdAsync(Guid productId)
         {
             return await _context.ProductVariants
                 .Where(pv => pv.ProductId == productId)
                 .Select(pv => pv.Color)
                 .Distinct()
-                .Select(c => new ColorDTO
+                .Select(c => new ColorResponse
                 {
                     Id = c.Id,
                     Name = c.Name,
