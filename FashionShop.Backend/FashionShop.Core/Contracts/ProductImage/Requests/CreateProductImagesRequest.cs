@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.ProductImage.Requests
 {
-    public class CreateProductImageRequest
+    public class CreateProductImagesRequest
     {
-        [Required]
-        public Guid ProductId { get; set; }
         public int? ColorId { get; set; }
 
         [Required]
+        [MinLength(1, ErrorMessage = "Sản phẩm phải có ít nhất 1 hình ảnh!")]
         public List<IFormFile> Images { get; set; }
     }
 }

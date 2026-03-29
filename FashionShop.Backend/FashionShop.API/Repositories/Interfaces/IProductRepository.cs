@@ -13,6 +13,7 @@ namespace FashionShop.API.Repositories.Interfaces
     public interface IProductRepository
     {
         Task<IDbContextTransaction> BeginTransactionAsync();
+        Task<int> SaveChangesAsync();
 
         #region 1. PRODUCTS
 
@@ -57,7 +58,9 @@ namespace FashionShop.API.Repositories.Interfaces
         Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId);
         Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId);
         Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId);
+        Task<List<ProductImage>> GetProductImagesForUpdateAsync(Guid productId, int? colorId);
         Task<int> GetMaxSortOrder(Guid productId, int? colorId);
+        Task<IEnumerable<ProductImage>> GetImagesByProductIdAndColorIdAsync(Guid productId, int? colorId);
 
         // --- VALIDATION METHODS --- //
         Task<bool> CheckExistProductVariant(Guid productId, int colorId);

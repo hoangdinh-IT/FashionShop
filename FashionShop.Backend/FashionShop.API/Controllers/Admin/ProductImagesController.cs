@@ -17,9 +17,9 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductImage(Guid productId, [FromForm] CreateProductImageRequest request)
+        public async Task<IActionResult> CreateProductImage(Guid productId, [FromForm] CreateProductImagesRequest request)
         {
-            var result = await _productService.CreateProductImageAsync(request);
+            var result = await _productService.CreateProductImageAsync(productId, request);
             return Created(result, "Thêm hình ảnh sản phẩm thành công!");
         }
 
@@ -30,24 +30,24 @@ namespace FashionShop.API.Controllers.Admin
             return Success(result, "Lấy danh sách hình ảnh sản phẩm thành công!");
         }
 
-        //[HttpGet("{productImageId}")]
-        //public async Task<IActionResult> GetProductImageById([FromRoute] Guid productImageId)
-        //{
-        //    var result = await _productService.GetProductImageByIdAsync(productImageId);
-        //    return Success(result, "Lấy hình ảnh sản phẩm thành công!");
-        //}
-
         [HttpPut("{productImageId}")]
-        public async Task<IActionResult> UpdateProductImage(Guid productId, [FromRoute] Guid productImageId, [FromBody] UpdateProductImageRequest request)
+        public async Task<IActionResult> UpdateProductImage(Guid productId, Guid productImageId, [FromBody] UpdateProductImageRequest request)
         {
             var result = await _productService.UpdateProductImageAsync(productImageId, request);
             return Success(result, "Cập nhật hình ảnh sản phẩm thành công!");
         }
 
-        [HttpDelete("{productImageId}")]
-        public async Task<IActionResult> DeleteProductImage(Guid productId, [FromRoute] Guid productImageId)
+        [HttpPut("sortOrder")]
+        public async Task<IActionResult> UpdateSortOrder(Guid productId, [FromBody] UpdateSortOrderRequest request)
         {
-            await _productService.DeleteProductImageAsync(productImageId);
+            var result = await _productService.UpdateSortOrderAsync(productId, request);
+            return Success(result, "Cập nhật thứ tự hình ảnh thành công!");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteProductImage(Guid productId, [FromBody] DeleteProductImagesRequest request)
+        {
+            await _productService.DeleteProductImageAsync(productId, request);
             return Success<object?>(null, "Xoá hình ảnh sản phẩm thành công!");
         }
     }

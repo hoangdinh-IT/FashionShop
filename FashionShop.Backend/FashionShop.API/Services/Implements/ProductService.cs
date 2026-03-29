@@ -343,18 +343,18 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<List<ProductImageResponse>> CreateProductImageAsync(CreateProductImageRequest dto)
+        public async Task<List<ProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest dto)
         {
             if (dto.ColorId.HasValue)
             {
-                var isExistProductVariant = await _productRepository.CheckExistProductVariant(dto.ProductId, dto.ColorId.Value);
+                var isExistProductVariant = await _productRepository.CheckExistProductVariant(productId, dto.ColorId.Value);
 
                 if (!isExistProductVariant) throw new Exception("Lỗi: Bạn không thể upload ảnh màu này vì chưa có biến thể sản phẩm (Variant) tương ứng!");
             }
 
             var listImages = new List<ProductImageResponse>();
 
-            var currentMaxSortOrder = await _productRepository.GetMaxSortOrder(dto.ProductId, dto.ColorId);
+            var currentMaxSortOrder = await _productRepository.GetMaxSortOrder(productId, dto.ColorId);
 
             for (int i = 0; i < dto.Images.Count; i++)
             {
@@ -364,7 +364,7 @@ namespace FashionShop.API.Services.Implements
 
                 var newImage = new ProductImage
                 {
-                    ProductId = dto.ProductId,
+                    ProductId = productId,
                     ColorId = dto.ColorId,
                     ImageUrl = uploadResult.SecureUrl.AbsoluteUri,
                     SortOrder = currentMaxSortOrder + i + 1,
@@ -391,26 +391,70 @@ namespace FashionShop.API.Services.Implements
             return await _productRepository.GetProductImageByIdAsync(productImageId);
         }
 
-        public async Task DeleteProductImageAsync(Guid productImageId)
+        public async Task<IEnumerable<ProductImageResponse>> UpdateSortOrderAsync(Guid productId, UpdateSortOrderRequest request)
         {
-            var existingProductImage = await _productRepository.FindProductImageByIdAsync(productImageId);
+            var existingProduct = await _productRepository.FindProductByIdAsync(productId);
 
-            if (existingProductImage == null) throw new KeyNotFoundException("Không tìm thấy hình ảnh sản phẩm!");
+            if (existingProduct == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm!");
 
-            if (!string.IsNullOrEmpty(existingProductImage.ImageUrl))
+            var existingImages = await _productRepository.GetImagesByProductIdAndColorIdAsync(productId, request.ColorId);
+
+            for (var i = 0; i < request.ImageIds.Count; i++)
             {
-                try
+                var targetImage = existingImages.FirstOrDefault(x => x.Id == request.ImageIds[i]);
+
+                if (targetImage != null)
                 {
-                    var publicId = _photoService.GetPublicIdFromUrl(existingProductImage.ImageUrl);
-                    await _photoService.DeletePhotoAsync(publicId);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Lỗi xóa ảnh cũ: " + ex.Message);
+                    targetImage.SortOrder = i + 1;
                 }
             }
 
-            await _productRepository.DeleteProductImageAsync(existingProductImage);
+            await _productRepository.SaveChangesAsync();
+
+            return await _productRepository.GetProductImagesAsync(productId, request.ColorId);
+        }
+
+        public async Task DeleteProductImageAsync(Guid productId, DeleteProductImagesRequest request)
+        {
+            var affectedColorIds = new HashSet<int?>();
+
+            foreach (var imageId in request.ImageIds)
+            {
+                var existingProductImage = await _productRepository.FindProductImageByIdAsync(imageId);
+
+                if (existingProductImage == null) throw new KeyNotFoundException("Không tìm thấy hình ảnh sản phẩm!");
+
+                affectedColorIds.Add(existingProductImage.ColorId);
+
+                if (!string.IsNullOrEmpty(existingProductImage.ImageUrl))
+                {
+                    try
+                    {
+                        var publicId = _photoService.GetPublicIdFromUrl(existingProductImage.ImageUrl);
+                        await _photoService.DeletePhotoAsync(publicId);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Lỗi xóa ảnh cũ: " + ex.Message);
+                    }
+                }
+
+                await _productRepository.DeleteProductImageAsync(existingProductImage);
+            }
+
+            foreach (var colorId in affectedColorIds)
+            {
+                var remainingImages = await _productRepository.GetProductImagesForUpdateAsync(productId, colorId);
+
+                int newSortOrder = 1;
+                foreach (var image in remainingImages)
+                {
+                    image.SortOrder = newSortOrder;
+                    newSortOrder++;
+                }
+            }
+
+            await _productRepository.SaveChangesAsync();
         }
         #endregion
     }

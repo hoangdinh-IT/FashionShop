@@ -2,22 +2,22 @@ import type { PagingBase } from "../../../models/PagingBase";
 
 // -- PRODUCTS -- //
 
-// export interface ProductFormInputs {
-//     name: string;
-//     slug: string;
-//     description: string;
-//     content: string;
-//     material: string;
-//     price: number;
-//     thumbnail: File;
+export interface ProductFormInputs {
+    name: string;
+    slug: string;
+    description: string;
+    content: string;
+    material: string;
+    price: number;
+    thumbnail: File;
 
-//     categoryId: string;
-//     brandId: string;
+    categoryId: string;
+    brandId: string;
 
-//     isActive?: boolean;
-//     isBestSeller?: boolean;
-//     isNew?: boolean;
-// }
+    isActive?: boolean;
+    isBestSeller?: boolean;
+    isNew?: boolean;
+}
 
 export interface ProductFilters {
     keyword?: string;
@@ -85,3 +85,15 @@ export interface ProductVariantFilters {
 }
 
 export interface ProductVariantQueryParams extends ProductVariantFilters, PagingBase {}
+
+
+// -- PRODUCT-IMAGES -- //
+
+export interface UpdateSortOrderRequest {
+    colorId?: number;
+    imageIds: string[];
+}
+
+export interface DeleteProductImagesRequest {
+    imageIds: string[];
+}

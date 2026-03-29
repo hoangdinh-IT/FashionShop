@@ -88,7 +88,7 @@ namespace FashionShop.API.Mappings
             CreateMap<UpdateProductVariantRequest, CreateProductVariantRequest>();
 
             // ProductImage
-            CreateMap<CreateProductImageRequest, ProductImage>();
+            CreateMap<CreateProductImagesRequest, ProductImage>();
 
             CreateMap<UpdateProductImageRequest, ProductImage>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

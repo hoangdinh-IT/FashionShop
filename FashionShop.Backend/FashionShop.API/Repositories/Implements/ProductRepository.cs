@@ -121,6 +121,11 @@ namespace FashionShop.API.Repositories.Implements
             return await _context.Database.BeginTransactionAsync();
         }
 
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
         #region 1. PRODUCTS
 
         // --- READ METHODS --- //
@@ -303,7 +308,8 @@ namespace FashionShop.API.Repositories.Implements
                 query = query.Where(x => x.ColorId == colorId.Value);
             }
 
-            return await query.OrderBy(x => x.SortOrder)
+            return await query.OrderBy(x => x.ColorId)
+                              .ThenBy(x => x.SortOrder)
                               .Select(_productImageSelector)
                               .ToListAsync();
         }
@@ -320,11 +326,26 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId)
             => await _context.ProductImages.FindAsync(productImageId);
 
+        public async Task<List<ProductImage>> GetProductImagesForUpdateAsync(Guid productId, int? colorId)
+        {
+            return await _context.ProductImages
+                .Where(x => x.ProductId == productId && x.ColorId == colorId)
+                .OrderBy(x => x.SortOrder)
+                .ToListAsync();
+        }
+
         public async Task<int> GetMaxSortOrder(Guid productId, int? colorId)
         {
             return await _context.ProductImages
                 .Where(x => x.ProductId == productId && x.ColorId == colorId)
                 .MaxAsync(x => (int?)x.SortOrder) ?? 0;
+        }
+
+        public async Task<IEnumerable<ProductImage>> GetImagesByProductIdAndColorIdAsync(Guid productId, int? colorId)
+        {
+            return await _context.ProductImages
+                .Where(x => x.ProductId == productId && x.ColorId == colorId)
+                .ToListAsync();
         }
 
         // --- VALIDATION METHODS --- //
