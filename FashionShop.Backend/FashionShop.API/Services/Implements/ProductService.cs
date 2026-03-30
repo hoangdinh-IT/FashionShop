@@ -181,7 +181,7 @@ namespace FashionShop.API.Services.Implements
                         var newVariant = _mapper.Map<CreateProductVariantRequest>(variantDto);
                         newVariant.ProductId = productId;
                         await CreateProductVariantAsync(newVariant);
-                    } 
+                    }
                     // TH2: CẬP NHẬT
                     else
                     {

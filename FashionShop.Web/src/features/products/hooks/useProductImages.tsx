@@ -3,12 +3,20 @@ import { useMutationSideEffects } from "../../../hooks/useMutationSideEffects";
 import productImageService from "../../../services/productImage.service";
 import type { DeleteProductImagesRequest, UpdateSortOrderRequest } from "../types/requests";
 
-export const productImageKeys = {
-    all: ["products"] as const,
-    images: (productId: string) => [...productImageKeys.all, "images", productId] as const,
+export const useProductImages = (productId?: string) => {
+    const getList = useQuery({
+        queryKey: ["products", "images", productId],
+        queryFn: () => productImageService.getList(productId!),
+        enabled: !!productId,
+    })
+
+    return {
+        productImages: getList.data?.data || [],
+        isLoadingProductImages: getList.isLoading,
+    }
 }
 
-export const useProductImageMutations = (productId?: string) => {
+export const useProductImageMutations = () => {
     const createSideEffects = useMutationSideEffects();
 
     const createMutation = useMutation({
@@ -16,14 +24,8 @@ export const useProductImageMutations = (productId?: string) => {
         ...createSideEffects({
             successMessage: "Thêm hình ảnh sản phẩm thành công!",
             errorMessage: "Thêm hình ảnh sản phẩm thất bại!",
-            invalidateKeys: [[...productImageKeys.images(productId!)]],
+            invalidateKeys: [["products", "images"]],
         }),
-    })
-
-    const getList = useQuery({
-        queryKey: productImageKeys.images(productId!),
-        queryFn: () => productImageService.getList(productId!),
-        enabled: !!productId,
     })
 
     const updateSortOrderMutation = useMutation({
@@ -31,7 +33,7 @@ export const useProductImageMutations = (productId?: string) => {
         ...createSideEffects({
             successMessage: "Cập nhật thứ tự hình ảnh thành công!",
             errorMessage: "Cập nhật thứ tự hình ảnh thất bại!",
-            invalidateKeys: [[...productImageKeys.images(productId!)]],
+            invalidateKeys: [["products", "images"]],
         }),
     })
 
@@ -40,16 +42,13 @@ export const useProductImageMutations = (productId?: string) => {
         ...createSideEffects({
             successMessage: "Xoá hình ảnh sản phẩm thành công!",
             errorMessage: "Xoá hình ảnh sản phẩm thất bại!",
-            invalidateKeys: [[...productImageKeys.images(productId!)]],
+            invalidateKeys: [["products", "images"]],
         }),
     })
 
     return {
         createProductImage: createMutation.mutate,
         isCreatingProductImage: createMutation.isPending,
-
-        productImages: getList.data?.data || [],
-        isLoadingProductImages: getList.isLoading,
 
         updateSortOrder: updateSortOrderMutation.mutate,
         isUpdatingSortOrder: updateSortOrderMutation.isPending,

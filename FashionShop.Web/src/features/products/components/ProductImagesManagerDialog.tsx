@@ -5,7 +5,7 @@ import { MdDragIndicator } from 'react-icons/md';
 
 import { useProductColors, useProductDetail } from '../hooks/useProducts';
 import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { useProductImageMutations } from '../hooks/useProductImages';
+import { useProductImageMutations, useProductImages } from '../hooks/useProductImages';
 import type { ProductImage } from '../types/product';
 
 interface Props {
@@ -49,14 +49,15 @@ const ProductImageManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId
     const { colors } = useProductColors(productId);
     
     const {
-        productImages,
         createProductImage,
         isCreatingProductImage,
         deleteProductImages,
         isDeletingProductImages,
         updateSortOrder, // API cập nhật thứ tự
         isUpdatingSortOrder
-    } = useProductImageMutations(productId);
+    } = useProductImageMutations();
+
+    const { productImages } = useProductImages(productId);
 
     // ==========================================
     // CLEANUP EFFECTS

@@ -94,20 +94,24 @@ namespace FashionShop.API.Repositories.Implements
                 ViewCount = x.ViewCount,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
-                ProductVariants = x.ProductVariants.Select(v => new ProductVariantResponse
-                {
-                    Id = v.Id,
-                    ProductId = v.ProductId,
-                    ColorId = v.ColorId,
-                    SizeId = v.SizeId,
-                    SKU = v.SKU,
-                    Quantity = v.Quantity,
-                    Price = v.Price,
-                    IsActive = v.IsActive,
-                    CreatedDate = v.CreatedDate,
-                    UpdatedDate = v.UpdatedDate,
-                    IsDeleted = v.IsDeleted,
-                }).ToList()
+                ProductVariants = x.ProductVariants
+                    .OrderBy(v => v.ColorId)
+                    .ThenBy(v => v.SizeId)
+                    .Select(v => new ProductVariantResponse
+                    {
+                        Id = v.Id,
+                        ProductId = v.ProductId,
+                        ColorId = v.ColorId,
+                        SizeId = v.SizeId,
+                        SKU = v.SKU,
+                        Quantity = v.Quantity,
+                        Price = v.Price,
+                        IsActive = v.IsActive,
+                        CreatedDate = v.CreatedDate,
+                        UpdatedDate = v.UpdatedDate,
+                        IsDeleted = v.IsDeleted,
+                    })
+                    .ToList()
             };
 
         public ProductRepository(FashionDbContext context)

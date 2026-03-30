@@ -4,6 +4,24 @@ import type { ProductVariantFormInputs, ProductVariantQueryParams } from "../typ
 import productVariantService from "../../../services/productVariant.service";
 
 export const useProductVariants = (productId?: string, params?: ProductVariantQueryParams) => {
+    const productVariantsListQuery = useQuery({
+        queryKey: ["products", "variants", productId, params],
+        queryFn: () => productVariantService.getList(productId!, params!),
+        staleTime: 1000 * 60 * 5,
+        placeholderData: keepPreviousData,
+        enabled: !!params,
+    })
+    
+    return {
+        productVariants: productVariantsListQuery.data?.data?.items || [],
+        isLoadingProductVariant: productVariantsListQuery.isLoading,
+
+        totalRecord: productVariantsListQuery.data?.data?.totalRecord || 0,
+        isFetchingProductVariant: productVariantsListQuery.isFetching,
+    }
+}
+
+export const useProductVariantMutations = () => {
     const createSideEffects = useMutationSideEffects();
 
     const createMutation = useMutation({
@@ -11,16 +29,8 @@ export const useProductVariants = (productId?: string, params?: ProductVariantQu
         ...createSideEffects({
             successMessage: "Thêm biến thể sản phẩm thành công!",
             errorMessage: "Thêm biến thể sản phẩm thất bại!",
-            invalidateKeys: [["productVariants"]],
+            invalidateKeys: [["products", "variants"]],
         })
-    })
-
-    const productVariantsListQuery = useQuery({
-        queryKey: ["productVariants", params],
-        queryFn: () => productVariantService.getList(productId!, params!),
-        staleTime: 1000 * 60 * 5,
-        placeholderData: keepPreviousData,
-        enabled: !!params,
     })
 
     const updateMutation = useMutation({
@@ -28,7 +38,7 @@ export const useProductVariants = (productId?: string, params?: ProductVariantQu
         ...createSideEffects({
             successMessage: "Cập nhật biến thể sản phẩm thành công!",
             errorMessage: "Cập nhật biến thể sản phẩm thất bại!",
-            invalidateKeys: [["productVariants"]],
+            invalidateKeys: [["products", "variants"]],
         })
     })
 
@@ -37,20 +47,14 @@ export const useProductVariants = (productId?: string, params?: ProductVariantQu
         ...createSideEffects({
             successMessage: "Xoá biến thể sản phẩm thành công!",
             errorMessage: "Xoá biến thể sản phẩm thất bại!",
-            invalidateKeys: [["productVariants"]],
+            invalidateKeys: [["products", "variants"]],
         })
         
     })
-    
+
     return {
         createProductVariant: createMutation.mutate,
         isCreatingProductVariant: createMutation.isPending,
-
-        productVariants: productVariantsListQuery.data?.data?.items || [],
-        isLoadingProductVariant: productVariantsListQuery.isLoading,
-
-        totalRecord: productVariantsListQuery.data?.data?.totalRecord || 0,
-        isFetchingProductVariant: productVariantsListQuery.isFetching,
 
         updateProductVariant: updateMutation.mutate,
         isUpdatingProductVariant: updateMutation.isPending,
