@@ -56,6 +56,7 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
         Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId);
+        Task<IEnumerable<ProductImage>> FindProductImagesAsync(Guid productId);
         Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId);
         Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId);
         Task<List<ProductImage>> GetProductImagesForUpdateAsync(Guid productId, int? colorId);
@@ -67,7 +68,7 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
         Task<ProductImage> CreateProductImageAsync(ProductImage productImage);
-        Task<ProductImage> UpdateProductImageAsync(ProductImage productImage);
+        //Task<ProductImage> UpdateProductImageAsync(ProductImage productImage);
         Task DeleteProductImageAsync(ProductImage productImage);
         #endregion
     }

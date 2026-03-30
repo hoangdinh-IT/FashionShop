@@ -314,6 +314,13 @@ namespace FashionShop.API.Repositories.Implements
                               .ToListAsync();
         }
 
+        public async Task<IEnumerable<ProductImage>> FindProductImagesAsync(Guid productId)
+        {
+            return await _context.ProductImages
+                .Where(x => x.ProductId == productId)
+                .ToListAsync();
+        }
+
         public async Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId)
         {
             return await _context.ProductImages
@@ -363,12 +370,12 @@ namespace FashionShop.API.Repositories.Implements
             return productImage;
         }
 
-        public async Task<ProductImage> UpdateProductImageAsync(ProductImage productImage)
-        {
-            _context.ProductImages.Update(productImage);
-            await _context.SaveChangesAsync();
-            return productImage;
-        }
+        //public async Task<ProductImage> UpdateProductImageAsync(ProductImage productImage)
+        //{
+        //    _context.ProductImages.Update(productImage);
+        //    await _context.SaveChangesAsync();
+        //    return productImage;
+        //}
 
         public async Task DeleteProductImageAsync(ProductImage productImage)
         {

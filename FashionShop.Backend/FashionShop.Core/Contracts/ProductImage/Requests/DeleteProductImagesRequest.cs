@@ -13,6 +13,6 @@ namespace FashionShop.Core.Contracts.ProductImage.Requests
 
         [Required]
         [MinLength(1, ErrorMessage = "Vui lòng chọn ít nhất 1 hình ảnh để xóa!")]
-        public List<Guid> ImageIds { get; set; }
+        public List<Guid>? ImageIds { get; set; }
     }
 }

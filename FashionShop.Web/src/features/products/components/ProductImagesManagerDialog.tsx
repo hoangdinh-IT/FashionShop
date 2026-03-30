@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { IoCloseOutline, IoCloudUploadOutline, IoTrashOutline, IoColorPaletteOutline, IoSaveOutline } from 'react-icons/io5';
 import { MdDragIndicator } from 'react-icons/md';
+
 import { useProductColors, useProductDetail } from '../hooks/useProducts';
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useProductImageMutations } from '../hooks/useProductImages';
@@ -10,7 +11,7 @@ import type { ProductImage } from '../types/product';
 interface Props {
     isOpen: boolean;
     onClose: () => void;
-    productId: string;
+    productId?: string;
 }
 
 interface DisplayImage extends Partial<ProductImage> {

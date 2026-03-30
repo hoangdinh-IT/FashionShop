@@ -95,5 +95,5 @@ export interface UpdateSortOrderRequest {
 }
 
 export interface DeleteProductImagesRequest {
-    imageIds: string[];
+    imageIds?: string[];
 }

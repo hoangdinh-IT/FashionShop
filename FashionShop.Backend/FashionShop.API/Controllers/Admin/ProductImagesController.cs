@@ -30,12 +30,12 @@ namespace FashionShop.API.Controllers.Admin
             return Success(result, "Lấy danh sách hình ảnh sản phẩm thành công!");
         }
 
-        [HttpPut("{productImageId}")]
-        public async Task<IActionResult> UpdateProductImage(Guid productId, Guid productImageId, [FromBody] UpdateProductImageRequest request)
-        {
-            var result = await _productService.UpdateProductImageAsync(productImageId, request);
-            return Success(result, "Cập nhật hình ảnh sản phẩm thành công!");
-        }
+        //[HttpPut("{productImageId}")]
+        //public async Task<IActionResult> UpdateProductImage(Guid productId, Guid productImageId, [FromBody] UpdateProductImageRequest request)
+        //{
+        //    var result = await _productService.UpdateProductImageAsync(productImageId, request);
+        //    return Success(result, "Cập nhật hình ảnh sản phẩm thành công!");
+        //}
 
         [HttpPut("sortOrder")]
         public async Task<IActionResult> UpdateSortOrder(Guid productId, [FromBody] UpdateSortOrderRequest request)
@@ -45,7 +45,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteProductImage(Guid productId, [FromBody] DeleteProductImagesRequest request)
+        public async Task<IActionResult> DeleteProductImage(Guid productId, [FromBody] DeleteProductImagesRequest? request)
         {
             await _productService.DeleteProductImageAsync(productId, request);
             return Success<object?>(null, "Xoá hình ảnh sản phẩm thành công!");

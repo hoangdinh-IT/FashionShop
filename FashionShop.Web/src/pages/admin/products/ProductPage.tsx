@@ -13,6 +13,7 @@ import { useDialog } from "../../../contexts";
 import ProductToolbar from "../../../features/products/components/ProductToolbar";
 import type { ProductFilters, ProductQueryParams } from "../../../features/products/types/requests";
 import ProductImageManagerDialog from "../../../features/products/components/ProductImagesManagerDialog";
+import { useProductImageMutations } from "../../../features/products/hooks/useProductImages";
 
 const ProductPage: React.FC = () => {
     const { showDialog } = useDialog();
@@ -51,6 +52,8 @@ const ProductPage: React.FC = () => {
         isFetchingProduct,
     } = useProducts(queryParams);
 
+    const { deleteProductImages } = useProductImageMutations(modalConfig.productId);
+
     const { deleteDetail } = useProductMutations();
 
     const { leafCategories } = useCategories();
@@ -72,7 +75,10 @@ const ProductPage: React.FC = () => {
             confirmText: "Xoá",
             cancelText: "Hủy",
             confirmColor: "error",
-            onConfirm: () => deleteDetail(productId)
+            onConfirm: () => {
+                deleteDetail(productId)
+                deleteProductImages({ productId })
+            }
         });
     }
 

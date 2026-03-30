@@ -21,7 +21,7 @@ const productImageService = {
         return response.data;
     },
 
-    delete: async(productId: string, request: DeleteProductImagesRequest): Promise<ApiResponse<null>> => {
+    delete: async(productId: string, request?: DeleteProductImagesRequest): Promise<ApiResponse<null>> => {
         const response = await apiClient.delete<ApiResponse<null>>(`/admin/products/${productId}/images`, {
             data: request
         });

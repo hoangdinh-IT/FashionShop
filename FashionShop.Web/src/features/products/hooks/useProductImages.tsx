@@ -36,7 +36,7 @@ export const useProductImageMutations = (productId?: string) => {
     })
 
     const deleteMutation = useMutation({
-        mutationFn: ({ productId, request }: { productId: string, request: DeleteProductImagesRequest }) => productImageService.delete(productId, request),
+        mutationFn: ({ productId, request }: { productId: string, request?: DeleteProductImagesRequest }) => productImageService.delete(productId, request),
         ...createSideEffects({
             successMessage: "Xoá hình ảnh sản phẩm thành công!",
             errorMessage: "Xoá hình ảnh sản phẩm thất bại!",
