@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Models.Colors
+namespace FashionShop.Core.Models.Color
 {
     public class ColorListRequest : PagingBase
     {

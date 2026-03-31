@@ -4,7 +4,7 @@ using FashionShop.Core.Contracts.Size.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Models.Sizes;
+using FashionShop.Core.Models.Size;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 

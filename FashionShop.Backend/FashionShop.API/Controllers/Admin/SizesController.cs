@@ -2,7 +2,7 @@
 using FashionShop.API.Services.Implements;
 using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.Size.Requests;
-using FashionShop.Core.Models.Sizes;
+using FashionShop.Core.Models.Size;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers.Admin

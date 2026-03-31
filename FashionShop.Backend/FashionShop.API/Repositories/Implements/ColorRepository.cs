@@ -3,7 +3,7 @@ using FashionShop.API.Repositories.Interfaces;
 using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
-using FashionShop.Core.Models.Colors;
+using FashionShop.Core.Models.Color;
 using FashionShop.Core.Models.Paging;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -34,7 +34,6 @@ namespace FashionShop.API.Repositories.Implements
         }
 
         // --- READ METHODS --- //
-
         public async Task<IEnumerable<ColorResponse>> GetAllColorsAsync()
         {
             return await _context.Colors
@@ -79,8 +78,8 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<Color?> FindColorByIdAsync(int colorId)
             => await _context.Colors.FindAsync(colorId);
 
-        // --- VALIDATION METHODS --- //
 
+        // --- VALIDATION METHODS --- //
         public async Task<bool> CheckExistHexCodeAsync(string hexCode)
             => await _context.Colors.AnyAsync(x => x.HexCode == hexCode);
 
@@ -93,6 +92,7 @@ namespace FashionShop.API.Repositories.Implements
 
             return !hasProduct;
         }
+
 
         // --- WRITE METHODS --- //
         public async Task<Color?> CreateColorAsync(Color color)

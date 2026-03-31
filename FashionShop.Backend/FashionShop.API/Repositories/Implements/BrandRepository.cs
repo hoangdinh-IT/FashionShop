@@ -4,9 +4,9 @@ using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
 using Microsoft.EntityFrameworkCore;
 using FashionShop.Core.Extensions;
-using FashionShop.Core.Models.Brands;
 using System.Linq.Expressions;
 using FashionShop.Core.Contracts.Brand.Responses;
+using FashionShop.Core.Models.Brand;
 
 namespace FashionShop.API.Repositories.Implements
 {

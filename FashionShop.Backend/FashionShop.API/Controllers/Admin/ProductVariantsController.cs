@@ -1,7 +1,7 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.ProductVariant.Requests;
-using FashionShop.Core.Models.ProductVariants;
+using FashionShop.Core.Models.ProductVariant;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers.Admin

@@ -212,7 +212,9 @@ namespace FashionShop.API.Data
 
             modelBuilder.Entity<Voucher>(entity =>
             {
-                entity.HasIndex(v => v.Code).IsUnique();
+                entity.HasIndex(v => v.Code)
+                      .IsUnique()
+                      .HasFilter("\"IsDeleted\" = false");
             });
 
             modelBuilder.Entity<VoucherUsage>(entity =>

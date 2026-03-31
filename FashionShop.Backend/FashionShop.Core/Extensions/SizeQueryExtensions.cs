@@ -26,7 +26,7 @@ namespace FashionShop.Core.Extensions
         {
             if (!type.HasValue) return query;
 
-            return query.Where(x => x.Type == type);
+            return query.Where(x => x.Type == type.Value);
         }
 
         public static IQueryable<Size> FilterByActive(this IQueryable<Size> query, bool? isActive)

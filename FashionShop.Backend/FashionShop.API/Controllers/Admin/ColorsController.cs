@@ -1,7 +1,7 @@
 ﻿using Azure.Core;
 using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.Color.Requests;
-using FashionShop.Core.Models.Colors;
+using FashionShop.Core.Models.Color;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers.Admin

@@ -65,7 +65,7 @@ export interface ProductDetailFormInputs {
 // -- PRODUCT-VARIANTS -- //
 
 export interface ProductVariantFormInputs {
-    SKU: string;
+    sku: string;
     quantity: number;
     price: number;
 

@@ -1,6 +1,6 @@
 ﻿using FashionShop.Core.Contracts.Color.Requests;
 using FashionShop.Core.Contracts.Color.Responses;
-using FashionShop.Core.Models.Colors;
+using FashionShop.Core.Models.Color;
 using FashionShop.Core.Models.Paging;
 
 namespace FashionShop.API.Services.Interfaces

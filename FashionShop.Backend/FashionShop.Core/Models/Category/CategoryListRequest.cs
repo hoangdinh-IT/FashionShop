@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Models.Brands
+namespace FashionShop.Core.Models.Category
 {
-    public class BrandListRequest : PagingBase
+    public class CategoryListRequest : PagingBase
     {
         public string? Keyword { get; set; }
         public bool? IsActive { get; set; }
+        public Guid? ParentId { get; set; }
     }
 }

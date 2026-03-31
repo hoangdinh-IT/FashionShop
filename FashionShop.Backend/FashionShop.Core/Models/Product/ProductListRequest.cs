@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Models.Products
+namespace FashionShop.Core.Models.Product
 {
     public class ProductListRequest : PagingBase
     {

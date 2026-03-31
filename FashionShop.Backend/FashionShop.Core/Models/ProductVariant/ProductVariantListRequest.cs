@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FashionShop.Core.Models.ProductVariants
+namespace FashionShop.Core.Models.ProductVariant
 {
     public class ProductVariantListRequest : PagingBase
     {

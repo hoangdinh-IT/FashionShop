@@ -6,7 +6,7 @@ using FashionShop.Core.Contracts.Color.Requests;
 using FashionShop.Core.Contracts.Color.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
-using FashionShop.Core.Models.Colors;
+using FashionShop.Core.Models.Color;
 using FashionShop.Core.Models.Paging;
 
 namespace FashionShop.API.Services.Implements

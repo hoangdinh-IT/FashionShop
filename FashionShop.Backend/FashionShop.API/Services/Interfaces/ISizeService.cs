@@ -1,7 +1,7 @@
 ﻿using FashionShop.Core.Contracts.Size.Requests;
 using FashionShop.Core.Contracts.Size.Responses;
 using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Models.Sizes;
+using FashionShop.Core.Models.Size;
 
 namespace FashionShop.API.Services.Interfaces
 {

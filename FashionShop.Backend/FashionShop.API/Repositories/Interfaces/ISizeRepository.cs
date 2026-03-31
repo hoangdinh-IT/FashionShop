@@ -1,7 +1,7 @@
 ﻿using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Models.Sizes;
 using FashionShop.Core.Contracts.Size.Responses;
+using FashionShop.Core.Models.Size;
 
 namespace FashionShop.API.Repositories.Interfaces
 {

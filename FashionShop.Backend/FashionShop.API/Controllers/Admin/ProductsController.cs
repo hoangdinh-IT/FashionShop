@@ -1,7 +1,7 @@
 ﻿using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.Product.Requests;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Products;
+using FashionShop.Core.Models.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers.Admin

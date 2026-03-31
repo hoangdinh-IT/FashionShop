@@ -18,6 +18,8 @@ using FashionShop.Core.Contracts.Size.Requests;
 using FashionShop.Core.Contracts.Size.Responses;
 using FashionShop.Core.Contracts.User.Requests;
 using FashionShop.Core.Contracts.User.Responses;
+using FashionShop.Core.Contracts.Voucher.Requests;
+using FashionShop.Core.Contracts.Voucher.Responses;
 using FashionShop.Core.Entities;
 
 namespace FashionShop.API.Mappings
@@ -94,6 +96,13 @@ namespace FashionShop.API.Mappings
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<ProductImage, ProductImageResponse>();
+
+            // Voucher
+            CreateMap<CreateVoucherRequest, Voucher>();
+
+            CreateMap<UpdateVoucherRequest, Voucher>();
+
+            CreateMap<Voucher, VoucherResponse>();
         }
     }
 }

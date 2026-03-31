@@ -225,11 +225,9 @@ const ProductFormDialog: React.FC<Props> = ({
         const isUpdate = !!productDetail;
         const formData = preparePayload(data, selectedFile, isUpdate);
 
-        console.log(data);
-
         const handleSuccess = (res: any) => {
             if (res.succeeded) {
-                showSnackbar(`Sản phẩm đã được ${isUpdate ? "thêm mới" : "cập nhật"} thành công!`, "success");
+                showSnackbar(`Sản phẩm đã được ${!isUpdate ? "thêm mới" : "cập nhật"} thành công!`, "success");
                 onClose();
             }
         };

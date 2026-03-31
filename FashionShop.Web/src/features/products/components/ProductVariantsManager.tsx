@@ -20,7 +20,7 @@ export default function ProductVariantsManager({
     register,
     errors
 }: ProductVariantsManagerProps) {
-
+    
     const { colors } = useColors();
     const { sizes } = useSizes();
 

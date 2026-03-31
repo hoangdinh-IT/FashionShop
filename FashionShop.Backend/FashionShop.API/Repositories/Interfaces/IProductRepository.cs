@@ -4,8 +4,8 @@ using FashionShop.Core.Contracts.ProductImage.Responses;
 using FashionShop.Core.Contracts.ProductVariant.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Models.Products;
-using FashionShop.Core.Models.ProductVariants;
+using FashionShop.Core.Models.Product;
+using FashionShop.Core.Models.ProductVariant;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FashionShop.API.Repositories.Interfaces

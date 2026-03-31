@@ -1,6 +1,6 @@
 ﻿using FashionShop.Core.Contracts.Brand.Responses;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Brands;
+using FashionShop.Core.Models.Brand;
 using FashionShop.Core.Models.Paging;
 
 namespace FashionShop.API.Repositories.Interfaces
