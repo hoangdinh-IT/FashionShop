@@ -143,7 +143,8 @@ namespace FashionShop.API.Repositories.Implements
                          .FilterByActive(request.IsActive)
                          .FilterByBestSeller(request.IsBestSeller)
                          .FilterByNew(request.IsNew)
-                         .FilterByPrice(request.MinPrice, request.MaxPrice);
+                         .FilterByPrice(request.MinPrice, request.MaxPrice)
+                         .Sort(request.SortBy, request.IsAscending);
 
             var totalRecorl = await query.CountAsync();
 

@@ -31,9 +31,9 @@ const ProductPage: React.FC = () => {
     })
 
     const [queryParams, setQueryParams] = useState<ProductQueryParams>({
-        keyword: "",
-        categoryId: "",
-        brandId: "",
+        keyword: undefined,
+        categoryId: undefined,
+        brandId: undefined,
         isActive: undefined,
         isBestSeller: undefined,
         isNew: undefined,
@@ -52,7 +52,7 @@ const ProductPage: React.FC = () => {
         isFetchingProduct,
     } = useProducts(queryParams);
 
-    const { deleteProductImages } = useProductImageMutations(modalConfig.productId);
+    const { deleteProductImages } = useProductImageMutations();
 
     const { deleteDetail } = useProductMutations();
 
@@ -68,7 +68,7 @@ const ProductPage: React.FC = () => {
 
     const handleClose = () => setModalConfig({ isOpen: null, productId: undefined })
 
-    const handleDeleteDetail = (productId: string) => {
+    const handleDelete = (productId: string) => {
         showDialog({
             title: "XÁC NHẬN XOÁ SẢN PHẨM",
             message: "Sản phẩm này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
@@ -98,11 +98,11 @@ const ProductPage: React.FC = () => {
         }));
     }
 
-    const handleSortChange = (colKey: string, direction: boolean) => {
+    const handleSortChange = (colKey: string, isAscending: boolean) => {
         setQueryParams(prev => ({
             ...prev,
             sortBy: colKey,
-            isAscending: direction,
+            isAscending: isAscending,
             pageIndex: 1,
         }));
     }
@@ -160,7 +160,7 @@ const ProductPage: React.FC = () => {
                         onSort={handleSortChange}
                         openImageManagerModal={handleOpenImage}
                         onEdit={handleOpenEdit}
-                        onDelete={handleDeleteDetail}
+                        onDelete={handleDelete}
                     />
                 </div>
                 

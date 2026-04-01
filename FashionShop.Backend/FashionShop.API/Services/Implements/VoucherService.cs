@@ -50,7 +50,7 @@ namespace FashionShop.API.Services.Implements
         {
             var existingVoucher = await _voucherRepository.FindVoucherByIdAsync(voucherId);
 
-            if (existingVoucher == null) throw new KeyNotFoundException("Không tìm thấy phiếu giảm giá!");
+            if (existingVoucher == null) throw new KeyNotFoundException("Không tìm thấy mã giảm giá!");
 
             if (request.Code != existingVoucher.Code)
             {
@@ -70,7 +70,7 @@ namespace FashionShop.API.Services.Implements
         {
             var existingVoucher = await _voucherRepository.FindVoucherByIdAsync(voucherId);
 
-            if (existingVoucher == null) throw new KeyNotFoundException("Không tìm thấy phiếu giảm giá!");
+            if (existingVoucher == null) throw new KeyNotFoundException("Không tìm thấy mã giảm giá!");
 
             await _voucherRepository.DeleteVoucherAsync(existingVoucher);
         }

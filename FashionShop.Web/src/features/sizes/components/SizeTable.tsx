@@ -5,7 +5,7 @@ import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoLayersOutline, IoPencil, I
 import { format } from "date-fns";
 import Tooltip from "../../../components/common/Tooltip";
 
-interface SizeTableProps {
+interface Props {
     data: Size[];
     isLoading: boolean;
     sortBy: string;
@@ -15,7 +15,7 @@ interface SizeTableProps {
     onDelete: (sizeId: number) => void;
 }
 
-const SizeTable: React.FC<SizeTableProps> = ({
+const SizeTable: React.FC<Props> = ({
     data,
     isLoading,
     sortBy,

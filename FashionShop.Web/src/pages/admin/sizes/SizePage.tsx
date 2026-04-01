@@ -17,7 +17,7 @@ const SizePage = () => {
     const [selectedSize, setSelectedSize] = useState<Size | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<SizeQueryParams>({
-        keyword: "",
+        keyword: undefined,
         type: undefined,
         isActive: undefined,
         pageSize: 5,
@@ -45,7 +45,7 @@ const SizePage = () => {
         setSelectedSize(size);
     }
 
-    const handleDeleteSize = (sizeId: number) => {
+    const handleDelete = (sizeId: number) => {
         showDialog({
             title: "XÁC NHẬN XOÁ KÍCH THƯỚC",
             message: "Kích thước này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
@@ -72,11 +72,11 @@ const SizePage = () => {
         }));
     }
 
-    const handleSortChange = (colKey: string, direction: boolean) => {
+    const handleSortChange = (colKey: string, isAscending: boolean) => {
         setQueryParams(prev => ({
             ...prev,
             sortBy: colKey,
-            isAscending: direction,
+            isAscending: isAscending,
             pageIndex: 1,
         }));
     }
@@ -131,7 +131,7 @@ const SizePage = () => {
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
                         onEdit={handleOpenEdit}
-                        onDelete={handleDeleteSize}
+                        onDelete={handleDelete}
                     />
                 </div>
                 

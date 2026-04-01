@@ -26,13 +26,13 @@ const modalVariants: Variants = {
     }
 };
 
-interface SizeFormDialogProps {
+interface Props {
     isOpen: boolean;
     onClose: () => void;
     initialData?: Size;
 }
 
-const SizeFormDialog: React.FC<SizeFormDialogProps> = ({
+const SizeFormDialog: React.FC<Props> = ({
     isOpen,
     onClose,
     initialData,

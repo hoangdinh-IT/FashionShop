@@ -61,5 +61,37 @@ namespace FashionShop.Core.Extensions
             if (maxPrice.HasValue) query = query.Where(x => x.Price <= maxPrice.Value);
             return query;
         }
+
+        public static IQueryable<Product> Sort(this IQueryable<Product> query, string? sortBy, bool isAscending)
+        {
+            if (string.IsNullOrWhiteSpace(sortBy))
+                return query.OrderByDescending(x => x.CreatedDate);
+
+            switch (sortBy.ToLower().Trim())
+            {
+                case "name":
+                    return isAscending
+                        ? query.OrderBy(x => x.Name)
+                        : query.OrderByDescending(x => x.Name);
+
+                case "price":
+                    return isAscending
+                        ? query.OrderBy(x => x.Price)
+                        : query.OrderByDescending(x => x.Price);
+
+                case "createddate":
+                    return isAscending
+                        ? query.OrderBy(x => x.CreatedDate)
+                        : query.OrderByDescending(x => x.CreatedDate);
+
+                case "isactive":
+                    return isAscending
+                        ? query.OrderByDescending(x => x.IsActive)
+                        : query.OrderBy(x => x.IsActive);
+
+                default:
+                    return query.OrderByDescending(x => x.CreatedDate);
+            }
+        }
     }
 }

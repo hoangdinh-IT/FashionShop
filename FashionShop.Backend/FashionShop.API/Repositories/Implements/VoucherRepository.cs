@@ -53,6 +53,7 @@ namespace FashionShop.API.Repositories.Implements
                          .FilterByDate(request.FromDate, request.ToDate)
                          .FilterByStatus(request.Status)
                          .FilterByAvailable(request.IsAvailable)
+                         .FilterByMinOrderValue(request.FromMinOrderValue, request.ToMinOrderValue)
                          .Sort(request.SortBy, request.IsAscending);
 
             var totalRecord = await query.CountAsync();

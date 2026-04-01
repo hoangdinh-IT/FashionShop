@@ -12,6 +12,7 @@ import BrandPage from "../pages/admin/brands/BrandPage";
 import ColorPage from "../pages/admin/colors/ColorPage";
 import SizePage from "../pages/admin/sizes/SizePage";
 import ProductPage from "../pages/admin/products/ProductPage";
+import VoucherPage from "../pages/admin/vouchers/VoucherPage";
 
 export const AppRoutes = () => {
     const elements = useRoutes([
@@ -72,6 +73,10 @@ export const AppRoutes = () => {
                         {
                             path: "products",
                             element: <ProductPage />
+                        },
+                        {
+                            path: "vouchers",
+                            element: <VoucherPage />
                         }
                     ]
                 }

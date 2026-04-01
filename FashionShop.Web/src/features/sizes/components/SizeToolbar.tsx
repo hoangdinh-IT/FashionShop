@@ -5,17 +5,17 @@ import { IoClose, IoFilterOutline, IoRefreshOutline, IoSearchOutline } from "rea
 import { motion, AnimatePresence } from "framer-motion";
 import type { SizeFilters } from "../types/requests";
 
-interface SizeToolbarProps {
+interface Props {
     onSearch: (text: string) => void;
     onFilterChange: (filters: SizeFilters) => void;
 }
 
-const SizeToolbar: React.FC<SizeToolbarProps> = ({
+const SizeToolbar: React.FC<Props> = ({
     onSearch,
     onFilterChange,
 }) => {
 
-    const defaultValues = {
+    const defaultValues: SizeFilters = {
         type: undefined,
         isActive: undefined,
     };
@@ -91,7 +91,7 @@ const SizeToolbar: React.FC<SizeToolbarProps> = ({
                                         value={filters.type === undefined ? "all" : filters.type}
                                         onChange={(e) => {
                                             const val = e.target.value;
-                                            handleFilterChange("type", val === "all" ? undefined : Number(val) as SizeType);
+                                            handleFilterChange("type", val === "all" ? undefined : val as SizeType);
                                         }}
                                         className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
                                     >

@@ -8,7 +8,8 @@ import {
     IoPricetagsOutline,
     IoColorPaletteOutline,
     IoScanOutline,
-    IoCubeOutline
+    IoCubeOutline,
+    IoTicketOutline
 } from "react-icons/io5";
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -26,6 +27,7 @@ const MENU_ITEMS = [
     { path: '/admin/colors', label: 'Màu sắc', icon: IoColorPaletteOutline },
     { path: '/admin/sizes', label: 'Kích thước', icon: IoScanOutline },
     { path: '/admin/products', label: 'Sản phẩm', icon: IoCubeOutline },
+    { path: '/admin/vouchers', label: 'Phiếu giảm giá', icon: IoTicketOutline },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ onHover, isExpanded }) => {

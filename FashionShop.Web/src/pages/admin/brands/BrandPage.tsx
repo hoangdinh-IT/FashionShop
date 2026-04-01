@@ -17,7 +17,7 @@ const BrandPage: React.FC = () => {
     const [selectedBrand, setSelectedBrand] = useState<Brand | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<BrandQueryParams>({
-        keyword: "",
+        keyword: undefined,
         isActive: undefined,
         pageSize: 5,
         pageIndex: 1,
@@ -49,7 +49,7 @@ const BrandPage: React.FC = () => {
         setSelectedBrand(brand);
     };
 
-    const handleDeleteBrand = (brandId: string) => {
+    const handleDelete = (brandId: string) => {
         showDialog({
             title: "XÁC NHẬN XOÁ THƯƠNG HIỆU",
             message: "Thương hiệu này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
@@ -76,11 +76,11 @@ const BrandPage: React.FC = () => {
         }));
     }
 
-    const handleSortChange = (colKey: string, direction: boolean) => {
+    const handleSortChange = (colKey: string, isAscending: boolean) => {
         setQueryParams(prev => ({
             ...prev,
             sortBy: colKey,
-            isAscending: direction,
+            isAscending: isAscending,
             pageIndex: 1,
         }))
     }
@@ -135,7 +135,7 @@ const BrandPage: React.FC = () => {
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
                         onEdit={handleOpenEdit}
-                        onDelete={handleDeleteBrand}
+                        onDelete={handleDelete}
                     />
                 </div>
                 

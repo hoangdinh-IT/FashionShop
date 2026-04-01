@@ -1,58 +1,63 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import type { Voucher } from "../../../features/vouchers/types/voucher";
+import type { VoucherFilters, VoucherQueryParam } from "../../../features/vouchers/types/requests";
+import { useVoucherMutations, useVouchers } from "../../../features/vouchers/hooks/useVouchers";
+import { useDialog } from "../../../contexts";
+import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import { IoAdd } from "react-icons/io5";
-import CategoryToolbar from '../../../features/categories/components/CategoryToolbar';
-import CategoryTable from '../../../features/categories/components/CategoryTable';
-import CategoryFormDialog from '../../../features/categories/components/CategoryFormDialog';
-import { useCategories } from '../../../features/categories/hooks/useCategories';
-import { useDialog } from '../../../contexts';
-import type { Category } from '../../../features/categories/types/category';
-import Pagination from '../../../components/common/Pagination';
-import { useTableMinHeight } from '../../../hooks/useTableMinHeight';
-import type { CategoryFilters, CategoryQueryParams } from '../../../features/categories/types/requests';
+import VoucherTable from "../../../features/vouchers/components/VoucherTable";
+import VoucherToolbar from "../../../features/vouchers/components/VoucherToolbar";
+import Pagination from "../../../components/common/Pagination";
+import VoucherFormDialog from "../../../features/vouchers/components/VoucherFormDialog";
 
-const CategoryPage: React.FC = () => {
+const VoucherPage = () => {
     const { showDialog } = useDialog();
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
-    
-    const [queryParams, setQueryParams] = useState<CategoryQueryParams>({
+    const [selectedVoucher, setSelectedVoucher] = useState<Voucher | undefined>(undefined);
+
+    const [queryParams, setQueryParams] = useState<VoucherQueryParam>({
         keyword: undefined,
+        discountType: undefined,
         isActive: undefined,
-        parentId: undefined,
+        fromDate: undefined,
+        toDate: undefined,
+        status: undefined,
+        isAvailable: undefined,
+        fromMinOrderValue: undefined,
+        toMinOrderValue: undefined,
         pageSize: 5,
         pageIndex: 1,
         sortBy: "createddate",
         isAscending: false,
-    });
+    })
 
     const {
-        categories,
-        isLoading,
-        pagedCategories,
+        pagedVouchers,
         totalRecord,
-        isFetching,
-        deleteCategory,
-    } = useCategories(queryParams);
+        isFetching
+    } = useVouchers(queryParams);
+
+    const { deleteVoucher } = useVoucherMutations();
 
     const handleOpenCreate = () => {
         setIsDialogOpen(true);
-        setSelectedCategory(undefined);
-    };
+        setSelectedVoucher(undefined);
+    }
 
-    const handleOpenEdit = (category: Category) => {
+    const handleOpenEdit = (voucher: Voucher) => {
         setIsDialogOpen(true);
-        setSelectedCategory(category);
-    };
+        setSelectedVoucher(voucher)
+    }
 
-    const handleDelete = (categoryId: string) => {
+    const handleDelete = (voucherId: string) => {
         showDialog({
-            title: "XÁC NHẬN XOÁ DANH MỤC",
-            message: "Khi bạn xoá danh mục này, tất cả danh mục thuộc danh mục này cũng sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
+            title: "XÁC NHẬN XOÁ KÍCH THƯỚC",
+            message: "Kích thước này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
             confirmText: "Xoá",
             cancelText: "Hủy",
             confirmColor: "error",
-            onConfirm: () => deleteCategory(categoryId)
+            onConfirm: () => deleteVoucher(voucherId)
         });
     }
 
@@ -60,33 +65,33 @@ const CategoryPage: React.FC = () => {
         setQueryParams(prev => ({
             ...prev,
             keyword: text,
-            pageIndex: 1,
+            pageIndex: 1
         }));
     }
 
-    const handleFilterChange = (newFilters: CategoryFilters) => {
+    const handleFilterChange = (newFilters: VoucherFilters) => {
         setQueryParams(prev => ({
             ...prev,
             ...newFilters,
-            pageIndex: 1,
+            pageIndex: 1
         }));
-    }
-
-    const handlePageChange = (newPage: number) => {
-        setQueryParams(prev => ({ 
-            ...prev, 
-            pageIndex: newPage 
-        }));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const handleSortChange = (colKey: string, isAscending: boolean) => {
-        setQueryParams(prev => ({ 
-            ...prev, 
+        setQueryParams(prev => ({
+            ...prev,
             sortBy: colKey,
             isAscending: isAscending,
             pageIndex: 1,
+        }))
+    }
+
+    const handlePageChange = (newPage: number) => {
+        setQueryParams(prev => ({
+            ...prev,
+            pageIndex: newPage
         }));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const tableContainerStyle = useTableMinHeight(queryParams.pageSize);
@@ -96,7 +101,7 @@ const CategoryPage: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 shrink-0">
                 <div className="flex items-center justify-center w-full">
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">
-                        QUẢN LÝ DANH MỤC
+                        QUẢN LÝ PHIẾU GIẢM GIÁ
                     </h1>
                 </div>
 
@@ -112,10 +117,9 @@ const CategoryPage: React.FC = () => {
             </div>
 
             <div className="shrink-0 z-20">
-                <CategoryToolbar
+                <VoucherToolbar
                     onSearch={handleSearch}
                     onFilterChange={handleFilterChange}
-                    parentCategories={categories}
                 />
             </div>
 
@@ -125,9 +129,9 @@ const CategoryPage: React.FC = () => {
                     className="flex-1 overflow-auto custom-scrollbar relative"
                     style={tableContainerStyle}
                 >
-                    <CategoryTable 
-                        data={pagedCategories} 
-                        isLoading={isLoading || isFetching}
+                    <VoucherTable 
+                        data={pagedVouchers} 
+                        isLoading={isFetching}
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
@@ -136,10 +140,10 @@ const CategoryPage: React.FC = () => {
                     />
                 </div>
                 
-                {!isLoading && categories.length > 0 && (
-                    <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3">
+                {!isFetching && pagedVouchers.length > 0 && (
+                    <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3 mt-auto">
                         <Pagination
-                            totalRecord={totalRecord}
+                            totalRecord={totalRecord} 
                             pageSize={queryParams.pageSize}
                             currentPage={queryParams.pageIndex}
                             onPageChange={handlePageChange}
@@ -148,14 +152,13 @@ const CategoryPage: React.FC = () => {
                 )}
             </div>
 
-            <CategoryFormDialog 
+            <VoucherFormDialog 
                 isOpen={isDialogOpen}
-                data={categories}
                 onClose={() => setIsDialogOpen(false)}
-                initialData={selectedCategory}
+                initialData={selectedVoucher}
             />
         </div>
     );
-};
+}
 
-export default CategoryPage;
+export default VoucherPage;

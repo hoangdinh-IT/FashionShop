@@ -18,7 +18,7 @@ const ColorPage: React.FC = () => {
     const [selectedColor, setSelectedColor] = useState<Color | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<ColorQueryParams>({
-        keyword: "",
+        keyword: undefined,
         isActive: undefined,
         pageSize: 5,
         pageIndex: 1,
@@ -44,7 +44,7 @@ const ColorPage: React.FC = () => {
         setSelectedColor(color);
     }
 
-    const handleDeleteColor = (colorId: number) => {
+    const handleDelete = (colorId: number) => {
         showDialog({
             title: "XÁC NHẬN XOÁ MÀU SẮC",
             message: "Màu sắc này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
@@ -71,11 +71,11 @@ const ColorPage: React.FC = () => {
         }));
     }
 
-    const handleSortChange = (colKey: string, direction: boolean) => {
+    const handleSortChange = (colKey: string, isAscending: boolean) => {
         setQueryParams(prev => ({
             ...prev,
             sortBy: colKey,
-            isAscending: direction,
+            isAscending: isAscending,
             pageIndex: 1,
         }));
     }
@@ -130,7 +130,7 @@ const ColorPage: React.FC = () => {
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
                         onEdit={handleOpenEdit}
-                        onDelete={handleDeleteColor}
+                        onDelete={handleDelete}
                     />
                 </div>
                 

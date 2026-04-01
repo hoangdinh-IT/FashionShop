@@ -46,7 +46,7 @@ namespace FashionShop.Core.Extensions
         {
             if (string.IsNullOrWhiteSpace(status)) return query;
 
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
 
             switch(status.ToLower())
             {
@@ -58,8 +58,8 @@ namespace FashionShop.Core.Extensions
                     query = query.Where(x => x.StartDate <= now && x.EndDate >= now);
                     break;
 
-                case "expire":
-                    query = query.Where(x => x.EndDate > now);
+                case "expired":
+                    query = query.Where(x => x.EndDate < now);
                     break;
 
                 default:
@@ -94,11 +94,6 @@ namespace FashionShop.Core.Extensions
 
             switch (sortBy.ToLower().Trim())
             {
-                case "name":
-                    return isAscending
-                        ? query.OrderBy(x => x.Name)
-                        : query.OrderByDescending(x => x.Name);
-
                 case "code":
                     return isAscending
                         ? query.OrderBy(x => x.Code)
@@ -108,21 +103,6 @@ namespace FashionShop.Core.Extensions
                     return isAscending
                         ? query.OrderBy(x => x.DiscountAmount)
                         : query.OrderByDescending(x => x.DiscountAmount);
-
-                case "maxdiscountamount":
-                    return isAscending
-                        ? query.OrderBy(x => x.MaxDiscountAmount)
-                        : query.OrderByDescending(x => x.MaxDiscountAmount);
-
-                case "minordervalue":
-                    return isAscending
-                        ? query.OrderBy(x => x.MinOrderValue)
-                        : query.OrderByDescending(x => x.MinOrderValue);
-
-                case "quantity":
-                    return isAscending
-                        ? query.OrderBy(x => x.Quantity)
-                        : query.OrderByDescending(x => x.Quantity);
 
                 case "usedcount":
                     return isAscending
@@ -139,15 +119,32 @@ namespace FashionShop.Core.Extensions
                         ? query.OrderBy(x => x.EndDate)
                         : query.OrderByDescending(x => x.EndDate);
 
-                case "createddate":
-                    return isAscending
-                        ? query.OrderBy(x => x.CreatedDate)
-                        : query.OrderByDescending(x => x.CreatedDate);
+                case "status":
+                    var now = DateTime.UtcNow;
 
-                case "isactive":
-                    return isAscending
-                        ? query.OrderByDescending(x => x.IsActive)
-                        : query.OrderBy(x => x.IsActive);
+                    // 1 - Ongoing
+                    // 2 - Upcoming
+                    // 3 - Expired
+                    // 4 - Inactive
+
+                    if (isAscending)
+                    {
+                        return query.OrderBy(x =>
+                            !x.IsActive ? 4 :
+                            (x.StartDate <= now && x.EndDate >= now) ? 1 :
+                            (x.StartDate > now) ? 2 :
+                            3
+                        );
+                    }
+                    else
+                    {
+                        return query.OrderByDescending(x =>
+                            !x.IsActive ? 4 :
+                            (x.StartDate <= now && x.EndDate >= now) ? 1 :
+                            (x.StartDate > now) ? 2 :
+                            3
+                        );
+                    }
 
                 default:
                     return query.OrderByDescending(x => x.CreatedDate);
