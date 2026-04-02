@@ -64,17 +64,17 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<ProductResponse?> CreateProductAsync(CreateProductRequest dto)
+        public async Task<ProductResponse?> CreateProductAsync(CreateProductRequest request)
         {
-            var isExistSlug = await _productRepository.CheckExistSlugAsync(dto.Slug);
+            var isExistSlug = await _productRepository.CheckExistSlugAsync(request.Slug);
 
             if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
 
-            var newProduct = _mapper.Map<Product>(dto);
+            var newProduct = _mapper.Map<Product>(request);
 
-            if (dto.Thumbnail != null)
+            if (request.Thumbnail != null)
             {
-                var uploadResult = await _photoService.AddPhotoAsync(dto.Thumbnail);
+                var uploadResult = await _photoService.AddPhotoAsync(request.Thumbnail);
 
                 if (uploadResult.Error != null) throw new Exception("Lỗi upload ảnh: " + uploadResult.Error.Message);
 
@@ -85,21 +85,21 @@ namespace FashionShop.API.Services.Implements
             return _mapper.Map<ProductResponse>(createdProduct);
         }
 
-        public async Task<ProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest dto)
+        public async Task<ProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest request)
         {
             using var transaction = await _productRepository.BeginTransactionAsync();
 
             try
             {
-                var createdProduct = await CreateProductAsync(dto);
+                var createdProduct = await CreateProductAsync(request);
 
-                if (dto.ProductVariants != null && dto.ProductVariants.Any())
+                if (request.ProductVariants != null && request.ProductVariants.Any())
                 {
-                    foreach (var variantDto in dto.ProductVariants)
+                    foreach (var variantrequest in request.ProductVariants)
                     {
-                        variantDto.ProductId = createdProduct!.Id;
+                        variantrequest.ProductId = createdProduct!.Id;
 
-                        await CreateProductVariantAsync(variantDto);
+                        await CreateProductVariantAsync(variantrequest);
                     }
                 }
 
@@ -114,23 +114,23 @@ namespace FashionShop.API.Services.Implements
             }
         }
 
-        public async Task<ProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest dto)
+        public async Task<ProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest request)
         {
             var existingProduct = await _productRepository.FindProductByIdAsync(productId);
 
             if (existingProduct == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm");
 
-            if (dto.Slug != existingProduct.Slug)
+            if (request.Slug != existingProduct.Slug)
             {
-                var isExistSlug = await _productRepository.CheckExistSlugAsync(dto.Slug);
+                var isExistSlug = await _productRepository.CheckExistSlugAsync(request.Slug);
 
                 if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
             }
 
-            _mapper.Map(dto, existingProduct);
+            _mapper.Map(request, existingProduct);
             existingProduct.UpdatedDate = DateTime.UtcNow;
 
-            if (dto.Thumbnail != null)
+            if (request.Thumbnail != null)
             {
                 // 1. Kiểm tra nếu ảnh cũ tồn tại thì Xóa đi
                 if (!string.IsNullOrEmpty(existingProduct.ThumbnailUrl))
@@ -147,7 +147,7 @@ namespace FashionShop.API.Services.Implements
                 }
 
                 // 2. Upload ảnh mới
-                var uploadResult = await _photoService.AddPhotoAsync(dto.Thumbnail);
+                var uploadResult = await _photoService.AddPhotoAsync(request.Thumbnail);
 
                 if (uploadResult.Error != null) throw new Exception(uploadResult.Error.Message);
 
@@ -158,42 +158,42 @@ namespace FashionShop.API.Services.Implements
             return await _productRepository.GetProductByIdAsync(productId);
         }
 
-        public async Task<ProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest dto)
+        public async Task<ProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest request)
         {
             using var transaction = await _productRepository.BeginTransactionAsync();
 
             try
             {
-                var updatedProduct = await UpdateProductAsync(productId, dto);
+                var updatedProduct = await UpdateProductAsync(productId, request);
 
                 var existingProductVariants = await _productRepository.GetProductVariantsByProductIdAsync(productId);
 
-                var inputIDs = dto.ProductVariants
+                var inputIDs = request.ProductVariants
                                   .Where(v => v.Id.HasValue)
                                   .Select(v => v.Id!.Value)
                                   .ToList();
 
-                foreach (var variantDto in dto.ProductVariants)
+                foreach (var variantrequest in request.ProductVariants)
                 {
                     // TH1: THÊM MỚI
-                    if (!variantDto.Id.HasValue)
+                    if (!variantrequest.Id.HasValue)
                     {
-                        var newVariant = _mapper.Map<CreateProductVariantRequest>(variantDto);
+                        var newVariant = _mapper.Map<CreateProductVariantRequest>(variantrequest);
                         newVariant.ProductId = productId;
                         await CreateProductVariantAsync(newVariant);
                     }
                     // TH2: CẬP NHẬT
                     else
                     {
-                        await UpdateProductVariantAsync(variantDto.Id.Value, variantDto);
+                        await UpdateProductVariantAsync(variantrequest.Id.Value, variantrequest);
                     }
                 }
 
                 // TH3: XOÁ
                 var variantsToDelete = existingProductVariants.Where(v => !inputIDs.Contains(v.Id)).ToList();
-                foreach (var variantDto in variantsToDelete)
+                foreach (var variantrequest in variantsToDelete)
                 {
-                    await DeleteProductVariantAsync(variantDto.Id);
+                    await DeleteProductVariantAsync(variantrequest.Id);
                 }
 
                 await transaction.CommitAsync();
@@ -278,32 +278,32 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<ProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest dto)
+        public async Task<ProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest request)
         {
-            var isExistSKU = await _productRepository.CheckExistSKUAsync(dto.SKU);
+            var isExistSKU = await _productRepository.CheckExistSKUAsync(request.SKU);
 
             if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
 
-            var newProductVariant = _mapper.Map<ProductVariant>(dto);
+            var newProductVariant = _mapper.Map<ProductVariant>(request);
 
             var createdProductVariant = await _productRepository.CreateProductVariantAsync(newProductVariant);
             return _mapper.Map<ProductVariantResponse>(createdProductVariant);
         }
 
-        public async Task<ProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantRequest dto)
+        public async Task<ProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantRequest request)
         {
             var existingProductVariant = await _productRepository.FindProductVariantByIdAsync(productVariantId);
 
             if (existingProductVariant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm");
 
-            if (dto.sku != existingProductVariant.SKU)
+            if (request.sku != existingProductVariant.SKU)
             {
-                var isExistSKU = await _productRepository.CheckExistSKUAsync(dto.sku);
+                var isExistSKU = await _productRepository.CheckExistSKUAsync(request.sku);
 
                 if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
             }
 
-            _mapper.Map(dto, existingProductVariant);
+            _mapper.Map(request, existingProductVariant);
             existingProductVariant.UpdatedDate = DateTime.UtcNow;
 
             await _productRepository.UpdateProductVariantAsync(existingProductVariant);
@@ -343,16 +343,16 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<List<ProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest dto)
+        public async Task<List<ProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest request)
         {
-            if (dto.ColorId.HasValue)
+            if (request.ColorId.HasValue)
             {
-                var isExistProductVariant = await _productRepository.CheckExistProductVariant(productId, dto.ColorId.Value);
+                var isExistProductVariant = await _productRepository.CheckExistProductVariant(productId, request.ColorId.Value);
 
                 if (!isExistProductVariant) throw new Exception("Lỗi: Bạn không thể upload ảnh màu này vì chưa có biến thể sản phẩm (Variant) tương ứng!");
             }
 
-            var uploadTasks = dto.Images.Select(async (file, index) =>
+            var uploadTasks = request.Images.Select(async (file, index) =>
             {
                 var uploadResult = await _photoService.AddPhotoAsync(file);
 
@@ -371,14 +371,14 @@ namespace FashionShop.API.Services.Implements
 
             var sortedResults = uploadResults.OrderBy(x => x.Index).ToList();
 
-            var currentMaxSortOrder = await _productRepository.GetMaxSortOrder(productId, dto.ColorId);
+            var currentMaxSortOrder = await _productRepository.GetMaxSortOrder(productId, request.ColorId);
 
             foreach (var result in sortedResults)
             {
                 var newImage = new ProductImage
                 {
                     ProductId = productId,
-                    ColorId = dto.ColorId,
+                    ColorId = request.ColorId,
                     ImageUrl = result.ImageUrl,
                     SortOrder = currentMaxSortOrder + result.Index + 1, // SortOrder đánh theo vị trí Index
                 };
@@ -390,13 +390,13 @@ namespace FashionShop.API.Services.Implements
             return listImages;
         }
 
-        //public async Task<ProductImageResponse?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageRequest dto)
+        //public async Task<ProductImageResponse?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageRequest request)
         //{
         //    var existingProductImage = await _productRepository.FindProductImageByIdAsync(productImageId);
 
         //    if (existingProductImage == null) throw new KeyNotFoundException("Không tìm thấy hình ảnh sản phẩm!");
 
-        //    _mapper.Map(dto, existingProductImage);
+        //    _mapper.Map(request, existingProductImage);
         //    existingProductImage.UpdatedDate = DateTime.UtcNow;
 
         //    await _productRepository.UpdateProductImageAsync(existingProductImage);

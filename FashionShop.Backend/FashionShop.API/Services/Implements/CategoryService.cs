@@ -55,25 +55,25 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<CategoryResponse?> CreateCategoryAsync(CreateCategoryRequest dto)
+        public async Task<CategoryResponse?> CreateCategoryAsync(CreateCategoryRequest request)
         {
-            if (dto.ParentId.HasValue && dto.ParentId != Guid.Empty)
+            if (request.ParentId.HasValue && request.ParentId != Guid.Empty)
             {
-                var parentCategory = await _categoryRepository.GetCategoryByIdAsync(dto.ParentId.Value);
+                var parentCategory = await _categoryRepository.GetCategoryByIdAsync(request.ParentId.Value);
 
                 if (parentCategory == null) throw new KeyNotFoundException("Không tìm thấy danh mục cha!");
             }
 
-            var isExistSlug = await _categoryRepository.CheckSlugExistAsync(dto.Slug);
+            var isExistSlug = await _categoryRepository.CheckSlugExistAsync(request.Slug);
 
             if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
 
-            var newCategory = _mapper.Map<Category>(dto);
+            var newCategory = _mapper.Map<Category>(request);
             newCategory.Id = Guid.NewGuid();
 
-            if (dto.Image != null)
+            if (request.Image != null)
             {
-                var uploadResult = await _photoService.AddPhotoAsync(dto.Image);
+                var uploadResult = await _photoService.AddPhotoAsync(request.Image);
 
                 if (uploadResult.Error != null) throw new Exception("Lỗi upload ảnh: " + uploadResult.Error.Message);
 
@@ -84,38 +84,38 @@ namespace FashionShop.API.Services.Implements
             return _mapper.Map<CategoryResponse>(newCategory);
         }
 
-        public async Task<CategoryResponse?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryRequest dto)
+        public async Task<CategoryResponse?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryRequest request)
         {
             var existingCategory = await _categoryRepository.FindCategoryByIdAsync(categoryId);
 
             if (existingCategory == null) throw new KeyNotFoundException("Không tìm thấy danh mục!");
 
-            if (dto.ParentId.HasValue && dto.ParentId != Guid.Empty)
+            if (request.ParentId.HasValue && request.ParentId != Guid.Empty)
             {
-                if (dto.ParentId.Value == categoryId) throw new ConflictException("Danh mục cha không thể là chính nó!");
+                if (request.ParentId.Value == categoryId) throw new ConflictException("Danh mục cha không thể là chính nó!");
 
-                var parentCategory = await _categoryRepository.GetCategoryByIdAsync(dto.ParentId.Value);
+                var parentCategory = await _categoryRepository.GetCategoryByIdAsync(request.ParentId.Value);
 
                 if (parentCategory == null) throw new KeyNotFoundException("Không tìm thấy danh mục cha!");
             }
 
-            if (dto.Slug != existingCategory.Slug)
+            if (request.Slug != existingCategory.Slug)
             {
-                var isExistSlug = await _categoryRepository.CheckSlugExistAsync(dto.Slug);
+                var isExistSlug = await _categoryRepository.CheckSlugExistAsync(request.Slug);
 
                 if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
             }
 
-            if (!dto.IsActive)
+            if (!request.IsActive)
             {
                 var isSafeToUpdate = await _categoryRepository.IsSafeToActionAsync(categoryId);
 
                 if (!isSafeToUpdate) throw new Exception("Khoan đã! Vẫn còn sản phẩm thuộc danh mục này. Hãy dọn dẹp chúng trước khi cập nhật trạng thái hoạt động của danh mục.");
             }
 
-            _mapper.Map(dto, existingCategory);
+            _mapper.Map(request, existingCategory);
 
-            if (dto.Image != null)
+            if (request.Image != null)
             {
                 // 1. Kiểm tra nếu ảnh cũ tồn tại thì Xóa đi
                 if (!string.IsNullOrEmpty(existingCategory.ImageUrl))
@@ -132,13 +132,13 @@ namespace FashionShop.API.Services.Implements
                 }
 
                 // 2. Upload ảnh mới
-                var uploadResult = await _photoService.AddPhotoAsync(dto.Image);
+                var uploadResult = await _photoService.AddPhotoAsync(request.Image);
 
                 if (uploadResult.Error != null) throw new Exception(uploadResult.Error.Message);
 
                 existingCategory.ImageUrl = uploadResult.SecureUrl.AbsoluteUri;
             }
-            else if (dto.IsImageDeleted)
+            else if (request.IsImageDeleted)
             {
                 if (!string.IsNullOrEmpty(existingCategory.ImageUrl))
                 {

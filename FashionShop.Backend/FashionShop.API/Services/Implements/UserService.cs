@@ -36,18 +36,18 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest dto)
+        public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest request)
         {
             var existingUser = await _userRepository.GetUserByIdAsync(userId);
 
             if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            if (dto.Email != existingUser.Email && await _userRepository.IsUserExistsAsync(dto.Email))
+            if (request.Email != existingUser.Email && await _userRepository.IsUserExistsAsync(request.Email))
             {
                 throw new ConflictException("Email đã được sử dụng");
             }
 
-            _mapper.Map(dto, existingUser);
+            _mapper.Map(request, existingUser);
             existingUser.UpdatedDate = DateTime.UtcNow;
             var updatedUser = await _userRepository.UpdateUserAsync(existingUser);
             return _mapper.Map<UserResponse>(existingUser);

@@ -3,6 +3,7 @@ using FashionShop.Core.Contracts.Auth;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FashionShop.API.Controllers
 {
@@ -27,6 +28,33 @@ namespace FashionShop.API.Controllers
         {
             var result = await _authService.LoginUserAsync(request);
             return Success(result, "Đăng nhập thành công!");
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            try
+            {
+                var result = await _authService.RefreshTokenAsync(request);
+
+                // Trả về 200 OK nếu thành công (Giả sử Success là hàm custom trả về form chuẩn của bạn)
+                return Success(result, "Làm mới Token thành công!");
+            }
+            catch (SecurityTokenException ex)
+            {
+                // Trả về 400 Bad Request thay vì 500
+                return BadRequest(new { message = "Token không hợp lệ", error = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                // Trả về 401 Unauthorized thay vì 500
+                return Unauthorized(new { message = "Phiên đăng nhập hết hạn", error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Chỉ trả về 500 khi thực sự là lỗi hệ thống không lường trước
+                return StatusCode(500, new { message = "Lỗi hệ thống cục bộ", error = ex.Message });
+            }
         }
     }
 }

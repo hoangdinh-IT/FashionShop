@@ -7,5 +7,6 @@ namespace FashionShop.API.Services.Interfaces
     {
         Task<UserResponse?> CreateUserAsync(RegisterRequest dto);
         Task<UserResponse?> LoginUserAsync(LoginRequest dto);
+        Task<UserResponse> RefreshTokenAsync(RefreshTokenRequest request);
     }
 }

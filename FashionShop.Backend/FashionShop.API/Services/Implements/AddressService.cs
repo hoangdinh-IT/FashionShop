@@ -29,24 +29,24 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<AddressResponse> CreateAddressAsync(CreateAddressRequest dto)
+        public async Task<AddressResponse> CreateAddressAsync(CreateAddressRequest request)
         {
-            if (await _userRepository.GetUserByIdAsync(dto.UserId) == null)
+            if (await _userRepository.GetUserByIdAsync(request.UserId) == null)
             {
                 throw new KeyNotFoundException("Không tìm thấy người dùng!");
             }
 
-            var newAddress = _mapper.Map<Address>(dto);
+            var newAddress = _mapper.Map<Address>(request);
             newAddress.Id = Guid.NewGuid();
 
-            var addressCount = await _addressRepository.CountAddressesByUserIdAsync(dto.UserId);
+            var addressCount = await _addressRepository.CountAddressesByUserIdAsync(request.UserId);
 
             if (addressCount == 0) newAddress.IsDefault = true;
             else
             {
                 if (newAddress.IsDefault)
                 {
-                    await _addressRepository.UnsetDefaultAddressAsync(dto.UserId);
+                    await _addressRepository.UnsetDefaultAddressAsync(request.UserId);
                 }
             }
 
@@ -56,22 +56,22 @@ namespace FashionShop.API.Services.Implements
         }
 
 
-        public async Task<AddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressRequest dto)
+        public async Task<AddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressRequest request)
         {
             var existingAddress = await _addressRepository.GetAddressByUserIdAsync(userId, addressId);
 
             if (existingAddress == null) throw new KeyNotFoundException("Không tìm thấy dữ liệu!");
 
-            if (!existingAddress.IsDefault && dto.IsDefault)
+            if (!existingAddress.IsDefault && request.IsDefault)
             {
                 await _addressRepository.UnsetDefaultAddressAsync(userId);
             }
-            else if (existingAddress.IsDefault && !dto.IsDefault)
+            else if (existingAddress.IsDefault && !request.IsDefault)
             {
-                dto.IsDefault = true;
+                request.IsDefault = true;
             }
 
-            _mapper.Map(dto, existingAddress);
+            _mapper.Map(request, existingAddress);
             existingAddress.UpdatedDate = DateTime.UtcNow;
             var updatedAddress = await _addressRepository.UpdateAddressByUserIdAsync(existingAddress);
             return _mapper.Map<AddressResponse>(updatedAddress);

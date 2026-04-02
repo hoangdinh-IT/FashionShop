@@ -14,5 +14,6 @@ export interface UserInfo {
     id: string;
     email: string;
     role: RoleUser;
-    token: string;
+    accessToken: string;
+    refreshToken: string;
 }

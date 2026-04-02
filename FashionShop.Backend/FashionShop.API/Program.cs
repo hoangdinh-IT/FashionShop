@@ -40,10 +40,10 @@ namespace FashionShop.API
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+                            {
+                                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                            })
                             .AddJwtBearer(options =>
                             {
                                 options.TokenValidationParameters = new TokenValidationParameters
@@ -54,7 +54,7 @@ namespace FashionShop.API
                                     ValidateIssuerSigningKey = true,
                                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                                     ValidAudience = builder.Configuration["Jwt:Audience"],
-                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
                                 };
                             });
 

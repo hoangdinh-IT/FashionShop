@@ -45,12 +45,19 @@ export const useLogin = () => {
         onSuccess: (response) => {
             if (response.succeeded) {
                 showSnackbar("Đăng nhập thành công!", "success");
-                login(response.data.token, {
-                    id: response.data.id,
-                    email: response.data.email,
-                    role: response.data.role,
-                    token: response.data.token,
-                });
+                const { id, email, role, accessToken, refreshToken } = response.data;
+                console.log("DỮ LIỆU TỪ BACKEND:", response.data);
+                login(
+                    accessToken,
+                    refreshToken,
+                    {
+                        id: id,
+                        email: email,
+                        role: role,
+                        accessToken: accessToken,
+                        refreshToken: refreshToken,
+                    }
+                );
                 if (response.data.role === "Admin") {
                     navigate("/admin", { replace: true });
                 }

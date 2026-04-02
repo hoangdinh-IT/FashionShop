@@ -42,49 +42,49 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<ColorResponse?> CreateColorAsync(CreateColorRequest dto)
+        public async Task<ColorResponse?> CreateColorAsync(CreateColorRequest request)
         {
-            var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(dto.HexCode);
+            var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(request.HexCode);
 
             if (isExistHexCode) throw new ConflictException("HexCode này đã tồn tại. Vui lòng chọn HexCode khác!");
 
-            var isExistSlug = await _colorRepository.CheckExistSlugAsync(dto.Slug);
+            var isExistSlug = await _colorRepository.CheckExistSlugAsync(request.Slug);
 
             if (isExistSlug) throw new ConflictException("Slug này đã tồn tại. Vui lòng chọn Slug khác!");
 
-            var newColor = _mapper.Map<Color>(dto);
+            var newColor = _mapper.Map<Color>(request);
             var createdColor = await _colorRepository.CreateColorAsync(newColor);
             return _mapper.Map<ColorResponse>(createdColor);
         }
 
-        public async Task<ColorResponse?> UpdateColorAsync(int colorId, UpdateColorRequest dto)
+        public async Task<ColorResponse?> UpdateColorAsync(int colorId, UpdateColorRequest request)
         {
             var existingColor = await _colorRepository.FindColorByIdAsync(colorId);
 
             if (existingColor == null) throw new KeyNotFoundException("Không tìm thấy màu sắc!");
 
-            if (dto.HexCode != existingColor.HexCode)
+            if (request.HexCode != existingColor.HexCode)
             {
-                var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(dto.HexCode);
+                var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(request.HexCode);
 
                 if (isExistHexCode) throw new ConflictException("HexCode này đã tồn tại. Vui lòng chọn HexCode khác!");
             }
 
-            if (dto.Slug != existingColor.Slug)
+            if (request.Slug != existingColor.Slug)
             {
-                var isExistSlug = await _colorRepository.CheckExistSlugAsync(dto.Slug);
+                var isExistSlug = await _colorRepository.CheckExistSlugAsync(request.Slug);
 
                 if (isExistSlug) throw new ConflictException("Slug này đã tồn tại. Vui lòng chọn Slug khác!");
             }
 
-            if (!dto.IsActive)
+            if (!request.IsActive)
             {
                 var isSafeToUpdate = await _colorRepository.IsSafeToActionAsync(colorId);
 
                 if (!isSafeToUpdate) throw new Exception("Khoan đã! Vẫn còn sản phẩm thuộc màu sắc này. Hãy dọn dẹp chúng trước khi cập nhật trạng thái hoạt động của màu sắc.");
             }
 
-            _mapper.Map(dto, existingColor);
+            _mapper.Map(request, existingColor);
             existingColor.UpdatedDate = DateTime.UtcNow;
             await _colorRepository.UpdateColorAsync(existingColor);
             return await _colorRepository.GetColorByIdAsync(colorId);

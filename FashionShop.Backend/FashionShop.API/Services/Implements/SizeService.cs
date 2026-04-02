@@ -41,27 +41,27 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<SizeResponse?> CreateSizeAsync(CreateSizeRequest dto)
+        public async Task<SizeResponse?> CreateSizeAsync(CreateSizeRequest request)
         {
-            var newSize = _mapper.Map<Size>(dto);
+            var newSize = _mapper.Map<Size>(request);
             var createdSize = await _sizeRepository.CreateSizeAsync(newSize);
             return _mapper.Map<SizeResponse>(newSize);
         }
 
-        public async Task<SizeResponse?> UpdateSizeAsync(int sizeId, UpdateSizeRequest dto)
+        public async Task<SizeResponse?> UpdateSizeAsync(int sizeId, UpdateSizeRequest request)
         {
             var existingSize = await _sizeRepository.FindSizeByIdAsync(sizeId);
 
             if (existingSize == null) throw new KeyNotFoundException("Không tìm thấy size!");
 
-            if (!dto.IsActive)
+            if (!request.IsActive)
             {
                 var isSafeToUpdate = await _sizeRepository.IsSafeToActionAsync(sizeId);
 
                 if (!isSafeToUpdate) throw new Exception("Khoan đã! Vẫn còn sản phẩm thuộc kích thước này. Hãy dọn dẹp chúng trước khi cập nhật trạng thái hoạt động của kích thước.");
             }
 
-            _mapper.Map(dto, existingSize);
+            _mapper.Map(request, existingSize);
             existingSize.UpdatedDate = DateTime.UtcNow;
             await _sizeRepository.UpdateSizeAsync(existingSize);
             return await GetSizeByIdAsync(sizeId);

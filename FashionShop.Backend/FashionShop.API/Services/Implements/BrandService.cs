@@ -44,18 +44,18 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
-        public async Task<BrandResponse?> CreateBrandAsync(CreateBrandRequest dto)
+        public async Task<BrandResponse?> CreateBrandAsync(CreateBrandRequest request)
         {
-            var isExistSlug = await _brandRepository.CheckExistSlugAsync(dto.Slug);
+            var isExistSlug = await _brandRepository.CheckExistSlugAsync(request.Slug);
 
             if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
 
-            var newBrand = _mapper.Map<Brand>(dto);
+            var newBrand = _mapper.Map<Brand>(request);
             newBrand.Id = Guid.NewGuid();
 
-            if (dto.Logo != null)
+            if (request.Logo != null)
             {
-                var uploadResult = await _photoService.AddPhotoAsync(dto.Logo);
+                var uploadResult = await _photoService.AddPhotoAsync(request.Logo);
 
                 if (uploadResult.Error != null) throw new Exception("Lỗi upload ảnh: " + uploadResult.Error.Message);
 
@@ -66,30 +66,30 @@ namespace FashionShop.API.Services.Implements
             return _mapper.Map<BrandResponse>(createdBrand);
         }
 
-        public async Task<BrandResponse?> UpdateBrandAsync(Guid brandId, UpdateBrandRequest dto)
+        public async Task<BrandResponse?> UpdateBrandAsync(Guid brandId, UpdateBrandRequest request)
         {
             var existingBrand = await _brandRepository.FindBrandByIdAsync(brandId);
 
             if (existingBrand == null) throw new KeyNotFoundException("Không tìm thấy thương hiệu!");
 
-            if (dto.Slug != existingBrand.Slug)
+            if (request.Slug != existingBrand.Slug)
             {
-                var isExistSlug = await _brandRepository.CheckExistSlugAsync(dto.Slug);
+                var isExistSlug = await _brandRepository.CheckExistSlugAsync(request.Slug);
 
                 if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
             }
 
-            if (!dto.IsActive)
+            if (!request.IsActive)
             {
                 var isSafeToUpdate = await _brandRepository.IsSafeToActionAsync(brandId);
 
                 if (!isSafeToUpdate) throw new Exception("Khoan đã! Vẫn còn sản phẩm thuộc thương hiệu này. Hãy dọn dẹp chúng trước khi cập nhật trạng thái hoạt động của thương hiệu.");
             }
 
-            _mapper.Map(dto, existingBrand);
+            _mapper.Map(request, existingBrand);
             existingBrand.UpdatedDate = DateTime.UtcNow;
 
-            if (dto.Logo != null)
+            if (request.Logo != null)
             {
                 // 1. Kiểm tra nếu ảnh cũ tồn tại thì Xóa đi
                 if (!string.IsNullOrEmpty(existingBrand.LogoUrl))
@@ -106,7 +106,7 @@ namespace FashionShop.API.Services.Implements
                 }
 
                 // 2. Upload ảnh mới
-                var uploadResult = await _photoService.AddPhotoAsync(dto.Logo);
+                var uploadResult = await _photoService.AddPhotoAsync(request.Logo);
 
                 if (uploadResult.Error != null) throw new Exception(uploadResult.Error.Message);
 
