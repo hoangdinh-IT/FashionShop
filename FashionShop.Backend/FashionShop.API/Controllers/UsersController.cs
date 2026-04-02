@@ -3,6 +3,7 @@ using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.User.Requests;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Models;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers
@@ -40,10 +41,7 @@ namespace FashionShop.API.Controllers
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty)
-            {
-                throw new ArgumentException("ID không hợp lệ!");
-            }
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _userService.UpdateUserAsync(userId, request);
             return Success(result, "Cập nhật thông tin người dùng thành công");

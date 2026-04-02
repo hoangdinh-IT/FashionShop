@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
+using FashionShop.Core.Common;
 using FashionShop.Core.Contracts.Auth;
 using FashionShop.Core.Contracts.User.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Enums;
 using FashionShop.Core.Exceptions;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,15 +21,17 @@ namespace FashionShop.API.Services.Implements
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
-        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IEmailService emailService )
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
-        public async Task<UserResponse?> CreateUserAsync(RegisterRequest request)
+        public async Task<UserResponse?> CreateUserAsync(AppRegisterRequest request)
         {
             if (await _userRepository.IsUserExistsAsync(request.Email))
             {
@@ -49,7 +53,7 @@ namespace FashionShop.API.Services.Implements
             return _mapper.Map<UserResponse>(createdUser);
         }
 
-        public async Task<UserResponse?> LoginUserAsync(LoginRequest request)
+        public async Task<UserResponse?> LoginUserAsync(AppLoginRequest request)
         {
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
 
@@ -188,6 +192,57 @@ namespace FashionShop.API.Services.Implements
                 throw new SecurityTokenException("Lỗi 2: Sai thuật toán mã hóa");
 
             return principal;
+        }
+
+        public async Task<OtpResponse> ForgotPasswordAsync(AppForgotPasswordRequest request)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+
+            if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
+
+            string otp = GenerateOTP();
+
+            user.Otp = otp;
+            user.OtpExpiryTime = DateTime.UtcNow.AddMinutes(5);
+            var updatedUser = await _userRepository.UpdateUserAsync(user);
+
+            string emailSubject = "[FashionShop] Mã xác thực đặt lại mật khẩu";
+            string emailBody = EmailTemplateHelper.GetResetPasswordTemplate(updatedUser.FullName, otp);
+
+            // 2. Nhờ EmailService đi giao
+            await _emailService.SendEmailAsync(updatedUser.Email, emailSubject, emailBody);
+
+            return new OtpResponse
+            {
+                Email = updatedUser.Email,
+                Message = "Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư."
+            };
+        }
+
+        public async Task ResetPasswordAsync(AppResetPasswordRequest request)
+        {
+            if (request.NewPassword != request.ConfirmNewPassword)
+                throw new ArgumentException("Mật khẩu mới và xác nhận mật khẩu mới không khớp!");
+
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+
+            if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
+
+            if (user.Otp != request.Otp) throw new ArgumentException("Mã OTP không chính xác.");
+
+            if (user.OtpExpiryTime < DateTime.UtcNow) throw new ArgumentException("Mã OTP đã hết hạn (hiệu lực 5 phút).");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            user.Otp = null;
+            user.OtpExpiryTime = null;
+            await _userRepository.UpdateUserAsync(user);
+        }
+
+        private string GenerateOTP()
+        {
+            int otpValue = RandomNumberGenerator.GetInt32(0, 1000000);
+
+            return otpValue.ToString("D6");
         }
     }
 }

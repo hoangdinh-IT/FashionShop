@@ -3,7 +3,6 @@ using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.User.Requests;
 using FashionShop.Core.Contracts.User.Responses;
-using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
 
 namespace FashionShop.API.Services.Implements
@@ -36,6 +35,7 @@ namespace FashionShop.API.Services.Implements
         }
 
         // --- WRITE METHODS --- //
+
         public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest request)
         {
             var existingUser = await _userRepository.GetUserByIdAsync(userId);

@@ -29,7 +29,7 @@ namespace FashionShop.API.Mappings
         public AutoMapperProfile()
         {
             // User
-            CreateMap<RegisterRequest, User>()
+            CreateMap<AppRegisterRequest, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
@@ -37,6 +37,8 @@ namespace FashionShop.API.Mappings
 
             CreateMap<User, UserResponse>()
                 .ReverseMap();
+
+            CreateMap<User, OtpResponse>();
 
             // Address
             CreateMap<CreateAddressRequest, Address>();

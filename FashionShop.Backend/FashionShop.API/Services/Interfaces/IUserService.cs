@@ -1,5 +1,6 @@
 ﻿using FashionShop.Core.Contracts.User.Requests;
 using FashionShop.Core.Contracts.User.Responses;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace FashionShop.API.Services.Interfaces
 {

@@ -1,7 +1,9 @@
-﻿using FashionShop.API.Services.Interfaces;
+﻿using FashionShop.API.Services.Implements;
+using FashionShop.API.Services.Interfaces;
 using FashionShop.Core.Contracts.Auth;
 using FashionShop.Core.Exceptions;
-using FashionShop.Core.Models;
+using FashionShop.Core.Contracts;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,14 +19,14 @@ namespace FashionShop.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] AppRegisterRequest request)
         {
             var result = await _authService.CreateUserAsync(request);
             return Created(result, "Đăng ký tài khoản thành công!");
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] AppLoginRequest request)
         {
             var result = await _authService.LoginUserAsync(request);
             return Success(result, "Đăng nhập thành công!");
@@ -55,6 +57,20 @@ namespace FashionShop.API.Controllers
                 // Chỉ trả về 500 khi thực sự là lỗi hệ thống không lường trước
                 return StatusCode(500, new { message = "Lỗi hệ thống cục bộ", error = ex.Message });
             }
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] AppForgotPasswordRequest request)
+        {
+            var result = await _authService.ForgotPasswordAsync(request);
+            return Success(result, "Lấy mã OTP thành công!");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] AppResetPasswordRequest request)
+        {
+            await _authService.ResetPasswordAsync(request);
+            return Success<object?>(null, "Cập nhật mật khẩu mới thành công!");
         }
     }
 }

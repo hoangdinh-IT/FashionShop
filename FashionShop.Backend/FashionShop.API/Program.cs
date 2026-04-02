@@ -6,6 +6,7 @@ using FashionShop.API.Repositories.Implements;
 using FashionShop.API.Repositories.Interfaces;
 using FashionShop.API.Services.Implements;
 using FashionShop.API.Services.Interfaces;
+using FashionShop.Core.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -80,11 +81,14 @@ namespace FashionShop.API
             builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped<ISizeService, SizeService>();
             builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IPhotoService, PhotoService>();
             builder.Services.AddScoped<IVoucherService, VoucherService>();
+
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             // 1. Lấy dữ liệu từ appsettings bind vào class CloudinarySettings
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
             // 2. Đăng ký PhotoService
 

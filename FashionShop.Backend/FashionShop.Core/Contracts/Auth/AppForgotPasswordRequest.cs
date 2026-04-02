@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Auth
 {
-    public class LoginRequest
+    public class AppForgotPasswordRequest
     {
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "Email không được để trống")]
+        [EmailAddress(ErrorMessage = "Định dạng email không hợp lệ")]
         public string Email { get; set; }
-
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
     }
 }

@@ -44,7 +44,8 @@ namespace FashionShop.Core.Entities
         public string? AvatarUrl { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-        public string? Otp {  get; set; }
+        public string? Otp { get; set; } = null;
+        public DateTime? OtpExpiryTime { get; set; }
 
         public MembershipClass MembershipClass { get; set; } = MembershipClass.New;
 
