@@ -194,7 +194,7 @@ namespace FashionShop.API.Services.Implements
             return principal;
         }
 
-        public async Task<OtpResponse> ForgotPasswordAsync(AppForgotPasswordRequest request)
+        public async Task ForgotPasswordAsync(AppForgotPasswordRequest request)
         {
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
 
@@ -211,12 +211,6 @@ namespace FashionShop.API.Services.Implements
 
             // 2. Nhờ EmailService đi giao
             await _emailService.SendEmailAsync(updatedUser.Email, emailSubject, emailBody);
-
-            return new OtpResponse
-            {
-                Email = updatedUser.Email,
-                Message = "Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư."
-            };
         }
 
         public async Task ResetPasswordAsync(AppResetPasswordRequest request)

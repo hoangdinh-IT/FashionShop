@@ -9,7 +9,7 @@ namespace FashionShop.API.Services.Interfaces
         Task<UserResponse?> CreateUserAsync(AppRegisterRequest dto);
         Task<UserResponse?> LoginUserAsync(AppLoginRequest dto);
         Task<UserResponse> RefreshTokenAsync(RefreshTokenRequest request);
-        Task<OtpResponse> ForgotPasswordAsync(AppForgotPasswordRequest request);
+        Task ForgotPasswordAsync(AppForgotPasswordRequest request);
         Task ResetPasswordAsync(AppResetPasswordRequest request);
     }
 }

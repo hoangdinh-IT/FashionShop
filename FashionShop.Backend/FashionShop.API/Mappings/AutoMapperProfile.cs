@@ -38,8 +38,6 @@ namespace FashionShop.API.Mappings
             CreateMap<User, UserResponse>()
                 .ReverseMap();
 
-            CreateMap<User, OtpResponse>();
-
             // Address
             CreateMap<CreateAddressRequest, Address>();
 

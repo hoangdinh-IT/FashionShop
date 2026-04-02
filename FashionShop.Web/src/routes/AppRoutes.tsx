@@ -5,6 +5,9 @@ import PrivateRoute from "./PrivateRoute";
 import AuthLayout from "../layouts/AuthLayout";
 import LoginPage from "../pages/auth/LoginPage"
 import RegisterPage from "../pages/auth/RegisterPage";
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
+import ResetPasswordForm from "../features/auth/components/ResetPasswordForm";
+
 import MainLayout from "../layouts/MainLayout";
 import DashboardPage from "../pages/admin/dashboard/DashboardPage";
 import CategoryPage from "../pages/admin/categories/CategoryPage";
@@ -39,6 +42,14 @@ export const AppRoutes = () => {
                             path: "register",
                             element: <RegisterPage />
                         },
+                        {
+                            path: "forgot-password",
+                            element: <ForgotPasswordPage />
+                        },
+                        {
+                            path: "reset-password",
+                            element: <ResetPasswordForm />
+                        }
                     ]
                 }
             ]

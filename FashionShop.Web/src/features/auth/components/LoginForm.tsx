@@ -5,12 +5,7 @@ import { motion } from "framer-motion";
 import { IoEye, IoEyeOff, IoHome } from "react-icons/io5";
 import { HiOutlineLockClosed, HiOutlineMail } from 'react-icons/hi';
 import { useLogin } from "../hooks/useAuth";
-
-interface LoginFormInputs {
-    email: string;
-    password: string;
-    remember?: boolean;
-}
+import type { LoginFormInputs } from '../types/requests';
 
 export const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -130,9 +125,12 @@ export const LoginForm: React.FC = () => {
                             />
                             <span>Ghi nhớ</span>
                         </label>
-                        <a href="#" className="font-medium text-white/80 hover:text-white hover:underline transition-all">
+                        <Link 
+                            to="/auth/forgot-password" 
+                            className="font-medium text-white/80 hover:text-white hover:underline transition-all"
+                        >
                             Quên mật khẩu?
-                        </a>
+                        </Link>
                     </div>
 
                     {/* --- Submit Button --- */}

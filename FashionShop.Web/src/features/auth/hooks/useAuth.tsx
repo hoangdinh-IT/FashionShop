@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"
 import { useAuth, useSnackbar } from "../../../contexts";
-import type { LoginRequest, RegisterRequest } from "../types/user";
 import { authService } from "../../../services/auth.service";
+import type { ForgotPasswordFormInputs, LoginFormInputs, RegisterFormInputs, ResetPasswordFormInputs } from "../types/requests";
 
 export const useRegister = () => {
     const { showSnackbar } = useSnackbar();
     const navigate = useNavigate();
 
     const mutation = useMutation({
-        mutationFn: (request: RegisterRequest) => authService.register(request),
+        mutationFn: (request: RegisterFormInputs) => authService.register(request),
         onSuccess: (response) => {
             if (response.succeeded) {
                 showSnackbar(
@@ -41,12 +41,11 @@ export const useLogin = () => {
     const navigate = useNavigate();
 
     const mutation = useMutation({
-        mutationFn: (request: LoginRequest) => authService.login(request),
+        mutationFn: (request: LoginFormInputs) => authService.login(request),
         onSuccess: (response) => {
             if (response.succeeded) {
                 showSnackbar("Đăng nhập thành công!", "success");
                 const { id, email, role, accessToken, refreshToken } = response.data;
-                console.log("DỮ LIỆU TỪ BACKEND:", response.data);
                 login(
                     accessToken,
                     refreshToken,
@@ -74,4 +73,54 @@ export const useLogin = () => {
         login: mutation.mutate,
         isLoading: mutation.isPending,
     };
+}
+
+export const useForgotPassword = () => {
+    const { showSnackbar } = useSnackbar()
+
+    const mutation = useMutation({
+        mutationFn: (request: ForgotPasswordFormInputs) => authService.forgotPassword(request),
+        onSuccess: (response) => {
+            if (response.succeeded) {
+                showSnackbar("Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư.", "success");
+            }
+        },
+        onError: (error: any) => {
+            showSnackbar(error.response?.data?.message || "Lỗi hệ thống", "error");
+        }
+    });
+
+    return {
+        forgotPassword: mutation.mutate,
+        isLoading: mutation.isPending,
+    }
+}
+
+export const useResetPassword = () => {
+    const { showSnackbar } = useSnackbar()
+
+    const mutation = useMutation({
+        mutationFn: (request: ResetPasswordFormInputs) => authService.resetPassword(request),
+        onSuccess: (response) => {
+            if (response.succeeded) {
+                showSnackbar("Mật khẩu được cập nhật thành công. Vui lòng đăng nhập lại!", "success");
+            }
+        },
+        onError: (error: any) => {
+            const errorData = error.response?.data;
+
+            if (errorData?.Errors && errorData.Errors.length > 0) {
+                showSnackbar(errorData.Errors[0], "error"); 
+            } else if (errorData?.Message) {
+                showSnackbar(errorData.Message, "error");
+            } else {
+                showSnackbar("Lỗi hệ thống hoặc không thể kết nối đến máy chủ", "error");
+            }
+        }
+    });
+
+    return {
+        resetPassword: mutation.mutate,
+        isLoading: mutation.isPending,
+    }
 }

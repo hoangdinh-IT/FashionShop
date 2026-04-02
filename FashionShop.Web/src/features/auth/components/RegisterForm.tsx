@@ -6,17 +6,12 @@ import { IoEye, IoEyeOff, IoHome } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useRegister } from "../hooks/useAuth";
-
-interface RegisterFormInputs {
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+import type { RegisterFormInputs } from "../types/requests";
 
 export const RegisterForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    
+
     const { registerMutation, isLoading } = useRegister();
 
     const {
@@ -26,8 +21,12 @@ export const RegisterForm: React.FC = () => {
         formState: { errors }
     } = useForm<RegisterFormInputs>();
 
-    const onSubmit: SubmitHandler<RegisterFormInputs> = (request) => {
-        registerMutation({ email: request.email, password: request.password })
+    const onSubmit: SubmitHandler<RegisterFormInputs> = (data) => {
+        registerMutation({ 
+            email: data.email, 
+            password: data.password, 
+            confirmPassword: data.confirmPassword 
+        })
     }
 
     const password = watch("password");
@@ -73,7 +72,7 @@ export const RegisterForm: React.FC = () => {
                                 },
                             })}
                             className={`block w-full rounded-xl border bg-white/5 py-3.5 pl-14 pr-4 text-base text-white placeholder-white/40 backdrop-blur-sm transition-all focus:bg-white/10 focus:outline-none focus:ring-1 
-                ${errors.email ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-white/20 focus:border-white focus:ring-white/50"}`}
+                                ${errors.email ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-white/20 focus:border-white focus:ring-white/50"}`}
                             placeholder="Email"
                         />
                         {errors.email && <p className="mt-1 ml-1 text-xs font-medium text-red-300 animate-pulse">{errors.email.message}</p>}
@@ -91,7 +90,7 @@ export const RegisterForm: React.FC = () => {
                                 minLength: { value: 6, message: "Mật khẩu tối thiểu 6 ký tự" },
                             })}
                             className={`block w-full rounded-xl border bg-white/5 py-3.5 pl-14 pr-14 text-base text-white placeholder-white/40 backdrop-blur-sm transition-all focus:bg-white/10 focus:outline-none focus:ring-1
-                ${errors.password ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-white/20 focus:border-white focus:ring-white/50"}`}
+                                ${errors.password ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-white/20 focus:border-white focus:ring-white/50"}`}
                             placeholder="Mật khẩu"
                         />
                         <button
@@ -116,7 +115,7 @@ export const RegisterForm: React.FC = () => {
                                 validate: (value) => value === password || "Mật khẩu không khớp",
                             })}
                             className={`block w-full rounded-xl border bg-white/5 py-3.5 pl-14 pr-14 text-base text-white placeholder-white/40 backdrop-blur-sm transition-all focus:bg-white/10 focus:outline-none focus:ring-1
-                ${errors.confirmPassword ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-white/20 focus:border-white focus:ring-white/50"}`}
+                                ${errors.confirmPassword ? "border-red-400 focus:border-red-400 focus:ring-red-400" : "border-white/20 focus:border-white focus:ring-white/50"}`}
                             placeholder="Xác nhận mật khẩu"
                         />
                         <button
@@ -134,7 +133,7 @@ export const RegisterForm: React.FC = () => {
                         type="submit"
                         disabled={isLoading}
                         className={`w-full rounded-xl py-3.5 text-base font-bold transition-all shadow-lg flex items-center justify-center gap-2 mt-2
-              ${isLoading ? "bg-white/50 cursor-not-allowed text-gray-800" : "bg-white text-gray-900 hover:scale-[1.02] hover:bg-gray-100 active:scale-95"}`}
+                            ${isLoading ? "bg-white/50 cursor-not-allowed text-gray-800" : "bg-white text-gray-900 hover:scale-[1.02] hover:bg-gray-100 active:scale-95"}`}
                     >
                         {isLoading ? (
                             <>

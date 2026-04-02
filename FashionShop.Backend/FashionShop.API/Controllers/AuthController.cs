@@ -62,8 +62,8 @@ namespace FashionShop.API.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] AppForgotPasswordRequest request)
         {
-            var result = await _authService.ForgotPasswordAsync(request);
-            return Success(result, "Lấy mã OTP thành công!");
+            await _authService.ForgotPasswordAsync(request);
+            return Success<object?>(null, "Lấy mã OTP thành công!");
         }
 
         [HttpPost("reset-password")]
