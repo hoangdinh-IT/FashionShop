@@ -42,7 +42,10 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<PagedResult<VoucherResponse>> GetPagedVouchers(VoucherListRequest request)
         {
             var query = _context.Vouchers.AsNoTracking().AsQueryable();
@@ -84,12 +87,16 @@ namespace FashionShop.API.Repositories.Implements
             => await _context.Vouchers.FindAsync(voucherId);
 
 
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> CheckExistCode(string code)
             => await _context.Vouchers.AnyAsync(x => x.Code.ToLower() == code.ToLower());
 
 
+
         // --- WRITE METHODS --- //
+
         public async Task<Voucher> CreateVoucherAsync(Voucher voucher)
         {
             _context.Vouchers.Add(voucher);

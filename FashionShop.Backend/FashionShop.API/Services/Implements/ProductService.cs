@@ -32,7 +32,10 @@ namespace FashionShop.API.Services.Implements
 
         #region 1. PRODUCTS
 
+
+
         // --- READ METHODS --- //
+
         public async Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request)
             => await _productRepository.GetPagedProductsAsync(request);
 
@@ -63,7 +66,10 @@ namespace FashionShop.API.Services.Implements
             return await _productRepository.GetColorsByProductIdAsync(productId);
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<ProductResponse?> CreateProductAsync(CreateProductRequest request)
         {
             var isExistSlug = await _productRepository.CheckExistSlugAsync(request.Slug);
@@ -257,7 +263,10 @@ namespace FashionShop.API.Services.Implements
 
         #region 2. PRODUCT VARIANTS
 
+
+
         // --- READ METHODS --- //
+
         public async Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
             => await _productRepository.GetPagedProductVariantsAsync(request);
 
@@ -277,7 +286,10 @@ namespace FashionShop.API.Services.Implements
             return productVariants;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<ProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest request)
         {
             var isExistSKU = await _productRepository.CheckExistSKUAsync(request.SKU);
@@ -323,7 +335,10 @@ namespace FashionShop.API.Services.Implements
 
         #region 3. PRODUCT IMAGES
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId)
         {
             var existingProduct = await _productRepository.FindProductByIdAsync(productId);
@@ -342,7 +357,10 @@ namespace FashionShop.API.Services.Implements
             return await _productRepository.GetProductImageByIdAsync(productImageId);
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<List<ProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest request)
         {
             if (request.ColorId.HasValue)

@@ -7,7 +7,9 @@ namespace FashionShop.API.Repositories.Interfaces
 {
     public interface ICategoryRepository
     {
+
         // --- READ METHODS --- //
+
         Task<IEnumerable<CategoryResponse>> GetAllCategoriesAsync();
         Task<PagedResult<CategoryResponse>> GetPagedCategoriesAsync(CategoryListRequest request);
         Task<IEnumerable<Category>> GetLeafCategoriesAsync();
@@ -15,11 +17,17 @@ namespace FashionShop.API.Repositories.Interfaces
         Task<IEnumerable<CategoryResponse>> GetCategoriesByParentIdAsync(Guid parentId);
         Task<Category?> FindCategoryByIdAsync(Guid categoryId);
 
+
+
         // --- VALIDATION METHODS --- //
+
         Task<bool> CheckSlugExistAsync(string slug);
         Task<bool> IsSafeToActionAsync(Guid categoryId);
 
+
+
         // --- WRITE METHODS --- //
+
         Task<Category?> CreateCategoryAsync(Category category);
         Task<Category?> UpdateCategoryAsync(Category category);
         Task DeleteCategoryAsync(Guid categoryId);

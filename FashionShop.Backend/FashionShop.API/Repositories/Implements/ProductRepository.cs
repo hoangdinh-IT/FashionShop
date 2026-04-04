@@ -132,7 +132,10 @@ namespace FashionShop.API.Repositories.Implements
 
         #region 1. PRODUCTS
 
+
+
         // --- READ METHODS --- //
+
         public async Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request)
         {
             var query = _context.Products.AsNoTracking().AsQueryable();
@@ -197,11 +200,17 @@ namespace FashionShop.API.Repositories.Implements
                 .ToListAsync();
         }
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> CheckExistSlugAsync(string slug)
             => await _context.Products.AnyAsync(prod => prod.Slug == slug);
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<Product> CreateProductAsync(Product product)
         {
             _context.Products.Add(product);
@@ -225,7 +234,10 @@ namespace FashionShop.API.Repositories.Implements
 
         #region 2. PRODUCT VARIANTS
 
+
+
         // --- READ METHODS --- //
+
         public async Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
         {
             var query = _context.ProductVariants.AsNoTracking().AsQueryable();
@@ -271,11 +283,17 @@ namespace FashionShop.API.Repositories.Implements
                 .ToListAsync();
         }
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> CheckExistSKUAsync(string sku)
             => await _context.ProductVariants.AnyAsync(x => x.SKU == sku);
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<ProductVariant> CreateProductVariantAsync(ProductVariant productVariant)
         {
             _context.ProductVariants.Add(productVariant);
@@ -301,7 +319,10 @@ namespace FashionShop.API.Repositories.Implements
 
         #region 3. PRODUCT IMAGES
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId)
         {
             var query = _context.ProductImages
@@ -360,14 +381,20 @@ namespace FashionShop.API.Repositories.Implements
                 .ToListAsync();
         }
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> CheckExistProductVariant(Guid productId, int colorId)
             => await _context.ProductVariants.AnyAsync(x => 
                 x.ProductId == productId && 
                 x.ColorId == colorId
             );
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<ProductImage> CreateProductImageAsync(ProductImage productImage)
         {
             _context.ProductImages.Add(productImage);

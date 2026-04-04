@@ -14,7 +14,10 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<int> CountAddressesByUserIdAsync(Guid userId)
             => await _context.Addresses.CountAsync(x => x.UserId == userId);
 
@@ -45,7 +48,10 @@ namespace FashionShop.API.Repositories.Implements
                 .FirstOrDefaultAsync();
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task UnsetDefaultAddressAsync(Guid userId)
         {
             //var defaultAddresses = await _context.Addresses

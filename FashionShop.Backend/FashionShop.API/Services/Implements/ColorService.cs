@@ -22,6 +22,8 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+
+
         // --- READ METHODS --- //
 
         public async Task<IEnumerable<ColorResponse>> GetAllColorsAsync()
@@ -41,7 +43,10 @@ namespace FashionShop.API.Services.Implements
             return color;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<ColorResponse?> CreateColorAsync(CreateColorRequest request)
         {
             var isExistHexCode = await _colorRepository.CheckExistHexCodeAsync(request.HexCode);

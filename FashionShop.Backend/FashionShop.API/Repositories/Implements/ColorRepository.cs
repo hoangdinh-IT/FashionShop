@@ -33,7 +33,10 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<ColorResponse>> GetAllColorsAsync()
         {
             return await _context.Colors
@@ -79,7 +82,10 @@ namespace FashionShop.API.Repositories.Implements
             => await _context.Colors.FindAsync(colorId);
 
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> CheckExistHexCodeAsync(string hexCode)
             => await _context.Colors.AnyAsync(x => x.HexCode == hexCode);
 
@@ -94,7 +100,9 @@ namespace FashionShop.API.Repositories.Implements
         }
 
 
+
         // --- WRITE METHODS --- //
+
         public async Task<Color?> CreateColorAsync(Color color)
         {
             _context.Colors.Add(color);

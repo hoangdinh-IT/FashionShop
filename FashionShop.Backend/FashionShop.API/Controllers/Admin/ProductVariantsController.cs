@@ -16,12 +16,9 @@ namespace FashionShop.API.Controllers.Admin
             _productService = productService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProductVariant(Guid productId, [FromForm] CreateProductVariantRequest request)
-        {
-            var result = await _productService.CreateProductVariantAsync(request);
-            return Created(result, "Thêm sản phẩm biến thể thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         //[HttpGet]
         //public async Task<IActionResult> GetPagedProductVariants([FromQuery] ProductVariantListRequest request)
@@ -42,6 +39,17 @@ namespace FashionShop.API.Controllers.Admin
         {
             var result = await _productService.GetProductVariantsByProductIdAsync(productId);
             return Success(result, "Lấy danh sách sản phẩm biến thể dựa vào sản phẩm thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductVariant(Guid productId, [FromForm] CreateProductVariantRequest request)
+        {
+            var result = await _productService.CreateProductVariantAsync(request);
+            return Created(result, "Thêm sản phẩm biến thể thành công!");
         }
 
         [HttpPut("{productVariantId}")]

@@ -35,7 +35,10 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<CategoryResponse>> GetAllCategoriesAsync()
         {
             return await _context.Categories
@@ -100,7 +103,9 @@ namespace FashionShop.API.Repositories.Implements
             => await _context.Categories.FindAsync(categoryId);
 
 
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> CheckSlugExistAsync(string slug)
             => await _context.Categories.AnyAsync(x => x.Slug == slug);
 
@@ -125,7 +130,10 @@ namespace FashionShop.API.Repositories.Implements
             return true;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<Category?> CreateCategoryAsync(Category category)
         {
             _context.Categories.Add(category);

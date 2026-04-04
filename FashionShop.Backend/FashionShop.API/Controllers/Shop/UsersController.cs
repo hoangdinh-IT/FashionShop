@@ -6,7 +6,7 @@ using FashionShop.Core.Models;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FashionShop.API.Controllers
+namespace FashionShop.API.Controllers.Shop
 {
     public class UsersController : BaseApiControllers
     {
@@ -17,6 +17,10 @@ namespace FashionShop.API.Controllers
             _userService = userService;
         }
 
+
+
+        // --- READ METHODS --- //
+
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -24,10 +28,10 @@ namespace FashionShop.API.Controllers
             return Success(users, "Lấy danh sách người dùng thành công");
         }
 
-        [HttpGet("find-by-email")]
+        [HttpGet("email")]
         public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
-            if (String.IsNullOrWhiteSpace(email))
+            if (string.IsNullOrWhiteSpace(email))
             {
                 throw new ArgumentException("Email không được để trống");
             }
@@ -35,6 +39,10 @@ namespace FashionShop.API.Controllers
             var user = await _userService.GetUserByEmailAsync(email);
             return Success(user, "Lấy thông tin người dùng thành công!");
         }
+
+
+
+        // --- WRITE METHODS --- //
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser(UpdateUserRequest request)

@@ -18,7 +18,10 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<UserResponse>> GetUsersAsync()
         {
             var users = await _userRepository.GetUsersAsync();
@@ -33,6 +36,8 @@ namespace FashionShop.API.Services.Implements
 
             return _mapper.Map<UserResponse>(user);
         }
+
+
 
         // --- WRITE METHODS --- //
 

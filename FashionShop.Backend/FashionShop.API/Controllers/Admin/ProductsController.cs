@@ -15,6 +15,8 @@ namespace FashionShop.API.Controllers.Admin
             _productService = productService;
         }
 
+
+
         // --- READ METHODS --- //
 
         [HttpGet]
@@ -48,6 +50,8 @@ namespace FashionShop.API.Controllers.Admin
             var result = await _productService.GetColorsByProductIdAsync(productId);
             return Success(result, "Lấy danh sách màu sắc dựa vào productId thành công!");
         }
+
+
 
         // --- WRITE METHODS --- //
 

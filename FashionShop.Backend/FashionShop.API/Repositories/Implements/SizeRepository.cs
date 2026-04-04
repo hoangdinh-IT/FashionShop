@@ -33,6 +33,8 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
 
         public async Task<IEnumerable<SizeResponse>> GetAllSizesAsync()
@@ -80,14 +82,20 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<Size?> FindSizeByIdAsync(int sizeId)
             => await _context.Sizes.FindAsync(sizeId);
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> IsSafeToActionAsync(int sizeId)
         {
             var hasProduct = await _context.ProductVariants.AnyAsync(x => x.SizeId == sizeId);
             return !hasProduct;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<Size?> CreateSizeAsync(Size size)
         {
             _context.Sizes.Add(size);

@@ -15,13 +15,19 @@ namespace FashionShop.API.Services.Interfaces
     {
         #region 1. PRODUCTS
 
+
+
         // --- READ METHODS --- //
+
         Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request);
         Task<ProductResponse?> GetProductByIdAsync(Guid productId);
         Task<ProductDetailResponse?> GetProductDetailByIdAsync(Guid productId);
         Task<List<ColorResponse>> GetColorsByProductIdAsync(Guid productId);
 
+
+
         // --- WRITE METHODS --- //
+
         Task<ProductResponse?> CreateProductAsync(CreateProductRequest dto);
         Task<ProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest dto);
         Task<ProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest dto);
@@ -33,12 +39,18 @@ namespace FashionShop.API.Services.Interfaces
 
         #region 2. PRODUCT VARIANTS
 
+
+
         // --- READ METHODS --- //
+
         Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request);
         Task<ProductVariantResponse?> GetProductVariantByIdAsync(Guid productVariantId);
         Task<List<ProductVariantResponse>> GetProductVariantsByProductIdAsync(Guid productId);
 
+
+
         // --- WRITE METHODS --- //
+
         Task<ProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest dto);
         Task<ProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantRequest dto);
         Task DeleteProductVariantAsync(Guid productVariantId);
@@ -47,11 +59,17 @@ namespace FashionShop.API.Services.Interfaces
 
         #region 3. PRODUCT IMAGES
 
+
+
         // --- READ METHODS --- //
+
         Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId);
         Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId);
 
+
+
         // --- WRITE METHODS --- //
+
         Task<List<ProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest dto);
         //Task<ProductImageResponse?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageRequest dto);
         Task<IEnumerable<ProductImageResponse>> UpdateSortOrderAsync(Guid productId, UpdateSortOrderRequest request);

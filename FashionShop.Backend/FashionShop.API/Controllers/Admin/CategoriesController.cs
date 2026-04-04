@@ -15,12 +15,9 @@ namespace FashionShop.API.Controllers.Admin
             _categoryService = categoryService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryRequest request)
-        {
-            var result = await _categoryService.CreateCategoryAsync(request);
-            return Created(result, "Thêm danh mục thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllCategories()
@@ -65,6 +62,17 @@ namespace FashionShop.API.Controllers.Admin
 
             var result = await _categoryService.GetCategoriesByParentIdAsync(parentId);
             return Success(result, "Lấy danh sách danh mục thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryRequest request)
+        {
+            var result = await _categoryService.CreateCategoryAsync(request);
+            return Created(result, "Thêm danh mục thành công!");
         }
 
         [HttpPut("{categoryId}")]

@@ -16,18 +16,26 @@ namespace FashionShop.API.Controllers.Admin
             _productService = productService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProductImage(Guid productId, [FromForm] CreateProductImagesRequest request)
-        {
-            var result = await _productService.CreateProductImageAsync(productId, request);
-            return Created(result, "Thêm hình ảnh sản phẩm thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet]
         public async Task<IActionResult> GetProductImages(Guid productId, [FromQuery] int? colorId)
         {
             var result = await _productService.GetProductImagesAsync(productId, colorId);
             return Success(result, "Lấy danh sách hình ảnh sản phẩm thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductImage(Guid productId, [FromForm] CreateProductImagesRequest request)
+        {
+            var result = await _productService.CreateProductImageAsync(productId, request);
+            return Created(result, "Thêm hình ảnh sản phẩm thành công!");
         }
 
         //[HttpPut("{productImageId}")]

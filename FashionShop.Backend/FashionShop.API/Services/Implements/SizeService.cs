@@ -22,7 +22,10 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<SizeResponse>> GetAllSizesAsync()
         {
             return await _sizeRepository.GetAllSizesAsync();
@@ -40,7 +43,10 @@ namespace FashionShop.API.Services.Implements
             return size;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<SizeResponse?> CreateSizeAsync(CreateSizeRequest request)
         {
             var newSize = _mapper.Map<Size>(request);

@@ -24,7 +24,10 @@ namespace FashionShop.API.Services.Implements
             _photoService = photoService;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<BrandResponse>> GetAllBrandsAsync()
         {
             var brands = await _brandRepository.GetAllBrandsAsync();
@@ -43,7 +46,10 @@ namespace FashionShop.API.Services.Implements
             return brand;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<BrandResponse?> CreateBrandAsync(CreateBrandRequest request)
         {
             var isExistSlug = await _brandRepository.CheckExistSlugAsync(request.Slug);

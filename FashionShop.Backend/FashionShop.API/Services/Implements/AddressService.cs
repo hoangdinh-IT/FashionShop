@@ -20,7 +20,10 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<AddressResponse>> GetAddressesByUserIdAsync(Guid userId)
         {
             var addresses = await _addressRepository.GetAddressesByUserIdAsync(userId);
@@ -28,7 +31,10 @@ namespace FashionShop.API.Services.Implements
             return _mapper.Map<IEnumerable<AddressResponse>>(addresses);
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<AddressResponse> CreateAddressAsync(CreateAddressRequest request)
         {
             if (await _userRepository.GetUserByIdAsync(request.UserId) == null)
@@ -54,7 +60,6 @@ namespace FashionShop.API.Services.Implements
             
             return _mapper.Map<AddressResponse>(createdAddress);
         }
-
 
         public async Task<AddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressRequest request)
         {

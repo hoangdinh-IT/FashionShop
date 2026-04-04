@@ -14,7 +14,10 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<User>> GetUsersAsync()
             => await _context.Users.AsNoTracking().ToListAsync();
 
@@ -28,7 +31,10 @@ namespace FashionShop.API.Repositories.Implements
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> IsUserExistsAsync(string email)
         {
             return await _context.Users
@@ -36,7 +42,10 @@ namespace FashionShop.API.Repositories.Implements
                 .AnyAsync(user => user.Email == email);
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<User?> CreateUserAsync(User user)
         {
             _context.Users.Add(user);

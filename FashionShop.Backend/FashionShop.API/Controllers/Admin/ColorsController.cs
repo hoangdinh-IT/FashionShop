@@ -15,12 +15,9 @@ namespace FashionShop.API.Controllers.Admin
             _colorService = colorService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateColor(CreateColorRequest request)
-        {
-            var result = await _colorService.CreateColorAsync(request);
-            return Created(result, "Thêm màu sắc thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllColors()
@@ -43,6 +40,17 @@ namespace FashionShop.API.Controllers.Admin
 
             var result = await _colorService.GetColorByIdAsync(colorId);
             return Success(result, "Lấy màu sắc thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateColor(CreateColorRequest request)
+        {
+            var result = await _colorService.CreateColorAsync(request);
+            return Created(result, "Thêm màu sắc thành công!");
         }
 
         [HttpPut("{colorId}")]

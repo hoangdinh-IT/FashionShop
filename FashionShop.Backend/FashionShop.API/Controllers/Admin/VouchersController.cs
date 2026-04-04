@@ -14,12 +14,9 @@ namespace FashionShop.API.Controllers.Admin
             _voucherService = voucherService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateVoucher(CreateVoucherRequest request)
-        {
-            var result = await _voucherService.CreateVoucherAsync(request);
-            return Created(result, "Thêm mới mã giảm giá thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet]
         public async Task<IActionResult> GetVouchers([FromQuery] VoucherListRequest request) 
@@ -33,6 +30,17 @@ namespace FashionShop.API.Controllers.Admin
         {
             var result = await _voucherService.GetVoucherByIdAsync(voucherId);
             return Success(result, "Lấy mã giảm giá thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateVoucher(CreateVoucherRequest request)
+        {
+            var result = await _voucherService.CreateVoucherAsync(request);
+            return Created(result, "Thêm mới mã giảm giá thành công!");
         }
 
         [HttpPut("{voucherId}")]

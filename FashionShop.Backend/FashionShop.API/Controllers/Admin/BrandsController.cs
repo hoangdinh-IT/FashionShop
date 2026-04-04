@@ -14,12 +14,9 @@ namespace FashionShop.API.Controllers.Admin
             _brandService = brandService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateBrand([FromForm] CreateBrandRequest request)
-        {
-            var result = await _brandService.CreateBrandAsync(request);
-            return Created(result, "Thêm thương hiệu thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllBrands()
@@ -42,6 +39,17 @@ namespace FashionShop.API.Controllers.Admin
 
             var result = await _brandService.GetBrandByIdAsync(brandId);
             return Success(result, "Lấy thương hiệu thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateBrand([FromForm] CreateBrandRequest request)
+        {
+            var result = await _brandService.CreateBrandAsync(request);
+            return Created(result, "Thêm thương hiệu thành công!");
         }
 
         [HttpPut("{brandId}")]

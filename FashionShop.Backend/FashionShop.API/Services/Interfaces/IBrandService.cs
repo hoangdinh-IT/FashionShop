@@ -8,12 +8,17 @@ namespace FashionShop.API.Services.Interfaces
 {
     public interface IBrandService
     {
+
         // --- READ METHODS --- //
+
         Task<IEnumerable<BrandResponse>> GetAllBrandsAsync();
         Task<PagedResult<BrandResponse>> GetPagedBrandsAsync(BrandListRequest request);
         Task<BrandResponse?> GetBrandByIdAsync(Guid brandId);
 
+
+
         // --- WRITE METHODS --- //
+
         Task<BrandResponse?> CreateBrandAsync(CreateBrandRequest dto);
         Task<BrandResponse?> UpdateBrandAsync(Guid brandId, UpdateBrandRequest dto);
         Task DeleteBrandAsync(Guid brandId);

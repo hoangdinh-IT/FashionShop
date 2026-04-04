@@ -21,7 +21,10 @@ namespace FashionShop.API.Services.Implements
             _mapper = mapper;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<PagedResult<VoucherResponse>> GetPagedVouchers(VoucherListRequest request)
         {
             return await _voucherRepository.GetPagedVouchers(request);
@@ -33,7 +36,9 @@ namespace FashionShop.API.Services.Implements
         }
 
 
+
         // --- WRITE METHODS --- //
+
         public async Task<VoucherResponse> CreateVoucherAsync(CreateVoucherRequest request)
         {
             var isExistCode = await _voucherRepository.CheckExistCode(request.Code);

@@ -23,7 +23,10 @@ namespace FashionShop.API.Services.Implements
             _photoService = photoService;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<IEnumerable<CategoryResponse>> GetAllCategoriesAsync()
             => await _categoryRepository.GetAllCategoriesAsync();
 
@@ -54,7 +57,10 @@ namespace FashionShop.API.Services.Implements
             return await _categoryRepository.GetCategoriesByParentIdAsync(parentId);
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<CategoryResponse?> CreateCategoryAsync(CreateCategoryRequest request)
         {
             if (request.ParentId.HasValue && request.ParentId != Guid.Empty)

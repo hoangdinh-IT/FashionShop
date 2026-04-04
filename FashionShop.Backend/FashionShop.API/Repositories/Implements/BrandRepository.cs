@@ -34,7 +34,10 @@ namespace FashionShop.API.Repositories.Implements
             _context = context;
         }
 
+
+
         // --- READ METHODS --- //
+
         public async Task<bool> CheckExistSlugAsync(string slug)
             => await _context.Brands.AnyAsync(x => x.Slug == slug);
 
@@ -82,14 +85,20 @@ namespace FashionShop.API.Repositories.Implements
         public async Task<Brand?> FindBrandByIdAsync(Guid brandId)
             => await _context.Brands.FindAsync(brandId);
 
+
+
         // --- VALIDATION METHODS --- //
+
         public async Task<bool> IsSafeToActionAsync(Guid brandId)
         {
             var hasProduct = await _context.Products.AnyAsync(x => x.BrandId == brandId);
             return !hasProduct;
         }
 
+
+
         // --- WRITE METHODS --- //
+
         public async Task<Brand?> CreateBrandAsync(Brand brand)
         {
             _context.Brands.Add(brand);

@@ -16,12 +16,9 @@ namespace FashionShop.API.Controllers.Admin
             _sizeService = sizeService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateSize(CreateSizeRequest request)
-        {
-            var result = await _sizeService.CreateSizeAsync(request);
-            return Created(result, "Thêm kích thước thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllSizes()
@@ -44,6 +41,17 @@ namespace FashionShop.API.Controllers.Admin
 
             var result = await _sizeService.GetSizeByIdAsync(sizeId);
             return Success(result, "Lấy kích thước thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSize(CreateSizeRequest request)
+        {
+            var result = await _sizeService.CreateSizeAsync(request);
+            return Created(result, "Thêm kích thước thành công!");
         }
 
         [HttpPut("{sizeId}")]
