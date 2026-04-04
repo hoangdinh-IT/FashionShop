@@ -1,7 +1,7 @@
-﻿using FashionShop.Core.Contracts.Brand.Responses;
+﻿using FashionShop.Core.Contracts.Admin.Brand.Requests;
+using FashionShop.Core.Contracts.Admin.Brand.Responses;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Brand;
-using FashionShop.Core.Models.Paging;
+using FashionShop.Core.Models;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
@@ -12,8 +12,8 @@ namespace FashionShop.API.Repositories.Interfaces
 
         Task<bool> CheckExistSlugAsync(string slug);
         Task<IEnumerable<Brand>> GetAllBrandsAsync();
-        Task<PagedResult<BrandResponse>> GetPagedBrandsAsync(BrandListRequest request);
-        Task<BrandResponse?> GetBrandByIdAsync(Guid brandId);
+        Task<PagedResult<AdminBrandResponse>> GetPagedBrandsAsync(AdminBrandListRequest request);
+        Task<AdminBrandResponse?> GetBrandByIdAsync(Guid brandId);
         Task<Brand?> FindBrandByIdAsync(Guid brandId);
 
 

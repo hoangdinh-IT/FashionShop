@@ -1,11 +1,10 @@
-﻿using FashionShop.Core.Contracts.Color.Responses;
-using FashionShop.Core.Contracts.Product.Responses;
-using FashionShop.Core.Contracts.ProductImage.Responses;
-using FashionShop.Core.Contracts.ProductVariant.Responses;
+﻿using FashionShop.Core.Contracts.Admin.Color.Responses;
+using FashionShop.Core.Contracts.Admin.Product.Requests;
+using FashionShop.Core.Contracts.Admin.Product.Responses;
+using FashionShop.Core.Contracts.Admin.ProductImage.Responses;
+using FashionShop.Core.Contracts.Admin.ProductVariant.Responses;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Models.Product;
-using FashionShop.Core.Models.ProductVariant;
+using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FashionShop.API.Repositories.Interfaces
@@ -21,11 +20,11 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<PagedResult<ProductResponse>> GetPagedProductsAsync(ProductListRequest request);
-        Task<ProductResponse?> GetProductByIdAsync(Guid productId);
+        Task<PagedResult<AdminProductResponse>> GetPagedProductsAsync(AdminProductListRequest request);
+        Task<AdminProductResponse?> GetProductByIdAsync(Guid productId);
         Task<Product?> FindProductByIdAsync(Guid productId);
-        Task<ProductDetailResponse?> GetProductDetailByIdAsync(Guid productId);
-        Task<List<ColorResponse>> GetColorsByProductIdAsync(Guid productId);
+        Task<AdminProductDetailResponse?> GetProductDetailByIdAsync(Guid productId);
+        Task<List<AdminColorResponse>> GetColorsByProductIdAsync(Guid productId);
 
 
 
@@ -49,10 +48,10 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request);
-        Task<ProductVariantResponse?> GetProductVariantByIdAsync(Guid productVariantId);
+        //Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request);
+        Task<AdminProductVariantResponse?> GetProductVariantByIdAsync(Guid productVariantId);
         Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId);
-        Task<List<ProductVariantResponse>> GetProductVariantsByProductIdAsync(Guid productId);
+        Task<List<AdminProductVariantResponse>> GetProductVariantsByProductIdAsync(Guid productId);
 
 
 
@@ -76,9 +75,9 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<ProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId);
+        Task<IEnumerable<AdminProductImageResponse>> GetProductImagesAsync(Guid productId, int? colorId);
         Task<IEnumerable<ProductImage>> FindProductImagesAsync(Guid productId);
-        Task<ProductImageResponse?> GetProductImageByIdAsync(Guid productImageId);
+        Task<AdminProductImageResponse?> GetProductImageByIdAsync(Guid productImageId);
         Task<ProductImage?> FindProductImageByIdAsync(Guid productImageId);
         Task<List<ProductImage>> GetProductImagesForUpdateAsync(Guid productId, int? colorId);
         Task<int> GetMaxSortOrder(Guid productId, int? colorId);

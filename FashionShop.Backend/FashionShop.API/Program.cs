@@ -2,10 +2,14 @@
 using FashionShop.API.Data;
 using FashionShop.API.Helpers;
 using FashionShop.API.Middwares;
-using FashionShop.API.Repositories.Implements;
+using FashionShop.API.Repositories;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.API.Services.Implements;
-using FashionShop.API.Services.Interfaces;
+using FashionShop.API.Services.Admin;
+using FashionShop.API.Services.Admin.Interfaces;
+using FashionShop.API.Services.Shared;
+using FashionShop.API.Services.Shared.Interfaces;
+using FashionShop.API.Services.Shop;
+using FashionShop.API.Services.Shop.Interfaces;
 using FashionShop.Core.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -73,18 +77,18 @@ namespace FashionShop.API
             builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 
             // Đăng ký Service
-            builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAddressService, AddressService>();
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IBrandService, BrandService>();
-            builder.Services.AddScoped<IColorService, ColorService>();
-            builder.Services.AddScoped<ISizeService, SizeService>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IVoucherService, VoucherService>();
+            builder.Services.AddScoped<IShopUserService, ShopUserService>();
+            builder.Services.AddScoped<IShopAddressService, ShopAddressService>();
+            builder.Services.AddScoped<IAdminCategoryService, AdminCategoryService>();
+            builder.Services.AddScoped<IAdminBrandService, AdminBrandService>();
+            builder.Services.AddScoped<IAdminColorService, AdminColorService>();
+            builder.Services.AddScoped<IAdminSizeService, AdminSizeService>();
+            builder.Services.AddScoped<IAdminProductService, AdminProductService>();
+            builder.Services.AddScoped<IAdminVoucherService, AdminVoucherService>();
 
-            builder.Services.AddScoped<IPhotoService, PhotoService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
 
             // 1. Lấy dữ liệu từ appsettings bind vào class CloudinarySettings
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));

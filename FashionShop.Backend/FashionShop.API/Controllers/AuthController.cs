@@ -1,11 +1,11 @@
-﻿using FashionShop.API.Services.Implements;
-using FashionShop.API.Services.Interfaces;
-using FashionShop.Core.Contracts.Auth;
+﻿using FashionShop.API.Services;
 using FashionShop.Core.Exceptions;
 using FashionShop.Core.Contracts;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using FashionShop.API.Services.Shared.Interfaces;
+using FashionShop.Core.Contracts.Shared.Auth;
 
 namespace FashionShop.API.Controllers
 {

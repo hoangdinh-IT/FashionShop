@@ -1,7 +1,7 @@
-﻿using FashionShop.Core.Contracts.Category.Responses;
+﻿using FashionShop.Core.Contracts.Admin.Category.Requests;
+using FashionShop.Core.Contracts.Admin.Category.Responses;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Category;
-using FashionShop.Core.Models.Paging;
+using FashionShop.Core.Models;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
@@ -10,11 +10,11 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<CategoryResponse>> GetAllCategoriesAsync();
-        Task<PagedResult<CategoryResponse>> GetPagedCategoriesAsync(CategoryListRequest request);
+        Task<IEnumerable<AdminCategoryResponse>> GetAllCategoriesAsync();
+        Task<PagedResult<AdminCategoryResponse>> GetPagedCategoriesAsync(AdminCategoryListRequest request);
         Task<IEnumerable<Category>> GetLeafCategoriesAsync();
-        Task<CategoryResponse?> GetCategoryByIdAsync(Guid categoryId);
-        Task<IEnumerable<CategoryResponse>> GetCategoriesByParentIdAsync(Guid parentId);
+        Task<AdminCategoryResponse?> GetCategoryByIdAsync(Guid categoryId);
+        Task<IEnumerable<AdminCategoryResponse>> GetCategoriesByParentIdAsync(Guid parentId);
         Task<Category?> FindCategoryByIdAsync(Guid categoryId);
 
 

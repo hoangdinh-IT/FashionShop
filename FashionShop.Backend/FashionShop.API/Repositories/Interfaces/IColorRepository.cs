@@ -1,7 +1,7 @@
-﻿using FashionShop.Core.Contracts.Color.Responses;
+﻿using FashionShop.Core.Contracts.Admin.Color.Requests;
+using FashionShop.Core.Contracts.Admin.Color.Responses;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Color;
-using FashionShop.Core.Models.Paging;
+using FashionShop.Core.Models;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
@@ -10,9 +10,9 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<ColorResponse>> GetAllColorsAsync();
-        Task<PagedResult<ColorResponse>> GetPagedColorsAsync(ColorListRequest request);
-        Task<ColorResponse?> GetColorByIdAsync(int colorId);
+        Task<IEnumerable<AdminColorResponse>> GetAllColorsAsync();
+        Task<PagedResult<AdminColorResponse>> GetPagedColorsAsync(AdminColorListRequest request);
+        Task<AdminColorResponse?> GetColorByIdAsync(int colorId);
         Task<Color?> FindColorByIdAsync(int colorId);
 
 

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Interfaces;
-using FashionShop.API.Services.Implements;
-using FashionShop.Core.Contracts.Address.Responses;
+using FashionShop.API.Services.Shop;
+using FashionShop.Core.Contracts.Shop.Address.Responses;
 using FashionShop.Core.Entities;
 using Moq;
 
@@ -13,7 +13,7 @@ namespace FashionShop.Tests.Services
         private readonly Mock<IUserRepository> _mockUserRepo;
         private readonly Mock<IMapper> _mockMapper;
 
-        private readonly AddressService _addressService;
+        private readonly ShopAddressService _addressService;
 
         public AddressServiceTests()
         {
@@ -21,7 +21,7 @@ namespace FashionShop.Tests.Services
             _mockUserRepo = new Mock<IUserRepository>();
             _mockMapper = new Mock<IMapper>();
 
-            _addressService = new AddressService(
+            _addressService = new ShopAddressService(
                 _mockAddressRepo.Object,
                 _mockUserRepo.Object,
                 _mockMapper.Object

@@ -1,7 +1,7 @@
 ﻿using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Contracts.Size.Responses;
-using FashionShop.Core.Models.Size;
+using FashionShop.Core.Contracts.Admin.Size.Responses;
+using FashionShop.Core.Contracts.Admin.Size.Requests;
+using FashionShop.Core.Models;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
@@ -10,9 +10,9 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<SizeResponse>> GetAllSizesAsync();
-        Task<PagedResult<SizeResponse>> GetPagedSizesAsync(SizeListRequest request);
-        Task<SizeResponse?> GetSizeByIdAsync(int sizeId);
+        Task<IEnumerable<AdminSizeResponse>> GetAllSizesAsync();
+        Task<PagedResult<AdminSizeResponse>> GetPagedSizesAsync(AdminSizeListRequest request);
+        Task<AdminSizeResponse?> GetSizeByIdAsync(int sizeId);
         Task<Size?> FindSizeByIdAsync(int sizeId);
 
 

@@ -42,12 +42,12 @@ namespace FashionShop.Core.Entities
         [MaxLength(500)]
         [Column(TypeName = "varchar(500)")]
         public string? AvatarUrl { get; set; }
+        public MembershipClass MembershipClass { get; set; } = MembershipClass.New;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
         public string? Otp { get; set; } = null;
         public DateTime? OtpExpiryTime { get; set; }
 
-        public MembershipClass MembershipClass { get; set; } = MembershipClass.New;
 
         public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 

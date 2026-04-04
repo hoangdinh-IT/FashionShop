@@ -1,8 +1,7 @@
-﻿using FashionShop.Core.Contracts.Voucher.Requests;
-using FashionShop.Core.Contracts.Voucher.Responses;
+﻿using FashionShop.Core.Contracts.Admin.Voucher.Requests;
+using FashionShop.Core.Contracts.Admin.Voucher.Responses;
 using FashionShop.Core.Entities;
-using FashionShop.Core.Models.Paging;
-using FashionShop.Core.Models.Voucher;
+using FashionShop.Core.Models;
 
 namespace FashionShop.API.Repositories.Interfaces
 {
@@ -11,8 +10,8 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<PagedResult<VoucherResponse>> GetPagedVouchers(VoucherListRequest request);
-        Task<VoucherResponse?> GetVoucherByIdAsync(Guid voucherId);
+        Task<PagedResult<AdminVoucherResponse>> GetPagedVouchers(AdminVoucherListRequest request);
+        Task<AdminVoucherResponse?> GetVoucherByIdAsync(Guid voucherId);
         Task<Voucher?> FindVoucherByIdAsync(Guid voucherId);
 
 

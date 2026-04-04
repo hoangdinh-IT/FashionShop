@@ -1,25 +1,25 @@
 ﻿using AutoMapper;
-using FashionShop.Core.Contracts.Address.Requests;
-using FashionShop.Core.Contracts.Address.Responses;
-using FashionShop.Core.Contracts.Auth;
-using FashionShop.Core.Contracts.Brand.Requests;
-using FashionShop.Core.Contracts.Brand.Responses;
-using FashionShop.Core.Contracts.Category.Requests;
-using FashionShop.Core.Contracts.Category.Responses;
-using FashionShop.Core.Contracts.Color.Requests;
-using FashionShop.Core.Contracts.Color.Responses;
-using FashionShop.Core.Contracts.Product.Requests;
-using FashionShop.Core.Contracts.Product.Responses;
-using FashionShop.Core.Contracts.ProductImage.Requests;
-using FashionShop.Core.Contracts.ProductImage.Responses;
-using FashionShop.Core.Contracts.ProductVariant.Requests;
-using FashionShop.Core.Contracts.ProductVariant.Responses;
-using FashionShop.Core.Contracts.Size.Requests;
-using FashionShop.Core.Contracts.Size.Responses;
-using FashionShop.Core.Contracts.User.Requests;
-using FashionShop.Core.Contracts.User.Responses;
-using FashionShop.Core.Contracts.Voucher.Requests;
-using FashionShop.Core.Contracts.Voucher.Responses;
+using FashionShop.Core.Contracts.Admin.Brand.Requests;
+using FashionShop.Core.Contracts.Admin.Brand.Responses;
+using FashionShop.Core.Contracts.Admin.Category.Requests;
+using FashionShop.Core.Contracts.Admin.Category.Responses;
+using FashionShop.Core.Contracts.Admin.Color.Requests;
+using FashionShop.Core.Contracts.Admin.Color.Responses;
+using FashionShop.Core.Contracts.Admin.Product.Requests;
+using FashionShop.Core.Contracts.Admin.Product.Responses;
+using FashionShop.Core.Contracts.Admin.ProductImage.Requests;
+using FashionShop.Core.Contracts.Admin.ProductImage.Responses;
+using FashionShop.Core.Contracts.Admin.ProductVariant.Requests;
+using FashionShop.Core.Contracts.Admin.ProductVariant.Responses;
+using FashionShop.Core.Contracts.Admin.Size.Requests;
+using FashionShop.Core.Contracts.Admin.Size.Responses;
+using FashionShop.Core.Contracts.Admin.Voucher.Requests;
+using FashionShop.Core.Contracts.Admin.Voucher.Responses;
+using FashionShop.Core.Contracts.Shared.Auth;
+using FashionShop.Core.Contracts.Shop.Address.Requests;
+using FashionShop.Core.Contracts.Shop.Address.Responses;
+using FashionShop.Core.Contracts.Shop.User.Requests;
+using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
 
 namespace FashionShop.API.Mappings
@@ -50,42 +50,42 @@ namespace FashionShop.API.Mappings
 
             CreateMap<UpdateCategoryRequest, Category>();
 
-            CreateMap<Category, CategoryResponse>();
+            CreateMap<Category, AdminCategoryResponse>();
 
             // Brand
             CreateMap<CreateBrandRequest, Brand>();
 
             CreateMap<UpdateBrandRequest, Brand>();
 
-            CreateMap<Brand, BrandResponse>();
+            CreateMap<Brand, AdminBrandResponse>();
 
             // Color
             CreateMap<CreateColorRequest, Color>();
 
             CreateMap<UpdateColorRequest, Color>();
 
-            CreateMap<Color, ColorResponse>();
+            CreateMap<Color, AdminColorResponse>();
 
             // Size
             CreateMap<CreateSizeRequest, Size>();
 
             CreateMap<UpdateSizeRequest, Size>();
 
-            CreateMap<Size, SizeResponse>();
+            CreateMap<Size, AdminSizeResponse>();
 
             // Product
             CreateMap<CreateProductRequest, Product>();
 
             CreateMap<UpdateProductRequest, Product>();
 
-            CreateMap<Product, ProductResponse>();
+            CreateMap<Product, AdminProductResponse>();
 
             // ProductVariant
             CreateMap<CreateProductVariantRequest, ProductVariant>();
             
             CreateMap<UpdateProductVariantRequest, ProductVariant>();
 
-            CreateMap<ProductVariant, ProductVariantResponse>();
+            CreateMap<ProductVariant, AdminProductVariantResponse>();
 
             CreateMap<UpdateProductVariantRequest, CreateProductVariantRequest>();
 
@@ -95,14 +95,14 @@ namespace FashionShop.API.Mappings
             CreateMap<UpdateProductImageRequest, ProductImage>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<ProductImage, ProductImageResponse>();
+            CreateMap<ProductImage, AdminProductImageResponse>();
 
             // Voucher
             CreateMap<CreateVoucherRequest, Voucher>();
 
             CreateMap<UpdateVoucherRequest, Voucher>();
 
-            CreateMap<Voucher, VoucherResponse>();
+            CreateMap<Voucher, AdminVoucherResponse>();
         }
     }
 }
