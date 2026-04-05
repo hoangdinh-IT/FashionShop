@@ -15,11 +15,13 @@ namespace FashionShop.API.Controllers.Shop
         }
 
 
-        // --- READ METHODS --- //
-        //    [HttpGet]
-        //    public async Task<IActionResult> GetProducts(ShopProductListRequest request)
-        //    {
 
-        //    }
+        // --- READ METHODS --- //
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetProducts(ShopProductListRequest request)
+        //{
+
+        //}
     }
 }

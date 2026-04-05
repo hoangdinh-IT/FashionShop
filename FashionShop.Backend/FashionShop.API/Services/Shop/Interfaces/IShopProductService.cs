@@ -8,6 +8,6 @@ namespace FashionShop.API.Services.Shop.Interfaces
 
         // --- READ METHODS --- //
 
-        //Task<IEnumerable<ShopProductResponse>> GetProductsAsync(ShopProductListRequest request);
+        //Task<IEnumerable<ShopProductResponse>> GetPagedProductsAsync(ShopProductListRequest request);
     }
 }

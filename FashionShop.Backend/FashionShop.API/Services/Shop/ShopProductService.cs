@@ -21,7 +21,7 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        //public async Task<IEnumerable<ShopProductResponse>> GetProductsAsync(ShopProductListRequest request)
+        //public async Task<IEnumerable<ShopProductResponse>> GetPagedProductsAsync(ShopProductListRequest request)
         //{
 
         //}
