@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Admin.Interfaces;
 using FashionShop.Core.Contracts.Admin.Voucher.Requests;
 using FashionShop.Core.Contracts.Admin.Voucher.Responses;
 using FashionShop.Core.Entities;
@@ -8,9 +8,9 @@ using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Admin
 {
-    public class VoucherRepository : IVoucherRepository
+    public class AdminVoucherRepository : IAdminVoucherRepository
     {
         private readonly FashionDbContext _context;
 
@@ -36,7 +36,7 @@ namespace FashionShop.API.Repositories
                 IsDeleted = x.IsDeleted,
             };
 
-        public VoucherRepository(FashionDbContext context)
+        public AdminVoucherRepository(FashionDbContext context)
         {
             _context = context;
         }
@@ -96,23 +96,14 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<Voucher> CreateVoucherAsync(Voucher voucher)
+        public void CreateVoucher(Voucher voucher)
         {
             _context.Vouchers.Add(voucher);
-            await _context.SaveChangesAsync();
-            return voucher;
         }
 
-        public async Task<Voucher> UpdateVoucherAsync(Voucher voucher)
-        {
-            await _context.SaveChangesAsync();
-            return voucher;
-        }
-
-        public async Task DeleteVoucherAsync(Voucher voucher)
+        public void DeleteVoucher(Voucher voucher)
         {
             voucher.IsDeleted = true;
-            await _context.SaveChangesAsync();
         }
     }
 }

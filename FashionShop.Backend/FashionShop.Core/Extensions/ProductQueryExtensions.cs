@@ -34,6 +34,20 @@ namespace FashionShop.Core.Extensions
             return query.Where(x => x.BrandId == brandId);
         }
 
+        public static IQueryable<Product> FilterByColor(this IQueryable<Product> query, List<int>? colorIds)
+        {
+            if (colorIds == null || !colorIds.Any()) return query;
+
+            return query.Where(p => p.ProductVariants.Any(v => colorIds.Contains(v.ColorId)));
+        }
+
+        public static IQueryable<Product> FilterBySize(this IQueryable<Product> query, List<int> sizeIds)
+        {
+            if (sizeIds == null || !sizeIds.Any()) return query;
+
+            return query.Where(p => p.ProductVariants.Any(v => sizeIds.Contains(v.SizeId)));
+        }
+
         public static IQueryable<Product> FilterByActive(this IQueryable<Product> query, bool? isActive)
         {
             if (!isActive.HasValue) return query;

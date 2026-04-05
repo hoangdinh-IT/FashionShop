@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Admin.Interfaces;
 using FashionShop.Core.Contracts.Admin.Color.Requests;
 using FashionShop.Core.Contracts.Admin.Color.Responses;
 using FashionShop.Core.Entities;
@@ -8,9 +8,9 @@ using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Admin
 {
-    public class ColorRepository : IColorRepository
+    public class AdminColorRepository : IAdminColorRepository
     {
         private readonly FashionDbContext _context;
 
@@ -28,7 +28,7 @@ namespace FashionShop.API.Repositories
                 IsDeleted = x.IsDeleted,
             };
 
-        public ColorRepository(FashionDbContext context)
+        public AdminColorRepository(FashionDbContext context)
         {
             _context = context;
         }
@@ -103,25 +103,14 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<Color?> CreateColorAsync(Color color)
+        public void CreateColor(Color color)
         {
             _context.Colors.Add(color);
-            await _context.SaveChangesAsync();
-            return color;
         }
 
-        public async Task<Color> UpdateColorAsync(Color color)
-        {
-            _context.Colors.Update(color);
-            await _context.SaveChangesAsync();
-            return color;
-        }
-
-        public async Task DeleteColorAsync(Color color)
+        public void DeleteColor(Color color)
         {
             color.IsDeleted = true;
-            _context.Colors.Update(color);
-            await _context.SaveChangesAsync();
         }
     }
 }

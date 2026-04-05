@@ -3,9 +3,9 @@ using FashionShop.Core.Contracts.Admin.Voucher.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Admin.Interfaces
 {
-    public interface IVoucherRepository
+    public interface IAdminVoucherRepository
     {
 
         // --- READ METHODS --- //
@@ -24,8 +24,7 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<Voucher> CreateVoucherAsync(Voucher voucher);
-        Task<Voucher> UpdateVoucherAsync(Voucher voucher);
-        Task DeleteVoucherAsync(Voucher voucher);
+        void CreateVoucher(Voucher voucher);
+        void DeleteVoucher(Voucher voucher);
     }
 }

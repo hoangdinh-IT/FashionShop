@@ -2,8 +2,12 @@
 using FashionShop.API.Data;
 using FashionShop.API.Helpers;
 using FashionShop.API.Middwares;
-using FashionShop.API.Repositories;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Admin;
+using FashionShop.API.Repositories.Admin.Interfaces;
+using FashionShop.API.Repositories.Shared;
+using FashionShop.API.Repositories.Shared.Interfaces;
+using FashionShop.API.Repositories.Shop;
+using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.API.Services.Admin;
 using FashionShop.API.Services.Admin.Interfaces;
 using FashionShop.API.Services.Shared;
@@ -67,14 +71,7 @@ namespace FashionShop.API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Đăng ký Repository
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IBrandRepository, BrandRepository>();
-            builder.Services.AddScoped<IColorRepository, ColorRepository>();
-            builder.Services.AddScoped<ISizeRepository, SizeRepository>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Đăng ký Service
             builder.Services.AddScoped<IShopUserService, ShopUserService>();

@@ -3,9 +3,9 @@ using FashionShop.Core.Contracts.Admin.Category.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Admin.Interfaces
 {
-    public interface ICategoryRepository
+    public interface IAdminCategoryRepository
     {
 
         // --- READ METHODS --- //
@@ -28,8 +28,7 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<Category?> CreateCategoryAsync(Category category);
-        Task<Category?> UpdateCategoryAsync(Category category);
+        void CreateCategory(Category category);
         Task DeleteCategoryAsync(Guid categoryId);
     }
 }

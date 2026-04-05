@@ -1,8 +1,8 @@
 ﻿using FashionShop.Core.Entities;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Shop.Interfaces
 {
-    public interface IAddressRepository
+    public interface IShopAddressRepository
     {
 
         // --- READ METHODS --- //
@@ -17,8 +17,7 @@ namespace FashionShop.API.Repositories.Interfaces
         // --- WRITE METHODS --- //
 
         Task UnsetDefaultAddressAsync(Guid userId);
-        Task<Address?> CreateAddressAsync(Address address);
-        Task<Address?> UpdateAddressByUserIdAsync(Address address);
-        Task DeleteAddressAsync(Address address);
+        void CreateAddress(Address address);
+        void DeleteAddress(Address address);
     }
 }

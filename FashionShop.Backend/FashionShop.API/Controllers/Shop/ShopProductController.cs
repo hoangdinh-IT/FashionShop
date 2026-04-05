@@ -1,4 +1,5 @@
 ﻿using FashionShop.API.Services.Shop.Interfaces;
+using FashionShop.Core.Contracts.Shop.Product.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FashionShop.API.Controllers.Shop
@@ -15,7 +16,10 @@ namespace FashionShop.API.Controllers.Shop
 
 
         // --- READ METHODS --- //
-        //[HttpGet]
-        //public async Task<IActionResult> GetProducts()
+        //    [HttpGet]
+        //    public async Task<IActionResult> GetProducts(ShopProductListRequest request)
+        //    {
+
+        //    }
     }
 }

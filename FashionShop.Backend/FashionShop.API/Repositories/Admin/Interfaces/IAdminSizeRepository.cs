@@ -3,9 +3,9 @@ using FashionShop.Core.Contracts.Admin.Size.Responses;
 using FashionShop.Core.Contracts.Admin.Size.Requests;
 using FashionShop.Core.Models;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Admin.Interfaces
 {
-    public interface ISizeRepository
+    public interface IAdminSizeRepository
     {
 
         // --- READ METHODS --- //
@@ -25,8 +25,7 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<Size?> CreateSizeAsync(Size size);
-        Task<Size> UpdateSizeAsync(Size size);
-        Task DeleteSizeAsync(Size size);
+        void CreateSize(Size size);
+        void DeleteSize(Size size);
     }
 }

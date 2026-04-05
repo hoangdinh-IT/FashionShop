@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Admin.Interfaces;
 using FashionShop.Core.Contracts.Admin.Category.Requests;
 using FashionShop.Core.Contracts.Admin.Category.Responses;
 using FashionShop.Core.Entities;
@@ -8,9 +8,9 @@ using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Admin
 {
-    public class CategoryRepository : ICategoryRepository
+    public class AdminCategoryRepository : IAdminCategoryRepository
     {
         private readonly FashionDbContext _context;
 
@@ -30,7 +30,7 @@ namespace FashionShop.API.Repositories
                 IsDeleted = x.IsDeleted,
             };
 
-        public CategoryRepository(FashionDbContext context)
+        public AdminCategoryRepository(FashionDbContext context)
         {
             _context = context;
         }
@@ -134,18 +134,9 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<Category?> CreateCategoryAsync(Category category)
+        public void CreateCategory(Category category)
         {
             _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-            return category;
-        }
-
-        public async Task<Category?> UpdateCategoryAsync(Category category)
-        {
-            _context.Categories.Update(category);
-            await _context.SaveChangesAsync();
-            return category;
         }
 
         private async Task DeleteChildrenRecursiveAsync(Guid parentId)
@@ -173,8 +164,6 @@ namespace FashionShop.API.Repositories
             }
 
             await DeleteChildrenRecursiveAsync(categoryId);
-
-            await _context.SaveChangesAsync();
         }
     }
 }

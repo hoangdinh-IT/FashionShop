@@ -1,15 +1,15 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Shop
 {
-    public class UserRepository : IUserRepository
+    public class ShopUserRepository : IShopUserRepository
     {
         private readonly FashionDbContext _context;
 
-        public UserRepository(FashionDbContext context)
+        public ShopUserRepository(FashionDbContext context)
         {
             _context = context;
         }

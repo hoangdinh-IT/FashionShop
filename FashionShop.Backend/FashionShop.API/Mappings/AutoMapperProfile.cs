@@ -76,6 +76,8 @@ namespace FashionShop.API.Mappings
             // Product
             CreateMap<CreateProductRequest, Product>();
 
+            CreateMap<CreateProductDetailRequest, Product>();
+
             CreateMap<UpdateProductRequest, Product>();
 
             CreateMap<Product, AdminProductResponse>();

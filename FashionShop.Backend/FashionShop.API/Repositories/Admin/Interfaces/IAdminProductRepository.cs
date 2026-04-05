@@ -7,13 +7,10 @@ using FashionShop.Core.Entities;
 using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Admin.Interfaces
 {
-    public interface IProductRepository
+    public interface IAdminProductRepository
     {
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        Task<int> SaveChangesAsync();
-
         #region 1. PRODUCTS
 
 
@@ -24,6 +21,7 @@ namespace FashionShop.API.Repositories.Interfaces
         Task<AdminProductResponse?> GetProductByIdAsync(Guid productId);
         Task<Product?> FindProductByIdAsync(Guid productId);
         Task<AdminProductDetailResponse?> GetProductDetailByIdAsync(Guid productId);
+        Task<Product?> FindProductDetailByIdAsync(Guid productId);
         Task<List<AdminColorResponse>> GetColorsByProductIdAsync(Guid productId);
 
 
@@ -36,9 +34,8 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<Product> CreateProductAsync(Product product);
-        Task<Product> UpdateProductAsync(Product product);
-        Task DeleteProductAsync(Product product);
+        void CreateProduct(Product product);
+        void DeleteProduct(Product product);
         #endregion
 
 
@@ -63,9 +60,8 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<ProductVariant> CreateProductVariantAsync(ProductVariant productVariant);
-        Task<ProductVariant> UpdateProductVariantAsync(ProductVariant productVariant);
-        Task DeleteProductVariantAsync(ProductVariant productVariant);
+        void CreateProductVariant(ProductVariant productVariant);
+        void DeleteProductVariant(ProductVariant productVariant);
         #endregion
 
 
@@ -93,9 +89,8 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<ProductImage> CreateProductImageAsync(ProductImage productImage);
-        //Task<ProductImage> UpdateProductImageAsync(ProductImage productImage);
-        Task DeleteProductImageAsync(ProductImage productImage);
+        void CreateProductImage(ProductImage productImage);
+        void DeleteProductImage(ProductImage productImage);
         #endregion
     }
 }

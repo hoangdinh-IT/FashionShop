@@ -3,14 +3,13 @@ using FashionShop.Core.Contracts.Admin.Brand.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Admin.Interfaces
 {
-    public interface IBrandRepository
+    public interface IAdminBrandRepository
     {
 
         // --- READ METHODS --- //
 
-        Task<bool> CheckExistSlugAsync(string slug);
         Task<IEnumerable<Brand>> GetAllBrandsAsync();
         Task<PagedResult<AdminBrandResponse>> GetPagedBrandsAsync(AdminBrandListRequest request);
         Task<AdminBrandResponse?> GetBrandByIdAsync(Guid brandId);
@@ -21,13 +20,13 @@ namespace FashionShop.API.Repositories.Interfaces
         // --- VALIDATION METHODS --- //
 
         Task<bool> IsSafeToActionAsync(Guid brandId);
+        Task<bool> CheckExistSlugAsync(string slug);
 
 
 
         // --- WRITE METHODS --- //
 
-        Task<Brand?> CreateBrandAsync(Brand brand);
-        Task<Brand?> UpdateBrandAsync(Brand brand);
-        Task DeleteBrandAsync(Brand brand);
+        void CreateBrand(Brand brand);
+        void DeleteBrand(Brand brand);
     }
 }

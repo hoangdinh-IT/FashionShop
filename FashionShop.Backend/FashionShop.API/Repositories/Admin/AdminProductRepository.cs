@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Admin.Interfaces;
 using FashionShop.Core.Contracts.Admin.Color.Responses;
 using FashionShop.Core.Contracts.Admin.Product.Requests;
 using FashionShop.Core.Contracts.Admin.Product.Responses;
@@ -12,9 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Admin
 {
-    public class ProductRepository : IProductRepository
+    public class AdminProductRepository : IAdminProductRepository
     {
         private readonly FashionDbContext _context;
 
@@ -113,20 +113,9 @@ namespace FashionShop.API.Repositories
                     .ToList()
             };
 
-        public ProductRepository(FashionDbContext context)
+        public AdminProductRepository(FashionDbContext context)
         {
             _context = context;
-        }
-
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            // Mở Transaction từ Database Context
-            return await _context.Database.BeginTransactionAsync();
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
         }
 
         #region 1. PRODUCTS
@@ -148,7 +137,7 @@ namespace FashionShop.API.Repositories
                          .FilterByPrice(request.MinPrice, request.MaxPrice)
                          .Sort(request.SortBy, request.IsAscending);
 
-            var totalRecorl = await query.CountAsync();
+            var totalRecord = await query.CountAsync();
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                                   .Take(request.PageSize)
@@ -158,7 +147,7 @@ namespace FashionShop.API.Repositories
             return new PagedResult<AdminProductResponse>()
             {
                 Items = data,
-                TotalRecord = totalRecorl,
+                TotalRecord = totalRecord,
                 PageSize = request.PageSize,
                 PageIndex = request.PageIndex,
             };
@@ -182,6 +171,13 @@ namespace FashionShop.API.Repositories
                 .Where(prod => prod.Id == productId)
                 .Select(_productDetailSelector)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Product?> FindProductDetailByIdAsync(Guid productId)
+        {
+            return await _context.Products
+                .Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
         public async Task<List<AdminColorResponse>> GetColorsByProductIdAsync(Guid productId)
@@ -210,23 +206,14 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<Product> CreateProductAsync(Product product)
+        public void CreateProduct(Product product)
         {
             _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-            return product;
         }
 
-        public async Task<Product> UpdateProductAsync(Product product)
-        {
-            await _context.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task DeleteProductAsync(Product product)
+        public void DeleteProduct(Product product)
         {
             product.IsDeleted = true;
-            await _context.SaveChangesAsync();
         }
         #endregion
 
@@ -293,25 +280,14 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<ProductVariant> CreateProductVariantAsync(ProductVariant productVariant)
+        public void CreateProductVariant(ProductVariant productVariant)
         {
             _context.ProductVariants.Add(productVariant);
-            await _context.SaveChangesAsync();
-            return productVariant;
         }
 
-        public async Task<ProductVariant> UpdateProductVariantAsync(ProductVariant productVariant)
-        {
-            _context.ProductVariants.Update(productVariant);
-            await _context.SaveChangesAsync();
-            return productVariant;
-        }
-
-        public async Task DeleteProductVariantAsync(ProductVariant productVariant)
+        public void DeleteProductVariant(ProductVariant productVariant)
         {
             productVariant.IsDeleted = true;
-            _context.ProductVariants.Update(productVariant);
-            await _context.SaveChangesAsync();
         }
         #endregion
 
@@ -394,24 +370,14 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<ProductImage> CreateProductImageAsync(ProductImage productImage)
+        public void CreateProductImage(ProductImage productImage)
         {
             _context.ProductImages.Add(productImage);
-            await _context.SaveChangesAsync();
-            return productImage;
         }
 
-        //public async Task<ProductImage> UpdateProductImageAsync(ProductImage productImage)
-        //{
-        //    _context.ProductImages.Update(productImage);
-        //    await _context.SaveChangesAsync();
-        //    return productImage;
-        //}
-
-        public async Task DeleteProductImageAsync(ProductImage productImage)
+        public void DeleteProductImage(ProductImage productImage)
         {
             _context.ProductImages.Remove(productImage);
-            await _context.SaveChangesAsync();
         }
         #endregion
     }

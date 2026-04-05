@@ -3,9 +3,9 @@ using FashionShop.Core.Contracts.Admin.Color.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Models;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Admin.Interfaces
 {
-    public interface IColorRepository
+    public interface IAdminColorRepository
     {
 
         // --- READ METHODS --- //
@@ -27,8 +27,7 @@ namespace FashionShop.API.Repositories.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<Color?> CreateColorAsync(Color color);
-        Task<Color> UpdateColorAsync(Color color);
-        Task DeleteColorAsync(Color color);
+        void CreateColor(Color color);
+        void DeleteColor(Color color);
     }
 }

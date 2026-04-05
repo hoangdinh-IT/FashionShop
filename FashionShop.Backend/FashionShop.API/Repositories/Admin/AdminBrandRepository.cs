@@ -1,5 +1,4 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
 using FashionShop.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using FashionShop.Core.Extensions;
@@ -7,10 +6,11 @@ using System.Linq.Expressions;
 using FashionShop.Core.Contracts.Admin.Brand.Responses;
 using FashionShop.Core.Contracts.Admin.Brand.Requests;
 using FashionShop.Core.Models;
+using FashionShop.API.Repositories.Admin.Interfaces;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Admin
 {
-    public class BrandRepository : IBrandRepository
+    public class AdminBrandRepository : IAdminBrandRepository
     {
         private readonly FashionDbContext _context;
 
@@ -29,7 +29,7 @@ namespace FashionShop.API.Repositories
                 IsDeleted = x.IsDeleted,
             };
 
-        public BrandRepository(FashionDbContext context)
+        public AdminBrandRepository(FashionDbContext context)
         {
             _context = context;
         }
@@ -37,9 +37,6 @@ namespace FashionShop.API.Repositories
 
 
         // --- READ METHODS --- //
-
-        public async Task<bool> CheckExistSlugAsync(string slug)
-            => await _context.Brands.AnyAsync(x => x.Slug == slug);
 
         public async Task<IEnumerable<Brand>> GetAllBrandsAsync()
         {
@@ -95,29 +92,21 @@ namespace FashionShop.API.Repositories
             return !hasProduct;
         }
 
+        public async Task<bool> CheckExistSlugAsync(string slug)
+            => await _context.Brands.AnyAsync(x => x.Slug == slug);
+
 
 
         // --- WRITE METHODS --- //
 
-        public async Task<Brand?> CreateBrandAsync(Brand brand)
+        public void CreateBrand(Brand brand)
         {
             _context.Brands.Add(brand);
-            await _context.SaveChangesAsync();
-            return brand;
         }
 
-        public async Task<Brand?> UpdateBrandAsync(Brand brand)
-        {
-            _context.Brands.Update(brand);
-            await _context.SaveChangesAsync();
-            return brand;
-        }
-
-        public async Task DeleteBrandAsync(Brand brand)
+        public void DeleteBrand(Brand brand)
         {
             brand.IsDeleted = true;
-            _context.Brands.Update(brand);
-            await _context.SaveChangesAsync();
         }
     }
 }

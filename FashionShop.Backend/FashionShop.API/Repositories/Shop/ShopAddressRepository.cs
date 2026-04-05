@@ -1,15 +1,15 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Shop
 {
-    public class AddressRepository : IAddressRepository
+    public class ShopAddressRepository : IShopAddressRepository
     {
         private readonly FashionDbContext _context;
 
-        public AddressRepository(FashionDbContext context)
+        public ShopAddressRepository(FashionDbContext context)
         {
             _context = context;
         }
@@ -54,41 +54,19 @@ namespace FashionShop.API.Repositories
 
         public async Task UnsetDefaultAddressAsync(Guid userId)
         {
-            //var defaultAddresses = await _context.Addresses
-            //    .Where(x => x.UserId == userId && x.IsDefault)
-            //    .ToListAsync();
-
-            //foreach (var address in defaultAddresses)
-            //{
-            //    address.IsDefault = false;
-            //}
-
-            //await _context.SaveChangesAsync();
-
             await _context.Addresses
                 .Where(x => x.UserId == userId && x.IsDefault)
                 .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.IsDefault, false));
         }
 
-        public async Task<Address?> CreateAddressAsync(Address address)
+        public void CreateAddress(Address address)
         {
             _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
-            return address;
         }
 
-        public async Task<Address?> UpdateAddressByUserIdAsync(Address address)
-        {
-            _context.Addresses.Update(address);
-            await _context.SaveChangesAsync();
-            return address;
-        }
-
-        public async Task DeleteAddressAsync(Address address)
+        public void DeleteAddress(Address address)
         {
             address.IsDeleted = true;
-            _context.Addresses.Update(address);
-            await _context.SaveChangesAsync();
         }
     }
 }

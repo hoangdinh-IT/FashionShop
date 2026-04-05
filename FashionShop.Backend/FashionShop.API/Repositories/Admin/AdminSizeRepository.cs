@@ -1,5 +1,5 @@
 ﻿using FashionShop.API.Data;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Admin.Interfaces;
 using FashionShop.Core.Contracts.Admin.Size.Requests;
 using FashionShop.Core.Contracts.Admin.Size.Responses;
 using FashionShop.Core.Entities;
@@ -8,9 +8,9 @@ using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace FashionShop.API.Repositories
+namespace FashionShop.API.Repositories.Admin
 {
-    public class SizeRepository : ISizeRepository
+    public class AdminSizeRepository : IAdminSizeRepository
     {
         private readonly FashionDbContext _context;
 
@@ -28,7 +28,7 @@ namespace FashionShop.API.Repositories
                 IsDeleted = x.IsDeleted,
             };
 
-        public SizeRepository(FashionDbContext context)
+        public AdminSizeRepository(FashionDbContext context)
         {
             _context = context;
         }
@@ -96,25 +96,14 @@ namespace FashionShop.API.Repositories
 
         // --- WRITE METHODS --- //
 
-        public async Task<Size?> CreateSizeAsync(Size size)
+        public void CreateSize(Size size)
         {
             _context.Sizes.Add(size);
-            await _context.SaveChangesAsync();
-            return size;
         }
 
-        public async Task<Size> UpdateSizeAsync(Size size)
-        {
-            _context.Sizes.Update(size);
-            await _context.SaveChangesAsync();
-            return size;
-        }
-
-        public async Task DeleteSizeAsync(Size size)
+        public void DeleteSize(Size size)
         {
             size.IsDeleted = true;
-            _context.Sizes.Update(size);
-            await _context.SaveChangesAsync();
         }
     }
 }

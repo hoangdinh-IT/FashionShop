@@ -9,6 +9,6 @@ namespace FashionShop.Core.Contracts.Admin.Product.Responses
 {
     public class AdminProductDetailResponse : AdminProductResponse
     {
-        public List<AdminProductVariantResponse> ProductVariants { get; set; }
+        public IEnumerable<AdminProductVariantResponse>? ProductVariants { get; set; }
     }
 }

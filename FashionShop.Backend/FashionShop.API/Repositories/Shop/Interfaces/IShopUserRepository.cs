@@ -1,8 +1,8 @@
 ﻿using FashionShop.Core.Entities;
 
-namespace FashionShop.API.Repositories.Interfaces
+namespace FashionShop.API.Repositories.Shop.Interfaces
 {
-    public interface IUserRepository
+    public interface IShopUserRepository
     {
 
         // --- READ METHODS --- //

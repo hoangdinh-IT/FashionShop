@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using FashionShop.API.Repositories.Interfaces;
+using FashionShop.API.Repositories.Shared.Interfaces;
+using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.API.Services.Shop.Interfaces;
 using FashionShop.Core.Contracts.Shop.User.Requests;
 using FashionShop.Core.Contracts.Shop.User.Responses;
@@ -9,12 +10,12 @@ namespace FashionShop.API.Services.Shop
 {
     public class ShopUserService : IShopUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ShopUserService(IUserRepository userRepository, IMapper mapper)
+        public ShopUserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -24,13 +25,13 @@ namespace FashionShop.API.Services.Shop
 
         public async Task<IEnumerable<UserResponse>> GetUsersAsync()
         {
-            var users = await _userRepository.GetUsersAsync();
+            var users = await _unitOfWork.ShopUsers.GetUsersAsync();
             return _mapper.Map<IEnumerable<UserResponse>>(users);
         }
 
         public async Task<UserResponse> GetUserByEmailAsync(string email)
         {
-            var user = await _userRepository.GetUserByEmailAsync(email);
+            var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(email);
 
             if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
@@ -43,28 +44,28 @@ namespace FashionShop.API.Services.Shop
 
         public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest request)
         {
-            var existingUser = await _userRepository.GetUserByIdAsync(userId);
+            var existingUser = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
 
             if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            if (request.Email != existingUser.Email && await _userRepository.IsUserExistsAsync(request.Email))
+            if (request.Email != existingUser.Email && await _unitOfWork.ShopUsers.IsUserExistsAsync(request.Email))
             {
                 throw new ConflictException("Email đã được sử dụng");
             }
 
             _mapper.Map(request, existingUser);
             existingUser.UpdatedDate = DateTime.UtcNow;
-            var updatedUser = await _userRepository.UpdateUserAsync(existingUser);
+            var updatedUser = await _unitOfWork.ShopUsers.UpdateUserAsync(existingUser);
             return _mapper.Map<UserResponse>(existingUser);
         }
 
         public async Task DeleteUserAsync(Guid userId)
         {
-            var existingUser = await _userRepository.GetUserByIdAsync(userId);
+            var existingUser = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
 
             if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            await _userRepository.DeleteUserAsync(existingUser);
+            await _unitOfWork.ShopUsers.DeleteUserAsync(existingUser);
         }
     }
 }
