@@ -14,7 +14,7 @@ const PublicRoute = () => {
             return <Navigate to="/admin" replace />;
         } else {
             // Đá về trang chủ hoặc profile
-            return <Navigate to="/" replace />; 
+            return <Navigate to="/shop/account" replace />; 
         }
     }
 

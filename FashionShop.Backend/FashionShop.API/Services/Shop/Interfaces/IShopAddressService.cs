@@ -8,14 +8,14 @@ namespace FashionShop.API.Services.Shop.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<AddressResponse>> GetAddressesByUserIdAsync(Guid userId);
+        Task<IEnumerable<ShopAddressResponse>> GetAddressesByUserIdAsync(Guid userId);
 
 
 
         // --- WRITE METHODS --- //
 
-        Task<AddressResponse> CreateAddressAsync(CreateAddressRequest dto);
-        Task<AddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressRequest dto);
+        Task<ShopAddressResponse> CreateAddressAsync(ShopCreateAddressRequest dto);
+        Task<ShopAddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, ShopUpdateAddressRequest dto);
         Task DeleteAddressAsync(Guid userId, Guid addressId);
     }
 }

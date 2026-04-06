@@ -1,7 +1,9 @@
 ﻿using FashionShop.API.Data;
 using FashionShop.API.Repositories.Shop.Interfaces;
+using FashionShop.Core.Contracts.Shop.Address.Responses;
 using FashionShop.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FashionShop.API.Repositories.Shop
 {
@@ -14,6 +16,21 @@ namespace FashionShop.API.Repositories.Shop
             _context = context;
         }
 
+        private static readonly Expression<Func<Address, ShopAddressResponse>> _addressSelector =
+            x => new ShopAddressResponse
+            {
+                Id = x.Id,
+                UserId = x.UserId,
+                FullName = x.User.FullName,
+                PhoneNumber = x.User.PhoneNumber,
+                AddressDetail = x.AddressDetail,
+                Commune = x.Commune,
+                District = x.District,
+                City = x.City,
+                IsDefault = x.IsDefault,
+                CreatedDate = x.CreatedDate,
+            };
+
 
 
         // --- READ METHODS --- //
@@ -21,10 +38,11 @@ namespace FashionShop.API.Repositories.Shop
         public async Task<int> CountAddressesByUserIdAsync(Guid userId)
             => await _context.Addresses.CountAsync(x => x.UserId == userId);
 
-        public async Task<IEnumerable<Address>> GetAddressesByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<ShopAddressResponse>> GetAddressesByUserIdAsync(Guid userId)
         {
             return await _context.Addresses
                 .AsNoTracking()
+                .Select(_addressSelector)
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.IsDefault)
                 .ThenByDescending(x => x.CreatedDate)
@@ -34,7 +52,6 @@ namespace FashionShop.API.Repositories.Shop
         public async Task<Address?> GetAddressByUserIdAsync(Guid userId, Guid addressId)
         {
             return await _context.Addresses
-                .AsNoTracking()
                 .Where(x => x.UserId == userId && x.Id == addressId)
                 .FirstOrDefaultAsync();
         }

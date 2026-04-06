@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useSizes } from "../../../features/sizes/hooks/useSizes";
-import type { Size } from "../../../features/sizes/types/size";
+import { useSizes } from "../../../features/admin/sizes/hooks/useSizes";
+import type { Size } from "../../../features/admin/sizes/types/size";
 import { IoAdd } from "react-icons/io5";
 import { useDialog } from "../../../contexts";
-import SizeTable from "../../../features/sizes/components/SizeTable";
+import SizeTable from "../../../features/admin/sizes/components/SizeTable";
 import Pagination from "../../../components/common/Pagination";
-import SizeToolbar from "../../../features/sizes/components/SizeToolbar";
-import SizeFormDialog from "../../../features/sizes/components/SizeFormDialog";
+import SizeToolbar from "../../../features/admin/sizes/components/SizeToolbar";
+import SizeFormDialog from "../../../features/admin/sizes/components/SizeFormDialog";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
-import type { SizeFilters, SizeQueryParams } from "../../../features/sizes/types/requests";
+import type { SizeFilters, SizeQueryParams } from "../../../features/admin/sizes/types/requests";
 
 const SizePage = () => {
     const { showDialog } = useDialog();

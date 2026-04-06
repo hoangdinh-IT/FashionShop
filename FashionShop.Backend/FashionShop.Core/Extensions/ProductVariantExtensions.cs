@@ -15,7 +15,7 @@ namespace FashionShop.Core.Extensions
 
             string word = keyword.ToLower().Trim();
 
-            return query.Where(x => x.SKU.ToLower().Contains(word));
+            return query.Where(x => x.Sku.ToLower().Contains(word));
         }
 
         public static IQueryable<ProductVariant> FilterByProduct(this IQueryable<ProductVariant> query, Guid? productId)

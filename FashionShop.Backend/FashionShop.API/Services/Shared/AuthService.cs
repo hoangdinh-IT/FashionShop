@@ -3,7 +3,8 @@ using FashionShop.API.Repositories.Shared.Interfaces;
 using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.API.Services.Shared.Interfaces;
 using FashionShop.Core.Common;
-using FashionShop.Core.Contracts.Shared.Auth;
+using FashionShop.Core.Contracts.Shared.Auth.Requests;
+using FashionShop.Core.Contracts.Shared.Auth.Responses;
 using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Enums;
@@ -32,9 +33,9 @@ namespace FashionShop.API.Services.Shared
             _emailService = emailService;
         }
 
-        public async Task<UserResponse?> CreateUserAsync(AppRegisterRequest request)
+        public async Task<ShopUserResponse?> CreateUserAsync(AppRegisterRequest request)
         {
-            if (await _unitOfWork.ShopUsers.IsUserExistsAsync(request.Email))
+            if (await _unitOfWork.ShopUsers.CheckUserExistAsync(request.Email))
             {
                 throw new ConflictException("Email đã được đăng ký!");
             }
@@ -44,17 +45,19 @@ namespace FashionShop.API.Services.Shared
             newUser.Role = RoleUser.Customer;
             newUser.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            var createdUser = await _unitOfWork.ShopUsers.CreateUserAsync(newUser);
+            _unitOfWork.ShopUsers.CreateUser(newUser);
 
-            if (createdUser == null)
+            if (newUser == null)
             {
                 throw new Exception("Đăng ký tài khoản thất bại!");
             }
 
-            return _mapper.Map<UserResponse>(createdUser);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<ShopUserResponse>(newUser);
         }
 
-        public async Task<UserResponse?> LoginUserAsync(AppLoginRequest request)
+        public async Task<AuthResponse?> LoginUserAsync(AppLoginRequest request)
         {
             var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(request.Email);
 
@@ -71,12 +74,15 @@ namespace FashionShop.API.Services.Shared
             else
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             
-            var updatedUser = await _unitOfWork.ShopUsers.UpdateUserAsync(user);
+            var userResponse = _mapper.Map<ShopUserResponse>(user);
 
-            var userResponse = _mapper.Map<UserResponse>(updatedUser);
-            userResponse.AccessToken = accessToken;
-
-            return userResponse;
+            return new AuthResponse
+            {
+                User = userResponse,
+                AccessToken = accessToken,
+                RefreshToken = user.RefreshToken,
+                RefreshTokenExpiryTime = user.RefreshTokenExpiryTime.Value,
+            };
         }
 
         private string GenerateAccessToken(User user)
@@ -120,7 +126,7 @@ namespace FashionShop.API.Services.Shared
             return Convert.ToBase64String(randomNumber);
         }
 
-        public async Task<UserResponse> RefreshTokenAsync(RefreshTokenRequest request)
+        public async Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request)
         {
             // 1. Lấy thông tin User từ Access Token cũ (dù đã hết hạn)
             var principal = GetPrincipalFromExpiredToken(request.AccessToken);
@@ -160,11 +166,11 @@ namespace FashionShop.API.Services.Shared
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             }
 
-            var updatedUser = await _unitOfWork.ShopUsers.UpdateUserAsync(user);
-
             // 5. Trả về
-            var response = _mapper.Map<UserResponse>(updatedUser);
+            var response = _mapper.Map<AuthResponse>(user);
             response.AccessToken = newAccessToken;
+
+            await _unitOfWork.SaveChangesAsync();
 
             return response;
         }
@@ -205,13 +211,13 @@ namespace FashionShop.API.Services.Shared
 
             user.Otp = otp;
             user.OtpExpiryTime = DateTime.UtcNow.AddMinutes(5);
-            var updatedUser = await _unitOfWork.ShopUsers.UpdateUserAsync(user);
-
             string emailSubject = "[FashionShop] Mã xác thực đặt lại mật khẩu";
-            string emailBody = EmailTemplateHelper.GetResetPasswordTemplate(updatedUser.FullName, otp);
+            string emailBody = EmailTemplateHelper.GetResetPasswordTemplate(user.FullName, otp);
 
             // 2. Nhờ EmailService đi giao
-            await _emailService.SendEmailAsync(updatedUser.Email, emailSubject, emailBody);
+            await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task ResetPasswordAsync(AppResetPasswordRequest request)
@@ -230,7 +236,8 @@ namespace FashionShop.API.Services.Shared
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             user.Otp = null;
             user.OtpExpiryTime = null;
-            await _unitOfWork.ShopUsers.UpdateUserAsync(user);
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         private string GenerateOTP()

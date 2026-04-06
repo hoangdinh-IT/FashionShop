@@ -1,14 +1,14 @@
 import { useState } from "react";
-import type { Voucher } from "../../../features/vouchers/types/voucher";
-import type { VoucherFilters, VoucherQueryParam } from "../../../features/vouchers/types/requests";
-import { useVoucherMutations, useVouchers } from "../../../features/vouchers/hooks/useVouchers";
+import type { Voucher } from "../../../features/admin/vouchers/types/voucher";
+import type { VoucherFilters, VoucherQueryParam } from "../../../features/admin/vouchers/types/requests";
+import { useVoucherMutations, useVouchers } from "../../../features/admin/vouchers/hooks/useVouchers";
 import { useDialog } from "../../../contexts";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import { IoAdd } from "react-icons/io5";
-import VoucherTable from "../../../features/vouchers/components/VoucherTable";
-import VoucherToolbar from "../../../features/vouchers/components/VoucherToolbar";
+import VoucherTable from "../../../features/admin/vouchers/components/VoucherTable";
+import VoucherToolbar from "../../../features/admin/vouchers/components/VoucherToolbar";
 import Pagination from "../../../components/common/Pagination";
-import VoucherFormDialog from "../../../features/vouchers/components/VoucherFormDialog";
+import VoucherFormDialog from "../../../features/admin/vouchers/components/VoucherFormDialog";
 
 const VoucherPage = () => {
     const { showDialog } = useDialog();
@@ -52,8 +52,8 @@ const VoucherPage = () => {
 
     const handleDelete = (voucherId: string) => {
         showDialog({
-            title: "XÁC NHẬN XOÁ KÍCH THƯỚC",
-            message: "Kích thước này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
+            title: "XÁC NHẬN XOÁ MÃ GIẢM GIÁ",
+            message: "Mã giảm giá này sẽ bị xoá vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
             confirmText: "Xoá",
             cancelText: "Hủy",
             confirmColor: "error",

@@ -4,7 +4,9 @@ using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.API.Services.Shop.Interfaces;
 using FashionShop.Core.Contracts.Shop.User.Requests;
 using FashionShop.Core.Contracts.Shop.User.Responses;
+using FashionShop.Core.Entities;
 using FashionShop.Core.Exceptions;
+using System.Security.Claims;
 
 namespace FashionShop.API.Services.Shop
 {
@@ -23,40 +25,67 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<UserResponse>> GetUsersAsync()
+        public async Task<IEnumerable<ShopUserResponse>> GetUsersAsync()
         {
             var users = await _unitOfWork.ShopUsers.GetUsersAsync();
-            return _mapper.Map<IEnumerable<UserResponse>>(users);
+            return _mapper.Map<IEnumerable<ShopUserResponse>>(users);
         }
 
-        public async Task<UserResponse> GetUserByEmailAsync(string email)
+        public async Task<ShopUserResponse?> GetUserByEmailAsync(string email)
         {
             var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(email);
 
             if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            return _mapper.Map<UserResponse>(user);
+            return _mapper.Map<ShopUserResponse>(user);
+        }
+
+        public async Task<ShopUserResponse?> GetMyProfileAsync(string userIdStr)
+        {
+            var userId = ConvertUserId(userIdStr);
+
+            var user = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
+            if (user == null) throw new KeyNotFoundException("Không tìm thấy thông tin người dùng.");
+
+            return _mapper.Map<ShopUserResponse>(user);
         }
 
 
 
         // --- WRITE METHODS --- //
 
-        public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest request)
+        public async Task<ShopUserResponse> UpdateUserAsync(string userIdStr, ShopUpdateUserRequest request)
         {
-            var existingUser = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
+            var userId = ConvertUserId(userIdStr);
 
-            if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
+            var user = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
+            if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            if (request.Email != existingUser.Email && await _unitOfWork.ShopUsers.IsUserExistsAsync(request.Email))
+            _mapper.Map(request, user);
+            user.UpdatedDate = DateTime.UtcNow;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<ShopUserResponse>(user);
+        }
+
+        public async Task ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            if (request.NewPassword != request.ConfirmNewPassword)
+                throw new ArgumentException("Xác nhận mật khẩu mới không khớp!");
+
+            var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(request.Email);
+            if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
             {
-                throw new ConflictException("Email đã được sử dụng");
+                throw new UnauthorizedAccessException("Thông tin đăng nhập không chính xác.");
             }
 
-            _mapper.Map(request, existingUser);
-            existingUser.UpdatedDate = DateTime.UtcNow;
-            var updatedUser = await _unitOfWork.ShopUsers.UpdateUserAsync(existingUser);
-            return _mapper.Map<UserResponse>(existingUser);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            user.UpdatedDate = DateTime.UtcNow;
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteUserAsync(Guid userId)
@@ -65,7 +94,21 @@ namespace FashionShop.API.Services.Shop
 
             if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            await _unitOfWork.ShopUsers.DeleteUserAsync(existingUser);
+            _unitOfWork.ShopUsers.DeleteUser(existingUser);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
+
+        // -- PRIVATE METHODS -- //
+
+        private Guid ConvertUserId(string userIdStr)
+        {
+            if (!Guid.TryParse(userIdStr, out Guid userId))
+                throw new ArgumentException("ID người dùng không hợp lệ.");
+
+            return userId;
         }
     }
 }

@@ -2,25 +2,21 @@ import type React from "react";
 import { useState } from "react";
 import { IoAdd } from "react-icons/io5";
 
-import { useProductMutations, useProducts } from "../../../features/products/hooks/useProducts";
-import { useCategories } from "../../../features/categories/hooks/useCategories";
-import { useBrands } from "../../../features/brands/hooks/useBrands";
-import ProductFormDialog from "../../../features/products/components/ProductFormDialog";
-import ProductTable from "../../../features/products/components/ProductTable";
+import { useProductMutations, useProducts } from "../../../features/admin/products/hooks/useProducts";
+import { useCategories } from "../../../features/admin/categories/hooks/useCategories";
+import { useBrands } from "../../../features/admin/brands/hooks/useBrands";
+import ProductFormDialog from "../../../features/admin/products/components/ProductFormDialog";
+import ProductTable from "../../../features/admin/products/components/ProductTable";
 import Pagination from "../../../components/common/Pagination";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import { useDialog } from "../../../contexts";
-import ProductToolbar from "../../../features/products/components/ProductToolbar";
-import type { ProductFilters, ProductQueryParams } from "../../../features/products/types/requests";
-import ProductImageManagerDialog from "../../../features/products/components/ProductImagesManagerDialog";
-import { useProductImageMutations } from "../../../features/products/hooks/useProductImages";
+import ProductToolbar from "../../../features/admin/products/components/ProductToolbar";
+import type { ProductFilters, ProductQueryParams } from "../../../features/admin/products/types/requests";
+import ProductImageManagerDialog from "../../../features/admin/products/components/ProductImagesManagerDialog";
+import { useProductImageMutations } from "../../../features/admin/products/hooks/useProductImages";
 
 const ProductPage: React.FC = () => {
     const { showDialog } = useDialog();
-
-    // const [isDialogOpen, setIsDialogOpen] = useState(false);
-    // const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
-    // const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
 
     const [modalConfig, setModalConfig] = useState<{
         isOpen: "FORM" | "IMAGE" | null;

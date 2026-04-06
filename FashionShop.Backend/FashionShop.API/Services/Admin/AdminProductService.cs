@@ -437,7 +437,7 @@ namespace FashionShop.API.Services.Admin
 
             if (existingProductVariant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm");
 
-            if (request.sku != existingProductVariant.SKU)
+            if (request.sku != existingProductVariant.Sku)
             {
                 var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(request.sku);
 

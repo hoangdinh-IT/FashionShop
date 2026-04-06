@@ -126,7 +126,7 @@ namespace FashionShop.API.Data
 
             modelBuilder.Entity<ProductVariant>(entity =>
             {
-                entity.HasIndex(pv => pv.SKU)
+                entity.HasIndex(pv => pv.Sku)
                       .IsUnique()
                       .HasFilter("\"IsDeleted\" = false");
 

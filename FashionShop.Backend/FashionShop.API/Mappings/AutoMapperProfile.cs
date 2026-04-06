@@ -15,7 +15,7 @@ using FashionShop.Core.Contracts.Admin.Size.Requests;
 using FashionShop.Core.Contracts.Admin.Size.Responses;
 using FashionShop.Core.Contracts.Admin.Voucher.Requests;
 using FashionShop.Core.Contracts.Admin.Voucher.Responses;
-using FashionShop.Core.Contracts.Shared.Auth;
+using FashionShop.Core.Contracts.Shared.Auth.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Responses;
 using FashionShop.Core.Contracts.Shop.User.Requests;
@@ -33,17 +33,19 @@ namespace FashionShop.API.Mappings
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
-            CreateMap<UpdateUserRequest, User>();
+            CreateMap<ShopUpdateUserRequest, User>();
 
-            CreateMap<User, UserResponse>()
+            CreateMap<User, ShopUserResponse>()
                 .ReverseMap();
 
+            CreateMap<ChangePasswordRequest, User>();
+
             // Address
-            CreateMap<CreateAddressRequest, Address>();
+            CreateMap<ShopCreateAddressRequest, Address>();
 
-            CreateMap<UpdateAddressRequest, Address>();
+            CreateMap<ShopUpdateAddressRequest, Address>();
 
-            CreateMap<Address, AddressResponse>();
+            CreateMap<Address, ShopAddressResponse>();
 
             // Category
             CreateMap<CreateCategoryRequest, Category>();

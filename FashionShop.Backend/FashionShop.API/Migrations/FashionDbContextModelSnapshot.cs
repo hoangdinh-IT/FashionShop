@@ -28,6 +28,11 @@ namespace FashionShop.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AddressDetail")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -51,11 +56,6 @@ namespace FashionShop.API.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -543,13 +543,13 @@ namespace FashionShop.API.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<string>("SKU")
+                    b.Property<int>("SizeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Sku")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -558,11 +558,11 @@ namespace FashionShop.API.Migrations
 
                     b.HasIndex("ColorId");
 
-                    b.HasIndex("SKU")
+                    b.HasIndex("SizeId");
+
+                    b.HasIndex("Sku")
                         .IsUnique()
                         .HasFilter("\"IsDeleted\" = false");
-
-                    b.HasIndex("SizeId");
 
                     b.HasIndex("ProductId", "ColorId", "SizeId")
                         .IsUnique()
@@ -693,15 +693,11 @@ namespace FashionShop.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AvatarUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()

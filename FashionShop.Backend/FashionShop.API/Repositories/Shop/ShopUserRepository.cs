@@ -27,7 +27,6 @@ namespace FashionShop.API.Repositories.Shop
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _context.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
@@ -35,7 +34,7 @@ namespace FashionShop.API.Repositories.Shop
 
         // --- VALIDATION METHODS --- //
 
-        public async Task<bool> IsUserExistsAsync(string email)
+        public async Task<bool> CheckUserExistAsync(string email)
         {
             return await _context.Users
                 .IgnoreQueryFilters()
@@ -46,25 +45,14 @@ namespace FashionShop.API.Repositories.Shop
 
         // --- WRITE METHODS --- //
 
-        public async Task<User?> CreateUserAsync(User user)
+        public void CreateUser(User user)
         {
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
         }
 
-        public async Task<User?> UpdateUserAsync(User user)
-        {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
-        public async Task DeleteUserAsync(User user)
+        public void DeleteUser(User user)
         {
             user.IsDeleted = true;
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
         }
     }
 }

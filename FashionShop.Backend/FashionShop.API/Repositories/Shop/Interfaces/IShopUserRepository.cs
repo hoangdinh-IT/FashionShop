@@ -15,14 +15,13 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
 
         // --- VALIDATION METHODS --- //
 
-        Task<bool> IsUserExistsAsync(string email);
+        Task<bool> CheckUserExistAsync(string email);
 
 
 
         // --- WRITE METHODS --- //
 
-        Task<User?> CreateUserAsync(User user);
-        Task<User?> UpdateUserAsync(User user);
-        Task DeleteUserAsync(User user);
+        void CreateUser(User user);
+        void DeleteUser(User user);
     }
 }

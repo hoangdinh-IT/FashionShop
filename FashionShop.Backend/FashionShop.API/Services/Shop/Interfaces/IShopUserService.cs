@@ -9,14 +9,16 @@ namespace FashionShop.API.Services.Shop.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<UserResponse>> GetUsersAsync();
-        Task<UserResponse> GetUserByEmailAsync(string email);
+        Task<IEnumerable<ShopUserResponse>> GetUsersAsync();
+        Task<ShopUserResponse?> GetUserByEmailAsync(string email);
+        Task<ShopUserResponse?> GetMyProfileAsync(string userIdStr);
 
 
 
         // --- WRITE METHODS --- //
 
-        Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest dto);
+        Task<ShopUserResponse> UpdateUserAsync(string userIdStr, ShopUpdateUserRequest dto);
+        Task ChangePasswordAsync(ChangePasswordRequest request);
         Task DeleteUserAsync(Guid userId);
     }
 }

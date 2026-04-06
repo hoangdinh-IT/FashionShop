@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
-import type { UserInfo } from '../features/auth/types/user';
+import type { User } from '../features/shop/users/types/user';
 
 // 2. Định nghĩa kiểu dữ liệu cho Context
 interface AuthContextType {
-    user: UserInfo | null;
+    user: User | null;
     accessToken: string | null;
     refreshToken: string | null;
     isAuthenticated: boolean;
-    login: (accessToken: string, refreshToken: string, user: UserInfo) => void;
+    login: (user: User, accessToken: string, refreshToken: string) => void;
     logout: () => void;
     isLoading: boolean; // Để hiển thị loading khi đang check localStorage lúc F5
 }
@@ -16,45 +16,45 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // 3. Tạo Provider
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<UserInfo | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // Khi app vừa chạy (F5), check localStorage để khôi phục user
     useEffect(() => {
+        const storedUser = localStorage.getItem('user');
         const storedAccessToken = localStorage.getItem('accessToken');
         const storedRefreshToken = localStorage.getItem('refreshToken');
-        const storedUser = localStorage.getItem('user');
 
         if (storedAccessToken && storedRefreshToken && storedUser) {
+            setUser(JSON.parse(storedUser));
             setAccessToken(storedAccessToken);
             setRefreshToken(storedRefreshToken);
-            setUser(JSON.parse(storedUser));
         }
         setIsLoading(false);
     }, []);
 
     // Hàm Login: Lưu vào State và LocalStorage
-    const login = (newAccessToken: string, newRefreshToken: string, newUser: UserInfo) => {
+    const login = (newUser: User, newAccessToken: string, newRefreshToken: string) => {
+        setUser(newUser);
         setAccessToken(newAccessToken);
         setRefreshToken(newRefreshToken);
-        setUser(newUser);
         
+        localStorage.setItem('user', JSON.stringify(newUser));
         localStorage.setItem('accessToken', newAccessToken);
         localStorage.setItem('refreshToken', newRefreshToken);
-        localStorage.setItem('user', JSON.stringify(newUser));
     };
 
     // Hàm Logout: Xóa hết
     const logout = () => {
+        setUser(null);
         setAccessToken(null);
         setRefreshToken(null);
-        setUser(null);
         
+        localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
     };
 
     const contextValue = React.useMemo(() => ({

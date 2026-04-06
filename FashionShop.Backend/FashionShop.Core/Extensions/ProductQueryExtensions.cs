@@ -41,7 +41,7 @@ namespace FashionShop.Core.Extensions
             return query.Where(p => p.ProductVariants.Any(v => colorIds.Contains(v.ColorId)));
         }
 
-        public static IQueryable<Product> FilterBySize(this IQueryable<Product> query, List<int> sizeIds)
+        public static IQueryable<Product> FilterBySize(this IQueryable<Product> query, List<int>? sizeIds)
         {
             if (sizeIds == null || !sizeIds.Any()) return query;
 
@@ -73,6 +73,15 @@ namespace FashionShop.Core.Extensions
         {
             if (minPrice.HasValue) query = query.Where(x => x.Price >= minPrice.Value);
             if (maxPrice.HasValue) query = query.Where(x => x.Price <= maxPrice.Value);
+            return query;
+        }
+
+        public static IQueryable<Product> SortByPrice(this IQueryable<Product> query, bool? isAscendingPrice)
+        {
+            if (isAscendingPrice == true) 
+                return query.OrderBy(x => x.Price);
+            else if (isAscendingPrice == false) 
+                return query.OrderByDescending(x => x.Price);
             return query;
         }
 

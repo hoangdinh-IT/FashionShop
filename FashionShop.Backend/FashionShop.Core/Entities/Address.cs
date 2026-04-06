@@ -17,7 +17,7 @@ namespace FashionShop.Core.Entities
 
         [Required]
         [MaxLength(200)]
-        public string Street {  get; set; }
+        public string AddressDetail {  get; set; }
 
         [Required]
         [MaxLength(100)]

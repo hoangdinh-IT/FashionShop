@@ -18,10 +18,18 @@ namespace FashionShop.API.Controllers.Shop
 
         // --- READ METHODS --- //
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetProducts(ShopProductListRequest request)
-        //{
+        [HttpGet]
+        public async Task<IActionResult> GetProducts([FromQuery] ShopProductListRequest request)
+        {
+            var result = await _productService.GetPagedProductsAsync(request);
+            return Success(result, "Lấy danh sách sản phẩm thành công!");
+        }
 
-        //}
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProductById(Guid productId)
+        {
+            var result = await _productService.GetProductByIdAsync(productId);
+            return Success(result, "Lấy chi tiết sản phẩm thành công!");
+        }
     }
 }

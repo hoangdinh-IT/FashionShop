@@ -1,15 +1,15 @@
 import type React from "react";
 import { IoAdd } from "react-icons/io5";
-import { useColors } from "../../../features/colors/hooks/useColors";
+import { useColors } from "../../../features/admin/colors/hooks/useColors";
 import { useState } from "react";
-import ColorTable from "../../../features/colors/components/ColorTable";
-import type { Color } from "../../../features/colors/types/color";
+import ColorTable from "../../../features/admin/colors/components/ColorTable";
+import type { Color } from "../../../features/admin/colors/types/color";
 import { useDialog } from "../../../contexts";
-import ColorToolbar from "../../../features/colors/components/ColorToolbar";
+import ColorToolbar from "../../../features/admin/colors/components/ColorToolbar";
 import Pagination from "../../../components/common/Pagination";
-import ColorFormDialog from "../../../features/colors/components/ColorFormDialog";
+import ColorFormDialog from "../../../features/admin/colors/components/ColorFormDialog";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
-import type { ColorFilters, ColorQueryParams } from "../../../features/colors/types/requests";
+import type { ColorFilters, ColorQueryParams } from "../../../features/admin/colors/types/requests";
 
 const ColorPage: React.FC = () => {
     const { showDialog } = useDialog();

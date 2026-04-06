@@ -1,4 +1,5 @@
-﻿using FashionShop.Core.Contracts.Shop.ProductVariant.Responses;
+﻿using FashionShop.Core.Contracts.Shop.ProductImage.Responses;
+using FashionShop.Core.Contracts.Shop.ProductVariant.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,6 @@ namespace FashionShop.Core.Contracts.Shop.Product.Responses
         public bool IsBestSeller { get; set; } = false;
         public bool IsNew { get; set; } = true;
         public IEnumerable<ShopProductVariantResponse>? ProductVariants { get; set; }
+        public IEnumerable<ShopProductImageResponse>? ProductImages { get; set; }
     }
 }

@@ -1,15 +1,15 @@
 import type React from "react";
 import { useState } from "react";
 import { IoAdd } from "react-icons/io5";
-import BrandToolbar from "../../../features/brands/components/BrandToolbar";
-import BrandTable from "../../../features/brands/components/BrandTable";
-import BrandFormDialog from "../../../features/brands/components/BrandFormDialog";
-import type { Brand } from "../../../features/brands/types/brand";
-import { useBrands } from "../../../features/brands/hooks/useBrands";
+import BrandToolbar from "../../../features/admin/brands/components/BrandToolbar";
+import BrandTable from "../../../features/admin/brands/components/BrandTable";
+import BrandFormDialog from "../../../features/admin/brands/components/BrandFormDialog";
+import type { Brand } from "../../../features/admin/brands/types/brand";
+import { useBrands } from "../../../features/admin/brands/hooks/useBrands";
 import { useDialog } from "../../../contexts";
 import Pagination from "../../../components/common/Pagination";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
-import type { BrandFilters, BrandQueryParams } from "../../../features/brands/types/requests";
+import type { BrandFilters, BrandQueryParams } from "../../../features/admin/brands/types/requests";
 
 const BrandPage: React.FC = () => {
     const { showDialog } = useDialog();

@@ -74,6 +74,10 @@ namespace FashionShop.API
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Đăng ký Service
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
+
             builder.Services.AddScoped<IShopUserService, ShopUserService>();
             builder.Services.AddScoped<IShopAddressService, ShopAddressService>();
             builder.Services.AddScoped<IAdminCategoryService, AdminCategoryService>();
@@ -83,9 +87,7 @@ namespace FashionShop.API
             builder.Services.AddScoped<IAdminProductService, AdminProductService>();
             builder.Services.AddScoped<IAdminVoucherService, AdminVoucherService>();
 
-            builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IPhotoService, PhotoService>();
+            builder.Services.AddScoped<IShopProductService, ShopProductService>();
 
             // 1. Lấy dữ liệu từ appsettings bind vào class CloudinarySettings
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));

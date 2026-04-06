@@ -51,7 +51,7 @@ namespace FashionShop.API.Repositories.Admin
                 ColorName = x.Color.Name,
                 ColorHexCode = x.Color.HexCode,
                 SizeName = x.Size.Name,
-                SKU = x.SKU,
+                SKU = x.Sku,
                 Quantity = x.Quantity,
                 Price = x.Price,
                 IsActive = x.IsActive,
@@ -102,7 +102,7 @@ namespace FashionShop.API.Repositories.Admin
                         ProductId = v.ProductId,
                         ColorId = v.ColorId,
                         SizeId = v.SizeId,
-                        SKU = v.SKU,
+                        SKU = v.Sku,
                         Quantity = v.Quantity,
                         Price = v.Price,
                         IsActive = v.IsActive,
@@ -274,7 +274,7 @@ namespace FashionShop.API.Repositories.Admin
         // --- VALIDATION METHODS --- //
 
         public async Task<bool> CheckExistSKUAsync(string sku)
-            => await _context.ProductVariants.AnyAsync(x => x.SKU == sku);
+            => await _context.ProductVariants.AnyAsync(x => x.Sku == sku);
 
 
 

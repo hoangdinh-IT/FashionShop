@@ -15,7 +15,7 @@ namespace FashionShop.Core.Entities
         [Required]
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
-        public string SKU { get; set; }
+        public string Sku { get; set; }
 
         [Required]
         [Range(0, int.MaxValue)]

@@ -16,9 +16,8 @@ namespace FashionShop.Core.Contracts.Shop.ProductVariant.Responses
         public string ColorName { get; set; }
         public string ColorHexCode { get; set; }
         public string SizeName { get; set; }
-        public string SKU { get; set; }
+        public string Sku { get; set; }
         public int Quantity { get; set; } = 0;
         public decimal Price { get; set; }
-        public IEnumerable<ShopProductImageResponse>? ProductImages { get; set; }
     }
 }

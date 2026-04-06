@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using FashionShop.API.Services.Shared.Interfaces;
-using FashionShop.Core.Contracts.Shared.Auth;
+using FashionShop.Core.Contracts.Shared.Auth.Requests;
 
 namespace FashionShop.API.Controllers
 {

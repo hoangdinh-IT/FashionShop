@@ -7,6 +7,14 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
 {
     public interface IShopProductRepository
     {
-        Task<PagedResult<IEnumerable<ShopProductResponse>>> GetPagedProductsAsync(ShopProductListRequest request);
+
+        // --- READ METHODS --- //
+
+        Task<PagedResult<ShopProductResponse>> GetPagedProductsAsync(ShopProductListRequest request);
+        Task<ShopProductResponse?> GetProductByIdAsync(Guid productId);
+
+
+
+        // --- WRITE METHODS --- //
     }
 }

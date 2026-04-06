@@ -20,6 +20,7 @@ namespace FashionShop.API.Repositories.Shared
         
         private IShopUserRepository _shopUsers;
         private IShopAddressRepository _shopAddresses;
+        private IShopProductRepository _shopProducts;
 
         public UnitOfWork(FashionDbContext context)
         {
@@ -35,6 +36,7 @@ namespace FashionShop.API.Repositories.Shared
 
         public IShopUserRepository ShopUsers => _shopUsers ??= new ShopUserRepository(_context);
         public IShopAddressRepository ShopAddresses => _shopAddresses ??= new ShopAddressRepository(_context);
+        public IShopProductRepository ShopProducts => _shopProducts ??= new ShopProductRepository(_context);
 
         public async Task<int> SaveChangesAsync()
         {

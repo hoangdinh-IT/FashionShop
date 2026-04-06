@@ -45,27 +45,22 @@ export const useLogin = () => {
         onSuccess: (response) => {
             if (response.succeeded) {
                 showSnackbar("Đăng nhập thành công!", "success");
-                const { id, email, role, accessToken, refreshToken } = response.data;
+                const { user, accessToken, refreshToken } = response.data;
                 login(
+                    user,
                     accessToken,
                     refreshToken,
-                    {
-                        id: id,
-                        email: email,
-                        role: role,
-                        accessToken: accessToken,
-                        refreshToken: refreshToken,
-                    }
                 );
-                if (response.data.role === "Admin") {
+                if (user.role === "Admin")
                     navigate("/admin", { replace: true });
-                }
+                else if (user.role === "Customer")
+                    navigate("/shop/account", { replace: true })
             } else {
                 showSnackbar(response.message || "Đăng nhập thất bại!", "error");
             }
         },
         onError: (error: any) => {
-            showSnackbar(error.response?.data?.message || "Lỗi hệ thống", "error");
+            showSnackbar(error.response?.data?.Message || "Lỗi hệ thống", "error");
         }
     });
 

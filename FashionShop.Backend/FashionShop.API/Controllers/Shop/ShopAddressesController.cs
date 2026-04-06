@@ -16,7 +16,7 @@ namespace FashionShop.API.Controllers.Shop
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAddress(CreateAddressRequest request)
+        public async Task<IActionResult> CreateAddress(ShopCreateAddressRequest request)
         {
             request.UserId = User.GetUserId();
             var result = await _addressService.CreateAddressAsync(request);
@@ -38,7 +38,7 @@ namespace FashionShop.API.Controllers.Shop
         }
 
         [HttpPut("{addressId}")]
-        public async Task<IActionResult> UpdateAddressByUserId(Guid addressId, UpdateAddressRequest request)
+        public async Task<IActionResult> UpdateAddressByUserId(Guid addressId, ShopUpdateAddressRequest request)
         {
             Guid userId = User.GetUserId();
 

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { IoAdd } from "react-icons/io5";
-import CategoryToolbar from '../../../features/categories/components/CategoryToolbar';
-import CategoryTable from '../../../features/categories/components/CategoryTable';
-import CategoryFormDialog from '../../../features/categories/components/CategoryFormDialog';
-import { useCategories } from '../../../features/categories/hooks/useCategories';
+import CategoryToolbar from '../../../features/admin/categories/components/CategoryToolbar';
+import CategoryTable from '../../../features/admin/categories/components/CategoryTable';
+import CategoryFormDialog from '../../../features/admin/categories/components/CategoryFormDialog';
+import { useCategories } from '../../../features/admin/categories/hooks/useCategories';
 import { useDialog } from '../../../contexts';
-import type { Category } from '../../../features/categories/types/category';
+import type { Category } from '../../../features/admin/categories/types/category';
 import Pagination from '../../../components/common/Pagination';
 import { useTableMinHeight } from '../../../hooks/useTableMinHeight';
-import type { CategoryFilters, CategoryQueryParams } from '../../../features/categories/types/requests';
+import type { CategoryFilters, CategoryQueryParams } from '../../../features/admin/categories/types/requests';
 
 const CategoryPage: React.FC = () => {
     const { showDialog } = useDialog();

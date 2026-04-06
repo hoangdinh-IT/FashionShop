@@ -1,4 +1,5 @@
 SELECT * FROM "Users"
+SELECT * FROM "Addresses"
 SELECT * FROM "Categories"
 SELECT * FROM "Brands"
 SELECT * FROM "Colors"
@@ -16,6 +17,7 @@ DELETE FROM "Brands" WHERE "IsDeleted" = true
 DELETE FROM "Sizes" WHERE "IsDeleted" = true
 
 DELETE FROM "Users"
+DELETE FROM "Addresses"
 DELETE FROM "Categories"
 DELETE FROM "Brands"
 DELETE FROM "Colors"

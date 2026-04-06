@@ -23,18 +23,18 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<AddressResponse>> GetAddressesByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<ShopAddressResponse>> GetAddressesByUserIdAsync(Guid userId)
         {
             var addresses = await _unitOfWork.ShopAddresses.GetAddressesByUserIdAsync(userId);
 
-            return _mapper.Map<IEnumerable<AddressResponse>>(addresses);
+            return _mapper.Map<IEnumerable<ShopAddressResponse>>(addresses);
         }
 
 
 
         // --- WRITE METHODS --- //
 
-        public async Task<AddressResponse> CreateAddressAsync(CreateAddressRequest request)
+        public async Task<ShopAddressResponse> CreateAddressAsync(ShopCreateAddressRequest request)
         {
             if (await _unitOfWork.ShopUsers.GetUserByIdAsync(request.UserId) == null)
             {
@@ -49,7 +49,7 @@ namespace FashionShop.API.Services.Shop
             if (addressCount == 0) newAddress.IsDefault = true;
             else
             {
-                if (newAddress.IsDefault)
+                if (request.IsDefault)
                 {
                     await _unitOfWork.ShopAddresses.UnsetDefaultAddressAsync(request.UserId);
                 }
@@ -58,10 +58,10 @@ namespace FashionShop.API.Services.Shop
             _unitOfWork.ShopAddresses.CreateAddress(newAddress);
             await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<AddressResponse>(newAddress);
+            return _mapper.Map<ShopAddressResponse>(newAddress);
         }
 
-        public async Task<AddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, UpdateAddressRequest request)
+        public async Task<ShopAddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, ShopUpdateAddressRequest request)
         {
             var existingAddress = await _unitOfWork.ShopAddresses.GetAddressByUserIdAsync(userId, addressId);
 
@@ -80,7 +80,7 @@ namespace FashionShop.API.Services.Shop
             existingAddress.UpdatedDate = DateTime.UtcNow;
 
             await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<AddressResponse>(existingAddress);
+            return _mapper.Map<ShopAddressResponse>(existingAddress);
         }
 
         public async Task DeleteAddressAsync(Guid userId, Guid addressId)

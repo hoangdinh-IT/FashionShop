@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // Import đường dẫn cho đúng với dự án của bạn
-import type { RoleUser } from '../features/auth/types/user';
+import type { RoleUser } from '../features/shop/users/types/user';
 
 interface PrivateRouteProps {
     allowedRoles?: RoleUser[];

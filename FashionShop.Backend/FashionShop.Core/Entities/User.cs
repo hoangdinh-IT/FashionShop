@@ -37,11 +37,7 @@ namespace FashionShop.Core.Entities
         public Gender Gender { get; set; } = Gender.Other;
 
         [Required]
-        public DateTime DateOfBirth { get; set; } = DateTime.UtcNow;
-
-        [MaxLength(500)]
-        [Column(TypeName = "varchar(500)")]
-        public string? AvatarUrl { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         public MembershipClass MembershipClass { get; set; } = MembershipClass.New;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }

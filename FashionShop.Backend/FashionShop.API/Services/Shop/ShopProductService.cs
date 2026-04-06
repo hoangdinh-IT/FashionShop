@@ -1,19 +1,21 @@
 ﻿using AutoMapper;
 using FashionShop.API.Repositories.Admin.Interfaces;
+using FashionShop.API.Repositories.Shared.Interfaces;
 using FashionShop.API.Services.Shop.Interfaces;
 using FashionShop.Core.Contracts.Shop.Product.Requests;
 using FashionShop.Core.Contracts.Shop.Product.Responses;
+using FashionShop.Core.Models;
 
 namespace FashionShop.API.Services.Shop
 {
     public class ShopProductService : IShopProductService
     {
-        private readonly IAdminProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ShopProductService(IAdminProductRepository productRepository, IMapper mapper)
+        public ShopProductService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -21,12 +23,11 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        //public async Task<IEnumerable<ShopProductResponse>> GetPagedProductsAsync(ShopProductListRequest request)
-        //{
+        public async Task<PagedResult<ShopProductResponse>> GetPagedProductsAsync(ShopProductListRequest request)
+            => await _unitOfWork.ShopProducts.GetPagedProductsAsync(request);
 
-        //}
-
-
+        public async Task<ShopProductResponse?> GetProductByIdAsync(Guid productId)
+            => await _unitOfWork.ShopProducts.GetProductByIdAsync(productId);
 
         // --- WRITE METHODS --- //
     }
