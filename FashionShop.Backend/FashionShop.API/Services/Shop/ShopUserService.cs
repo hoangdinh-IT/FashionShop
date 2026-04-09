@@ -40,10 +40,8 @@ namespace FashionShop.API.Services.Shop
             return _mapper.Map<ShopUserResponse>(user);
         }
 
-        public async Task<ShopUserResponse?> GetMyProfileAsync(string userIdStr)
+        public async Task<ShopUserResponse?> GetMyProfileAsync(Guid userId)
         {
-            var userId = ConvertUserId(userIdStr);
-
             var user = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
             if (user == null) throw new KeyNotFoundException("Không tìm thấy thông tin người dùng.");
 
@@ -54,9 +52,8 @@ namespace FashionShop.API.Services.Shop
 
         // --- WRITE METHODS --- //
 
-        public async Task<ShopUserResponse> UpdateUserAsync(string userIdStr, ShopUpdateUserRequest request)
+        public async Task<ShopUserResponse> UpdateUserAsync(Guid userId, ShopUpdateUserRequest request)
         {
-            var userId = ConvertUserId(userIdStr);
 
             var user = await _unitOfWork.ShopUsers.GetUserByIdAsync(userId);
             if (user == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
@@ -97,18 +94,6 @@ namespace FashionShop.API.Services.Shop
             _unitOfWork.ShopUsers.DeleteUser(existingUser);
 
             await _unitOfWork.SaveChangesAsync();
-        }
-
-
-
-        // -- PRIVATE METHODS -- //
-
-        private Guid ConvertUserId(string userIdStr)
-        {
-            if (!Guid.TryParse(userIdStr, out Guid userId))
-                throw new ArgumentException("ID người dùng không hợp lệ.");
-
-            return userId;
         }
     }
 }

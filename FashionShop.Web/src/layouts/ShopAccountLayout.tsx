@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts';
-import SidebarAccount from '../features/shop/users/components/SidebarAccount';
+import SidebarAccount from '../components/layout/shop/SidebarAccount';
 
 const ShopAccountLayout: React.FC = () => {
     const { logout } = useAuth();

@@ -16,6 +16,7 @@ namespace FashionShop.API.Services.Shop.Interfaces
 
         Task<ShopAddressResponse> CreateAddressAsync(ShopCreateAddressRequest dto);
         Task<ShopAddressResponse?> UpdateAddressByUserIdAsync(Guid userId, Guid addressId, ShopUpdateAddressRequest dto);
+        Task<ShopAddressResponse?> UpdateAddressDefaultAsync(Guid userId, Guid addressId);
         Task DeleteAddressAsync(Guid userId, Guid addressId);
     }
 }

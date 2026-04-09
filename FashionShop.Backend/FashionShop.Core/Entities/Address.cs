@@ -16,6 +16,14 @@ namespace FashionShop.Core.Entities
         public Guid UserId { get; set; }
 
         [Required]
+        [MaxLength(100)]
+        public string FullName { get; set; }
+
+        [Required]
+        [MaxLength(10)]
+        public string PhoneNumber { get; set; }
+
+        [Required]
         [MaxLength(200)]
         public string AddressDetail {  get; set; }
 

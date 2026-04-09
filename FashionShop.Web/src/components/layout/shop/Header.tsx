@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import MegaMenu from '../../../features/shop/categories/components/MegaMenu';
 
 const Header: React.FC = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm font-sans transition-all duration-300">
             <div className="w-full px-6 lg:px-12 h-20 flex items-center justify-between">
                 
                 {/* 1. Trái: Nút Danh mục (Giữ nguyên khung nhưng làm thanh lịch hơn) */}
                 <div className="flex-1 flex justify-start">
-                    <button className="flex items-center gap-2.5 border border-gray-200 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all duration-300">
+                    <button 
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="flex items-center gap-2.5 border border-gray-200 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all duration-300"
+                    >
                         {/* Icon Menu cách điệu (các đường line không bằng nhau tạo sự hiện đại) */}
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 7h16M4 12h16M4 17h10" />
@@ -23,7 +29,7 @@ const Header: React.FC = () => {
                         to="/" 
                         className="text-2xl md:text-3xl font-bold uppercase tracking-[0.15em] text-black hover:opacity-60 transition-opacity"
                     >
-                        rKA Shop
+                        RKA Shop
                     </Link>
                 </div>
 
@@ -52,7 +58,7 @@ const Header: React.FC = () => {
                     </button>
 
                     {/* Tài khoản */}
-                    <Link to="/profile" className="flex items-center gap-2 text-gray-800 hover:text-black group transition-colors">
+                    <Link to="/shop/account/information" className="flex items-center gap-2 text-gray-800 hover:text-black group transition-colors">
                         <svg className="w-6 h-6 group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -61,6 +67,11 @@ const Header: React.FC = () => {
                 </div>
 
             </div>
+
+            <MegaMenu 
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+            />
         </header>
     );
 };

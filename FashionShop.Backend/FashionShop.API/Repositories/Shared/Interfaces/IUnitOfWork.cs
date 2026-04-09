@@ -15,6 +15,8 @@ namespace FashionShop.API.Repositories.Shared.Interfaces
         IShopUserRepository ShopUsers { get; }
         IShopAddressRepository ShopAddresses { get; }
         IShopProductRepository ShopProducts { get; }
+        IShopBrandRepository ShopBrands { get; }
+        IShopCategoryRepository ShopCategories { get; }
 
         Task<int> SaveChangesAsync();
 

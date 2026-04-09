@@ -6,6 +6,7 @@ using FashionShop.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace FashionShop.API.Controllers.Shop
@@ -47,35 +48,11 @@ namespace FashionShop.API.Controllers.Shop
         [Authorize]
         public async Task<IActionResult> GetMyProfile()
         {
-            try
-            {
-                var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid userId = User.GetUserId();
 
-                if (string.IsNullOrEmpty(userIdStr))
-                {
-                    return Unauthorized(new { message = "Token không hợp lệ hoặc thiếu thông tin định danh." });
-                }
+            var profile = await _userService.GetMyProfileAsync(userId);
 
-                var profile = await _userService.GetMyProfileAsync(userIdStr);
-
-                return Success(profile, "Lấy thông tin tài khoản người dùng thành công!");
-            }
-            catch (ArgumentException ex)
-            {
-                // Bắt lỗi Guid không hợp lệ từ Service -> Trả về HTTP 400 (Bad Request)
-                return BadRequest(new { success = false, message = ex.Message });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                // Bắt lỗi không tìm thấy User trong DB -> Trả về HTTP 404 (Not Found)
-                return NotFound(new { success = false, message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                // Bắt các lỗi hệ thống không lường trước được -> Trả về HTTP 500 (Internal Server Error)
-                // Lưu ý: Ở dự án thực tế, bạn nên dùng ILogger để ghi log lỗi 'ex' ở đây
-                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống." });
-            }
+            return Success(profile, "Lấy thông tin tài khoản người dùng thành công!");
         }
 
 
@@ -85,14 +62,9 @@ namespace FashionShop.API.Controllers.Shop
         [HttpPut]
         public async Task<IActionResult> UpdateUser(ShopUpdateUserRequest request)
         {
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid userId = User.GetUserId();
 
-            if (string.IsNullOrEmpty(userIdStr))
-            {
-                return Unauthorized(new { message = "Token không hợp lệ hoặc thiếu thông tin định danh." });
-            }
-
-            var result = await _userService.UpdateUserAsync(userIdStr, request);
+            var result = await _userService.UpdateUserAsync(userId, request);
             return Success(result, "Cập nhật thông tin người dùng thành công");
         }
 

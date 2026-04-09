@@ -83,6 +83,19 @@ namespace FashionShop.API.Services.Shop
             return _mapper.Map<ShopAddressResponse>(existingAddress);
         }
 
+        public async Task<ShopAddressResponse?> UpdateAddressDefaultAsync(Guid userId, Guid addressId)
+        {
+            var existingAddress = await _unitOfWork.ShopAddresses.GetAddressByUserIdAsync(userId, addressId);
+
+            if (existingAddress == null) throw new KeyNotFoundException("Không tìm thấy dữ liệu!");
+
+            existingAddress.IsDefault = true;
+            await _unitOfWork.ShopAddresses.UnsetDefaultAddressAsync(userId);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<ShopAddressResponse>(existingAddress);
+        }
+
         public async Task DeleteAddressAsync(Guid userId, Guid addressId)
         {
             var existingAddress = await _unitOfWork.ShopAddresses.GetAddressByUserIdAsync(userId, addressId);

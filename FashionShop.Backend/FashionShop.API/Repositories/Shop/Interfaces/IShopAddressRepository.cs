@@ -9,7 +9,7 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
         // --- READ METHODS --- //
 
         Task<int> CountAddressesByUserIdAsync(Guid userId);
-        Task<IEnumerable<ShopAddressResponse>> GetAddressesByUserIdAsync(Guid userId);
+        Task<IEnumerable<Address>> GetAddressesByUserIdAsync(Guid userId);
         Task<Address?> GetAddressByUserIdAsync(Guid userId, Guid addressId);
         Task<Address?> GetNewestAddressByUserIdAsync(Guid userId, Guid excludeAddressId);
 

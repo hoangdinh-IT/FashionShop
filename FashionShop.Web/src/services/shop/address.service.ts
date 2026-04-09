@@ -19,6 +19,11 @@ export const addressService = {
         return response.data;
     },
 
+    updateSetDefault: async(addressId: string): Promise<ApiResponse<Address>> => {
+        const response = await apiClient.put<ApiResponse<Address>>(`/shop/addresses/set-default/${addressId}`);
+        return response.data;
+    },
+
     delete: async(addressId: string): Promise<ApiResponse<null>> => {
         const response = await apiClient.delete<ApiResponse<null>>(`/shop/addresses/${addressId}`);
         return response.data;

@@ -51,6 +51,20 @@ namespace FashionShop.API.Controllers.Shop
             return Success(result, "Cập nhật địa chỉ giao hàng thành công!");
         }
 
+        [HttpPut("set-default/{addressId}")]
+        public async Task<IActionResult> UpdateAddressDefault(Guid addressId)
+        {
+            Guid userId = User.GetUserId();
+
+            if (userId == Guid.Empty || addressId == Guid.Empty)
+            {
+                throw new ArgumentException("ID không hợp lệ!");
+            }
+
+            var result = await _addressService.UpdateAddressDefaultAsync(userId, addressId);
+            return Success(result, "Cập nhật địa chỉ mặc định thành công!");
+        }
+
         [HttpDelete("{addressId}")]
         public async Task<IActionResult> DeleteAddress(Guid addressId)
         {

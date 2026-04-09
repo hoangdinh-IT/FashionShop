@@ -21,8 +21,8 @@ namespace FashionShop.API.Repositories.Shop
             {
                 Id = x.Id,
                 UserId = x.UserId,
-                FullName = x.User.FullName,
-                PhoneNumber = x.User.PhoneNumber,
+                FullName = x.FullName,
+                PhoneNumber = x.PhoneNumber,
                 AddressDetail = x.AddressDetail,
                 Commune = x.Commune,
                 District = x.District,
@@ -38,11 +38,10 @@ namespace FashionShop.API.Repositories.Shop
         public async Task<int> CountAddressesByUserIdAsync(Guid userId)
             => await _context.Addresses.CountAsync(x => x.UserId == userId);
 
-        public async Task<IEnumerable<ShopAddressResponse>> GetAddressesByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<Address>> GetAddressesByUserIdAsync(Guid userId)
         {
             return await _context.Addresses
                 .AsNoTracking()
-                .Select(_addressSelector)
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.IsDefault)
                 .ThenByDescending(x => x.CreatedDate)

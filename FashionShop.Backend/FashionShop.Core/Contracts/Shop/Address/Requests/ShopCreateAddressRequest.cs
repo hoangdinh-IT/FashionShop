@@ -12,6 +12,13 @@ namespace FashionShop.Core.Contracts.Shop.Address.Requests
         [Required]
         public Guid UserId { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập họ tên")]
+        [MaxLength(200)]
+        public string FullName { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [MaxLength(200)]
+        public string PhoneNumber { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ cụ thể")]
         [MaxLength(200)]
         public string AddressDetail { get; set; }

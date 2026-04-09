@@ -11,13 +11,13 @@ namespace FashionShop.API.Services.Shop.Interfaces
 
         Task<IEnumerable<ShopUserResponse>> GetUsersAsync();
         Task<ShopUserResponse?> GetUserByEmailAsync(string email);
-        Task<ShopUserResponse?> GetMyProfileAsync(string userIdStr);
+        Task<ShopUserResponse?> GetMyProfileAsync(Guid userId);
 
 
 
         // --- WRITE METHODS --- //
 
-        Task<ShopUserResponse> UpdateUserAsync(string userIdStr, ShopUpdateUserRequest dto);
+        Task<ShopUserResponse> UpdateUserAsync(Guid userId, ShopUpdateUserRequest dto);
         Task ChangePasswordAsync(ChangePasswordRequest request);
         Task DeleteUserAsync(Guid userId);
     }

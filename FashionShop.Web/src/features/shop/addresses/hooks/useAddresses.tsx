@@ -29,6 +29,15 @@ export const useAddresses = () => {
         })
     })
 
+    const updateSetDefaultMutation = useMutation({
+        mutationFn: (addressId: string) => addressService.updateSetDefault(addressId),
+        ...createSideEffects({
+            successMessage: "Cập nhật địa chỉ mặc định thành công!",
+            errorMessage: "Cập nhật địa chỉ mặc định thất bại!",
+            invalidateKeys: [["addresses"]]
+        })
+    })
+
     const deleteMutation = useMutation({
         mutationFn: (addressId: string) => addressService.delete(addressId),
         ...createSideEffects({
@@ -47,6 +56,9 @@ export const useAddresses = () => {
 
         updateAddress: updateMutation.mutate,
         isUpdating: updateMutation.isPending,
+
+        updateSetDefaultAddress: updateSetDefaultMutation.mutate,
+        isUpdatingSetDefault: updateSetDefaultMutation.isPending,
 
         deleteAddress: deleteMutation.mutate,
         isDeleting: deleteMutation.isPending,

@@ -6,9 +6,10 @@ import {
     IoClose, 
     IoChevronDown,
     IoLocationOutline,
-    IoMapOutline,
     IoHomeOutline,
-    IoBusinessOutline
+    IoBusinessOutline,
+    IoPersonOutline,
+    IoCallOutline
 } from 'react-icons/io5';
 import type { AddressFormInputs } from '../types/requests';
 import { useAddresses } from '../hooks/useAddresses';
@@ -99,6 +100,8 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
     useEffect(() => {
         if (isOpen && initialData) {
             reset({
+                fullName: initialData.fullName,
+                phoneNumber: initialData.phoneNumber,
                 addressDetail: initialData.addressDetail || "",
                 city: "",     // BẮT BUỘC ĐỂ TRỐNG: chờ mảng provinces tải xong mới gán
                 district: "", // BẮT BUỘC ĐỂ TRỐNG: chờ mảng districts tải xong mới gán
@@ -188,7 +191,7 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                     
                     {/* BACKDROP */}
                     <motion.div
-                        className="absolute inset-0 bg-zinc-900/30 backdrop-blur-[6px]"
+                        className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
@@ -198,28 +201,20 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
 
                     {/* MODAL CONTENT */}
                     <motion.div
-                        className="relative w-full max-w-lg bg-white rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-zinc-100 overflow-hidden flex flex-col"
+                        className="relative w-full max-w-lg bg-white rounded-[1.5rem] shadow-2xl border border-zinc-100 overflow-hidden flex flex-col"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
+                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full max-h-[85vh]">
                             
-                            {/* --- HEADER --- */}
-                            <div className="px-8 py-7 flex items-start justify-between bg-white shrink-0">
-                                <div>
-                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-zinc-100 to-zinc-50 border border-zinc-100 flex items-center justify-center mb-4 shadow-sm">
-                                        <IoMapOutline className="text-zinc-700 text-xl" />
-                                    </div>
-                                    <h3 className="text-2xl font-semibold text-zinc-900 tracking-tight">
-                                        {initialData ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ mới'}
-                                    </h3>
-                                    <p className="text-[14px] text-zinc-500 mt-1.5 leading-relaxed">
-                                        Cập nhật địa chỉ nhận hàng để chúng tôi giao hàng chính xác nhất.
-                                    </p>
-                                </div>
+                            {/* --- HEADER SÁNG TẠO & TỐI GIẢN --- */}
+                            <div className="px-8 py-6 flex items-center justify-between bg-white shrink-0 border-b border-zinc-50">
+                                <h3 className="text-2xl sm:text-[26px] font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-500">
+                                    {initialData ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ'}
+                                </h3>
                                 <button
                                     type="button"
                                     onClick={onClose}
@@ -230,8 +225,63 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                             </div>
 
                             {/* --- BODY --- */}
-                            <div className="px-8 pb-4 pt-2 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+                            <div className="px-8 pb-4 pt-4 overflow-y-auto custom-scrollbar flex-1 space-y-6">
                                 
+                                {/* Họ và tên (Floating Label) */}
+                                <div className="relative pt-2">
+                                    <div className="relative">
+                                        {/* Nhớ import IoPersonOutline từ react-icons/io5 */}
+                                        <IoPersonOutline className={`absolute left-4 top-1/2 -translate-y-1/2 text-[20px] pointer-events-none transition-colors duration-300 z-10 ${errors.fullName ? 'text-red-400' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
+                                        
+                                        <input
+                                            id="fullName"
+                                            {...register("fullName", { required: "Vui lòng nhập họ và tên" })}
+                                            type="text"
+                                            placeholder=" "
+                                            className={`peer w-full h-[56px] pl-12 pr-4 bg-zinc-50/80 border ${errors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                        />
+                                        
+                                        <label
+                                            htmlFor="fullName"
+                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
+                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-semibold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-mt-[2px]
+                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-mt-[2px]"
+                                        >
+                                            Họ và tên
+                                        </label>
+                                    </div>
+                                    {errors.fullName && <p className="text-[13px] text-red-500 mt-1.5 font-medium pl-1">{errors.fullName.message}</p>}
+                                </div>
+
+                                {/* Số điện thoại (Floating Label) */}
+                                <div className="relative pt-2">
+                                    <div className="relative">
+                                        {/* Nhớ import IoCallOutline từ react-icons/io5 */}
+                                        <IoCallOutline className={`absolute left-4 top-1/2 -translate-y-1/2 text-[20px] pointer-events-none transition-colors duration-300 z-10 ${errors.phoneNumber ? 'text-red-400' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
+                                        
+                                        <input
+                                            id="phoneNumber"
+                                            {...register("phoneNumber", { 
+                                                required: "Vui lòng nhập số điện thoại",
+                                                pattern: { value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g, message: "Số điện thoại không hợp lệ" }
+                                            })}
+                                            type="tel"
+                                            placeholder=" "
+                                            className={`peer w-full h-[56px] pl-12 pr-4 bg-zinc-50/80 border ${errors.phoneNumber ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                        />
+                                        
+                                        <label
+                                            htmlFor="phoneNumber"
+                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
+                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-semibold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-mt-[2px]
+                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-mt-[2px]"
+                                        >
+                                            Số điện thoại
+                                        </label>
+                                    </div>
+                                    {errors.phoneNumber && <p className="text-[13px] text-red-500 mt-1.5 font-medium pl-1">{errors.phoneNumber.message}</p>}
+                                </div>
+
                                 {/* Tỉnh / Thành phố */}
                                 <div className="space-y-1.5">
                                     <label className="text-[13px] font-semibold text-zinc-900 flex items-center gap-2 pl-1">
@@ -245,7 +295,7 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                                                 onChange: () => {
                                                     setValue("district", "");
                                                     setValue("commune", "");
-                                                    setWards([]);
+                                                    // Nếu đang lưu Huyện Xã bằng state thì dùng setWards([]), setDistricts([]) ở file cha nhé
                                                 }
                                             })}
                                             className={`w-full h-[52px] pl-4 pr-10 bg-zinc-50/80 border ${errors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed`}
@@ -356,7 +406,7 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                             </div>
 
                             {/* --- FOOTER --- */}
-                            <div className="px-8 py-6 mt-2 bg-white rounded-b-[1.5rem]">
+                            <div className="px-8 py-6 mt-2 bg-white rounded-b-[1.5rem] shrink-0 border-t border-zinc-50">
                                 <button
                                     type="submit"
                                     disabled={isLoading}
@@ -368,7 +418,7 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                                             <span>ĐANG LƯU...</span>
                                         </div>
                                     ) : (
-                                        initialData ? 'LƯU THAY ĐỔI' : 'THÊM ĐỊA CHỈ'
+                                        initialData ? 'CẬP NHẬT' : 'THÊM ĐỊA CHỈ'
                                     )}
                                 </button>
                             </div>

@@ -11,6 +11,7 @@ const AddressPage: React.FC = () => {
     const { 
         addresses, 
         isLoading,
+        updateSetDefaultAddress,
         deleteAddress,
     } = useAddresses();
 
@@ -25,6 +26,8 @@ const AddressPage: React.FC = () => {
     const handleOpenCreate = () => setModalConfig({ isOpen: true, address: undefined })
 
     const handleOpenEdit = (address: Address) => setModalConfig({ isOpen: true, address: address })
+
+    const handleUpdateSetDefaultAddress = (addressId: string) => updateSetDefaultAddress(addressId);
 
     const handleClose = () => setModalConfig({ isOpen: false, address: undefined })
 
@@ -46,6 +49,7 @@ const AddressPage: React.FC = () => {
                 isLoading={isLoading}
                 onCreate={handleOpenCreate}
                 onEdit={handleOpenEdit}
+                onSetDefaultAddress={handleUpdateSetDefaultAddress}
                 onDelete={handleDelete}
             />
 
