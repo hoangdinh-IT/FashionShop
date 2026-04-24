@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBrands } from '../../brands/hooks/useBrands';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     isOpen: boolean;
@@ -8,22 +9,23 @@ interface Props {
 }
 
 // =======================================================================
-// COMPONENT PHỤ: LEVEL 2 ITEM (Chữ to & đậm hơn)
+// COMPONENT PHỤ: LEVEL 2 ITEM
 // =======================================================================
 interface Level2Props {
     category: any;
     isExpanded: boolean;
     onToggle: () => void;
+    onFilter: (categorySlug: string) => void;
 }
 
-const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onToggle }) => {
+const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onToggle, onFilter }) => {
     const hasChildren = category.children && category.children.length > 0;
 
     return (
         <div className="mb-1">
             <button
                 onClick={() => hasChildren && onToggle()}
-                className={`flex items-center justify-between w-full py-3 text-left group ${hasChildren ? 'cursor-pointer' : 'cursor-default'}`}
+                className={`flex items-center justify-between w-full py-3 text-left group cursor-pointer ${hasChildren ? 'cursor-pointer' : 'cursor-default'}`}
             >
                 <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-md bg-zinc-50 overflow-hidden flex-shrink-0 border border-zinc-100 shadow-sm transition-transform duration-500 group-hover:scale-105">
@@ -34,7 +36,6 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
                         )}
                     </div>
                     
-                    {/* Danh mục Cấp 2: Kích thước 16px, Đậm (Bold/Semibold) */}
                     <span className={`text-[16px] transition-all duration-300 transform group-hover:translate-x-1 ${isExpanded ? 'text-black font-bold' : 'text-zinc-700 font-semibold group-hover:text-black'}`}>
                         {category.name}
                     </span>
@@ -58,19 +59,30 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden ml-[4.5rem] flex flex-col gap-3.5 pb-4 pt-1" 
                     >
+                        {/* Nút Tất cả (Level 2) - Dùng Slug của chính nó */}
+                        <li>
+                            <button
+                                onClick={() => onFilter(category.slug)} 
+                                className="text-[14px] font-semibold text-black hover:text-black transition-all duration-300 flex items-center gap-2 group/link cursor-pointer" 
+                            >
+                                <span className="w-1.5 h-1.5 rounded-full bg-black opacity-0 -ml-3.5 transition-all duration-300 group-hover/link:opacity-100 group-hover/link:ml-0" />
+                                Tất cả {category.name.toLowerCase()}
+                            </button>
+                        </li>
+
+                        {/* Danh sách Level 3 - Dùng Slug của con */}
                         {category.children.map((child: any) => (
                             <li key={child.id}>
-                                {/* Danh mục Cấp 3: Kích thước 14px, font-medium */}
-                                <a 
-                                    href={`/category/${child.slug || child.id}`} 
-                                    className="text-[14px] font-medium text-zinc-500 hover:text-black hover:font-semibold transition-all duration-300 flex items-center gap-2 group/link"
+                                <button
+                                    onClick={() => onFilter(child.slug)} 
+                                    className="text-[14px] font-medium text-zinc-500 hover:text-black hover:font-semibold transition-all duration-300 flex items-center gap-2 group/link cursor-pointer"
                                 >
                                     <span className="w-1.5 h-1.5 rounded-full bg-black opacity-0 -ml-3.5 transition-all duration-300 group-hover/link:opacity-100 group-hover/link:ml-0" />
                                     {child.name}
-                                </a>
+                                </button>
                             </li>
                         ))}
                     </motion.ul>
@@ -84,6 +96,8 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
 // COMPONENT CHÍNH: MEGA MENU
 // =======================================================================
 const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
+    const navigate = useNavigate();
+
     const [activeBrandId, setActiveBrandId] = useState<string>('');
     const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
 
@@ -93,6 +107,24 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
         categories,
         isLoadingCategories
     } = useBrands(activeBrandId);
+
+    // Lấy thông tin Brand đang chọn để lấy Slug và Name
+    const activeBrand = useMemo(() => 
+        brands?.find((b: any) => b.id === activeBrandId), 
+    [brands, activeBrandId]);
+
+    // Hàm điều hướng theo format: /shop/collection/brand-slug/category-slug
+    const handleFilter = (brandSlug?: string, categorySlug?: string) => {
+        if (!brandSlug) return;
+
+        let path = `/shop/collection/${brandSlug}`;
+        if (categorySlug) {
+            path += `/${categorySlug}`;
+        }
+
+        navigate(path);
+        onClose();
+    };
 
     useEffect(() => {
         if (brands?.length > 0 && !activeBrandId) {
@@ -105,16 +137,12 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
     }, [activeBrandId]);
 
     const defaultBanner = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop';
-    const activeBrandName = brands?.find((b: any) => b.id === activeBrandId)?.name || '';
-
-    const handleToggleCategory = (categoryId: string) => {
-        setExpandedCategoryId(prev => prev === categoryId ? null : categoryId);
-    };
 
     return (
         <AnimatePresence>
             {isOpen && (
                 <>
+                    {/* Backdrop */}
                     <motion.div
                         className="fixed inset-0 top-[80px] z-40 bg-black/50 backdrop-blur-sm"
                         initial={{ opacity: 0 }}
@@ -124,6 +152,7 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                         onClick={onClose}
                     />
 
+                    {/* Menu Content */}
                     <motion.div
                         className="absolute left-0 right-0 top-[80px] z-50 bg-white shadow-2xl border-t border-zinc-200 origin-top"
                         initial={{ opacity: 0, y: -20 }}
@@ -133,7 +162,7 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                     >
                         <div className="max-w-[1300px] mx-auto px-6 lg:px-12 flex flex-col">
                             
-                            {/* --- TABS THƯƠNG HIỆU: Chữ to 15px, BOLD --- */}
+                            {/* Tabs Thương Hiệu */}
                             <div className="flex items-center justify-center gap-16 py-8 border-b border-zinc-200">
                                 {brands?.map((brand: any) => {
                                     const isActive = activeBrandId === brand.id;
@@ -141,7 +170,7 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                         <button
                                             key={brand.id}
                                             onMouseEnter={() => setActiveBrandId(brand.id)}
-                                            className={`relative pb-3 text-[15px] uppercase tracking-wider transition-all duration-300 ${
+                                            className={`relative pb-3 text-[15px] uppercase tracking-wider transition-all duration-300 cursor-pointer ${
                                                 isActive ? 'text-black font-extrabold' : 'text-zinc-400 font-bold hover:text-black'
                                             }`}
                                         >
@@ -150,7 +179,7 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                                 <motion.div
                                                     layoutId="activeBrandIndicator"
                                                     className="absolute left-0 right-0 bottom-0 h-[2px] bg-black"
-                                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                                    transition={{ duration: 0.3 }}
                                                 />
                                             )}
                                         </button>
@@ -175,24 +204,34 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: index * 0.1, duration: 0.4 }}
                                                 >
-                                                    {/* Danh mục Cấp 1: Kích thước 18px, Extra Bold */}
-                                                    <h3 className="text-[18px] font-extrabold tracking-wide text-black mb-6 uppercase flex items-center justify-between pb-4 border-b-2 border-black/5">
-                                                        {level1.name}
-                                                    </h3>
+                                                    <button 
+                                                        type="button"
+                                                        onClick={() => handleFilter(activeBrand?.slug, level1.slug)}
+                                                        className="w-full text-[18px] font-extrabold tracking-wide text-black mb-6 uppercase flex items-center justify-between pb-4 border-b-2 border-black/5 cursor-pointer hover:text-zinc-500 hover:border-zinc-300 transition-all duration-300 group/title select-none"
+                                                    >
+                                                        <span>{level1.name}</span>
+                                                        
+                                                        <svg 
+                                                            className="w-5 h-5 opacity-0 -translate-x-3 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all duration-300 text-zinc-400" 
+                                                            fill="none" 
+                                                            viewBox="0 0 24 24" 
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                                        </svg>
+                                                    </button>
                                                     
                                                     <div className="flex flex-col gap-2">
-                                                        {level1.children && level1.children.length > 0 ? (
-                                                            level1.children.map((level2: any) => (
-                                                                <CategoryLevel2Item 
-                                                                    key={level2.id} 
-                                                                    category={level2} 
-                                                                    isExpanded={expandedCategoryId === level2.id}
-                                                                    onToggle={() => handleToggleCategory(level2.id)}
-                                                                />
-                                                            ))
-                                                        ) : (
-                                                            <div className="text-[14px] text-zinc-400 font-medium py-2">Đang cập nhật...</div>
-                                                        )}
+                                                        {level1.children?.map((level2: any) => (
+                                                            <CategoryLevel2Item 
+                                                                key={level2.id} 
+                                                                category={level2} 
+                                                                isExpanded={expandedCategoryId === level2.id}
+                                                                onToggle={() => setExpandedCategoryId(prev => prev === level2.id ? null : level2.id)}
+                                                                // Truyền slug của Brand hiện tại và slug của Category con
+                                                                onFilter={(categorySlug) => handleFilter(activeBrand?.slug, categorySlug)}
+                                                            />
+                                                        ))}
                                                     </div>
                                                 </motion.div>
                                             ))}
@@ -204,8 +243,12 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                     )}
                                 </div>
 
+                                {/* Banner bên phải */}
                                 <div className="w-[380px] flex-shrink-0">
-                                    <div className="relative w-full h-[420px] bg-zinc-100 overflow-hidden group cursor-pointer rounded-lg shadow-xl">
+                                    <div 
+                                        className="relative w-full h-[420px] bg-zinc-100 overflow-hidden group cursor-pointer rounded-lg shadow-xl"
+                                        onClick={() => handleFilter(activeBrand?.slug)}
+                                    >
                                         <AnimatePresence mode="wait">
                                             <motion.img
                                                 key={activeBrandId}
@@ -219,14 +262,14 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                             />
                                         </AnimatePresence>
                                         
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none transition-opacity duration-500" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
                                         
                                         <div className="absolute bottom-10 left-10 right-10 flex flex-col items-start transform transition-transform duration-500 group-hover:-translate-y-2">
                                             <span className="px-4 py-1.5 bg-white text-black text-[11px] font-bold tracking-widest uppercase rounded-sm mb-4">
                                                 Bộ Sưu Tập Mới
                                             </span>
                                             <h5 className="text-white text-4xl font-extrabold tracking-tight leading-tight mb-4">
-                                                {activeBrandName}
+                                                {activeBrand?.name || ''}
                                             </h5>
                                             <p className="text-white/80 text-[14px] font-medium flex items-center gap-2 group/btn">
                                                 Khám phá ngay 
@@ -240,11 +283,11 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
 
                             </div>
 
-                            {/* --- NÚT ĐÓNG --- */}
+                            {/* Nút Đóng */}
                             <div className="flex justify-center pb-8 border-t border-zinc-200 pt-6">
                                 <button
                                     onClick={onClose}
-                                    className="group flex items-center gap-3 px-8 py-3 bg-zinc-50 rounded-full border border-zinc-200 text-[13px] font-bold tracking-wider text-zinc-600 uppercase hover:text-black hover:bg-zinc-100 transition-all shadow-sm"
+                                    className="group flex items-center gap-3 px-8 py-3 bg-zinc-50 rounded-full border border-zinc-200 text-[13px] font-bold tracking-wider text-zinc-600 uppercase hover:text-black hover:bg-zinc-100 transition-all shadow-sm cursor-pointer"
                                 >
                                     Đóng Menu
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:rotate-90">

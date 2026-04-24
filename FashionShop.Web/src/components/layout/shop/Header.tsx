@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import MegaMenu from '../../../features/shop/categories/components/MegaMenu';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import MegaMenu from '../../../features/shop/brands/components/MegaMenu';
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,7 +13,7 @@ const Header: React.FC = () => {
                 <div className="flex-1 flex justify-start">
                     <button 
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="flex items-center gap-2.5 border border-gray-200 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all duration-300"
+                        className="flex items-center gap-2.5 border border-gray-200 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all duration-300 cursor-pointer"
                     >
                         {/* Icon Menu cách điệu (các đường line không bằng nhau tạo sự hiện đại) */}
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,8 +43,8 @@ const Header: React.FC = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </span>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             placeholder="Tìm kiếm..." 
                             className="w-full border border-gray-200 rounded-full pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all bg-transparent text-gray-800 placeholder-gray-400"
                         />

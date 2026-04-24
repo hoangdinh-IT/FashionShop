@@ -14,13 +14,14 @@ import CategoryPage from "../pages/admin/categories/CategoryPage";
 import BrandPage from "../pages/admin/brands/BrandPage";
 import ColorPage from "../pages/admin/colors/ColorPage";
 import SizePage from "../pages/admin/sizes/SizePage";
-import ProductPage from "../pages/admin/products/ProductPage";
+import AdminProductPage from "../pages/admin/products/ProductPage";
 import VoucherPage from "../pages/admin/vouchers/VoucherPage";
 
 import ShopMainLayout from "../layouts/ShopMainLayout";
 import ShopAccountLayout from "../layouts/ShopAccountLayout";
 import InformationPage from "../pages/shop/users/InformationPage";
 import AddressPage from "../pages/shop/addresses/AddressPage";
+import ShopProductPage from "../pages/shop/products/ProductPage";
 
 export const AppRoutes = () => {
     const elements = useRoutes([
@@ -88,7 +89,7 @@ export const AppRoutes = () => {
                         }, 
                         {
                             path: "products",
-                            element: <ProductPage />
+                            element: <AdminProductPage />
                         },
                         {
                             path: "vouchers",
@@ -122,6 +123,10 @@ export const AppRoutes = () => {
                                     element: <AddressPage />
                                 }
                             ]
+                        },
+                        {
+                            path: "collection/:brandSlug?/:categorySlug?",
+                            element: <ShopProductPage />
                         }
                     ]
                 }

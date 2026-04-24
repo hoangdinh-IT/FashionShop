@@ -392,7 +392,7 @@ const FormHeader = ({ isEdit, isProcessing, isDataReady, onClose }: any) => (
                 disabled={isProcessing || !isDataReady}
                 className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all"
             >
-                {isProcessing ? "Đang lưu..." : "Lưu sản phẩm"}
+                {isProcessing ? "ĐANG LƯU..." : "Lưu sản phẩm"}
             </button>
             
             <div className="hidden sm:block w-px h-8 bg-slate-200 mx-2"></div>

@@ -19,7 +19,7 @@ namespace FashionShop.Core.Contracts.Admin.ProductVariant.Requests
 
         [Required]
         [MaxLength(50, ErrorMessage = "SKU không được quá 50 kí tự!")]
-        public string sku { get; set; }
+        public string Sku { get; set; }
 
         [Required]
         [Range(0, int.MaxValue)]

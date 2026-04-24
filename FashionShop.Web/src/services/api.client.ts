@@ -1,4 +1,5 @@
 import axios from "axios";
+import qs from 'qs';
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -6,6 +7,10 @@ const apiClient = axios.create({
         'Content-Type': 'application/json',
     },
     timeout: 60000,
+    paramsSerializer: {
+        // Sử dụng thư viện qs để ép kiểu mảng "phẳng" (không có dấu [])
+        serialize: (params) => qs.stringify(params, { arrayFormat: 'repeat' }) 
+    }
 });
 
 apiClient.interceptors.request.use(

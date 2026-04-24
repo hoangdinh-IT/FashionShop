@@ -317,20 +317,27 @@ namespace FashionShop.API.Services.Admin
                     else
                     {
                         var existingVariant = await _unitOfWork.AdminProducts.FindProductVariantByIdAsync(variantRequest.Id.Value);
-                        if (existingVariant != null)
+                        //if (existingVariant != null)
+                        //{
+                        //    _mapper.Map(variantRequest, existingVariant);
+                        //    existingVariant.UpdatedDate = DateTime.UtcNow;
+                        //}
+
+                        if (existingVariant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm!");
+
+                        if (variantRequest.Sku != existingVariant.Sku)
                         {
-                            _mapper.Map(variantRequest, existingVariant);
-                            existingVariant.UpdatedDate = DateTime.UtcNow;
+                            var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(variantRequest.Sku);
+
+                            if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
                         }
+
+                        _mapper.Map(variantRequest, existingVariant);
+                        existingVariant.UpdatedDate = DateTime.UtcNow;
                     }
                 }
 
-                // 4. LƯU DATABASE 1 LẦN DUY NHẤT
-                // EF Core sẽ gom tất cả: Update Product, Insert Variant mới, Update Variant cũ, Delete Variant thừa.
                 await _unitOfWork.SaveChangesAsync();
-
-                // 5. DỌN RÁC ẢNH CŨ TRÊN CLOUD NẾU THÀNH CÔNG (Nếu có)
-                // ...
 
                 return await GetProductDetailByIdAsync(productId);
             }
@@ -437,9 +444,9 @@ namespace FashionShop.API.Services.Admin
 
             if (existingProductVariant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm");
 
-            if (request.sku != existingProductVariant.Sku)
+            if (request.Sku != existingProductVariant.Sku)
             {
-                var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(request.sku);
+                var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(request.Sku);
 
                 if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
             }

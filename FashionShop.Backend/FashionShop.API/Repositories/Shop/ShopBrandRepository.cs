@@ -2,6 +2,7 @@
 using FashionShop.API.Repositories.Shop.Interfaces;
 using FashionShop.Core.Contracts.Shop.Brand.Responses;
 using FashionShop.Core.Contracts.Shop.Category.Responses;
+using FashionShop.Core.Contracts.Shop.Product.Responses;
 using FashionShop.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -48,20 +49,19 @@ namespace FashionShop.API.Repositories.Shop
 
         public async Task<IEnumerable<ShopCategoryResponse>> GetCategoriesByBrandAsync(Guid brandId)
         {
-            // BƯỚC 1: Tìm danh sách ID các danh mục CÓ TRỰC TIẾP sản phẩm của Brand A
+            // BƯỚC 1: Tìm danh sách ID các danh mục CÓ TRỰC TIẾP sản phẩm của Brand
             var activeCategoryIds = await _context.Products
                 .Where(p => p.BrandId == brandId)
                 .Select(p => p.CategoryId)
                 .Distinct()
                 .ToListAsync();
 
-            // Nếu brand không có sản phẩm nào, trả về mảng rỗng
             if (!activeCategoryIds.Any())
             {
                 return Enumerable.Empty<ShopCategoryResponse>();
             }
 
-            // BƯỚC 2: Lấy TẤT CẢ danh mục bằng _categorySelector của bạn
+            // BƯỚC 2: Lấy TẤT CẢ danh mục
             var allCategories = await _context.Categories
                 .Select(_categorySelector)
                 .ToListAsync();
@@ -72,9 +72,6 @@ namespace FashionShop.API.Repositories.Shop
 
             foreach (var cat in allCategories)
             {
-                // Khởi tạo list Children nếu chưa có (đề phòng quên khởi tạo ở class)
-                cat.Children ??= new List<ShopCategoryResponse>();
-
                 if (cat.ParentId.HasValue && dict.ContainsKey(cat.ParentId.Value))
                 {
                     dict[cat.ParentId.Value].Children.Add(cat);
@@ -85,21 +82,19 @@ namespace FashionShop.API.Repositories.Shop
                 }
             }
 
-            // BƯỚC 4: Hàm cắt tỉa (Prune) - Xóa bỏ những nhánh không có đồ của Brand A
+            // BƯỚC 4: Hàm cắt tỉa (Prune) - Xóa bỏ những nhánh không có đồ của Brand
             var validIdsSet = new HashSet<Guid>(activeCategoryIds);
 
             bool KeepBranch(ShopCategoryResponse node)
             {
-                // Đi ngược từ dưới lên để check các danh mục con
                 for (int i = node.Children.Count - 1; i >= 0; i--)
                 {
                     if (!KeepBranch(node.Children[i]))
                     {
-                        node.Children.RemoveAt(i); // Cắt bỏ nhánh con nếu không hợp lệ
+                        node.Children.RemoveAt(i);
                     }
                 }
 
-                // Giữ lại danh mục này nếu: bản thân nó có sản phẩm, HOẶC nó có chứa nhánh con hợp lệ
                 return validIdsSet.Contains(node.Id) || node.Children.Any();
             }
 
@@ -114,5 +109,46 @@ namespace FashionShop.API.Repositories.Shop
 
             return roots;
         }
+
+        //public async Task<IEnumerable<ProductGridItemResponse>> GetProductsAsync(Guid? brandId, Guid? categoryId)
+        //{
+        //    var query = _context.Products.AsQueryable();
+
+        //    // Lọc theo Brand
+        //    if (brandId.HasValue)
+        //    {
+        //        query = query.Where(p => p.BrandId == brandId.Value);
+        //    }
+
+        //    // Lọc theo Category (Bao gồm cả xử lý Level 2)
+        //    if (categoryId.HasValue)
+        //    {
+        //        // Lấy ID của category hiện tại VÀ tất cả ID của các category con trực tiếp
+        //        // Ví dụ: Nhận ID của "Áo thun" (Level 2) -> Lấy thêm ID của "Áo thun Polo", "Áo thun Basic" (Level 3)
+        //        var categoryIds = await _context.Categories
+        //            .Where(c => c.Id == categoryId.Value || c.ParentId == categoryId.Value)
+        //            .Select(c => c.Id)
+        //            .ToListAsync();
+
+        //        if (categoryIds.Any())
+        //        {
+        //            // Lấy tất cả sản phẩm nằm trong danh sách ID vừa tìm được
+        //            query = query.Where(p => categoryIds.Contains(p.CategoryId));
+        //        }
+        //    }
+
+        //    // Map qua DTO và trả về (Thay đổi Select tùy vào hệ thống của bạn)
+        //    return await query
+        //        .Select(p => new ProductGridItemResponse
+        //        {
+        //            Id = p.Id,
+        //            Name = p.Name,
+        //            Price = p.Price,
+        //            ThumbnailUrl = p.ThumbnailUrl,
+        //            IsNew = p.IsNew,
+        //            IsBestSeller = p.IsBestSeller
+        //        })
+        //        .ToListAsync();
+        //}
     }
 }

@@ -23,11 +23,14 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        public async Task<PagedResult<ShopProductResponse>> GetPagedProductsAsync(ShopProductListRequest request)
+        public async Task<PagedResult<ProductGridItemResponse>> GetPagedProductsAsync(ShopProductListRequest request)
             => await _unitOfWork.ShopProducts.GetPagedProductsAsync(request);
 
-        public async Task<ShopProductResponse?> GetProductByIdAsync(Guid productId)
+        public async Task<ProductGridItemResponse?> GetProductByIdAsync(Guid productId)
             => await _unitOfWork.ShopProducts.GetProductByIdAsync(productId);
+
+        public async Task<ShopFilterOptionsResponse?> GetFilterOptionsAsync(ShopFilterOptionsRequest request)
+            => await _unitOfWork.ShopProducts.GetFilterOptionsAsync(request);
 
         // --- WRITE METHODS --- //
     }

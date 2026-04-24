@@ -289,7 +289,7 @@ const ProductImageManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId
                                 <motion.div className="relative w-full max-w-7xl h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col" variants={modalVariants} initial="hidden" animate="visible" exit="exit">
                                     {/* --- HEADER --- */}
                                     <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between">
-                                        <div><Dialog.Title className="text-2xl font-bold text-slate-900">Quản lý thư viện hình ảnh</Dialog.Title><Dialog.Description className="text-slate-500 mt-1 font-medium">Sản phẩm: {productDetail?.name || 'Đang tải...'}</Dialog.Description></div>
+                                        <div><Dialog.Title className="text-2xl font-bold text-slate-900">Quản lý thư viện hình ảnh</Dialog.Title><Dialog.Description className="text-slate-500 mt-1 font-medium">Sản phẩm: {productDetail?.name || 'ĐANG TẢI...'}</Dialog.Description></div>
                                         <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors"><IoCloseOutline className="text-2xl" /></button>
                                     </div>
 
@@ -377,7 +377,7 @@ const ProductImageManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId
                                         <div className="flex items-center gap-3">
                                             <button onClick={onClose} disabled={isProcessing} className="px-6 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50">Đóng</button>
                                             <button onClick={handleSaveChanges} disabled={!hasChanges || isProcessing} className="px-8 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-                                                {isProcessing ? "Đang xử lý..." : "Lưu thay đổi"}
+                                                {isProcessing ? "ĐANG XỬ LÝ..." : "Lưu thay đổi"}
                                             </button>
                                         </div>
                                     </div>

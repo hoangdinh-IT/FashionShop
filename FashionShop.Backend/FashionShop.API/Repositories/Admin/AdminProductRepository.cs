@@ -129,8 +129,8 @@ namespace FashionShop.API.Repositories.Admin
             var query = _context.Products.AsNoTracking().AsQueryable();
 
             query = query.FilterByKeyword(request.Keyword)
-                         .FilterByCategory(request.CategoryId)
-                         .FilterByBrand(request.BrandId)
+                         .FilterByCategoryId(request.CategoryId)
+                         .FilterByBrandId(request.BrandId)
                          .FilterByActive(request.IsActive)
                          .FilterByBestSeller(request.IsBestSeller)
                          .FilterByNew(request.IsNew)
@@ -302,7 +302,9 @@ namespace FashionShop.API.Repositories.Admin
         {
             var query = _context.ProductImages
                                 .AsNoTracking()
-                                .Where(x => x.ProductId == productId);
+                                .Where(x => x.ProductId == productId)
+                                .Where(x => x.ColorId == null ||
+                                    x.Product.ProductVariants.Any(v => v.ColorId == x.ColorId && v.IsDeleted == false));
 
             if (colorId.HasValue)
             {

@@ -54,7 +54,7 @@ export const useLogin = () => {
                 if (user.role === "Admin")
                     navigate("/admin", { replace: true });
                 else if (user.role === "Customer")
-                    navigate("/shop/account", { replace: true })
+                    navigate("/shop/collection", { replace: true })
             } else {
                 showSnackbar(response.message || "Đăng nhập thất bại!", "error");
             }
