@@ -12,5 +12,7 @@ namespace FashionShop.Core.Contracts.Shop.Product.Responses
     {
         public List<ShopColorResponse> AvailableColors { get; set; }
         public List<ShopSizeResponse> AvailableSizes { get; set; }
+        public string BrandName { get; set; }
+        public string CategoryName { get; set; }
     }
 }

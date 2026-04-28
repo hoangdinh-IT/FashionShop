@@ -450,6 +450,7 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                 </span>
                 <input
                     type="text"
+                    disabled
                     className={`flex-1 rounded-l-none ${getInputClassName(errors.slug)}`}
                     {...register("slug", { required: "Vui lòng nhập Slug", maxLength: 200 })}
                 />

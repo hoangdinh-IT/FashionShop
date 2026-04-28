@@ -12,11 +12,10 @@ namespace FashionShop.Core.Contracts.Shop.Product.Requests
         public string? Keyword { get; set; }
         public string CategorySlug { get; set; }
         public string BrandSlug { get; set; }
-        public int? ColorId { get; set; }
-        public List<int>? SizeIds { get; set; }
+        public List<string>? SizeSlugs { get; set; }
+        public string? ColorSlug { get; set; }
         public bool? IsBestSeller { get; set; }
         public bool? IsNew { get; set; }
-        public string? PriceRange { get; set; }
-        public bool? IsAscendingPrice { get; set; }
+        public List<string>? PriceRange { get; set; }
     }
 }

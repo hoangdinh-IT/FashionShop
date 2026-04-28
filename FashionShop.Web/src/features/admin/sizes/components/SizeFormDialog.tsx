@@ -26,6 +26,19 @@ const modalVariants: Variants = {
     }
 };
 
+const generateSlug = (str: string) => {
+    if (!str) return "";
+    return str
+        .toLowerCase() // Chuyển thành chữ thường
+        .normalize("NFD") // Chuẩn hóa chuỗi Unicode để tách dấu
+        .replace(/[\u0300-\u036f]/g, "") // Xóa các dấu
+        .replace(/[đĐ]/g, "d") // Xử lý chữ đ/Đ
+        .replace(/([^0-9a-z-\s])/g, "") // Xóa các ký tự đặc biệt
+        .replace(/(\s+)/g, "-") // Thay khoảng trắng bằng dấu gạch ngang
+        .replace(/-+/g, "-") // Xóa các dấu gạch ngang kép
+        .replace(/^-+|-+$/g, ""); // Xóa gạch ngang ở đầu và cuối
+};
+
 interface Props {
     isOpen: boolean;
     onClose: () => void;
@@ -45,23 +58,35 @@ const SizeFormDialog: React.FC<Props> = ({
         handleSubmit,
         reset,
         watch,
-        formState: { errors }
+        setValue,
+        formState: { dirtyFields, errors }
     } = useForm<SizeFormInputs>();
 
     // Theo dõi độ dài tên để hiển thị counter
     const watchedName = watch("name") || "";
+    const watchedSlug = watch("slug") || "";
 
     // 3. Reset form khi mở Modal hoặc data thay đổi
     useEffect(() => {
         if (isOpen) {
             reset({
                 name: initialData?.name || "",
-                sortOrder: (initialData?.sortOrder ?? "") as any, // Để undefined nếu thêm mới
-                type: initialData?.type || "" as SizeType, // Hack nhẹ để nhận chuỗi rỗng cho placeholder
-                isActive: initialData?.isActive ?? true // Mặc định là true nếu không có data
+                slug: initialData?.slug || "",
+                sortOrder: (initialData?.sortOrder ?? "") as any, 
+                type: initialData?.type || "" as SizeType, 
+                isActive: initialData?.isActive ?? true 
             });
         }
     }, [isOpen, initialData, reset]);
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newName = e.target.value;
+
+        if (!initialData || !dirtyFields.slug) {
+            const newSlug = generateSlug(newName);
+            setValue("slug", newSlug, { shouldValidate: !!newSlug });
+        }
+    };
 
     // 4. Xử lý Submit
     const onSubmit: SubmitHandler<SizeFormInputs> = (data) => {
@@ -129,7 +154,8 @@ const SizeFormDialog: React.FC<Props> = ({
                                     <input
                                         {...register("name", { 
                                             required: "Tên kích thước là bắt buộc",
-                                            maxLength: { value: 50, message: "Tên không quá 50 ký tự!" }
+                                            maxLength: { value: 50, message: "Tên không quá 50 ký tự!" },
+                                            onChange: handleNameChange
                                         })}
                                         type="text"
                                         placeholder="Nhập tên kích thước..."
@@ -141,6 +167,40 @@ const SizeFormDialog: React.FC<Props> = ({
                                         </span>
                                         <span className={`text-xs ${watchedName.length > 50 ? 'text-red-500 font-bold' : 'text-gray-400'}`}>
                                             {watchedName.length}/50
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Slug */}
+                                <div className="space-y-1.5">
+                                    <label className="text-sm font-semibold text-gray-700">
+                                        Đường dẫn (Slug) <span className="text-red-500">*</span>
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            {...register("slug", { 
+                                                required: "Slug là bắt buộc",
+                                                maxLength: {
+                                                    value: 50,
+                                                    message: "Slug không được vượt quá 50 ký tự!"
+                                                }
+                                            })}
+                                            type="text"
+                                            disabled
+                                            placeholder="Nhập đường dẫn (Slug)..."
+                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm text-gray-600"
+                                        />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+                                            /url
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between mt-1">
+                                        <span className="text-xs text-red-500 font-medium min-h-[20px]">
+                                            {errors.slug?.message}
+                                        </span>
+
+                                        <span className={`text-xs ${watchedSlug.length > 50 ? 'text-red-500 font-bold' : 'text-gray-400'}`}>
+                                            {watchedSlug.length}/50
                                         </span>
                                     </div>
                                 </div>

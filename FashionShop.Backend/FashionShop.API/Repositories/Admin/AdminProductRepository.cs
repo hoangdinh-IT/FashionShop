@@ -135,7 +135,7 @@ namespace FashionShop.API.Repositories.Admin
                          .FilterByBestSeller(request.IsBestSeller)
                          .FilterByNew(request.IsNew)
                          .FilterByPrice(request.MinPrice, request.MaxPrice)
-                         .Sort(request.SortBy, request.IsAscending);
+                         .AdminSort(request.SortBy, request.IsAscending);
 
             var totalRecord = await query.CountAsync();
 

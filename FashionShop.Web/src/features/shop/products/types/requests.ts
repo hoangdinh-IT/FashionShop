@@ -2,13 +2,13 @@ import type { PagingBase } from "../../../../models/PagingBase";
 
 export interface ProductFilters {
     keyword?: string;
-    categorySlug?: string;
     brandSlug?: string;
-    colorId?: number;
-    sizeIds?: number[];
+    categorySlug?: string;
+    sizeSlugs?: string[];
+    colorSlug?: string;
     isBestSeller?: string;
     isNew?: string;
-    priceRange?: string;
+    priceRange?: string[];
     isAscendingPrice?: boolean;
 }
 

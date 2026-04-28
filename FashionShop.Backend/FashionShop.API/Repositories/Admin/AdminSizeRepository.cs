@@ -19,6 +19,7 @@ namespace FashionShop.API.Repositories.Admin
             {
                 Id = x.Id,
                 Name = x.Name,
+                Slug = x.Slug,
                 SortOrder = x.SortOrder,
                 Type = x.Type,
                 productCount = x.ProductVariants.Count(),

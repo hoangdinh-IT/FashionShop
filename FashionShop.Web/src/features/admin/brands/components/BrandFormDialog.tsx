@@ -272,6 +272,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                         }
                                                     })}
                                                     type="text"
+                                                    disabled
                                                     placeholder="Nhập đường dẫn (Slug)..."
                                                     className={`w-full pl-5 pr-16 py-3 border border-transparent bg-gray-50 rounded-xl outline-none transition-all placeholder:text-gray-400 font-semibold text-gray-800
                                                         ${errors.slug 

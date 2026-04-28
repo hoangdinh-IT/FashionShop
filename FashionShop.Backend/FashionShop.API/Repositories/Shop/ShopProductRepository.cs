@@ -24,7 +24,7 @@ namespace FashionShop.API.Repositories.Shop
             _context = context;
         }
 
-        private static readonly Expression<Func<Product, ProductGridItemResponse>> _productSelector =
+        private static readonly Expression<Func<Product, ProductGridItemResponse>> _productGridItemSelector =
             p => new ProductGridItemResponse
             {
                 Id = p.Id,
@@ -34,6 +34,19 @@ namespace FashionShop.API.Repositories.Shop
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsBestSeller = p.IsBestSeller,
                 IsNew = p.IsNew,
+
+                ProductSizes = p.ProductVariants != null
+                    ? p.ProductVariants
+                        .Select(v => v.Size)
+                        .Distinct()
+                        .Select(s => new ShopProductSizeDto
+                        {
+                            SizeId = s.Id,
+                            SizeName = s.Name,
+                        })
+                        .OrderBy(dto => dto.SizeId)
+                        .ToList()
+                    : new List<ShopProductSizeDto>(),
 
                 ProductColors = p.ProductVariants != null
                     ? p.ProductVariants
@@ -55,6 +68,29 @@ namespace FashionShop.API.Repositories.Shop
                         .ToList()
                     : new List<ShopProductColorDto>(),
 
+                ProductVariants = p.ProductVariants != null
+                    ? p.ProductVariants
+                        .Select(v => new ShopProductVariantDto
+                        {
+                            ColorId = v.ColorId,
+                            SizeId = v.SizeId,
+                            Quantity = v.Quantity,
+                        })
+                        .ToList()
+                    : new List<ShopProductVariantDto>(),
+            };
+
+        private static readonly Expression<Func<Product, ProductDetailResponse>> _productDetailSelector =
+            p => new ProductDetailResponse
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Slug = p.Slug,
+                Content = p.Content,
+                Price = p.Price,
+                ThumbnailUrl = p.ThumbnailUrl,
+                IsNew = p.IsNew,
+                IsBestSeller = p.IsBestSeller,
                 ProductSizes = p.ProductVariants != null
                     ? p.ProductVariants
                         .Select(v => v.Size)
@@ -63,11 +99,30 @@ namespace FashionShop.API.Repositories.Shop
                         {
                             SizeId = s.Id,
                             SizeName = s.Name,
-                            IsOutOfStock = false
                         })
                         .OrderBy(dto => dto.SizeId)
                         .ToList()
                     : new List<ShopProductSizeDto>(),
+
+                ProductColors = p.ProductVariants != null
+                    ? p.ProductVariants
+                        .Where(v => v.Quantity > 0)
+                        .GroupBy(v => v.Color)
+                        .OrderBy(g => g.Min(v => v.CreatedDate))
+                        .Select(g => g.Key)
+                        .Select(c => new ShopProductColorDto
+                        {
+                            ColorId = c.Id,
+                            ColorName = c.Name,
+                            ColorHexCode = c.HexCode,
+                            ImageUrl = p.ProductImages
+                                .Where(pi => pi.ColorId == c.Id)
+                                .OrderBy(pi => pi.SortOrder)
+                                .Select(pi => pi.ImageUrl)
+                                .FirstOrDefault() ?? p.ThumbnailUrl
+                        })
+                        .ToList()
+                    : new List<ShopProductColorDto>(),
 
                 ProductVariants = p.ProductVariants != null
                     ? p.ProductVariants
@@ -79,6 +134,19 @@ namespace FashionShop.API.Repositories.Shop
                         })
                         .ToList()
                     : new List<ShopProductVariantDto>(),
+
+                ProductImages = p.ProductImages != null
+                    ? p.ProductImages
+                        .Select(x => new ShopProductImageResponse
+                        {
+                            ImageId = x.Id,
+                            ProductId = p.Id,
+                            ColorId = x.ColorId,
+                            ImageUrl = x.ImageUrl,
+                            SortOrder = x.SortOrder,
+                        })
+                        .ToList()
+                    : new List<ShopProductImageResponse>(),
             };
 
         // --- READ METHODS --- //
@@ -93,19 +161,18 @@ namespace FashionShop.API.Repositories.Shop
             query = query.FilterByKeyword(request.Keyword)
                          .FilterByCategorySlug(request.CategorySlug)
                          .FilterByBrandSlug(request.BrandSlug)
-                         .FilterByColor(request.ColorId)
-                         .FilterBySize(request.SizeIds)
+                         .FilterBySize(request.SizeSlugs)
+                         .FilterByColor(request.ColorSlug)
                          .FilterByBestSeller(request.IsBestSeller)
                          .FilterByNew(request.IsNew)
                          .FilterByPriceRange(request.PriceRange)
-                         .SortByPrice(request.IsAscendingPrice)
-                         .Sort(request.SortBy, request.IsAscending);
+                         .ShopSort(request.SortBy);
 
             var totalRecord = await query.CountAsync();
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                                   .Take(request.PageSize)
-                                  .Select(_productSelector)
+                                  .Select(_productGridItemSelector)
                                   .AsSplitQuery()
                                   .ToListAsync();
 
@@ -118,12 +185,14 @@ namespace FashionShop.API.Repositories.Shop
             };
         }
 
-        public async Task<ProductGridItemResponse?> GetProductByIdAsync(Guid productId)
+        public async Task<ProductDetailResponse?> GetProductByIdAsync(string productSlug)
         {
             return await _context.Products
                 .AsNoTracking()
-                .Select(_productSelector)
-                .FirstOrDefaultAsync(p => p.Id == productId);
+                .AsSplitQuery()
+                .Where(p => p.Slug == productSlug)
+                .Select(_productDetailSelector)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<ShopFilterOptionsResponse?> GetFilterOptionsAsync(ShopFilterOptionsRequest request)
@@ -143,17 +212,10 @@ namespace FashionShop.API.Repositories.Shop
                 {
                     AvailableColors = new List<ShopColorResponse>(),
                     AvailableSizes = new List<ShopSizeResponse>(),
+                    BrandName = "",
+                    CategoryName = "",
                 };
             }
-
-            var priceRange = await query
-                .GroupBy(p => 1)
-                .Select(g => new
-                {
-                    Min = g.Min(p => p.Price),
-                    Max = g.Max(p => p.Price),
-                })
-                .FirstOrDefaultAsync();
 
             var colors = await query
                 .SelectMany(p => p.ProductVariants)
@@ -164,6 +226,7 @@ namespace FashionShop.API.Repositories.Shop
                 {
                     Id = c.Id,
                     Name = c.Name,
+                    Slug = c.Slug,
                     HexCode = c.HexCode,
                 })
                 .ToListAsync();
@@ -177,13 +240,26 @@ namespace FashionShop.API.Repositories.Shop
                 {
                     Id = c.Id,
                     Name = c.Name,
+                    Slug = c.Slug,
                 })
                 .ToListAsync();
+
+            var brandName = await _context.Brands
+                .Where(x => x.Slug == request.BrandSlug)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
+
+            var categoryName = await _context.Categories
+                .Where(x => x.Slug == request.CategorySlug)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
 
             return new ShopFilterOptionsResponse
             {
                 AvailableColors = colors,
                 AvailableSizes = sizes,
+                BrandName = brandName,
+                CategoryName = categoryName,
             };
         }
 

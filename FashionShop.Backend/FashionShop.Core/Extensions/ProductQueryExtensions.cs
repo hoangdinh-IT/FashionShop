@@ -53,18 +53,18 @@ namespace FashionShop.Core.Extensions
             return query.Where(x => x.Brand.Slug == brandSlug);
         }
 
-        public static IQueryable<Product> FilterByColor(this IQueryable<Product> query, int? colorId)
+        public static IQueryable<Product> FilterBySize(this IQueryable<Product> query, List<string>? sizeSlugs)
         {
-            if (colorId == null) return query;
+            if (sizeSlugs == null || !sizeSlugs.Any()) return query;
 
-            return query.Where(p => p.ProductVariants.Any(v => v.ColorId == colorId));
+            return query.Where(p => p.ProductVariants.Any(v => sizeSlugs.Contains(v.Size.Slug) && v.Quantity > 0));
         }
 
-        public static IQueryable<Product> FilterBySize(this IQueryable<Product> query, List<int>? sizeIds)
+        public static IQueryable<Product> FilterByColor(this IQueryable<Product> query, string? colorSlug)
         {
-            if (sizeIds == null || !sizeIds.Any()) return query;
+            if (string.IsNullOrWhiteSpace(colorSlug)) return query;
 
-            return query.Where(p => p.ProductVariants.Any(v => sizeIds.Contains(v.SizeId) && v.Quantity > 0));
+            return query.Where(p => p.ProductVariants.Any(v => v.Color.Slug == colorSlug && v.Quantity > 0));
         }
 
         public static IQueryable<Product> FilterByActive(this IQueryable<Product> query, bool? isActive)
@@ -95,16 +95,16 @@ namespace FashionShop.Core.Extensions
             return query;
         }
 
-        public static IQueryable<Product> FilterByPriceRange(this IQueryable<Product> query, string? priceRange)
+        public static IQueryable<Product> FilterByPriceRange(this IQueryable<Product> query, List<string>? priceRange)
         {
-            if (string.IsNullOrWhiteSpace(priceRange)) return query;
-
-            var data = priceRange.Split(",");
+            // 1. Kiểm tra List null hoặc rỗng thay vì IsNullOrWhiteSpace
+            if (priceRange == null || !priceRange.Any()) return query;
 
             var parameter = Expression.Parameter(typeof(Product), "x");
             Expression? combinedExpression = null;
 
-            foreach (var item in data)
+            // 2. Duyệt trực tiếp qua List thay vì phải Split(",") như trước
+            foreach (var item in priceRange)
             {
                 Expression? currentExpression = null;
 
@@ -119,14 +119,18 @@ namespace FashionShop.Core.Extensions
                             Expression.Constant(minPrice, typeof(decimal))
                         );
                     }
-                } 
+                }
                 else
                 {
-                    var prices = item.Split("-");;
+                    // Tách khoảng giá bằng dấu "-"
+                    var prices = item.Split("-");
 
-                    if (decimal.TryParse(prices[0], out var minPrice) && decimal.TryParse(prices[1], out var maxPrice))
+                    // Thêm check prices.Length == 2 để an toàn, tránh lỗi IndexOutOfRange
+                    if (prices.Length == 2 &&
+                        decimal.TryParse(prices[0], out var minPrice) &&
+                        decimal.TryParse(prices[1], out var maxPrice))
                     {
-                        var greaterThan = Expression.GreaterThan(
+                        var greaterThan = Expression.GreaterThan( // Hoặc GreaterThanOrEqual tuỳ logic của bạn
                             Expression.Property(parameter, nameof(Product.Price)),
                             Expression.Constant(minPrice, typeof(decimal))
                         );
@@ -140,6 +144,7 @@ namespace FashionShop.Core.Extensions
                     }
                 }
 
+                // Kết hợp các điều kiện lại bằng OR
                 if (currentExpression != null)
                 {
                     combinedExpression = combinedExpression == null
@@ -148,6 +153,7 @@ namespace FashionShop.Core.Extensions
                 }
             }
 
+            // 3. Build biểu thức Lambda và apply vào query
             if (combinedExpression != null)
             {
                 var lambda = Expression.Lambda<Func<Product, bool>>(combinedExpression, parameter);
@@ -166,7 +172,7 @@ namespace FashionShop.Core.Extensions
             return query;
         }
 
-        public static IQueryable<Product> Sort(this IQueryable<Product> query, string? sortBy, bool isAscending)
+        public static IQueryable<Product> AdminSort(this IQueryable<Product> query, string? sortBy, bool isAscending)
         {
             if (string.IsNullOrWhiteSpace(sortBy))
                 return query.OrderByDescending(x => x.CreatedDate);
@@ -195,6 +201,40 @@ namespace FashionShop.Core.Extensions
 
                 default:
                     return query.OrderByDescending(x => x.CreatedDate);
+            }
+        }
+
+        public static IQueryable<Product> ShopSort(this IQueryable<Product> query, string? sortBy)
+        {
+            if (string.IsNullOrWhiteSpace(sortBy))
+                return query.OrderByDescending(x => x.CreatedDate)
+                            .ThenByDescending(x => x.Id);
+
+            switch(sortBy.ToLower().Trim())
+            {
+                case "default":
+                    return query.OrderByDescending(x => x.CreatedDate)
+                                .ThenByDescending(x => x.Id);
+
+                case "newest":
+                    return query.OrderByDescending(x => x.IsNew)
+                                .ThenByDescending(x => x.Id);
+
+                case "bestseller":
+                    return query.OrderByDescending(x => x.IsBestSeller)
+                                .ThenByDescending(x => x.Id);
+
+                case "price-asc":
+                    return query.OrderBy(x => x.Price)
+                                .ThenByDescending(x => x.Id);
+
+                case "price-desc":
+                    return query.OrderByDescending(x => x.Price)
+                                .ThenByDescending(x => x.Id);
+
+                default:
+                    return query.OrderByDescending(x => x.CreatedDate)
+                                .ThenByDescending(x => x.Id);
             }
         }
     }

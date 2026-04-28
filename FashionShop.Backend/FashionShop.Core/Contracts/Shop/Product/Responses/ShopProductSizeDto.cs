@@ -10,6 +10,5 @@ namespace FashionShop.Core.Contracts.Shop.Product.Responses
     {
         public int SizeId { get; set; }
         public string SizeName { get; set; }
-        public bool IsOutOfStock { get; set; }
     }
 }

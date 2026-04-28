@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import MegaMenu from '../../../features/shop/brands/components/MegaMenu';
 
 const Header: React.FC = () => {
@@ -51,11 +51,11 @@ const Header: React.FC = () => {
                     </div>
 
                     {/* Giỏ hàng (Túi xách nét mảnh) */}
-                    <button className="text-gray-800 hover:text-black hover:-translate-y-0.5 transition-all duration-300 relative">
+                    <Link to="/shop/cart" className="text-gray-800 hover:text-black hover:-translate-y-0.5 transition-all duration-300 relative">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
-                    </button>
+                    </Link>
 
                     {/* Tài khoản */}
                     <Link to="/shop/account/information" className="flex items-center gap-2 text-gray-800 hover:text-black group transition-colors">

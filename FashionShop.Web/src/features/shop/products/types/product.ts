@@ -1,16 +1,6 @@
 import type { Color } from "../../colors/types/color";
 import type { Size } from "../../sizes/types/size";
 
-interface Product {
-    productId: string;
-    name: string;
-    slug: string;
-    price: number;
-    thumbnailUrl: string;
-    isBestSeller: boolean;
-    isNew: boolean;
-}
-
 interface ProductColor {
     colorId: number;
     colorName: string;
@@ -21,7 +11,6 @@ interface ProductColor {
 interface ProductSize {
     sizeId: number;
     sizeName: string;
-    isOutOfStock: boolean;
 }
 
 interface ProductVariant {
@@ -30,7 +19,22 @@ interface ProductVariant {
     quantity: number;
 }
 
-export interface ProductGridItem extends Product {
+interface ProductImage {
+    imageId: string;
+    productId: string;
+    colorId: number;
+    imageUrl: string;
+    sortOrder: number;
+}
+
+export interface ProductGridItem {
+    productId: string;
+    name: string;
+    slug: string;
+    price: number;
+    thumbnailUrl: string;
+    isNew: boolean;
+    isBestSeller: boolean;
     productColors: ProductColor[],
     productSizes: ProductSize[],
     productVariants: ProductVariant[],
@@ -39,4 +43,22 @@ export interface ProductGridItem extends Product {
 export interface FilterOptionsResponse {
     availableColors: Color[];
     availableSizes: Size[];
+    brandName: string;
+    categoryName: string;
+}
+
+export interface ProductDetail {
+    productId: string;
+    name: string;
+    slug: string;
+    content: string;
+    material: string;
+    price: number;
+    thumbnailUrl: string;
+    isNew: boolean;
+    isBestSeller: boolean;
+    productColors: ProductColor[],
+    productSizes: ProductSize[],
+    productVariants: ProductVariant[],
+    productImages: ProductImage[],
 }

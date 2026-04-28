@@ -1,4 +1,4 @@
-import type { FilterOptionsResponse, ProductGridItem } from "../../features/shop/products/types/product";
+import type { FilterOptionsResponse, ProductDetail, ProductGridItem } from "../../features/shop/products/types/product";
 import type { FilterOptionsRequest, ProductQueryParams } from "../../features/shop/products/types/requests";
 import type { ApiResponse } from "../../models/apiResponse";
 import type { PagedResult } from "../../models/PagedResult";
@@ -16,6 +16,11 @@ export const productService = {
         const response = await apiClient.get<ApiResponse<FilterOptionsResponse>>("/shop/products/filter-options", {
             params: params
         });
+        return response.data;
+    },
+
+    getDetail: async(productSlug: string): Promise<ApiResponse<ProductDetail>> => {
+        const response = await apiClient.get(`/shop/products/${productSlug}`);
         return response.data;
     }
 }

@@ -77,13 +77,13 @@ const ColorFormDialog: React.FC<ColorFormDialogProps> = ({
     const watchedHexCode = watch("hexCode") || "";
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            const newName = e.target.value;
-    
-            if (!initialData || !dirtyFields.slug) {
-                const newSlug = generateSlug(newName);
-                setValue("slug", newSlug, { shouldValidate: !!newSlug });
-            }
-        };
+        const newName = e.target.value;
+
+        if (!initialData || !dirtyFields.slug) {
+            const newSlug = generateSlug(newName);
+            setValue("slug", newSlug, { shouldValidate: !!newSlug });
+        }
+    };
 
     const onSubmit: SubmitHandler<ColorFormInputs> = (data) => {
         const handleSuccess = (response: any) => {
@@ -208,6 +208,7 @@ const ColorFormDialog: React.FC<ColorFormDialogProps> = ({
                                                 }
                                             })}
                                             type="text"
+                                            disabled
                                             placeholder="Nhập đường dẫn (Slug)..."
                                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm text-gray-600"
                                         />

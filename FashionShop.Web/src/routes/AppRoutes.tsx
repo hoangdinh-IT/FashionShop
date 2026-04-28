@@ -22,6 +22,8 @@ import ShopAccountLayout from "../layouts/ShopAccountLayout";
 import InformationPage from "../pages/shop/users/InformationPage";
 import AddressPage from "../pages/shop/addresses/AddressPage";
 import ShopProductPage from "../pages/shop/products/ProductPage";
+import ShopProductDetailPage from "../pages/shop/products/ProductDetailPage";
+import CartPage from "../pages/shop/products/CartPage";
 
 export const AppRoutes = () => {
     const elements = useRoutes([
@@ -127,6 +129,14 @@ export const AppRoutes = () => {
                         {
                             path: "collection/:brandSlug?/:categorySlug?",
                             element: <ShopProductPage />
+                        },
+                        {
+                            path: "product/:productSlug",
+                            element: <ShopProductDetailPage />
+                        },
+                        {
+                            path: "cart",
+                            element: <CartPage />
                         }
                     ]
                 }

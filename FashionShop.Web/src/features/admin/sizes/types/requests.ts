@@ -3,6 +3,7 @@ import type { SizeType } from "./size";
 
 export interface SizeFormInputs {
     name: string;
+    slug: string;
     sortOrder: number;
     type: SizeType;
     isActive?: boolean;

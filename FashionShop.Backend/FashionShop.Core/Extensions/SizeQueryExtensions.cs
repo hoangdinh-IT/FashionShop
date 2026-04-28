@@ -19,7 +19,8 @@ namespace FashionShop.Core.Extensions
             if (word == "xxl") word = "2xl";
             if (word == "xxxl") word = "3xl";
 
-            return query.Where(x => x.Name.ToLower().Contains(word));
+            return query.Where(x => x.Name.ToLower().Contains(word) ||
+                                    x.Slug.ToLower().Contains(word));
         }
 
         public static IQueryable<Size> FilterByType(this IQueryable<Size> query, SizeType? type)

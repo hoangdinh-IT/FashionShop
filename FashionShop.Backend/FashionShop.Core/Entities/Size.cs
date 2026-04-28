@@ -21,6 +21,10 @@ namespace FashionShop.Core.Entities
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(50)]
+        public string Slug { get; set; }
+
+        [Required]
         public int SortOrder { get; set; }
 
         [Required]

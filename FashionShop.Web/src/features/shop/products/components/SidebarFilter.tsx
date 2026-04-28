@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus, Check, X } from 'lucide-react';
+import { Plus, Minus, X } from 'lucide-react';
 import type { FilterOptionsResponse } from '../types/product';
 
 interface Props {
     totalProducts: number;
     filterOptions?: FilterOptionsResponse;
-    selectedSizeIds: number[];
-    selectedColorId: number;
-    selectedPrices: string[];
-    onFilterChange: (filters: { sizeIds: number[], colorId: number, priceRange: string[] }) => void;
+    selectedSizeSlugs: string[];
+    selectedColorSlug: string;
+    selectedPriceRange: string[];
+    onFilterChange: (filters: { sizeSlugs: string[], colorSlug: string, priceRange: string[] }) => void;
 }
 
 const PRICE_SEGMENTS = [
@@ -22,37 +22,36 @@ const PRICE_SEGMENTS = [
 const SidebarFilter: React.FC<Props> = ({ 
     totalProducts, 
     filterOptions, 
-    selectedSizeIds, 
-    selectedColorId, 
-    selectedPrices, 
+    selectedSizeSlugs, 
+    selectedColorSlug, 
+    selectedPriceRange, 
     onFilterChange 
 }) => {
     const [openSections, setOpenSections] = useState({ size: true, color: true, price: true });
 
-    const hasFilters = selectedSizeIds.length > 0 || selectedColorId > 0 || selectedPrices.length > 0;
+    const hasFilters = selectedSizeSlugs.length > 0 || selectedColorSlug !== "" || selectedPriceRange.length > 0;
 
-    // --- CÁC HÀM XỬ LÝ CLICK SẼ GỌI onFilterChange NGAY LẬP TỨC ---
-    const handleSizeToggle = (id: number) => {
-        const newSizes = selectedSizeIds.includes(id) 
-            ? selectedSizeIds.filter(item => item !== id) 
-            : [...selectedSizeIds, id];
-        onFilterChange({ sizeIds: newSizes, colorId: selectedColorId, priceRange: selectedPrices });
-    };
-
-    const handleColorToggle = (id: number) => {
-        const newColor = selectedColorId === id ? 0 : id;
-        onFilterChange({ sizeIds: selectedSizeIds, colorId: newColor, priceRange: selectedPrices });
-    };
+    const handleSizeToggle = (slug: string) => {
+        const newSizes = selectedSizeSlugs.includes(slug)
+            ? selectedSizeSlugs.filter(item => item !== slug)
+            : [...selectedSizeSlugs, slug];
+        onFilterChange({ sizeSlugs: newSizes, colorSlug: selectedColorSlug, priceRange: selectedPriceRange });
+    }
+    
+    const handleColorToggle = (slug: string) => {
+        const newColor = selectedColorSlug === slug ? "" : slug;
+        onFilterChange({ sizeSlugs: selectedSizeSlugs, colorSlug: newColor, priceRange: selectedPriceRange });
+    }
 
     const handlePriceToggle = (id: string) => {
-        const newPrices = selectedPrices.includes(id)
-            ? selectedPrices.filter(item => item !== id)
-            : [...selectedPrices, id];
-        onFilterChange({ sizeIds: selectedSizeIds, colorId: selectedColorId, priceRange: newPrices });
+        const newPriceRange = selectedPriceRange.includes(id)
+            ? selectedPriceRange.filter(item => item !== id)
+            : [...selectedPriceRange, id];
+        onFilterChange({ sizeSlugs: selectedSizeSlugs, colorSlug: selectedColorSlug, priceRange: newPriceRange });
     };
 
     const handleClearFilters = () => {
-        onFilterChange({ sizeIds: [], colorId: 0, priceRange: [] });
+        onFilterChange({ sizeSlugs: [], colorSlug: "", priceRange: [] });
     };
 
     if (!filterOptions) return <div className="w-full h-64 animate-pulse bg-zinc-50/50" />;
@@ -60,7 +59,7 @@ const SidebarFilter: React.FC<Props> = ({
     return (
         <aside className="hidden lg:block w-[22%] flex-shrink-0 sticky top-28 max-h-[90vh] pr-4 select-none">
             {/* --- HEADER --- */}
-            <div className="mb-4 border-b border-zinc-100 pb-4 flex justify-between items-baseline">
+            <div className="mb-4 border-b border-zinc-400 pb-4 flex justify-between items-baseline">
                 <h2 className="text-lg font-bold tracking-tight text-zinc-900">Bộ lọc</h2>
                 <span className="text-[12px] font-medium text-zinc-700 uppercase tracking-widest">
                     {totalProducts} sản phẩm
@@ -74,18 +73,21 @@ const SidebarFilter: React.FC<Props> = ({
                     isOpen={openSections.size} 
                     onToggle={() => setOpenSections(prev => ({ ...prev, size: !prev.size }))}
                 >
-                    <div className="flex flex-wrap gap-1.5 pt-1">
+                    <div className="flex flex-wrap gap-2.5 pt-2 pb-1">
                         {filterOptions.availableSizes.map((size) => {
-                            const isActive = selectedSizeIds.includes(size.id); 
+                            const isActive = selectedSizeSlugs.includes(size.slug); 
                             return (
                                 <button
-                                    key={size.id}
-                                    onClick={() => handleSizeToggle(size.id)}
+                                    key={size.slug}
+                                    type="button"
+                                    onClick={() => handleSizeToggle(size.slug)}
                                     className={`
-                                        min-w-[70px] h-10 text-[12px] font-semibold border transition-all duration-300 cursor-pointer
+                                        relative flex items-center justify-center min-w-[3.5rem] px-3 h-10 
+                                        text-[12px] uppercase tracking-wider transition-all duration-300 ease-out outline-none
+                                        border rounded-md select-none overflow-hidden
                                         ${isActive 
-                                            ? 'bg-zinc-900 border-zinc-900 text-white' 
-                                            : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900'
+                                            ? 'bg-zinc-900 border-zinc-900 text-white font-bold shadow-[0_2px_10px_-3px_rgba(0,0,0,0.3)] scale-[1.02]' 
+                                            : 'bg-white border-zinc-200 text-zinc-500 font-medium hover:border-zinc-400 hover:text-zinc-900 hover:bg-zinc-50 hover:-translate-y-0.5'
                                         }
                                     `}
                                 >
@@ -102,37 +104,50 @@ const SidebarFilter: React.FC<Props> = ({
                     isOpen={openSections.color} 
                     onToggle={() => setOpenSections(prev => ({ ...prev, color: !prev.color }))}
                 >
-                    <div className="grid grid-cols-5 gap-y-4 pt-2">
+                    <div className="grid grid-cols-4 lg:grid-cols-4 gap-x-1 gap-y-5 pt-3 pb-2">
                         {filterOptions.availableColors.map((color) => {
-                            const isActive = selectedColorId === color.id;
+                            const isActive = selectedColorSlug === color.slug;
+                            
+                            // Kiểm tra nếu màu là màu trắng/sáng thì viền đậm hơn một chút để không bị chìm vào nền
+                            const isLightColor = color.hexCode.toUpperCase() === '#FFFFFF' || color.hexCode.toUpperCase() === '#FFF';
                             
                             return (
                                 <button
-                                    key={color.id}
-                                    onClick={() => handleColorToggle(color.id)}
-                                    className="group flex flex-col items-center gap-1.5 cursor-pointer outline-none"
+                                    key={color.slug}
+                                    type="button"
+                                    onClick={() => handleColorToggle(color.slug)}
+                                    className="group flex flex-col items-center gap-2 cursor-pointer outline-none"
+                                    title={color.name} // Hiện tên đầy đủ khi di chuột vào
                                 >
                                     <div className="relative w-8 h-8 flex items-center justify-center">
+                                        {/* Chấm màu */}
                                         <div 
                                             className={`
-                                                w-6 h-6 rounded-full border border-zinc-200 shadow-sm transition-all duration-300 
-                                                ${isActive ? 'scale-[0.85]' : 'group-hover:scale-110'}
+                                                rounded-full transition-all duration-300 ease-out shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]
+                                                ${isActive 
+                                                    ? 'w-5 h-5' // Thu nhỏ khi active tạo offset
+                                                    : 'w-7 h-7 group-hover:scale-105' // To ra nhẹ khi hover
+                                                }
+                                                ${isLightColor ? 'border border-zinc-300' : 'border border-black/10'}
                                             `} 
                                             style={{ backgroundColor: color.hexCode }} 
                                         />
                                         
+                                        {/* Vòng viền bên ngoài khi Active (Framer Motion) */}
                                         {isActive && (
                                             <motion.div 
                                                 layoutId="activeColorRing" 
-                                                className="absolute inset-0 border border-zinc-900 rounded-full" 
-                                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                                className="absolute inset-0 border-2 border-zinc-900 rounded-full" 
+                                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                             />
                                         )}
                                     </div>
+                                    
+                                    {/* Tên màu */}
                                     <span 
                                         className={`
-                                            text-[10px] font-bold uppercase tracking-tight transition-colors 
-                                            ${isActive ? 'text-zinc-900' : 'text-zinc-400 group-hover:text-zinc-600'}
+                                            text-[10px] uppercase tracking-wider text-center w-full px-0.5 transition-colors duration-300
+                                            ${isActive ? 'text-zinc-900 font-bold' : 'text-zinc-500 font-medium group-hover:text-zinc-800'}
                                         `}
                                     >
                                         {color.name}
@@ -151,30 +166,62 @@ const SidebarFilter: React.FC<Props> = ({
                 >
                     <div className="space-y-2.5 pt-1">
                         {PRICE_SEGMENTS.map((segment) => {
-                            const isActive = selectedPrices.includes(segment.id);
+                            const isActive = selectedPriceRange.includes(segment.id);
                             return (
                                 <button
-                                    key={segment.id}
-                                    onClick={() => handlePriceToggle(segment.id)}
-                                    className="flex items-center w-full group cursor-pointer"
-                                >
-                                    <div 
-                                        className={`
-                                            w-4 h-4 border flex items-center justify-center transition-all mr-3 
-                                            ${isActive ? 'bg-zinc-900 border-zinc-900' : 'border-zinc-200 group-hover:border-zinc-900'}
-                                        `}
+                        key={segment.id}
+                        type="button"
+                        onClick={() => handlePriceToggle(segment.id)}
+                        className="flex items-center w-full group cursor-pointer py-1"
+                    >
+                        {/* Ô Checkbox */}
+                        <div 
+                            className={`
+                                relative w-[18px] h-[18px] rounded-[4px] border flex items-center justify-center transition-all duration-300 mr-3 shrink-0
+                                ${isActive 
+                                    ? 'bg-zinc-900 border-zinc-900 shadow-sm shadow-zinc-400/50' 
+                                    : 'bg-white border-zinc-300 group-hover:border-zinc-500 shadow-sm'
+                                }
+                            `}
+                        >
+                            <AnimatePresence>
+                                {isActive && (
+                                    <motion.svg
+                                        initial={{ opacity: 0, scale: 0.5 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.15 } }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                        width="12" 
+                                        height="12" 
+                                        viewBox="0 0 14 14" 
+                                        fill="none"
+                                        className="absolute"
                                     >
-                                        {isActive && <Check size={10} className="text-white" strokeWidth={4} />}
-                                    </div>
-                                    <span 
-                                        className={`
-                                            text-[13px] font-semibold transition-all 
-                                            ${isActive ? 'text-zinc-900' : 'text-zinc-500 group-hover:text-zinc-900'}
-                                        `}
-                                    >
-                                        {segment.label}
-                                    </span>
-                                </button>
+                                        <motion.path
+                                            d="M3 7.5L5.5 10L11 4"
+                                            stroke="white"
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            initial={{ pathLength: 0 }}
+                                            animate={{ pathLength: 1 }}
+                                            transition={{ duration: 0.35, ease: "easeOut", delay: 0.05 }}
+                                        />
+                                    </motion.svg>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Label chữ */}
+                        <span 
+                            className={`
+                                text-[13px] transition-all duration-300 tracking-wide
+                                ${isActive ? 'text-zinc-900 font-bold' : 'text-zinc-500 font-medium group-hover:text-zinc-800'}
+                            `}
+                        >
+                            {segment.label}
+                        </span>
+                    </button>
                             );
                         })}
                     </div>

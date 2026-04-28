@@ -13,6 +13,7 @@ namespace FashionShop.Core.Contracts.Admin.Size.Responses
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Slug { get; set; }
         public int SortOrder { get; set; }
         public SizeType Type { get; set; }
         public int productCount { get; set; } = 0;

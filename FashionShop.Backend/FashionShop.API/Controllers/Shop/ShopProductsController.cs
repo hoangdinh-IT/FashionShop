@@ -25,10 +25,10 @@ namespace FashionShop.API.Controllers.Shop
             return Success(result, "Lấy danh sách sản phẩm thành công!");
         }
 
-        [HttpGet("{productId}")]
-        public async Task<IActionResult> GetProductById(Guid productId)
+        [HttpGet("{productSlug}")]
+        public async Task<IActionResult> GetProductById(string productSlug)
         {
-            var result = await _productService.GetProductByIdAsync(productId);
+            var result = await _productService.GetProductByIdAsync(productSlug);
             return Success(result, "Lấy chi tiết sản phẩm thành công!");
         }
 

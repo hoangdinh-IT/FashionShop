@@ -1,6 +1,7 @@
 export interface Size {
     id: number;
     name: string;
+    slug: string;
     sortOrder: number;
     type: SizeType;
     productCount: number;

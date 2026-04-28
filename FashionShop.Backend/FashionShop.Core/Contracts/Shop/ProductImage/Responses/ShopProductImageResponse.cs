@@ -10,7 +10,7 @@ namespace FashionShop.Core.Contracts.Shop.ProductImage.Responses
 {
     public class ShopProductImageResponse
     {
-        public Guid Id { get; set; }
+        public Guid ImageId { get; set; }
         public Guid ProductId { get; set; }
         public int? ColorId { get; set; }
         public string ImageUrl { get; set; }

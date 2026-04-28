@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import type { ProductGridItem } from '../types/product';
+import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
-    product: ProductGridItem;
+    product: ProductGridItem & { slug?: string };
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    // 1. Khởi tạo state
     const [activeColorId, setActiveColorId] = useState(product.productColors?.[0]?.colorId);
 
-    // 2. THÊM ĐOẠN NÀY: Lắng nghe sự thay đổi của props `product`
-    // Khi bạn đổi bộ lọc ở trang ngoài, cục `product` mới được truyền vào đây,
-    // useEffect sẽ kích hoạt và reset màu về lại màu đầu tiên của sản phẩm mới.
     useEffect(() => {
         setActiveColorId(product.productColors?.[0]?.colorId);
     }, [product]);
 
-    // Lấy hình ảnh tương ứng với màu đang chọn
     const currentImageUrl = product.productColors?.find(c => c.colorId === activeColorId)?.imageUrl || product.thumbnailUrl;
 
+    const productUrl = `/shop/product/${product.slug}`;
+
     return (
-        <div className="group flex flex-col gap-3 cursor-pointer">
-            
+        <Link 
+            to={productUrl} 
+            className="group flex flex-col gap-3 cursor-pointer"
+        >
             {/* 1. IMAGE CONTAINER */}
             <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F7F7F7] z-10">
                 <img
@@ -53,12 +53,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {/* Lưới kích thước */}
                     <div className="flex flex-wrap justify-center gap-1.5">
                         {product.productSizes?.map((s) => {
-                            // 1. Tìm biến thể khớp với Color đang được chọn VÀ Size hiện tại
                             const currentVariant = product.productVariants?.find(
                                 (v) => v.colorId === activeColorId && v.sizeId === s.sizeId
                             );
-                            
-                            // 2. Xác định hết hàng
                             const isOutOfStock = !currentVariant || currentVariant.quantity <= 0;
 
                             return (
@@ -66,6 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                     key={s.sizeId}
                                     onClick={(e) => {
                                         e.preventDefault();
+                                        e.stopPropagation(); // 3. CHẶN SỰ KIỆN CLICK LAN RA THẺ LINK
                                         if (!isOutOfStock) {
                                             console.log("Thêm vào giỏ:", { color: activeColorId, size: s.sizeId });
                                         }
@@ -74,14 +72,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                         relative overflow-hidden flex items-center justify-center px-3 h-7 text-[11px] uppercase tracking-wider rounded shadow-sm
                                         transition-all hover:scale-105 active:scale-95
                                         ${isOutOfStock 
-                                            ? 'bg-zinc-100/50 text-zinc-500 opacity-50 cursor-not-allowed' // Hết hàng
-                                            : 'bg-white text-zinc-900 font-semibold cursor-pointer hover:bg-zinc-100' // Còn hàng
+                                            ? 'bg-zinc-100/50 text-zinc-500 opacity-50 cursor-not-allowed' 
+                                            : 'bg-white text-zinc-900 font-semibold cursor-pointer hover:bg-zinc-100'
                                         }
                                     `}
                                 >
                                     <span>{s.sizeName}</span>
-                                    
-                                    {/* Đường gạch chéo */}
                                     {isOutOfStock && (
                                         <div className="absolute h-[1px] w-[150%] bg-zinc-500 origin-center rotate-[-40deg] pointer-events-none" />
                                     )}
@@ -101,13 +97,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             key={color.colorId}
                             onClick={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation(); // 3. CHẶN SỰ KIỆN CLICK LAN RA THẺ LINK
                                 setActiveColorId(color.colorId);
                             }}
                             className={`
                                 relative flex items-center justify-center w-12 h-7 rounded-full bg-white p-[2px] transition-all duration-200
                                 ${activeColorId === color.colorId 
-                                    ? 'border-2 border-blue-600' // Viền xanh dương đậm khi được chọn
-                                    : 'border border-gray-200 hover:border-gray-400 hover:scale-105' // Viền xám nhạt khi bình thường
+                                    ? 'border-2 border-blue-600' 
+                                    : 'border border-gray-200 hover:border-gray-400 hover:scale-105'
                                 }
                             `}
                             title={color.colorName}
@@ -134,7 +131,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };
 
