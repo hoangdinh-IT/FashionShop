@@ -15,13 +15,9 @@ namespace FashionShop.API.Controllers.Shop
             _addressService = addressService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateAddress(ShopCreateAddressRequest request)
-        {
-            request.UserId = User.GetUserId();
-            var result = await _addressService.CreateAddressAsync(request);
-            return Created(result, "Thêm địa chỉ giao hàng thành công!");
-        }
+
+
+        // --- READ METHODS --- //
 
         [HttpGet]
         public async Task<IActionResult> GetAddressesByUserId()
@@ -35,6 +31,18 @@ namespace FashionShop.API.Controllers.Shop
 
             var result = await _addressService.GetAddressesByUserIdAsync(userId);
             return Success(result, "Lấy danh sách địa chỉ giao hàng thành công!");
+        }
+
+
+
+        // --- WRITE METHODS --- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAddress(ShopCreateAddressRequest request)
+        {
+            Guid userId = User.GetUserId();
+            var result = await _addressService.CreateAddressAsync(userId, request);
+            return Created(result, "Thêm địa chỉ giao hàng thành công!");
         }
 
         [HttpPut("{addressId}")]

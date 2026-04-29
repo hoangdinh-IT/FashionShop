@@ -9,9 +9,6 @@ namespace FashionShop.Core.Contracts.Shop.Address.Requests
 {
     public class ShopCreateAddressRequest
     {
-        [Required]
-        public Guid UserId { get; set; }
-
         [Required(ErrorMessage = "Vui lòng nhập họ tên")]
         [MaxLength(200)]
         public string FullName { get; set; }

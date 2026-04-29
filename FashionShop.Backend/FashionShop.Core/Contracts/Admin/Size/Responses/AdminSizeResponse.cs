@@ -19,7 +19,7 @@ namespace FashionShop.Core.Contracts.Admin.Size.Responses
         public int productCount { get; set; } = 0;
         public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

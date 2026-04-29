@@ -30,7 +30,7 @@ namespace FashionShop.Core.Entities
         public string Slug {  get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedDate { get; set; } = null;
         public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();

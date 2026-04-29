@@ -26,7 +26,7 @@ namespace FashionShop.Core.Entities
 
         public DateTime UsedDate { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedDate { get; set; } = null;
         public bool IsDeleted { get; set; } = false;
 
         [ForeignKey("UserId")]

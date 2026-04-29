@@ -19,7 +19,7 @@ namespace FashionShop.Core.Entities
 
         [Required]
         [Range(0, int.MaxValue)]
-        public int Quantity { get; set; } = 0;
+        public int StockQuantity { get; set; } = 0;
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]

@@ -159,17 +159,8 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
 
     // 8. Gom dữ liệu và Submit
     const onSubmit: SubmitHandler<AddressFormInputs> = (formData) => {
-        const userStr = localStorage.getItem("user");
-        const userId = userStr ? JSON.parse(userStr).id : null;
-
-        if (!userId) {
-            alert("Vui lòng đăng nhập lại để tiếp tục!");
-            return;
-        }
-
         const finalPayload: AddressFormInputs = {
             ...formData,
-            userId: userId,
             isDefault: isDefault
         };
 

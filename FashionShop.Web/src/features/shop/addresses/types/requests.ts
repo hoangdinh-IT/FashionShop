@@ -1,5 +1,4 @@
 export interface AddressFormInputs {
-    userId: string;
     fullName: string;
     phoneNumber: string;
     addressDetail: string;

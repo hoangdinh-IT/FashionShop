@@ -34,24 +34,25 @@ namespace FashionShop.API.Services.Shop
 
         // --- WRITE METHODS --- //
 
-        public async Task<ShopAddressResponse> CreateAddressAsync(ShopCreateAddressRequest request)
+        public async Task<ShopAddressResponse> CreateAddressAsync(Guid userId, ShopCreateAddressRequest request)
         {
-            if (await _unitOfWork.ShopUsers.GetUserByIdAsync(request.UserId) == null)
+            if (await _unitOfWork.ShopUsers.GetUserByIdAsync(userId) == null)
             {
                 throw new KeyNotFoundException("Không tìm thấy người dùng!");
             }
 
             var newAddress = _mapper.Map<Address>(request);
             newAddress.Id = Guid.NewGuid();
+            newAddress.UserId = userId;
 
-            var addressCount = await _unitOfWork.ShopAddresses.CountAddressesByUserIdAsync(request.UserId);
+            var addressCount = await _unitOfWork.ShopAddresses.CountAddressesByUserIdAsync(userId);
 
             if (addressCount == 0) newAddress.IsDefault = true;
             else
             {
                 if (request.IsDefault)
                 {
-                    await _unitOfWork.ShopAddresses.UnsetDefaultAddressAsync(request.UserId);
+                    await _unitOfWork.ShopAddresses.UnsetDefaultAddressAsync(userId);
                 }
             }
 

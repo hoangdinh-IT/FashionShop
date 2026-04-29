@@ -32,7 +32,7 @@ namespace FashionShop.Core.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalLine { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedDate { get; set; } = null;
         public bool IsDeleted { get; set; } = false;
 
         [ForeignKey("OrderId")]

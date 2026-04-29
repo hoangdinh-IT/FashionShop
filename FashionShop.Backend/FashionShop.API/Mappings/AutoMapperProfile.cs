@@ -18,6 +18,7 @@ using FashionShop.Core.Contracts.Admin.Voucher.Responses;
 using FashionShop.Core.Contracts.Shared.Auth.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Responses;
+using FashionShop.Core.Contracts.Shop.Cart.Responses;
 using FashionShop.Core.Contracts.Shop.User.Requests;
 using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
@@ -107,6 +108,11 @@ namespace FashionShop.API.Mappings
             CreateMap<UpdateVoucherRequest, Voucher>();
 
             CreateMap<Voucher, AdminVoucherResponse>();
+
+            // Cart
+            CreateMap<Cart, ShopCartResponse>();
+
+            CreateMap<CartItem, ShopCartItemResponse>();
         }
     }
 }

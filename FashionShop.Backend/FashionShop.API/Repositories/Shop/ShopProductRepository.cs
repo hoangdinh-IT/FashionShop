@@ -50,7 +50,7 @@ namespace FashionShop.API.Repositories.Shop
 
                 ProductColors = p.ProductVariants != null
                     ? p.ProductVariants
-                        .Where(v => v.Quantity > 0)
+                        .Where(v => v.StockQuantity > 0)
                         .GroupBy(v => v.Color)
                         .OrderBy(g => g.Min(v => v.CreatedDate))
                         .Select(g => g.Key)
@@ -74,7 +74,7 @@ namespace FashionShop.API.Repositories.Shop
                         {
                             ColorId = v.ColorId,
                             SizeId = v.SizeId,
-                            Quantity = v.Quantity,
+                            Quantity = v.StockQuantity,
                         })
                         .ToList()
                     : new List<ShopProductVariantDto>(),
@@ -106,7 +106,7 @@ namespace FashionShop.API.Repositories.Shop
 
                 ProductColors = p.ProductVariants != null
                     ? p.ProductVariants
-                        .Where(v => v.Quantity > 0)
+                        .Where(v => v.StockQuantity > 0)
                         .GroupBy(v => v.Color)
                         .OrderBy(g => g.Min(v => v.CreatedDate))
                         .Select(g => g.Key)
@@ -130,7 +130,7 @@ namespace FashionShop.API.Repositories.Shop
                         {
                             ColorId = v.ColorId,
                             SizeId = v.SizeId,
-                            Quantity = v.Quantity,
+                            Quantity = v.StockQuantity,
                         })
                         .ToList()
                     : new List<ShopProductVariantDto>(),

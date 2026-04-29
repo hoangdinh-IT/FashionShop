@@ -57,14 +57,14 @@ namespace FashionShop.Core.Extensions
         {
             if (sizeSlugs == null || !sizeSlugs.Any()) return query;
 
-            return query.Where(p => p.ProductVariants.Any(v => sizeSlugs.Contains(v.Size.Slug) && v.Quantity > 0));
+            return query.Where(p => p.ProductVariants.Any(v => sizeSlugs.Contains(v.Size.Slug) && v.StockQuantity > 0));
         }
 
         public static IQueryable<Product> FilterByColor(this IQueryable<Product> query, string? colorSlug)
         {
             if (string.IsNullOrWhiteSpace(colorSlug)) return query;
 
-            return query.Where(p => p.ProductVariants.Any(v => v.Color.Slug == colorSlug && v.Quantity > 0));
+            return query.Where(p => p.ProductVariants.Any(v => v.Color.Slug == colorSlug && v.StockQuantity > 0));
         }
 
         public static IQueryable<Product> FilterByActive(this IQueryable<Product> query, bool? isActive)
