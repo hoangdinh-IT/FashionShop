@@ -29,8 +29,6 @@ const CartPage = () => {
         .filter(item => item.isSelected)
         .reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    if (isLoading) return <div className="p-10 text-center">Đang tải giỏ hàng...</div>;
-
     if (isLoading) {
         return (
             <div className="bg-[#fafafa] min-h-screen">
@@ -48,21 +46,23 @@ const CartPage = () => {
     // --- TRẠNG THÁI HOÀN TẤT ---
     return (
         <div className="bg-[#fafafa] min-h-screen pb-24 font-sans text-zinc-900">
-            {/* Header chính thức */}
-            <div className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-zinc-100">
-                <div className="max-w-[1200px] mx-auto px-6 py-5 flex justify-between items-center">
+            {/* 1. Header Giỏ hàng: 
+            - sticky top-[chiều cao header tổng]: Giả sử Header tổng cao 64px (h-16).
+            - z-20: Đảm bảo cao hơn nội dung item nhưng thấp hơn MegaMenu (z-100).
+            */}
+            <div className="bg-white/80 backdrop-blur-md sticky top-[64px] z-20 border-b border-zinc-100">
+                <div className="max-w-[1200px] mx-auto px-6 py-5 flex justify-center items-center">
                     <h1 className="text-2xl font-extrabold tracking-tighter uppercase">Giỏ hàng</h1>
-                    <div className="text-sm font-medium text-zinc-400">
-                        Sản phẩm của bạn ({cartItems?.length || 0})
-                    </div>
                 </div>
             </div>
 
             <div className="max-w-[1200px] mx-auto px-6 mt-12">
                 {cartItems && cartItems.length > 0 ? (
-                    <div className="flex flex-col lg:flex-row gap-12">
-                        {/* Danh sách sản phẩm */}
-                        <div className="flex-1">
+                    /* items-start là bắt buộc để sticky sidebar hoạt động */
+                    <div className="flex flex-col lg:flex-row gap-12 items-start">
+                        
+                        {/* Danh sách sản phẩm: Cuộn tự nhiên theo trang */}
+                        <div className="flex-1 w-full">
                             <CartList
                                 cartItems={cartItems} 
                                 onUpdate={handleUpdate}
@@ -70,15 +70,17 @@ const CartPage = () => {
                             />
                         </div>
 
-                        {/* Tổng kết giỏ hàng */}
-                        <div className="w-full lg:w-[400px]">
+                        {/* 2. Sidebar Thanh toán: 
+                        - sticky: Cố định khi cuộn.
+                        - top-[100px]: Cách mép trên trình duyệt một khoảng để không dính sát Header.
+                        */}
+                        <div className="w-full lg:w-[400px] lg:sticky lg:top-[100px] z-10">
                             <CartSummary 
                                 total={selectedTotalPrice} 
                             />
                         </div>
                     </div>
                 ) : (
-                    /* Trạng thái giỏ hàng trống (Optional) */
                     <div className="text-center py-20">
                         <p className="text-zinc-400 font-medium">Giỏ hàng của bạn đang trống.</p>
                     </div>

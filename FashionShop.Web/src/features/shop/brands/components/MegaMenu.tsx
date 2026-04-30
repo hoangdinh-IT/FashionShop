@@ -144,7 +144,7 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                 <>
                     {/* Backdrop */}
                     <motion.div
-                        className="fixed inset-0 top-[80px] z-40 bg-black/50 backdrop-blur-sm"
+                        className="fixed inset-0 top-[80px] z-100 bg-black/50 backdrop-blur-sm"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -154,7 +154,7 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
 
                     {/* Menu Content */}
                     <motion.div
-                        className="absolute left-0 right-0 top-[80px] z-50 bg-white shadow-2xl border-t border-zinc-200 origin-top"
+                        className="absolute left-0 right-0 top-[80px] z-100 bg-white shadow-2xl border-t border-zinc-200 origin-top"
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}

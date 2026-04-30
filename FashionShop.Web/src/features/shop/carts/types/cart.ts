@@ -14,6 +14,7 @@ export interface CartItem {
     productId: string;
     productName: string;
     productSlug: string;
+    brandName: string;
     imageUrl: string;
 
     colorId: number;

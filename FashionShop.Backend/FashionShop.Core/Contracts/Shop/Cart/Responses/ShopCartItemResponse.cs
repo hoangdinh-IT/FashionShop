@@ -19,6 +19,7 @@ namespace FashionShop.Core.Contracts.Shop.Cart.Responses
         public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public string ProductSlug { get; set; }
+        public string BrandName { get; set; }
         public string ImageUrl { get; set; }
 
         public int ColorId { get; set; }
