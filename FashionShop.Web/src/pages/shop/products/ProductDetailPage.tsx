@@ -7,10 +7,16 @@ import {
 import { useParams } from 'react-router-dom';
 import { useProductDetail } from '../../../features/shop/products/hooks/useProducts';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCartMutations } from '../../../features/shop/carts/hooks/useCarts';
+import type { CartFormInputs } from '../../../features/shop/carts/types/requests';
+import { useSnackbar } from '../../../contexts';
 
 const ProductDetailPage = () => {
+    const { showSnackbar } = useSnackbar();
+
     const { productSlug } = useParams<{ productSlug: string }>();
     const { productDetail, isLoading } = useProductDetail(productSlug);
+    const { createCartItem, isCreating } = useCartMutations();
     
     // --- UI STATES ---
     const [activeColorId, setActiveColorId] = useState<number | null>(null);
@@ -63,6 +69,25 @@ const ProductDetailPage = () => {
         setQuantity(1);
         setSelectedImageIndex(0);
     }, [activeColorId, activeSizeId]);
+
+    const handleAddToCart = () => {
+        // Tìm biến thể hiện tại dựa trên màu và size đã chọn
+        const currentVariant = productDetail?.productVariants?.find(
+            v => v.colorId === activeColorId && v.sizeId === activeSizeId
+        );
+
+        if (!currentVariant) {
+            showSnackbar("Không tìm thấy biến thể sản phẩm!", "error");
+            return;
+        }
+
+        const cartData: CartFormInputs = {
+            productVariantId: currentVariant.productVariantId, // Đảm bảo tên trường khớp với API (thường là id hoặc productVariantId)
+            quantity: quantity
+        };
+
+        createCartItem(cartData);
+    };
 
 
     // --- RENDERING ---
@@ -313,15 +338,22 @@ const ProductDetailPage = () => {
                             
                             {/* NÚT THÊM VÀO GIỎ: Bắt trọn phần diện tích còn lại */}
                             <button 
-                                disabled={isOutOfStock}
+                                onClick={handleAddToCart}
+                                disabled={isOutOfStock || isCreating} // Vô hiệu hóa khi hết hàng hoặc đang gửi request
                                 className={`flex-1 h-full flex items-center justify-center gap-2 font-bold text-base rounded-full transition-colors cursor-pointer ${
-                                    isOutOfStock 
+                                    isOutOfStock || isCreating
                                     ? 'text-zinc-500 cursor-not-allowed'
                                     : 'text-white hover:bg-white/10'
                                 }`}
                             >
-                                {!isOutOfStock && <ShoppingBag size={20} strokeWidth={2} />}
-                                {isOutOfStock ? 'HẾT HÀNG' : 'Thêm vào giỏ'}
+                                {isCreating ? (
+                                    <span className="animate-pulse">Đang xử lý...</span>
+                                ) : (
+                                    <>
+                                        {!isOutOfStock && <ShoppingBag size={20} strokeWidth={2} />}
+                                        {isOutOfStock ? 'HẾT HÀNG' : 'Thêm vào giỏ'}
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>

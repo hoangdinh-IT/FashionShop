@@ -15,8 +15,7 @@ namespace FashionShop.API.Services.Shop.Interfaces
         // --- WRITE METHODS --- //
 
         Task<ShopCartResponse> CreateCartItemAsync(Guid userId, ShopCreateCartItemRequest request);
-        Task<ShopCartResponse> UpdateProductVariantAsync(Guid userId, int cartItemId, ShopUpdateProductVariantRequest request);
-        Task<ShopCartItemResponse> UpdateQuantityAsync(Guid userId, int cartItemId, ShopUpdateQuantityRequest request);
+        Task<ShopCartResponse> UpdateCartItemAsync(Guid userId, int cartItemId, ShopUpdateCartItemRequest request);
         Task DeleteCartItemAsync(Guid userId, int cartItemId);
     }
 }

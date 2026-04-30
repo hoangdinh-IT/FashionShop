@@ -72,6 +72,7 @@ namespace FashionShop.API.Repositories.Shop
                     ? p.ProductVariants
                         .Select(v => new ShopProductVariantDto
                         {
+                            ProductVariantId = v.Id,
                             ColorId = v.ColorId,
                             SizeId = v.SizeId,
                             Quantity = v.StockQuantity,
@@ -128,6 +129,7 @@ namespace FashionShop.API.Repositories.Shop
                     ? p.ProductVariants
                         .Select(v => new ShopProductVariantDto
                         {
+                            ProductVariantId = v.Id,
                             ColorId = v.ColorId,
                             SizeId = v.SizeId,
                             Quantity = v.StockQuantity,

@@ -14,32 +14,36 @@ export const useMutationSideEffects = () => {
 
     const createSideEffects = (options: SideEffectOptions) => {
         const { 
-            successMessage = "Thao tác thành công!", 
-            errorMessage = "Thao tác thất bại!", 
+            successMessage = null, 
+            errorMessage = null, 
             invalidateKeys = [] 
         } = options;
 
         return {
             onSuccess: (response: any) => {
-                // Giả sử API trả về { succeeded: true/false }
                 if (response?.succeeded) {
-                    showSnackbar(successMessage, "success");
+                    // CHỈ HIỂN THỊ nếụ có successMessage
+                    if (successMessage) {
+                        showSnackbar(successMessage, "success");
+                    }
                     
-                    // Invalidate các query key được truyền vào
                     if (invalidateKeys.length > 0) {
                         invalidateKeys.forEach(key => {
                             queryClient.invalidateQueries({ queryKey: key });
                         });
                     }
                 } else {
-                    showSnackbar(errorMessage, "error");
+                    // CHỈ HIỂN THỊ nếu có errorMessage
+                    if (errorMessage) {
+                        showSnackbar(errorMessage, "error");
+                    }
                 }
             },
             onError: (error: any) => {
+                // Đối với lỗi hệ thống, thường chúng ta vẫn nên giữ thông báo
                 const data = error.response?.data;
                 const specificError = data?.Errors?.[0];
                 const generalMessage = data?.Message;
-
                 const warningMessage = specificError || generalMessage;
 
                 if (warningMessage) {

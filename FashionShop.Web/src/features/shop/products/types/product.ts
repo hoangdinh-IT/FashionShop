@@ -14,6 +14,7 @@ interface ProductSize {
 }
 
 interface ProductVariant {
+    productVariantId: string;
     colorId: number;
     sizeId: number;
     quantity: number;

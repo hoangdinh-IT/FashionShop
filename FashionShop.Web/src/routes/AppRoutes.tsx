@@ -23,7 +23,7 @@ import InformationPage from "../pages/shop/users/InformationPage";
 import AddressPage from "../pages/shop/addresses/AddressPage";
 import ShopProductPage from "../pages/shop/products/ProductPage";
 import ShopProductDetailPage from "../pages/shop/products/ProductDetailPage";
-import CartPage from "../pages/shop/products/CartPage";
+import CartPage from "../pages/shop/carts/CartPage";
 
 export const AppRoutes = () => {
     const elements = useRoutes([

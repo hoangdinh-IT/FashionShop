@@ -24,17 +24,26 @@ namespace FashionShop.API.Repositories.Shop
                 ProductVariantId = ci.ProductVariantId,
                 Quantity = ci.Quantity,
                 IsSelected = ci.IsSelected,
-                CreatedDate = ci.CreatedDate,
-                UpdatedDate = ci.UpdatedDate,
 
+                ProductId = ci.ProductVariant.ProductId,
                 ProductName = ci.ProductVariant.Product.Name,
-                Price = ci.ProductVariant.Price,
-                ColorName = ci.ProductVariant.Color.Name,
-                SizeName = ci.ProductVariant.Size.Name,
+                ProductSlug = ci.ProductVariant.Product.Slug,
                 ImageUrl = ci.ProductVariant.Product.ProductImages
-                    .OrderBy(x => x.Id)
+                    .Where(x => x.ColorId == ci.ProductVariant.ColorId)
+                    .OrderBy(x => x.SortOrder)
                     .Select(x => x.ImageUrl)
                     .FirstOrDefault()
+                    ?? ci.ProductVariant.Product.ThumbnailUrl
+                    ?? string.Empty,
+
+                ColorId = ci.ProductVariant.ColorId,
+                ColorName = ci.ProductVariant.Color.Name,
+                SizeId = ci.ProductVariant.SizeId,
+                SizeName = ci.ProductVariant.Size.Name,
+
+                Price = ci.ProductVariant.Price,
+                CreatedDate = ci.CreatedDate,
+                UpdatedDate = ci.UpdatedDate,
             };
 
 
@@ -61,7 +70,7 @@ namespace FashionShop.API.Repositories.Shop
             return await _context.CartItems
                 .AsNoTracking()
                 .Where(ci => ci.Cart.UserId == userId)
-                .OrderByDescending(ci => ci.UpdatedDate ?? ci.CreatedDate)
+                .OrderByDescending(ci => ci.CreatedDate)
                 .Select(_cartItemSelector)
                 .ToListAsync();
         }

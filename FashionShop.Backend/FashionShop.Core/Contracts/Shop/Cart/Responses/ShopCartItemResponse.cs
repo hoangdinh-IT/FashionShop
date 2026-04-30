@@ -15,13 +15,19 @@ namespace FashionShop.Core.Contracts.Shop.Cart.Responses
         public Guid ProductVariantId { get; set; }
         public int Quantity { get; set; } = 1;
         public bool IsSelected { get; set; } = true;
+
+        public Guid ProductId { get; set; }
+        public string ProductName { get; set; }
+        public string ProductSlug { get; set; }
+        public string ImageUrl { get; set; }
+
+        public int ColorId { get; set; }
+        public string ColorName { get; set; }
+        public int SizeId { get; set; }
+        public string SizeName { get; set; }
+
+        public decimal Price { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; } = null;
-
-        public string ProductName { get; set; }
-        public decimal Price { get; set; }
-        public string ColorName { get; set; }
-        public string SizeName { get; set; }
-        public string ImageUrl { get; set; }
     }
 }

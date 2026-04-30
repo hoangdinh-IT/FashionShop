@@ -87,55 +87,57 @@ namespace FashionShop.API.Services.Shop
             return _mapper.Map<ShopCartResponse>(cart);
         }
 
-        public async Task<ShopCartResponse> UpdateProductVariantAsync(Guid userId, int cartItemId, ShopUpdateProductVariantRequest request)
+        public async Task<ShopCartResponse> UpdateCartItemAsync(Guid userId, int cartItemId, ShopUpdateCartItemRequest request)
         {
+            // 1. Lấy CartItem hiện tại
             var cartItem = await _unitOfWork.ShopCarts.GetCartItemAsync(userId, cartItemId);
             if (cartItem == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm trong giỏ hàng!");
 
+            // 2. Lấy thông tin biến thể mới (để kiểm tra stock và cùng sản phẩm)
             var newVariant = await _unitOfWork.AdminProducts.FindProductVariantByIdAsync(request.ProductVariantId);
             if (newVariant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm mới!");
 
             if (cartItem.ProductVariant.ProductId != newVariant.ProductId)
                 throw new InvalidOperationException("Chỉ được phép đổi màu sắc hoặc kích cỡ của cùng một sản phẩm!");
 
-            var cartItemWithVariant = await _unitOfWork.ShopCarts.GetCartItemWithVariantAsync(userId, cartItemId, request.ProductVariantId);
+            // 3. Kiểm tra tồn kho của biến thể mới
+            if (request.Quantity > newVariant.StockQuantity)
+                throw new InvalidOperationException($"Số lượng yêu cầu ({request.Quantity}) vượt quá số lượng còn lại trong kho ({newVariant.StockQuantity})!");
 
-            if (cartItemWithVariant == null)
+            // 4. Kiểm tra xem biến thể mới này đã tồn tại ở một dòng khác trong giỏ hàng chưa
+            var existingItemWithVariant = await _unitOfWork.ShopCarts.GetCartItemWithVariantAsync(userId, cartItemId, request.ProductVariantId);
+
+            if (existingItemWithVariant != null)
             {
-                cartItem.ProductVariantId = request.ProductVariantId;
-                cartItem.UpdatedDate = DateTime.UtcNow;
-                cartItem.IsSelected = true;
+                // TRƯỜNG HỢP GỘP DÒNG: 
+                // Ví dụ: Giỏ đang có [Áo đỏ size M] và [Áo đỏ size L]. 
+                // User sửa [Áo đỏ size L] thành [Áo đỏ size M].
+
+                existingItemWithVariant.Quantity += request.Quantity; // Cộng dồn số lượng mới vào dòng cũ
+
+                // Kiểm tra lại stock lần nữa sau khi cộng dồn
+                if (existingItemWithVariant.Quantity > newVariant.StockQuantity)
+                    existingItemWithVariant.Quantity = newVariant.StockQuantity;
+
+                existingItemWithVariant.UpdatedDate = DateTime.UtcNow;
+                existingItemWithVariant.IsSelected = request.IsSelected; // Dùng giá trị từ FE
+
+                // Xóa dòng cũ (dòng vừa được yêu cầu sửa)
+                _unitOfWork.ShopCarts.DeleteCartItem(cartItem);
             }
             else
             {
-                cartItemWithVariant.Quantity += cartItem.Quantity;
-                cartItemWithVariant.UpdatedDate = DateTime.UtcNow;
-                cartItemWithVariant.IsSelected = true;
+                // TRƯỜNG HỢP CẬP NHẬT TRỰC TIẾP TRÊN DÒNG HIỆN TẠI
+                cartItem.ProductVariantId = request.ProductVariantId;
+                cartItem.Quantity = request.Quantity;
+                cartItem.IsSelected = request.IsSelected; // Quan trọng: Cập nhật theo yêu cầu của FE
+                cartItem.UpdatedDate = DateTime.UtcNow;
             }
 
             await _unitOfWork.SaveChangesAsync();
 
             var cart = await _unitOfWork.ShopCarts.GetCartAsync(userId);
             return _mapper.Map<ShopCartResponse>(cart);
-        }
-
-        public async Task<ShopCartItemResponse> UpdateQuantityAsync(Guid userId, int cartItemId, ShopUpdateQuantityRequest request)
-        {
-            var cartItem = await _unitOfWork.ShopCarts.GetCartItemAsync(userId, cartItemId);
-
-            if (cartItem == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm trong giỏ hàng!");
-
-            if (request.Quantity <= 0) throw new ArgumentException("Số lượng phải lớn hơn 0!");
-
-            if (request.Quantity > cartItem.ProductVariant.StockQuantity)
-                throw new InvalidOperationException($"Số lượng yêu cầu ({request.Quantity}) vượt quá số lượng còn lại trong kho ({cartItem.ProductVariant.StockQuantity})!");
-
-            cartItem.Quantity = request.Quantity;
-            cartItem.UpdatedDate = DateTime.UtcNow;
-            cartItem.IsSelected = true;
-
-            await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<ShopCartItemResponse>(cartItem);
         }
 
         public async Task DeleteCartItemAsync(Guid userId, int cartItemId)

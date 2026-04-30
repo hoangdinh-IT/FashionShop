@@ -47,28 +47,16 @@ namespace FashionShop.API.Controllers.Shop
             return Success(result, "Thêm sản phẩm trong giỏ hàng thành công!");
         }
 
-        [HttpPut("items/{cartItemId}/variant")]
-        public async Task<IActionResult> UpdateProductVariant(int cartItemId, ShopUpdateProductVariantRequest request)
+        [HttpPut("items/{cartItemId}")]
+        public async Task<IActionResult> UpdateCartItem(int cartItemId, ShopUpdateCartItemRequest request)
         {
             Guid userId = User.GetUserId();
 
             if (userId == Guid.Empty)
                 throw new ArgumentException("ID không hợp lệ!");
 
-            var result = await _cartService.UpdateProductVariantAsync(userId, cartItemId, request);
+            var result = await _cartService.UpdateCartItemAsync(userId, cartItemId, request);
             return Success(result, "Cập nhật biến thể sản phẩm thành công!");
-        }
-
-        [HttpPut("items/{cartItemId}/quantity")]
-        public async Task<IActionResult> UpdateQuantity(int cartItemId, [FromBody] ShopUpdateQuantityRequest request)
-        {
-            Guid userId = User.GetUserId();
-
-            if (userId == Guid.Empty)
-                throw new ArgumentException("ID không hợp lệ!");
-
-            var result = await _cartService.UpdateQuantityAsync(userId, cartItemId, request);
-            return Success(result, "Cập nhật số lượng sản phẩm trong giỏ hàng thành công!");
         }
 
         [HttpDelete("items/{cartItemId}")]
