@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import type { Address } from '../types/address';
-import axios from 'axios';
+import AddressString from './AddressString';
 
 interface Props {
     data: Address[];
@@ -132,7 +132,7 @@ const AccountAddress: React.FC<Props> = ({
                     {/* Dùng whitespace-pre-line để tự động xuống dòng */}
                     <span className="leading-relaxed whitespace-pre-line mt-1">
                         <AddressString 
-                            detail={item.addressDetail} 
+                            addressDetail={item.addressDetail} 
                             communeCode={item.commune} 
                             districtCode={item.district} 
                             cityCode={item.city} 
@@ -157,46 +157,6 @@ const AccountAddress: React.FC<Props> = ({
 </div>
             
         </main>
-    );
-};
-
-interface AddressStringProps {
-    detail: string;
-    communeCode: string | number;
-    districtCode: string | number;
-    cityCode: string | number;
-}
-
-const AddressString: React.FC<AddressStringProps> = ({ detail, communeCode, districtCode, cityCode }) => {
-    const [locationName, setLocationName] = useState<string>("Đang tải dữ liệu...");
-
-    useEffect(() => {
-        // Nếu không có đủ mã thì không gọi API
-        if (!cityCode || !districtCode || !communeCode) {
-            setLocationName("");
-            return;
-        }
-
-        // Gọi API song song để lấy Tên từ 3 Mã
-        Promise.all([
-            axios.get(`https://provinces.open-api.vn/api/w/${communeCode}`),
-            axios.get(`https://provinces.open-api.vn/api/d/${districtCode}`),
-            axios.get(`https://provinces.open-api.vn/api/p/${cityCode}`)
-        ])
-        .then(([wardRes, districtRes, cityRes]) => {
-            // Nối chuỗi tên lại với nhau
-            setLocationName(`${wardRes.data.name}, ${districtRes.data.name}, ${cityRes.data.name}`);
-        })
-        .catch(err => {
-            console.error("Lỗi dịch địa chỉ:", err);
-            setLocationName("Lỗi hiển thị khu vực");
-        });
-    }, [communeCode, districtCode, cityCode]);
-
-    return (
-        <span className="leading-relaxed whitespace-pre-line">
-            {detail}{locationName ? `, ${locationName}` : ""}
-        </span>
     );
 };
 

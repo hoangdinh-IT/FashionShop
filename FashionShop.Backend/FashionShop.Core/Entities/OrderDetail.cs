@@ -30,7 +30,7 @@ namespace FashionShop.Core.Entities
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalLine { get; set; }
+        public decimal TotalLine { get; set; } // TotalLine = UnitPrice × Quantity
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; } = null;
         public bool IsDeleted { get; set; } = false;

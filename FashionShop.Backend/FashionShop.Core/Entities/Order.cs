@@ -16,7 +16,6 @@ namespace FashionShop.Core.Entities
         [Required]
         public Guid UserId { get; set; }
 
-        [Required]
         public Guid? VoucherId { get; set; }
 
         [Required]

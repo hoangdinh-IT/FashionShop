@@ -4,12 +4,14 @@ using FashionShop.API.Repositories.Admin.Interfaces;
 using FashionShop.API.Repositories.Shared.Interfaces;
 using FashionShop.API.Repositories.Shop;
 using FashionShop.API.Repositories.Shop.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FashionShop.API.Repositories.Shared
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly FashionDbContext _context;
+        private IDbContextTransaction _transaction;
 
         private IAdminBrandRepository _adminBrands;
         private IAdminCategoryRepository _adminCategories;
@@ -24,6 +26,7 @@ namespace FashionShop.API.Repositories.Shared
         private IShopBrandRepository _shopBrands;
         private IShopCategoryRepository _shopCategories;
         private IShopCartRepository _shopCarts;
+        private IShopOrderRepository _shopOrders;
 
         public UnitOfWork(FashionDbContext context)
         {
@@ -43,6 +46,7 @@ namespace FashionShop.API.Repositories.Shared
         public IShopBrandRepository ShopBrands => _shopBrands ??= new ShopBrandRepository(_context);
         public IShopCategoryRepository ShopCategories => _shopCategories ??= new ShopCategoryRepository(_context);
         public IShopCartRepository ShopCarts => _shopCarts ??= new ShopCartRepository(_context);
+        public IShopOrderRepository ShopOrders => _shopOrders ??= new ShopOrderRepository(_context);
 
         public async Task<int> SaveChangesAsync()
         {
@@ -51,17 +55,48 @@ namespace FashionShop.API.Repositories.Shared
 
         public async Task BeginTransactionAsync()
         {
-            await _context.Database.BeginTransactionAsync();
+            if (_transaction != null) return;
+            _transaction = await _context.Database.BeginTransactionAsync();
         }
 
         public async Task CommitTransactionAsync()
         {
-            await _context.Database.CommitTransactionAsync();
+            try
+            {
+                await _context.SaveChangesAsync(); // Lưu data trước khi commit
+                if (_transaction != null)
+                {
+                    await _transaction.CommitAsync();
+                }
+            }
+            finally
+            {
+                await ResetTransaction();
+            }
         }
 
         public async Task RollbackTransactionAsync()
         {
-            await _context.Database.RollbackTransactionAsync();
+            try
+            {
+                if (_transaction != null)
+                {
+                    await _transaction.RollbackAsync();
+                }
+            }
+            finally
+            {
+                await ResetTransaction();
+            }
+        }
+
+        private async Task ResetTransaction()
+        {
+            if (_transaction != null)
+            {
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
         }
 
         public void Dispose()

@@ -24,6 +24,7 @@ import AddressPage from "../pages/shop/addresses/AddressPage";
 import ShopProductPage from "../pages/shop/products/ProductPage";
 import ShopProductDetailPage from "../pages/shop/products/ProductDetailPage";
 import CartPage from "../pages/shop/carts/CartPage";
+import CheckoutPage from "../pages/shop/orders/CheckoutPage";
 
 export const AppRoutes = () => {
     const elements = useRoutes([
@@ -137,6 +138,10 @@ export const AppRoutes = () => {
                         {
                             path: "cart",
                             element: <CartPage />
+                        },
+                        {
+                            path: "order",
+                            element: <CheckoutPage />
                         }
                     ]
                 }

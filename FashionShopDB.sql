@@ -10,6 +10,7 @@ SELECT * FROM "ProductImages"
 SELECT * FROM "Vouchers"
 SELECT * FROM "Carts"
 SELECT * FROM "CartItems"
+SELECT * FROM "Orders"
 
 UPDATE "Users" SET "Role" = 0 WHERE "Id" = '1ee314d5-ab19-4abd-a61b-29fc1701703c'
 UPDATE "Colors" SET "IsDeleted" = false
@@ -30,6 +31,7 @@ DELETE FROM "ProductImages"
 DELETE FROM "Vouchers"
 DELETE FROM "Carts"
 DELETE FROM "CartItems"
+DELETE FROM "Orders"
 
 -- Reset Id(int)
 TRUNCATE TABLE "CartItems" RESTART IDENTITY CASCADE;

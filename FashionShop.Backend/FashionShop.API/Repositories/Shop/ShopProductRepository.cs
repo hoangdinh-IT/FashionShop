@@ -187,7 +187,12 @@ namespace FashionShop.API.Repositories.Shop
             };
         }
 
-        public async Task<ProductDetailResponse?> GetProductByIdAsync(string productSlug)
+        public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)
+        {
+            return await _context.ProductVariants.FindAsync(productVariantId);
+        }
+
+        public async Task<ProductDetailResponse?> GetProductBySlugAsync(string productSlug)
         {
             return await _context.Products
                 .AsNoTracking()

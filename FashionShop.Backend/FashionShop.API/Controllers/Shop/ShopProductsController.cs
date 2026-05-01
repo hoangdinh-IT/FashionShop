@@ -28,7 +28,7 @@ namespace FashionShop.API.Controllers.Shop
         [HttpGet("{productSlug}")]
         public async Task<IActionResult> GetProductById(string productSlug)
         {
-            var result = await _productService.GetProductByIdAsync(productSlug);
+            var result = await _productService.GetProductBySlugAsync(productSlug);
             return Success(result, "Lấy chi tiết sản phẩm thành công!");
         }
 

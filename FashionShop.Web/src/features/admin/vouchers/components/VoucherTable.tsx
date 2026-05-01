@@ -19,7 +19,7 @@ interface Props {
     data: Voucher[];
     isLoading: boolean;
     sortBy: string;
-    isAscending: boolean;
+    isAscending?: boolean;
     onSort: (colKey: string, direction: boolean) => void;
     onEdit: (voucher: Voucher) => void;
     onDelete: (voucherId: string) => void;

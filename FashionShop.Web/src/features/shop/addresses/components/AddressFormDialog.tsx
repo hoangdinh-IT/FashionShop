@@ -43,14 +43,14 @@ interface Location {
     name: string;
 }
 
-interface AddressFormDialogProps {
+interface Props {
     isOpen: boolean;
     initialData?: Address;
     onClose: () => void;
     isLoading?: boolean;
 }
 
-const AddressFormDialog: React.FC<AddressFormDialogProps> = ({ 
+const AddressFormDialog: React.FC<Props> = ({ 
     isOpen,
     initialData,
     onClose,
@@ -209,7 +209,7 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-zinc-50 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-all duration-200"
+                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-zinc-50 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-all duration-200 cursor-pointer"
                                 >
                                     <IoClose className="text-xl" />
                                 </button>
@@ -401,7 +401,7 @@ const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="relative w-full h-[56px] text-[14px] font-bold tracking-widest text-white bg-zinc-900 hover:bg-zinc-800 rounded-2xl transition-all duration-300 disabled:opacity-70 disabled:cursor-wait flex items-center justify-center overflow-hidden shadow-[0_4px_14px_0_rgb(24,24,27,0.3)] hover:shadow-[0_6px_20px_rgba(24,24,27,0.23)] hover:-translate-y-[1px] active:translate-y-[0px] active:scale-[0.98]"
+                                    className="relative w-full h-[56px] text-[14px] font-bold tracking-widest text-white bg-zinc-900 hover:bg-zinc-800 rounded-2xl transition-all duration-300 disabled:opacity-70 disabled:cursor-wait flex items-center justify-center overflow-hidden shadow-[0_4px_14px_0_rgb(24,24,27,0.3)] hover:shadow-[0_6px_20px_rgba(24,24,27,0.23)] hover:-translate-y-[1px] active:translate-y-[0px] active:scale-[0.98] cursor-pointer"
                                 >
                                     {isLoading ? (
                                         <div className="flex items-center gap-3">

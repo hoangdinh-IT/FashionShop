@@ -19,6 +19,8 @@ using FashionShop.Core.Contracts.Shared.Auth.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Responses;
 using FashionShop.Core.Contracts.Shop.Cart.Responses;
+using FashionShop.Core.Contracts.Shop.Order.Requests;
+using FashionShop.Core.Contracts.Shop.Order.Responses;
 using FashionShop.Core.Contracts.Shop.User.Requests;
 using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
@@ -113,6 +115,15 @@ namespace FashionShop.API.Mappings
             CreateMap<Cart, ShopCartResponse>();
 
             CreateMap<CartItem, ShopCartItemResponse>();
+
+            // Order
+            CreateMap<ShopCreateOrderRequest, Order>()
+                .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
+
+            CreateMap<OrderDetail, ShopOrderDetailResponse>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductVariant.Product.Name));
+
+            CreateMap<Order, ShopOrderResponse>();
         }
     }
 }

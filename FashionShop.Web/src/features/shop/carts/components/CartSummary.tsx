@@ -1,11 +1,14 @@
 import { ArrowRight, Truck } from 'lucide-react';
 import type React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     total: number;
 }
 
 const CartSummary: React.FC<Props> = ({ total }) => {
+    const navigate = useNavigate();
+
     return (
         <div className="space-y-6 sticky top-24">
             <div className="bg-white rounded-3xl p-8 border border-zinc-100 shadow-sm">
@@ -41,6 +44,7 @@ const CartSummary: React.FC<Props> = ({ total }) => {
                     {/* Nút đặt hàng: Màu đen, hiệu ứng Hover và Active */}
                     <button 
                         disabled={total === 0}
+                        onClick={() => navigate("/shop/order")}
                         className={`w-full font-bold py-5 rounded-2xl flex items-center justify-center gap-3 transition-all mt-6 shadow-lg group cursor-pointer 
                             ${total === 0 
                                 ? 'bg-zinc-200 text-zinc-400 cursor-not-allowed shadow-none' 
