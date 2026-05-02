@@ -31,12 +31,23 @@ namespace FashionShop.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowReactApp",
+            //        policy =>
+            //        {
+            //            policy.WithOrigins("http://localhost:5173") 
+            //                  .AllowAnyHeader()
+            //                  .AllowAnyMethod();
+            //        });
+            //});
+
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowReactApp",
+                options.AddPolicy("AllowAll",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173") 
+                        policy.AllowAnyOrigin() // Cho phép tất cả các nguồn (Dễ nhất cho việc test)
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
