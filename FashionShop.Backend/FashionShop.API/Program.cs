@@ -131,14 +131,41 @@ namespace FashionShop.API
 
             var app = builder.Build();
 
-            app.UseCors("AllowReactApp");
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<FashionDbContext>();
+                    // Kiểm tra xem có kết nối được tới DB không trước khi Migrate
+                    if (context.Database.CanConnect())
+                    {
+                        context.Database.Migrate();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Chỉ log lỗi chứ không để app bị crash
+                    Console.WriteLine("Lỗi Migration: " + ex.Message);
+                }
+            }
+
+            //app.UseCors("AllowReactApp");
+            app.UseCors("AllowAll");
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FashionShop API V1");
+                c.RoutePrefix = string.Empty; // Truy cập link Render là ra thẳng Swagger
+            });
 
             app.UseMiddleware<ExceptionMiddleware>();
 
