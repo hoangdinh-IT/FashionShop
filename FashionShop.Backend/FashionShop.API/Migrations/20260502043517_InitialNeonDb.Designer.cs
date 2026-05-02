@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FashionShop.API.Migrations
 {
     [DbContext(typeof(FashionDbContext))]
-    [Migration("20260425040908_21")]
-    partial class _21
+    [Migration("20260502043517_InitialNeonDb")]
+    partial class InitialNeonDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,7 +180,7 @@ namespace FashionShop.API.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -274,7 +274,7 @@ namespace FashionShop.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -360,7 +360,6 @@ namespace FashionShop.API.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("VoucherId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -380,9 +379,6 @@ namespace FashionShop.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -400,9 +396,6 @@ namespace FashionShop.API.Migrations
 
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -553,9 +546,6 @@ namespace FashionShop.API.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
                     b.Property<int>("SizeId")
                         .HasColumnType("integer");
 
@@ -563,6 +553,9 @@ namespace FashionShop.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -654,7 +647,7 @@ namespace FashionShop.API.Migrations
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -697,7 +690,7 @@ namespace FashionShop.API.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -856,7 +849,7 @@ namespace FashionShop.API.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("UsedDate")
@@ -971,8 +964,7 @@ namespace FashionShop.API.Migrations
                     b.HasOne("FashionShop.Core.Entities.Voucher", "Voucher")
                         .WithMany("Orders")
                         .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
 

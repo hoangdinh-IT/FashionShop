@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FashionShop.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialNeonDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,12 +18,12 @@ namespace FashionShop.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Slug = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     LogoUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -37,13 +37,13 @@ namespace FashionShop.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Slug = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    ImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -65,9 +65,10 @@ namespace FashionShop.API.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     HexCode = table.Column<string>(type: "varchar(7)", maxLength: 7, nullable: false),
+                    Slug = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -82,11 +83,12 @@ namespace FashionShop.API.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -105,11 +107,14 @@ namespace FashionShop.API.Migrations
                     FullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     PhoneNumber = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
                     Gender = table.Column<byte>(type: "smallint", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AvatarUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     MembershipClass = table.Column<byte>(type: "smallint", nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Otp = table.Column<string>(type: "text", nullable: true),
+                    OtpExpiryTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -136,7 +141,7 @@ namespace FashionShop.API.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -149,8 +154,6 @@ namespace FashionShop.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BrandId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Slug = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
@@ -158,12 +161,14 @@ namespace FashionShop.API.Migrations
                     Material = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     ThumbnailUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BrandId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     IsBestSeller = table.Column<bool>(type: "boolean", nullable: false),
                     IsNew = table.Column<bool>(type: "boolean", nullable: false),
                     ViewCount = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -189,13 +194,15 @@ namespace FashionShop.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Street = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    FullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    AddressDetail = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Commune = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     District = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     IsDefault = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -216,7 +223,7 @@ namespace FashionShop.API.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -236,7 +243,7 @@ namespace FashionShop.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    VoucherId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VoucherId = table.Column<Guid>(type: "uuid", nullable: true),
                     ShippingAddress = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     ShippingCommune = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     ShippingDistrict = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
@@ -253,7 +260,7 @@ namespace FashionShop.API.Migrations
                     OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -279,15 +286,22 @@ namespace FashionShop.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ColorId = table.Column<int>(type: "integer", nullable: true),
                     ImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductImages_Colors_ColorId",
+                        column: x => x.ColorId,
+                        principalTable: "Colors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProductImages_Products_ProductId",
                         column: x => x.ProductId,
@@ -301,16 +315,15 @@ namespace FashionShop.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Sku = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    StockQuantity = table.Column<int>(type: "integer", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     ColorId = table.Column<int>(type: "integer", nullable: false),
                     SizeId = table.Column<int>(type: "integer", nullable: false),
-                    SKU = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    VariantImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -347,7 +360,7 @@ namespace FashionShop.API.Migrations
                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     UsedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -384,7 +397,7 @@ namespace FashionShop.API.Migrations
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     IsSelected = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -415,8 +428,6 @@ namespace FashionShop.API.Migrations
                     UnitPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     TotalLine = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -444,7 +455,7 @@ namespace FashionShop.API.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductVariantId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -476,7 +487,7 @@ namespace FashionShop.API.Migrations
                     Content = table.Column<string>(type: "text", nullable: true),
                     LikeCount = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -512,7 +523,7 @@ namespace FashionShop.API.Migrations
                     ImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -593,6 +604,11 @@ namespace FashionShop.API.Migrations
                 column: "VoucherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductImages_ColorId",
+                table: "ProductImages",
+                column: "ColorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductImages_ProductId",
                 table: "ProductImages",
                 column: "ProductId");
@@ -611,7 +627,8 @@ namespace FashionShop.API.Migrations
                 name: "IX_Products_Slug",
                 table: "Products",
                 column: "Slug",
-                unique: true);
+                unique: true,
+                filter: "\"IsDeleted\" = false");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductVariants_ColorId",
@@ -622,7 +639,8 @@ namespace FashionShop.API.Migrations
                 name: "IX_ProductVariants_ProductId_ColorId_SizeId",
                 table: "ProductVariants",
                 columns: new[] { "ProductId", "ColorId", "SizeId" },
-                unique: true);
+                unique: true,
+                filter: "\"IsDeleted\" = false");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductVariants_SizeId",
@@ -630,10 +648,11 @@ namespace FashionShop.API.Migrations
                 column: "SizeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductVariants_SKU",
+                name: "IX_ProductVariants_Sku",
                 table: "ProductVariants",
-                column: "SKU",
-                unique: true);
+                column: "Sku",
+                unique: true,
+                filter: "\"IsDeleted\" = false");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReviewImages_ReviewId",
@@ -666,7 +685,8 @@ namespace FashionShop.API.Migrations
                 name: "IX_Vouchers_Code",
                 table: "Vouchers",
                 column: "Code",
-                unique: true);
+                unique: true,
+                filter: "\"IsDeleted\" = false");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VoucherUsages_OrderId",
