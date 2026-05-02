@@ -25,9 +25,9 @@ namespace FashionShop.API.Repositories.Shop
                 ShippingCommune = order.ShippingCommune,
                 ShippingDistrict = order.ShippingDistrict,
                 ShippingCity = order.ShippingCity,
-                OrderStatus = order.OrderStatus.ToString(),
-                PaymentMethod = order.PaymentMethod.ToString(),
-                PaymentStatus = order.PaymentStatus.ToString(),
+                OrderStatus = order.OrderStatus,
+                PaymentMethod = order.PaymentMethod,
+                PaymentStatus = order.PaymentStatus,
                 SubTotal = order.SubTotal,
                 ShippingFee = order.ShippingFee,
                 DiscountAmount = order.DiscountAmount,
@@ -63,8 +63,15 @@ namespace FashionShop.API.Repositories.Shop
             return await _context.Orders
                 .AsNoTracking()
                 .Where(order => order.UserId == userId)
+                .OrderByDescending(order => order.CreatedDate)
                 .Select(_orderSelector)
                 .ToListAsync();
+        }
+
+        public async Task<Order?> FindOrderByIdAsync(Guid userId, Guid orderId)
+        {
+            return await _context.Orders
+                .FirstOrDefaultAsync(order => order.UserId == userId && order.Id == orderId);
         }
 
         public async Task<ShopOrderResponse?> GetOrderByIdAsync(Guid userId, Guid orderId)

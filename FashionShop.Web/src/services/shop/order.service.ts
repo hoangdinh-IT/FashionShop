@@ -12,5 +12,10 @@ export const orderService = {
     getAll: async(): Promise<ApiResponse<Order[]>> => {
         const response = await apiClient.get<ApiResponse<Order[]>>("/shop/orders");
         return response.data;
+    },
+
+    updateCancelled: async(orderId: string): Promise<ApiResponse<Order>> => {
+        const response = await apiClient.put<ApiResponse<Order>>(`/shop/orders/${orderId}/order-status-cancelled`);
+        return response.data;
     }
 }

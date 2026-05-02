@@ -16,6 +16,7 @@ import ColorPage from "../pages/admin/colors/ColorPage";
 import SizePage from "../pages/admin/sizes/SizePage";
 import AdminProductPage from "../pages/admin/products/ProductPage";
 import VoucherPage from "../pages/admin/vouchers/VoucherPage";
+import OrderPage from "../pages/admin/orders/OrderPage";
 
 import ShopMainLayout from "../layouts/ShopMainLayout";
 import ShopAccountLayout from "../layouts/ShopAccountLayout";
@@ -25,6 +26,7 @@ import ShopProductPage from "../pages/shop/products/ProductPage";
 import ShopProductDetailPage from "../pages/shop/products/ProductDetailPage";
 import CartPage from "../pages/shop/carts/CartPage";
 import CheckoutPage from "../pages/shop/orders/CheckoutPage";
+import PurchaseHistory from "../pages/shop/orders/PurchaseHistory";
 
 export const AppRoutes = () => {
     const elements = useRoutes([
@@ -97,6 +99,10 @@ export const AppRoutes = () => {
                         {
                             path: "vouchers",
                             element: <VoucherPage />
+                        },
+                        {
+                            path: "orders",
+                            element: <OrderPage />
                         }
                     ]
                 }
@@ -124,6 +130,10 @@ export const AppRoutes = () => {
                                 {
                                     path: "address", // URL: /shop/account/address
                                     element: <AddressPage />
+                                },
+                                {
+                                    path: "purchase-histories",
+                                    element: <PurchaseHistory />
                                 }
                             ]
                         },

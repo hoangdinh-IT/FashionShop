@@ -20,7 +20,7 @@ namespace FashionShop.Core.Contracts.Admin.ProductVariant.Requests
 
         [Required]
         [Range(0, int.MaxValue)]
-        public int Quantity { get; set; } = 0;
+        public int StockQuantity { get; set; } = 0;
 
         [Required]
         public decimal Price { get; set; }

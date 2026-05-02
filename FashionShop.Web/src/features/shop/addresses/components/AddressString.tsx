@@ -2,10 +2,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface Props {
-    addressDetail: string;
-    communeCode: string | number;
-    districtCode: string | number;
-    cityCode: string | number;
+    addressDetail?: string;
+    communeCode?: string | number;
+    districtCode?: string | number;
+    cityCode?: string | number;
 }
 
 const AddressString: React.FC<Props> = ({ addressDetail, communeCode, districtCode, cityCode }) => {

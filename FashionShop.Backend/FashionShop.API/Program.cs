@@ -84,6 +84,7 @@ namespace FashionShop.API
             builder.Services.AddScoped<IAdminSizeService, AdminSizeService>();
             builder.Services.AddScoped<IAdminProductService, AdminProductService>();
             builder.Services.AddScoped<IAdminVoucherService, AdminVoucherService>();
+            builder.Services.AddScoped<IAdminOrderService, AdminOrderService>();
 
             builder.Services.AddScoped<IShopUserService, ShopUserService>();
             builder.Services.AddScoped<IShopAddressService, ShopAddressService>();

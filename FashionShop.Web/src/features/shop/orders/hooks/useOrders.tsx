@@ -1,7 +1,19 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type { OrderRequest } from "../types/requests";
 import { orderService } from "../../../../services/shop/order.service";
 import { useMutationSideEffects } from "../../../../hooks/useMutationSideEffects";
+
+export const useOrders = () => {
+    const query = useQuery({
+        queryKey: ["orders"],
+        queryFn: orderService.getAll,
+    })
+
+    return {
+        orders: query.data?.data || [],
+        isFetching: query.isFetching,
+    }
+}
 
 export const useOrderMutations = () => {
     const createSideEffects = useMutationSideEffects();
@@ -11,12 +23,24 @@ export const useOrderMutations = () => {
         ...createSideEffects({
             successMessage: "Đặt hàng thành công!",
             errorMessage: "Đặt hàng thất bại!",
-            invalidateKeys: [["addresses"]]
+            invalidateKeys: [["orders"]]
+        })
+    })
+
+    const updateCancelledMutation = useMutation({
+        mutationFn: (orderId: string) => orderService.updateCancelled(orderId),
+        ...createSideEffects({
+            successMessage: "Đơn hàng huỷ thành công!",
+            errorMessage: "Đơn hàng huỷ thất bại!",
+            invalidateKeys: [["orders"]]
         })
     })
 
     return {
         createOrder: createMutation.mutate,
-        isLoading: createMutation.isPending,
+        isCreating: createMutation.isPending,
+
+        updateCancelledOrder: updateCancelledMutation.mutate,
+        isUpdatingCancelled: updateCancelledMutation.isPending,
     }
 }

@@ -19,6 +19,7 @@ namespace FashionShop.API.Repositories.Shared
         private IAdminProductRepository _adminProducts;
         private IAdminSizeRepository _adminSizes;
         private IAdminVoucherRepository _adminVouchers;
+        private IAdminOrderRepository _adminOrders;
         
         private IShopUserRepository _shopUsers;
         private IShopAddressRepository _shopAddresses;
@@ -39,6 +40,7 @@ namespace FashionShop.API.Repositories.Shared
         public IAdminProductRepository AdminProducts => _adminProducts ??= new AdminProductRepository(_context);
         public IAdminSizeRepository AdminSizes => _adminSizes ??= new AdminSizeRepository(_context);
         public IAdminVoucherRepository AdminVouchers => _adminVouchers ??= new AdminVoucherRepository(_context);
+        public IAdminOrderRepository AdminOrders => _adminOrders ??= new AdminOrderRepository(_context);
 
         public IShopUserRepository ShopUsers => _shopUsers ??= new ShopUserRepository(_context);
         public IShopAddressRepository ShopAddresses => _shopAddresses ??= new ShopAddressRepository(_context);

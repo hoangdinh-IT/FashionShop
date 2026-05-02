@@ -74,7 +74,7 @@ const CheckoutPage = () => {
 
         createOrder(orderRequest, {
             onSuccess: (data) => {
-                
+                navigate("/shop/account/purchase-histories");
             }
         })
     };

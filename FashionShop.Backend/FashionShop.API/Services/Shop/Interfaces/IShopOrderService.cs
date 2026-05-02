@@ -16,5 +16,6 @@ namespace FashionShop.API.Services.Shop.Interfaces
         // --- WRITE METHODS --- //
 
         Task<ShopOrderResponse?> CreateOrderAsync(Guid userId, ShopCreateOrderRequest request);
+        Task<ShopOrderResponse?> UpdateCancelledAsync(Guid userId, Guid orderId);
     }
 }

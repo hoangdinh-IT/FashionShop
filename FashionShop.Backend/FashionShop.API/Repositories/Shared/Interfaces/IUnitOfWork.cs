@@ -11,6 +11,7 @@ namespace FashionShop.API.Repositories.Shared.Interfaces
         IAdminProductRepository AdminProducts { get; }
         IAdminSizeRepository AdminSizes { get; }
         IAdminVoucherRepository AdminVouchers { get; }
+        IAdminOrderRepository AdminOrders { get; }
 
         IShopUserRepository ShopUsers { get; }
         IShopAddressRepository ShopAddresses { get; }

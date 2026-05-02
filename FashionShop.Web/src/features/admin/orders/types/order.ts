@@ -13,6 +13,8 @@ interface OrderDetail {
 export interface Order {
     id: string;
     orderDate: Date;
+    fullName: string;
+    phoneNumber: string;
     shippingAddress: string;
     shippingCommune: string;
     shippingDistrict: string;

@@ -76,7 +76,7 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
                     }`}
                 >
                     {isFilterOpen ? <IoClose className="text-lg" /> : <IoFilterOutline className="text-lg" />}
-                    <span className="hidden sm:inline">{isFilterOpen ? 'Đóng' : 'Bộ lọc nâng cao'}</span>
+                    <span className="hidden sm:inline">{isFilterOpen ? 'Đóng' : 'Bộ lọc'}</span>
                 </button>
             </div>
 

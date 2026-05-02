@@ -62,5 +62,19 @@ namespace FashionShop.API.Controllers.Shop
             var result = await _orderService.CreateOrderAsync(userId, request);
             return Success(result, "Tạo đơn hàng thành công!");
         }
+
+        [HttpPut("{orderId}/order-status-cancelled")]
+        public async Task<IActionResult> UpdateCancelled(Guid orderId)
+        {
+            Guid userId = User.GetUserId();
+
+            if (userId == Guid.Empty)
+            {
+                throw new ArgumentException("ID không hợp lệ!");
+            }
+
+            var result = await _orderService.UpdateCancelledAsync(userId, orderId);
+            return Success(result, "Đơn hàng huỷ thành công!");
+        }
     }
 }

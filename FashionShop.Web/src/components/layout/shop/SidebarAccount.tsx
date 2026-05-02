@@ -8,10 +8,9 @@ import {
     IoLogOutOutline
 } from "react-icons/io5";
 
-// Khai báo menu tĩnh gọn gàng như Admin
 const MENU_ITEMS = [
     { path: '/shop/account/information', label: 'Thông tin tài khoản', icon: IoPersonOutline },
-    { path: '/shop/account/orders', label: 'Lịch sử đơn hàng', icon: IoReceiptOutline },
+    { path: '/shop/account/purchase-histories', label: 'Lịch sử mua hàng', icon: IoReceiptOutline },
     { path: '/shop/account/address', label: 'Sổ địa chỉ', icon: IoLocationOutline },
     { path: '/shop/account/reviews', label: 'Đánh giá và phản hồi', icon: IoChatbubblesOutline },
 ];
@@ -21,7 +20,6 @@ interface SidebarAccountProps {
 }
 
 const SidebarAccount: React.FC<SidebarAccountProps> = ({ onLogout }) => {
-    // Dùng useLocation để check active giống hệt Admin Sidebar
     const location = useLocation();
 
     return (

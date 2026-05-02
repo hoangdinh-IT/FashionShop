@@ -114,5 +114,17 @@ namespace FashionShop.API.Services.Shop
                 throw new Exception("Đặt hàng thất bại: " + ex.Message);
             }
         }
+
+        public async Task<ShopOrderResponse?> UpdateCancelledAsync(Guid userId, Guid orderId)
+        {
+            var order = await _unitOfWork.ShopOrders.FindOrderByIdAsync(userId, orderId);
+            if (order == null) throw new KeyNotFoundException("Không tìm thấy đơn hàng!");
+
+            order.OrderStatus = OrderStatus.Cancelled;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return await _unitOfWork.ShopOrders.GetOrderByIdAsync(userId, orderId);
+        }
     }
 }

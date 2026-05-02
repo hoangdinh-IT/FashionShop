@@ -72,7 +72,7 @@ const VoucherToolbar: React.FC<Props> = ({
                     }`}
                 >
                     {isFilterOpen ? <IoClose className="text-lg" /> : <IoFilterOutline className="text-lg" />}
-                    <span className="hidden sm:inline">{isFilterOpen ? 'Đóng bộ lọc' : 'Lọc nâng cao'}</span>
+                    <span className="hidden sm:inline">{isFilterOpen ? 'Đóng' : 'Bộ lọc'}</span>
                 </button>
             </div>
 

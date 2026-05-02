@@ -18,7 +18,7 @@ namespace FashionShop.Core.Contracts.Admin.ProductVariant.Responses
         public string ColorHexCode {  get; set; }
         public string SizeName { get; set; }
         public string SKU { get; set; }
-        public int Quantity { get; set; } = 0;
+        public int StockQuantity { get; set; } = 0;
         public decimal Price { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; }
