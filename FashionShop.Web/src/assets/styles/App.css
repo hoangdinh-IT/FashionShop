@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+  
+  /* Có thể thêm cho các thành phần giống nút bấm khác */
+  [type='button'], [type='reset'], [type='submit'] {
+    @apply cursor-pointer;
+  }
+}

@@ -87,7 +87,6 @@ namespace FashionShop.API.Repositories.Shop
                 Id = p.Id,
                 Name = p.Name,
                 Slug = p.Slug,
-                Content = p.Content,
                 Price = p.Price,
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsNew = p.IsNew,

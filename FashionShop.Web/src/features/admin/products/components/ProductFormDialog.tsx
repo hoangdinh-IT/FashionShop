@@ -54,7 +54,7 @@ const getInputClassName = (hasError?: boolean) => {
 
 const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailFormInputs> => {
     const defaultVariants = [
-        { id: "", sku: "", colorId: 0 as any, sizeId: 0 as any, quantity: 0, price: 0 }
+        { id: "", sku: "", colorId: 0 as any, sizeId: 0 as any, stockQuantity: 0, price: 0 }
     ];
 
     if (!productDetail) {
@@ -62,7 +62,6 @@ const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailF
             name: "",
             slug: "",
             description: "",
-            content: "",
             material: "",
             price: 0,
             categoryId: "",
@@ -82,7 +81,7 @@ const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailF
                 sku: v.sku,
                 colorId: v.colorId,
                 sizeId: v.sizeId,
-                quantity: v.quantity,
+                stockQuantity: v.stockQuantity,
                 price: v.price,
             }))
             : defaultVariants
@@ -109,7 +108,7 @@ const preparePayload = (data: ProductDetailFormInputs, file: File | null, isUpda
         formData.append(`productVariants[${index}].ColorId`, String(variant.colorId));
         formData.append(`productVariants[${index}].SizeId`, String(variant.sizeId));
         formData.append(`productVariants[${index}].SKU`, String(variant.sku));
-        formData.append(`productVariants[${index}].Quantity`, String(variant.quantity));
+        formData.append(`productVariants[${index}].StockQuantity`, String(variant.stockQuantity));
         formData.append(`productVariants[${index}].Price`, String(variant.price || data.price));
 
         if (isUpdate && variant.id) {
@@ -286,6 +285,8 @@ const ProductFormDialog: React.FC<Props> = ({
                             <FormHeader
                                 isEdit={!!productDetail}
                                 isProcessing={isProcessing}
+                                isCreating={isCreatingDetail}
+                                isUpdating={isUpdatingDetail}
                                 isDataReady={isDataReady}
                                 onClose={onClose}
                             />
@@ -363,7 +364,7 @@ export default ProductFormDialog;
 // 3. SUB-COMPONENTS
 // ==========================================
 
-const FormHeader = ({ isEdit, isProcessing, isDataReady, onClose }: any) => (
+const FormHeader = ({ isEdit, isProcessing, isCreating, isUpdating, isDataReady, onClose }: any) => (
     <div className="px-6 py-5 md:px-8 border-b border-slate-200 flex flex-wrap gap-4 items-center justify-between bg-white shrink-0 z-20 sticky top-0">
         <div>
             <div className="flex items-center gap-3">
@@ -390,9 +391,15 @@ const FormHeader = ({ isEdit, isProcessing, isDataReady, onClose }: any) => (
             <button
                 type="submit"
                 disabled={isProcessing || !isDataReady}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all"
+                className={`
+                    px-5 py-2.5 rounded-xl text-sm font-semibold text-white disabled:bg-blue-400 disabled:cursor-not-allowed transition-all
+                    ${isCreating || isUpdating 
+                        ? 'bg-indigo-400 cursor-wait' 
+                        : 'bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5' 
+                    }
+                `}
             >
-                {isProcessing ? "ĐANG LƯU..." : "Lưu sản phẩm"}
+                {isProcessing ? "Đang xử lý..." : "Lưu sản phẩm"}
             </button>
             
             <div className="hidden sm:block w-px h-8 bg-slate-200 mx-2"></div>
@@ -465,38 +472,21 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
             </div>
         </div>
 
-        {/* Description & Content */}
+        {/* Description */}
         <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                Mô tả ngắn <span className="text-red-500">*</span>
+                Mô tả <span className="text-red-500">*</span>
             </label>
             <textarea
-                rows={3}
+                rows={20}
                 className={`resize-none ${getInputClassName(errors.description)}`}
-                {...register("description", { required: "Vui lòng nhập Mô tả ngắn", maxLength: 500 })}
+                {...register("description", { required: "Vui lòng nhập Mô tả" })}
             />
             <div className="flex justify-between mt-1.5 text-xs">
                 <span className="text-red-500 text-[12px] font-semibold">
                     {errors.description?.message}
                 </span>
-                <span className={`${(watch("description") || "").length >= 500 ? "text-red-500 font-bold" : "text-slate-400"}`}>
-                    {(watch("description") || "").length}/500
-                </span>
             </div>
-        </div>
-        
-        <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                Nội dung chi tiết <span className="text-red-500">*</span>
-            </label>
-            <textarea
-                rows={6}
-                className={`resize-none ${getInputClassName(errors.content)}`}
-                {...register("content", { required: "Vui lòng nhập Nội dung chi tiết" })}
-            />
-            <span className="block mt-1.5 text-red-500 text-[12px] font-semibold">
-                {errors.content?.message}
-            </span>
         </div>
     </div>
 );

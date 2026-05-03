@@ -22,11 +22,7 @@ namespace FashionShop.Core.Entities
         public string Slug { get; set; }
 
         [Required]
-        [MaxLength(500)]
         public string Description { get; set; }
-
-        [Required]
-        public string Content { get; set; }
 
         [Required]
         [MaxLength(100)]

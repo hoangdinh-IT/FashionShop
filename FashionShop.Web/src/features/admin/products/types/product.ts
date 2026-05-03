@@ -7,7 +7,6 @@ export interface Product {
     name: string;
     slug: string;
     description: string;
-    content: string;
     material: string;
     price: number;
     thumbnailUrl: string;
@@ -25,7 +24,7 @@ export interface ProductVariant {
     colorId: string;
     sizeId: string;
     sku: string;
-    quantity: number;
+    stockQuantity: number;
     price: number;
     isActive: boolean;
     createdDate: Date;

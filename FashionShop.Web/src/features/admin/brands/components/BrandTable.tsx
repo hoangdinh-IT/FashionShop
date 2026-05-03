@@ -9,7 +9,7 @@ interface BrandTableProps {
     data: Brand[];
     isLoading: boolean;
     sortBy: string;
-    isAscending: boolean;
+    isAscending?: boolean;
     onSort: (col: string, direction: boolean) => void;
     onEdit?: (brand: Brand) => void;
     onDelete?: (id: string) => void;

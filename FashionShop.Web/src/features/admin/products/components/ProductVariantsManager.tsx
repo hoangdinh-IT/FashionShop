@@ -159,17 +159,17 @@ export default function ProductVariantsManager({
                                         type="number"
                                         min="0"
                                         placeholder="0"
-                                        {...register(`productVariants.${index}.quantity` as const, { 
-                                            required: "Nhập SL",
+                                        {...register(`productVariants.${index}.stockQuantity` as const, { 
+                                            required: "Nhập số lượng",
                                             valueAsNumber: true,
-                                            min: { value: 0, message: "SL >= 0" }
+                                            min: { value: 0, message: "Số lượng >= 0" }
                                         })}
                                         className={`w-full pl-9 pr-3 py-2.5 bg-slate-50 border rounded-lg text-sm text-slate-900 placeholder:text-slate-400 transition-colors outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 font-semibold
-                                            ${errors?.productVariants?.[index]?.quantity ? "border-red-400" : "border-slate-200 focus:border-blue-500"}`}
+                                            ${errors?.productVariants?.[index]?.stockQuantity ? "border-red-400" : "border-slate-200 focus:border-blue-500"}`}
                                     />
                                 </div>
-                                {errors?.productVariants?.[index]?.quantity && (
-                                    <span className="text-red-500 text-[11px] font-semibold">{errors.productVariants[index]?.quantity?.message}</span>
+                                {errors?.productVariants?.[index]?.stockQuantity && (
+                                    <span className="text-red-500 text-[11px] font-semibold">{errors.productVariants[index]?.stockQuantity?.message}</span>
                                 )}
                             </div>
 
@@ -207,7 +207,7 @@ export default function ProductVariantsManager({
             <button
                 type="button"
                 // Dùng hàm append của useFieldArray
-                onClick={() => append({ id: "", sku: "", colorId: 0, sizeId: 0, quantity: 0, price: 0 })}
+                onClick={() => append({ id: "", sku: "", colorId: 0, sizeId: 0, stockQuantity: 0, price: 0 })}
                 className="mt-5 w-full py-3.5 flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500/10"
             >
                 <IoAddOutline className="text-xl" />

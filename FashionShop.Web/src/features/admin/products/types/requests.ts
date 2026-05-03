@@ -6,7 +6,6 @@ export interface ProductFormInputs {
     name: string;
     slug: string;
     description: string;
-    content: string;
     material: string;
     price: number;
     thumbnail: File;
@@ -39,7 +38,6 @@ export interface ProductDetailFormInputs {
     name: string;
     slug: string;
     description: string;
-    content: string;
     material: string;
     price: number;
     thumbnail: File;
@@ -56,7 +54,7 @@ export interface ProductDetailFormInputs {
         sku: string;
         colorId: number;
         sizeId: number;
-        quantity: number;
+        stockQuantity: number;
         price: number;
     }[];
 }
@@ -66,7 +64,7 @@ export interface ProductDetailFormInputs {
 
 export interface ProductVariantFormInputs {
     sku: string;
-    quantity: number;
+    stockQuantity: number;
     price: number;
 
     productId: string;

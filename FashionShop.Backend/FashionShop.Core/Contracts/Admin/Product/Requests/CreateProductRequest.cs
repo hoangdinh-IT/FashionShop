@@ -20,11 +20,7 @@ namespace FashionShop.Core.Contracts.Admin.Product.Requests
         public string Slug { get; set; }
 
         [Required]
-        [MaxLength(500, ErrorMessage = "Mô tả không được quá 500 kí tự!")]
         public string Description { get; set; }
-
-        [Required]
-        public string Content { get; set; }
 
         [Required]
         [MaxLength(100, ErrorMessage = "Chất liệu không được quá 100 kí tự!")]

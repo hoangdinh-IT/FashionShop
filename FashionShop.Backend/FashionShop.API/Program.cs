@@ -160,16 +160,27 @@ namespace FashionShop.API
             //    app.UseSwaggerUI();
             //}
 
+            // 1. Chỉ dùng HttpsRedirection khi KHÔNG phải trên Render (Production)
+            if (!app.Environment.IsProduction())
+            {
+                app.UseHttpsRedirection();
+            }
+
+            // 2. Swagger: Bạn có thể giữ cấu hình hiện tại để test cả 2 nơi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FashionShop API V1");
-                c.RoutePrefix = string.Empty; // Truy cập link Render là ra thẳng Swagger
+                // Nếu trên Local bạn muốn vào /swagger, còn Production vào thẳng trang chủ
+                if (app.Environment.IsProduction())
+                {
+                    c.RoutePrefix = string.Empty;
+                }
             });
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
