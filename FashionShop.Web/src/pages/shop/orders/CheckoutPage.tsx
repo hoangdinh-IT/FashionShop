@@ -17,7 +17,7 @@ const CheckoutPage = () => {
 
     const { cartItems, isLoading: isCartLoading } = useCarts();
     const { addresses, isLoading: isAddrLoading } = useAddresses();
-    const { createOrder, isLoading: isOrdering } = useOrderMutations();
+    const { createOrder, isCreating: isOrdering } = useOrderMutations();
     
     // 1. Quản lý địa chỉ đang được chọn
     const [selectedAddress, setSelectedAddress] = useState<Address | undefined>(undefined);

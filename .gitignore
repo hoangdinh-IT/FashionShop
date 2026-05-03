@@ -482,3 +482,13 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Ignore sensitive app settings
+appsettings.json
+appsettings.Development.json
+
+# Frontend build and dependencies
+node_modules/
+dist/
+build/
+.env*
