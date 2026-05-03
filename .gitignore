@@ -484,8 +484,8 @@ $RECYCLE.BIN/
 *.swp
 
 # Ignore sensitive app settings
-appsettings.json
-appsettings.Development.json
+**/appsettings.json
+**/appsettings.Development.json
 
 # Frontend build and dependencies
 node_modules/
