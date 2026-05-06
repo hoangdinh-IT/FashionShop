@@ -24,7 +24,7 @@ const CheckoutPage = () => {
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
     const [note, setNote] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.COD);
+    // const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.COD);
 
     // 2. Tự động gán địa chỉ mặc định khi load dữ liệu xong lần đầu
     useEffect(() => {
@@ -73,7 +73,7 @@ const CheckoutPage = () => {
         };
 
         createOrder(orderRequest, {
-            onSuccess: (data) => {
+            onSuccess: () => {
                 navigate("/shop/account/purchase-histories");
             }
         })

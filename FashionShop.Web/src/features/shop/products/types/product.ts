@@ -52,7 +52,7 @@ export interface ProductDetail {
     productId: string;
     name: string;
     slug: string;
-    content: string;
+    description: string;
     material: string;
     price: number;
     thumbnailUrl: string;

@@ -138,6 +138,14 @@ export const AppRoutes = () => {
                             ]
                         },
                         {
+                            path: "collection/new-arrivals",
+                            element: <ShopProductPage collectionType="new-arrivals" />
+                        },
+                        {
+                            path: "collection/best-sellers",
+                            element: <ShopProductPage collectionType="best-sellers" />
+                        },
+                        {
                             path: "collection/:brandSlug?/:categorySlug?",
                             element: <ShopProductPage />
                         },

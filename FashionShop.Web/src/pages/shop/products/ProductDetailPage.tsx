@@ -369,7 +369,7 @@ const ProductDetailPage = () => {
                 </div>
                 {/* Dùng whitespace-pre-line để giữ nguyên dấu xuống dòng \r\n từ DB trả về */}
                 <div className="p-6 bg-white text-zinc-700 text-sm leading-relaxed whitespace-pre-line">
-                    {productDetail.content || "Chưa có thông tin chi tiết cho sản phẩm này."}
+                    {productDetail.description || "Chưa có thông tin chi tiết cho sản phẩm này."}
                     
                     {productDetail.material && (
                         <div className="mt-6 pt-6 border-t border-zinc-100">

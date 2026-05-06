@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { X, Plus, MapPin, Phone, Edit3, Check } from 'lucide-react';
+import { X, MapPin, Phone, Check } from 'lucide-react';
 import type { Address } from '../../addresses/types/address';
 import AddressString from '../../addresses/components/AddressString';
-import AddressFormDialog from '../../addresses/components/AddressFormDialog';
 
 interface Props {
     isOpen: boolean;
@@ -54,8 +53,6 @@ const AddressDialog: React.FC<Props> = ({
     onSelect,
     currentSelectedAddress
 }) => {
-    const [isFormOpen, setIsFormOpen] = useState(false);
-    const [selectedAddressForEdit, setSelectedAddressForEdit] = useState<Address | undefined>(undefined);
     const [localSelected, setLocalSelected] = useState<Address | undefined>(currentSelectedAddress);
 
     // Đồng bộ local state khi dialog mở
@@ -69,17 +66,6 @@ const AddressDialog: React.FC<Props> = ({
         if (localSelected) {
             onSelect(localSelected);
         }
-    };
-
-    const handleAddNew = () => {
-        setSelectedAddressForEdit(undefined);
-        setIsFormOpen(true);
-    };
-
-    const handleEdit = (e: React.MouseEvent, addr: Address) => {
-        e.stopPropagation();
-        setSelectedAddressForEdit(addr);
-        setIsFormOpen(true);
     };
 
     return (
@@ -153,12 +139,6 @@ const AddressDialog: React.FC<Props> = ({
                                                                 <span>{addr.phoneNumber}</span>
                                                             </div>
                                                         </div>
-                                                        <button
-                                                            onClick={(e) => handleEdit(e, addr)}
-                                                            className="p-2.5 hover:bg-zinc-900 text-zinc-400 hover:text-white rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                                                        >
-                                                            <Edit3 size={16} />
-                                                        </button>
                                                     </div>
                                                     <div className="flex items-start gap-2 text-zinc-600 text-sm leading-relaxed mt-3">
                                                         <MapPin size={16} className="shrink-0 mt-0.5 text-zinc-300" />
@@ -175,14 +155,6 @@ const AddressDialog: React.FC<Props> = ({
                                     );
                                 })}
                             </div>
-
-                            <button
-                                onClick={handleAddNew}
-                                className="w-full mt-6 py-5 flex items-center justify-center gap-3 text-zinc-500 font-bold hover:text-zinc-900 bg-white hover:bg-zinc-50 rounded-[30px] transition-all border-2 border-dashed border-zinc-200 hover:border-zinc-900 cursor-pointer group"
-                            >
-                                <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-                                <span className="uppercase text-xs tracking-[0.15em]">Thêm địa chỉ nhận hàng</span>
-                            </button>
                         </div>
 
                         {/* Footer */}
@@ -197,12 +169,6 @@ const AddressDialog: React.FC<Props> = ({
                     </motion.div>
                 </div>
             )}
-
-            <AddressFormDialog
-                isOpen={isFormOpen}
-                onClose={() => setIsFormOpen(false)}
-                initialData={selectedAddressForEdit}
-            />
         </AnimatePresence>
     );
 };

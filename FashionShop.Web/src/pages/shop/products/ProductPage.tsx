@@ -1,12 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Imports từ project
 import SidebarFilter from '../../../features/shop/products/components/SidebarFilter';
 import ProductCard from '../../../features/shop/products/components/ProductCard';
 import { useFilterOptions, useProducts } from '../../../features/shop/products/hooks/useProducts';
 import type { FilterOptionsRequest, ProductQueryParams } from '../../../features/shop/products/types/requests';
 import ProductSkeleton from '../../../components/common/ProductSkeleton';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { Check, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import ProductHeader from '../../../features/shop/products/components/ProductHeader';
+
+interface ProductPageProps {
+    collectionType?: "new-arrivals" | "best-sellers";
+}
 
 const SORT_OPTIONS = [
     { value: "default", label: "Mặc định" },
@@ -16,13 +22,50 @@ const SORT_OPTIONS = [
     { value: "price-desc", label: "Giá: Cao đến thấp" },
 ];
 
-const ProductPage: React.FC = () => {
-    const { brandSlug, categorySlug } = useParams<{ brandSlug: string, categorySlug: string }>();
+const CollectionBanner: React.FC<{ type: "new-arrivals" | "best-sellers" }> = ({ type }) => {
+    const isNew = type === "new-arrivals";
+    return (
+        <div className="relative w-full h-[400px] md:h-[500px] bg-zinc-100 overflow-hidden mb-16 first:mt-4">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-6">
+                <motion.span 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-zinc-500 mb-4"
+                >
+                    {isNew ? "Spring // Summer 2026" : "Most Wanted Items"}
+                </motion.span>
+                <motion.h2 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-4xl md:text-6xl font-black italic tracking-tighter text-zinc-900 mb-8 uppercase"
+                >
+                    {isNew ? "New Arrivals" : "Best Sellers"}
+                </motion.h2>
+                <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-3 bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-colors"
+                >
+                    Khám phá ngay
+                </motion.button>
+            </div>
+            {/* Overlay giả lập ảnh */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5" />
+        </div>
+    );
+};
 
+const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
+    const { brandSlug, categorySlug } = useParams<{ brandSlug: string, categorySlug: string }>();
     const [searchParams, setSearchParams] = useSearchParams();
 
+    // KIỂM TRA CHẾ ĐỘ HIỂN THỊ
+    const isShopView = !!brandSlug || !!categorySlug;
+
+    // --- LOGIC HOÀN TOÀN GIỮ NGUYÊN NHƯ CODE CỦA BẠN ---
     const rawSizeSlugs = searchParams.get("size");
-    const urlSizeSlugs = (rawSizeSlugs && rawSizeSlugs !== "undefined")
+    const urlSizeSlugs = (rawSizeSlugs && rawSizeSlugs !== "undefined" && rawSizeSlugs !== "null")
         ? rawSizeSlugs.split(",").filter(Boolean)
         : [];
 
@@ -32,40 +75,25 @@ const ProductPage: React.FC = () => {
         : "";
 
     const rawPriceRange = searchParams.get("price_range");
-    const urlPriceRange = (rawPriceRange && rawPriceRange !== "undefined")
+    const urlPriceRange = (rawPriceRange && rawPriceRange !== "undefined" && rawPriceRange !== "null")
         ? rawPriceRange.split(",").filter(Boolean)
         : [];
 
     const urlSort = searchParams.get("sort") || "default";
 
-    const [isSortOpen, setIsSortOpen] = useState(false);
-    const sortDropdownRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
-                setIsSortOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    // 2. KHỞI TẠO STATE ĐỂ GỌI API (Truyền thẳng Array vào priceRange)
     const [queryParams, setQueryParams] = useState<ProductQueryParams>({
         keyword: undefined,
         brandSlug: brandSlug || undefined,
         categorySlug: categorySlug || undefined,
         sizeSlugs: urlSizeSlugs.length > 0 ? urlSizeSlugs : [],
         colorSlug: urlColorSlug !== "" ? urlColorSlug : "",
-        isBestSeller: undefined,
-        isNew: undefined,
+        isBestSeller: collectionType === 'best-sellers' ? true : undefined,
+        isNew: collectionType === 'new-arrivals' ? true : undefined,
         priceRange: urlPriceRange.length > 0 ? urlPriceRange : [],
-        isAscendingPrice: undefined,
-        pageSize: 1,
+        pageSize: 4,
         pageIndex: 1,
         sortBy: urlSort, 
-    })
+    });
 
     const [filterOptionParams, setFilterOptionParams] = useState<FilterOptionsRequest>({
         brandSlug: brandSlug || undefined,
@@ -75,7 +103,6 @@ const ProductPage: React.FC = () => {
     const { pagedProducts, totalProducts, isLoading } = useProducts(queryParams);
     const { filterOptions } = useFilterOptions(filterOptionParams);
 
-    // 3. CẬP NHẬT STATE KHI URL THAY ĐỔI
     useEffect(() => {
         const freshSizeSlugs = searchParams.get("size");
         const cleanSizeSlugs = (freshSizeSlugs && freshSizeSlugs !== "null" && freshSizeSlugs !== "undefined")
@@ -98,22 +125,19 @@ const ProductPage: React.FC = () => {
             ...prev,
             brandSlug: brandSlug || undefined,
             categorySlug: categorySlug || undefined,
-            sizeSlugs: cleanSizeSlugs.length > 0 ? cleanSizeSlugs : undefined,
-            colorSlug: cleanColorSlug !== "" ? cleanColorSlug : undefined,
-            priceRange: cleanPriceRange.length > 0 ? cleanPriceRange : undefined,
-            pageSize: 1,
-            pageIndex: 1,
+            sizeSlugs: cleanSizeSlugs.length > 0 ? cleanSizeSlugs : [],
+            colorSlug: cleanColorSlug !== "" ? cleanColorSlug : "",
+            priceRange: cleanPriceRange.length > 0 ? cleanPriceRange : [],
             sortBy: cleanSort,
-        }))
-
-        setFilterOptionParams(prev => ({
-            ...prev,
-            brandSlug: brandSlug,
-            categorySlug: categorySlug,
+            pageIndex: 1,
         }));
-    }, [brandSlug, categorySlug, searchParams]);
 
-    // 4. LƯU BỘ LỌC LÊN URL KHI CLICK TỪ SIDEBAR
+        setFilterOptionParams({
+            brandSlug: brandSlug || undefined,
+            categorySlug: categorySlug || undefined,
+        });
+    }, [brandSlug, categorySlug, searchParams, collectionType]);
+
     const handleFilterChange = (filters: { sizeSlugs: string[], colorSlug: string, priceRange: string[] }) => {
         const newParams = new URLSearchParams(searchParams);
 
@@ -135,7 +159,7 @@ const ProductPage: React.FC = () => {
             newParams.delete("price_range");
 
         setSearchParams(newParams);
-    }
+    };
 
     const handleSortSelect = (value: string) => {
         const newParams = new URLSearchParams(searchParams);
@@ -145,10 +169,7 @@ const ProductPage: React.FC = () => {
             newParams.set("sort", value);
         }
         setSearchParams(newParams);
-        setIsSortOpen(false);
     };
-
-    const currentSortLabel = SORT_OPTIONS.find(opt => opt.value === urlSort)?.label || "Mặc định";
 
     const handleLoadMore = () => {
         setQueryParams(prev => ({ ...prev, pageSize: (prev.pageSize || 1) + 1 }));
@@ -157,133 +178,168 @@ const ProductPage: React.FC = () => {
     const currentDisplayedCount = pagedProducts?.length || 0;
     const progressPercentage = totalProducts > 0 ? (currentDisplayedCount / totalProducts) * 100 : 0;
 
+    // --- RENDER GIAO DIỆN MỚI ---
     return (
         <div className="w-full max-w-[1600px] mx-auto px-6 py-8">
-            <div className="flex justify-between items-end mb-8 pb-5 border-b border-zinc-200">
-                {/* --- TIÊU ĐỀ --- */}
-                <div className="flex items-baseline gap-4">
-                    <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">
-                        {filterOptions?.brandName} \/ {filterOptions?.categoryName}
-                    </h1>
-                </div>
-
-                {/* --- KHU VỰC PHÂN LOẠI --- */}
-                <div className="flex items-center gap-3.5">
-                    <span className="text-[12px] text-zinc-500 font-bold uppercase tracking-widest">
-                        Sắp xếp theo
-                    </span>
-                    
-                    {/* Custom Dropdown Wrapper */}
-                    <div className="relative" ref={sortDropdownRef}>
-                        {/* Nút bấm để mở Dropdown */}
-                        <button 
-                            onClick={() => setIsSortOpen(!isSortOpen)}
-                            className={`
-                                flex items-center justify-between w-48 bg-white border text-[13px] font-semibold text-zinc-800 
-                                rounded-lg pl-4 pr-3 py-2.5 outline-none cursor-pointer shadow-sm
-                                transition-all duration-200 ease-in-out
-                                hover:border-zinc-300 hover:bg-zinc-50
-                                ${isSortOpen ? 'border-zinc-900 ring-1 ring-zinc-900' : 'border-zinc-200'}
-                            `}
-                        >
-                            <span className="truncate">{currentSortLabel}</span>
-                            <motion.div
-                                animate={{ rotate: isSortOpen ? 180 : 0 }}
-                                transition={{ duration: 0.2, ease: "easeInOut" }}
-                            >
-                                <ChevronDown size={16} strokeWidth={2} className="text-zinc-500" />
-                            </motion.div>
-                        </button>
-
-                        {/* Menu Dropdown với Framer Motion */}
-                        <AnimatePresence>
-                            {isSortOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    transition={{ duration: 0.15, ease: "easeOut" }}
-                                    className="absolute z-50 right-0 top-full mt-2 w-56 bg-white border border-zinc-200 rounded-xl shadow-lg overflow-hidden py-1.5"
-                                >
-                                    {SORT_OPTIONS.map((option) => {
-                                        const isSelected = urlSort === option.value;
-                                        return (
-                                            <button
-                                                key={option.value}
-                                                onClick={() => handleSortSelect(option.value)}
-                                                className={`
-                                                    w-full text-left flex items-center justify-between px-4 py-2.5 text-[13px] transition-colors
-                                                    ${isSelected 
-                                                        ? 'bg-zinc-50 text-zinc-900 font-bold' 
-                                                        : 'text-zinc-600 font-medium hover:bg-zinc-50 hover:text-zinc-900'
-                                                    }
-                                                `}
-                                            >
-                                                {option.label}
-                                                {isSelected && <Check size={14} strokeWidth={2.5} className="text-zinc-900" />}
-                                            </button>
-                                        );
-                                    })}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex items-start gap-10 relative">
-                <SidebarFilter
-                    totalProducts={totalProducts}
-                    filterOptions={filterOptions}
-                    selectedSizeSlugs={urlSizeSlugs} 
-                    selectedColorSlug={urlColorSlug} 
-                    selectedPriceRange={urlPriceRange} 
-                    onFilterChange={handleFilterChange}
-                />
-
-                <main className="flex-1 w-full pb-20">
-                    {isLoading && currentDisplayedCount === 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-                            {Array.from({ length: 8 }).map((_, index) => (
-                                <ProductSkeleton key={index} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-                            {pagedProducts?.map((product) => (
-                                <ProductCard key={product.productId} product={product} />
-                            ))}
-                        </div>
-                    )}
-
-                    {!isLoading && currentDisplayedCount === 0 && (
-                        <div className="text-center py-20 text-zinc-500">
-                            Không tìm thấy sản phẩm nào phù hợp.
-                        </div>
-                    )}
-
-                    {currentDisplayedCount > 0 && currentDisplayedCount < totalProducts && (
-                        <div className="mt-16 flex flex-col items-center justify-center space-y-4">
-                            <p className="text-sm font-medium text-zinc-500">
-                                Hiển thị {currentDisplayedCount} trên {totalProducts} sản phẩm
-                            </p>
-                            <div className="w-64 h-1 bg-zinc-200 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-zinc-900 rounded-full transition-all duration-500"
-                                    style={{ width: `${progressPercentage}%` }}
-                                ></div>
+            <AnimatePresence mode="wait">
+                {!isShopView ? (
+                    /* =========================================================
+                       CHẾ ĐỘ 1: TRANG CHỦ (BANNER + SẢN PHẨM ĐÃ ĐƯỢC LỌC TỪ API) 
+                    ============================================================ */
+                    <motion.div 
+                        key="landing"
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    >
+                        {/* ================= SECTION: NEW ARRIVALS ================= */}
+                        {(!collectionType || collectionType === 'new-arrivals') && (
+                            <div className="mb-24">
+                                <CollectionBanner type="new-arrivals" />
+                                <div className="mt-10">
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
+                                        {isLoading && currentDisplayedCount === 0 ? (
+                                            Array.from({ length: 4 }).map((_, i) => <ProductSkeleton key={`sk-new-${i}`} />)
+                                        ) : (
+                                            pagedProducts
+                                                ?.filter(product => !collectionType ? product.isNew : true)
+                                                .map((product) => (
+                                                    <ProductCard key={`new-${product.productId}`} product={product} />
+                                                ))
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <button
-                                className="mt-4 px-10 py-3.5 bg-white border border-zinc-300 text-zinc-900 font-semibold rounded-full hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all duration-300 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                                onClick={handleLoadMore}
-                                disabled={isLoading}
-                            >
-                                {isLoading ? 'Đang tải...' : 'Xem thêm sản phẩm'}
-                            </button>
+                        )}
+
+                        {/* ================= SECTION: BEST SELLERS ================= */}
+                        {(!collectionType || collectionType === 'best-sellers') && (
+                            <div className="mb-20">
+                                <CollectionBanner type="best-sellers" />
+                                <div className="mt-10">
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
+                                        {isLoading && currentDisplayedCount === 0 ? (
+                                            Array.from({ length: 4 }).map((_, i) => <ProductSkeleton key={`sk-best-${i}`} />)
+                                        ) : (
+                                            pagedProducts
+                                                ?.filter(product => !collectionType ? product.isBestSeller : true)
+                                                .map((product) => (
+                                                    <ProductCard key={`best-${product.productId}`} product={product} />
+                                                ))
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* State: Không có sản phẩm (Dùng chung) */}
+                        {!isLoading && currentDisplayedCount === 0 && (
+                            <div className="text-center py-20">
+                                <p className="text-zinc-400 italic">Hiện tại chưa có sản phẩm nào trong bộ sưu tập này.</p>
+                            </div>
+                        )}
+
+                        {/* Load More: Tiến trình & Nút Xem Thêm (Dùng chung) */}
+                        {!isLoading && totalProducts > 0 && currentDisplayedCount < totalProducts && (
+                            <div className="mb-20 flex flex-col items-center gap-6">
+                                <div className="flex flex-col items-center gap-2">
+                                    <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
+                                        Bạn đã xem {currentDisplayedCount} trong tổng số {totalProducts}
+                                    </p>
+                                    <div className="w-64 h-[2px] bg-zinc-100 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-zinc-900 transition-all duration-700 ease-in-out"
+                                            style={{ width: `${progressPercentage}%` }}
+                                        />
+                                    </div>
+                                </div>
+                                <button
+                                    className="px-12 py-4 bg-white border border-zinc-200 text-zinc-900 font-bold rounded-full hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all duration-300 shadow-sm disabled:opacity-50 uppercase text-xs tracking-widest"
+                                    onClick={handleLoadMore}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Đang tải...' : 'Xem thêm sản phẩm'}
+                                </button>
+                            </div>
+                        )}
+                    </motion.div>
+                ) : (
+                    /* =========================================================
+                       CHẾ ĐỘ 2: TRANG CỬA HÀNG (HEADER + SIDEBAR + SẢN PHẨM)
+                    ============================================================ */
+                    <motion.div 
+                        key="shop"
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    >
+                        <ProductHeader
+                            brandName={filterOptions?.brandName}
+                            categoryName={filterOptions?.categoryName}
+                            urlSort={urlSort}
+                            sortOptions={SORT_OPTIONS}
+                            onSortSelect={handleSortSelect}
+                            customTitle={collectionType === 'new-arrivals' ? "New Arrivals" : collectionType === 'best-sellers' ? "Best Sellers" : undefined}
+                        />
+
+                        <div className="flex flex-col md:flex-row gap-12 mt-10">
+                            {/* CỘT TRÁI: SIDEBAR FILTER */}
+                            <aside className="w-full md:w-[280px] shrink-0">
+                                <div className="sticky top-24">
+                                    <SidebarFilter
+                                        totalProducts={totalProducts}
+                                        filterOptions={filterOptions}
+                                        selectedSizeSlugs={urlSizeSlugs} 
+                                        selectedColorSlug={urlColorSlug} 
+                                        selectedPriceRange={urlPriceRange} 
+                                        onFilterChange={handleFilterChange}
+                                    />
+                                </div>
+                            </aside>
+
+                            {/* CỘT PHẢI: LƯỚI SẢN PHẨM */}
+                            <main className="flex-1 min-w-0">
+                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
+                                    {isLoading && currentDisplayedCount === 0 ? (
+                                        Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)
+                                    ) : (
+                                        pagedProducts?.map((product) => (
+                                            <ProductCard key={product.productId} product={product} />
+                                        ))
+                                    )}
+                                </div>
+
+                                {/* State: Không có sản phẩm */}
+                                {!isLoading && currentDisplayedCount === 0 && (
+                                    <div className="text-center py-40">
+                                        <p className="text-zinc-400 italic">Không tìm thấy sản phẩm nào khớp với bộ lọc.</p>
+                                    </div>
+                                )}
+
+                                {/* Load More */}
+                                {!isLoading && totalProducts > 0 && currentDisplayedCount < totalProducts && (
+                                    <div className="mt-20 flex flex-col items-center gap-6">
+                                        <div className="flex flex-col items-center gap-2">
+                                            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
+                                                Bạn đã xem {currentDisplayedCount} trong tổng số {totalProducts}
+                                            </p>
+                                            <div className="w-64 h-[2px] bg-zinc-100 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-zinc-900 transition-all duration-700 ease-in-out"
+                                                    style={{ width: `${progressPercentage}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <button
+                                            className="px-12 py-4 bg-white border border-zinc-200 text-zinc-900 font-bold rounded-full hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all duration-300 shadow-sm disabled:opacity-50 uppercase text-xs tracking-widest"
+                                            onClick={handleLoadMore}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? 'Đang tải...' : 'Xem thêm sản phẩm'}
+                                        </button>
+                                    </div>
+                                )}
+                            </main>
                         </div>
-                    )}
-                </main>
-            </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

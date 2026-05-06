@@ -74,18 +74,18 @@ namespace FashionShop.Core.Extensions
             return query.Where(x => x.IsActive == isActive.Value);
         }
 
-        public static IQueryable<Product> FilterByBestSeller(this IQueryable<Product> query, bool? isBestSeller)
-        {
-            if (!isBestSeller.HasValue) return query;
-
-            return query.Where(x => x.IsBestSeller == isBestSeller.Value);
-        }
-
         public static IQueryable<Product> FilterByNew(this IQueryable<Product> query, bool? isNew)
         {
             if (!isNew.HasValue) return query;
 
             return query.Where(x => x.IsNew == isNew.Value);
+        }
+
+        public static IQueryable<Product> FilterByBestSeller(this IQueryable<Product> query, bool? isBestSeller)
+        {
+            if (!isBestSeller.HasValue) return query;
+
+            return query.Where(x => x.IsBestSeller == isBestSeller.Value);
         }
 
         public static IQueryable<Product> FilterByPrice(this IQueryable<Product> query, decimal? minPrice, decimal? maxPrice)

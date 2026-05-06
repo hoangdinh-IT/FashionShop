@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Shop.Product.Responses
 {
-    public class ProductDetailResponse
+    public class ShopProductDetailResponse
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
-        public string Content { get; set; }
+        public string Description { get; set; }
         public string Material { get; set; }
         public decimal Price { get; set; }
         public string ThumbnailUrl { get; set; }

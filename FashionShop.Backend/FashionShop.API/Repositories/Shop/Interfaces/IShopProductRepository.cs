@@ -13,7 +13,7 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
 
         Task<PagedResult<ProductGridItemResponse>> GetPagedProductsAsync(ShopProductListRequest request);
         Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId);
-        Task<ProductDetailResponse?> GetProductBySlugAsync(string productSlug);
+        Task<ShopProductDetailResponse?> GetProductBySlugAsync(string productSlug);
         Task<ShopFilterOptionsResponse?> GetFilterOptionsAsync(ShopFilterOptionsRequest request);
 
 

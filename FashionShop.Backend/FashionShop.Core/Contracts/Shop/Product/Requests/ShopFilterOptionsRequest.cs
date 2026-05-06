@@ -8,7 +8,7 @@ namespace FashionShop.Core.Contracts.Shop.Product.Requests
 {
     public class ShopFilterOptionsRequest
     {
-        public string BrandSlug { get; set; }
-        public string CategorySlug { get; set; }
+        public string? BrandSlug { get; set; }
+        public string? CategorySlug { get; set; }
     }
 }

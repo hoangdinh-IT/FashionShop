@@ -81,12 +81,13 @@ namespace FashionShop.API.Repositories.Shop
                     : new List<ShopProductVariantDto>(),
             };
 
-        private static readonly Expression<Func<Product, ProductDetailResponse>> _productDetailSelector =
-            p => new ProductDetailResponse
+        private static readonly Expression<Func<Product, ShopProductDetailResponse>> _productDetailSelector =
+            p => new ShopProductDetailResponse
             {
                 Id = p.Id,
                 Name = p.Name,
                 Slug = p.Slug,
+                Description = p.Description,
                 Price = p.Price,
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsNew = p.IsNew,
@@ -159,6 +160,21 @@ namespace FashionShop.API.Repositories.Shop
                 .AsNoTracking()
                 .AsQueryable();
 
+            if (request.IsNew.HasValue)
+            {
+                query = query.FilterByNew(request.IsNew.Value);
+            }
+
+            if (request.IsBestSeller.HasValue)
+            {
+                query = query.FilterByBestSeller(request.IsBestSeller.Value);
+            }
+
+            if (!string.IsNullOrEmpty(request.BrandSlug))
+            {
+                query = query.FilterByBrandSlug(request.BrandSlug);
+            }
+
             query = query.FilterByKeyword(request.Keyword)
                          .FilterByCategorySlug(request.CategorySlug)
                          .FilterByBrandSlug(request.BrandSlug)
@@ -191,7 +207,7 @@ namespace FashionShop.API.Repositories.Shop
             return await _context.ProductVariants.FindAsync(productVariantId);
         }
 
-        public async Task<ProductDetailResponse?> GetProductBySlugAsync(string productSlug)
+        public async Task<ShopProductDetailResponse?> GetProductBySlugAsync(string productSlug)
         {
             return await _context.Products
                 .AsNoTracking()

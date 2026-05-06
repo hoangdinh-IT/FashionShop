@@ -6,8 +6,8 @@ export interface ProductFilters {
     categorySlug?: string;
     sizeSlugs?: string[];
     colorSlug?: string;
-    isBestSeller?: string;
-    isNew?: string;
+    isBestSeller?: boolean;
+    isNew?: boolean;
     priceRange?: string[];
     isAscendingPrice?: boolean;
 }
