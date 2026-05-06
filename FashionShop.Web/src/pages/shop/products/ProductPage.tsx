@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 // Imports từ project
 import SidebarFilter from '../../../features/shop/products/components/SidebarFilter';
 import ProductCard from '../../../features/shop/products/components/ProductCard';
-import { useFilterOptions, useProducts } from '../../../features/shop/products/hooks/useProducts';
-import type { FilterOptionsRequest, ProductQueryParams } from '../../../features/shop/products/types/requests';
+import { useFilterOptions, useProductCollections, useProducts } from '../../../features/shop/products/hooks/useProducts';
+import type { FilterOptionsRequest, ProductCollectionsQueryParams, ProductQueryParams } from '../../../features/shop/products/types/requests';
 import ProductSkeleton from '../../../components/common/ProductSkeleton';
 import ProductHeader from '../../../features/shop/products/components/ProductHeader';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ProductPageProps {
     collectionType?: "new-arrivals" | "best-sellers";
@@ -90,10 +91,15 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
         isBestSeller: collectionType === 'best-sellers' ? true : undefined,
         isNew: collectionType === 'new-arrivals' ? true : undefined,
         priceRange: urlPriceRange.length > 0 ? urlPriceRange : [],
-        pageSize: 4,
+        pageSize: 5,
         pageIndex: 1,
         sortBy: urlSort, 
     });
+
+    const [collectionQueryParams, setCollectionQueryParams] = useState<ProductCollectionsQueryParams>({
+        isNew: collectionType === 'new-arrivals' ? true : undefined,
+        isBestSeller: collectionType === 'best-sellers' ? true : undefined,
+    })
 
     const [filterOptionParams, setFilterOptionParams] = useState<FilterOptionsRequest>({
         brandSlug: brandSlug || undefined,
@@ -101,6 +107,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
     });
 
     const { pagedProducts, totalProducts, isLoading } = useProducts(queryParams);
+    const { collectionProducts } = useProductCollections(collectionQueryParams);
     const { filterOptions } = useFilterOptions(filterOptionParams);
 
     useEffect(() => {
@@ -178,6 +185,14 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
     const currentDisplayedCount = pagedProducts?.length || 0;
     const progressPercentage = totalProducts > 0 ? (currentDisplayedCount / totalProducts) * 100 : 0;
 
+    const newArrivalsRef = useRef<HTMLDivElement>(null);
+    const scrollNewArrivals = (direction: 'left' | 'right') => {
+        if (newArrivalsRef.current) {
+            const scrollAmount = newArrivalsRef.current.offsetWidth; // Cuộn đúng bằng 1 màn hình hiển thị
+            newArrivalsRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
+
     // --- RENDER GIAO DIỆN MỚI ---
     return (
         <div className="w-full max-w-[1600px] mx-auto px-6 py-8">
@@ -194,18 +209,48 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
                         {(!collectionType || collectionType === 'new-arrivals') && (
                             <div className="mb-24">
                                 <CollectionBanner type="new-arrivals" />
-                                <div className="mt-10">
-                                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
+                                
+                                {/* Thêm relative và group để định vị mũi tên và hiệu ứng hover */}
+                                <div className="mt-10 relative group">
+                                    
+                                    {/* Nút mũi tên trái */}
+                                    <button
+                                        onClick={() => scrollNewArrivals('left')}
+                                        className="absolute left-0 top-[40%] -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white hidden md:flex"
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+
+                                    {/* Container chứa sản phẩm trượt ngang */}
+                                    <div 
+                                        ref={newArrivalsRef}
+                                        className="flex overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                                    >
                                         {isLoading && currentDisplayedCount === 0 ? (
-                                            Array.from({ length: 4 }).map((_, i) => <ProductSkeleton key={`sk-new-${i}`} />)
+                                            Array.from({ length: 4 }).map((_, i) => (
+                                                <div key={`sk-new-${i}`} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.3333%-16px)] xl:w-[calc(25%-18px)] shrink-0 snap-start">
+                                                    <ProductSkeleton />
+                                                </div>
+                                            ))
                                         ) : (
-                                            pagedProducts
+                                            collectionProducts
                                                 ?.filter(product => !collectionType ? product.isNew : true)
                                                 .map((product) => (
-                                                    <ProductCard key={`new-${product.productId}`} product={product} />
+                                                    <div key={`new-${product.productId}`} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.3333%-16px)] xl:w-[calc(25%-18px)] shrink-0 snap-start">
+                                                        <ProductCard product={product} />
+                                                    </div>
                                                 ))
                                         )}
                                     </div>
+
+                                    {/* Nút mũi tên phải */}
+                                    <button
+                                        onClick={() => scrollNewArrivals('right')}
+                                        className="absolute right-0 top-[40%] -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white hidden md:flex"
+                                    >
+                                        <ChevronRight size={24} />
+                                    </button>
+
                                 </div>
                             </div>
                         )}
@@ -234,30 +279,6 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
                         {!isLoading && currentDisplayedCount === 0 && (
                             <div className="text-center py-20">
                                 <p className="text-zinc-400 italic">Hiện tại chưa có sản phẩm nào trong bộ sưu tập này.</p>
-                            </div>
-                        )}
-
-                        {/* Load More: Tiến trình & Nút Xem Thêm (Dùng chung) */}
-                        {!isLoading && totalProducts > 0 && currentDisplayedCount < totalProducts && (
-                            <div className="mb-20 flex flex-col items-center gap-6">
-                                <div className="flex flex-col items-center gap-2">
-                                    <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
-                                        Bạn đã xem {currentDisplayedCount} trong tổng số {totalProducts}
-                                    </p>
-                                    <div className="w-64 h-[2px] bg-zinc-100 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-zinc-900 transition-all duration-700 ease-in-out"
-                                            style={{ width: `${progressPercentage}%` }}
-                                        />
-                                    </div>
-                                </div>
-                                <button
-                                    className="px-12 py-4 bg-white border border-zinc-200 text-zinc-900 font-bold rounded-full hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all duration-300 shadow-sm disabled:opacity-50 uppercase text-xs tracking-widest"
-                                    onClick={handleLoadMore}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? 'Đang tải...' : 'Xem thêm sản phẩm'}
-                                </button>
                             </div>
                         )}
                     </motion.div>

@@ -1,5 +1,5 @@
 import type { FilterOptionsResponse, ProductDetail, ProductGridItem } from "../../features/shop/products/types/product";
-import type { FilterOptionsRequest, ProductQueryParams } from "../../features/shop/products/types/requests";
+import type { FilterOptionsRequest, ProductCollectionsQueryParams, ProductQueryParams } from "../../features/shop/products/types/requests";
 import type { ApiResponse } from "../../models/apiResponse";
 import type { PagedResult } from "../../models/PagedResult";
 import apiClient from "../api.client";
@@ -7,6 +7,13 @@ import apiClient from "../api.client";
 export const productService = {
     getPaged: async(params: ProductQueryParams): Promise<ApiResponse<PagedResult<ProductGridItem>>> => {
         const response = await apiClient.get<ApiResponse<PagedResult<ProductGridItem>>>("/shop/products", {
+            params: params
+        });
+        return response.data;
+    },
+
+    getCollection: async(params: ProductCollectionsQueryParams): Promise<ApiResponse<ProductGridItem[]>> => {
+        const response = await apiClient.get<ApiResponse<ProductGridItem[]>>("/shop/products/collection", {
             params: params
         });
         return response.data;

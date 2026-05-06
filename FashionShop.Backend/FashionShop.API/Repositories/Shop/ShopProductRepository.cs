@@ -79,7 +79,7 @@ namespace FashionShop.API.Repositories.Shop
                         })
                         .ToList()
                     : new List<ShopProductVariantDto>(),
-            };
+            };  
 
         private static readonly Expression<Func<Product, ShopProductDetailResponse>> _productDetailSelector =
             p => new ShopProductDetailResponse
@@ -160,15 +160,15 @@ namespace FashionShop.API.Repositories.Shop
                 .AsNoTracking()
                 .AsQueryable();
 
-            if (request.IsNew.HasValue)
-            {
-                query = query.FilterByNew(request.IsNew.Value);
-            }
+            //if (request.IsNew.HasValue)
+            //{
+            //    query = query.FilterByNew(request.IsNew.Value);
+            //}
 
-            if (request.IsBestSeller.HasValue)
-            {
-                query = query.FilterByBestSeller(request.IsBestSeller.Value);
-            }
+            //if (request.IsBestSeller.HasValue)
+            //{
+            //    query = query.FilterByBestSeller(request.IsBestSeller.Value);
+            //}
 
             if (!string.IsNullOrEmpty(request.BrandSlug))
             {
@@ -200,6 +200,32 @@ namespace FashionShop.API.Repositories.Shop
                 PageSize = request.PageSize,
                 PageIndex = request.PageIndex,
             };
+        }
+
+        public async Task<IEnumerable<ProductGridItemResponse>> GetCollectionProductsAsync(ShopCollectionProductListRequest request)
+        {
+            var query = _context.Products
+                .Where(p => p.IsActive)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (request.IsNew.HasValue)
+            {
+                query = query.FilterByNew(request.IsNew.Value);
+            }
+
+            if (request.IsBestSeller.HasValue)
+            {
+                query = query.FilterByBestSeller(request.IsBestSeller.Value);
+            }
+
+            query = query.OrderByDescending(p => p.CreatedDate);
+
+            return await query
+                .Take(8)
+                .Select(_productGridItemSelector)
+                .AsSplitQuery()
+                .ToListAsync();
         }
 
         public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)

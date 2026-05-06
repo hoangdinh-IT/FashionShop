@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { FilterOptionsRequest, ProductQueryParams } from "../types/requests";
+import type { FilterOptionsRequest, ProductCollectionsQueryParams, ProductQueryParams } from "../types/requests";
 import { productService } from "../../../../services/shop/product.service";
 
 export const useProducts = (params: ProductQueryParams) => {
@@ -12,6 +12,19 @@ export const useProducts = (params: ProductQueryParams) => {
     return {
         pagedProducts: query.data?.data?.items || [],
         totalProducts: query.data?.data?.totalRecord || 0,
+        isLoading: query.isLoading,
+    }
+}
+
+export const useProductCollections = (params: ProductCollectionsQueryParams) => {
+    const query = useQuery({
+        queryKey: ["products", params],
+        queryFn: () => productService.getCollection(params),
+        enabled: !!params,
+    })
+
+    return {
+        collectionProducts: query.data?.data || [],
         isLoading: query.isLoading,
     }
 }

@@ -15,6 +15,15 @@ const ProductDetailPage = () => {
     const { showSnackbar } = useSnackbar();
 
     const { productSlug } = useParams<{ productSlug: string }>();
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'instant' // Dùng 'smooth' nếu muốn cuộn mượt, 'instant' để nhảy ngay lập tức
+        });
+    }, [productSlug]);
+    
     const { productDetail, isLoading } = useProductDetail(productSlug);
     const { createCartItem, isCreating } = useCartMutations();
     

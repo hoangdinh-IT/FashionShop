@@ -26,6 +26,9 @@ namespace FashionShop.API.Services.Shop
         public async Task<PagedResult<ProductGridItemResponse>> GetPagedProductsAsync(ShopProductListRequest request)
             => await _unitOfWork.ShopProducts.GetPagedProductsAsync(request);
 
+        public async Task<IEnumerable<ProductGridItemResponse>> GetCollectionProductsAsync(ShopCollectionProductListRequest request)
+            => await _unitOfWork.ShopProducts.GetCollectionProductsAsync(request);
+
         public async Task<ShopProductDetailResponse?> GetProductBySlugAsync(string productSlug)
             => await _unitOfWork.ShopProducts.GetProductBySlugAsync(productSlug);
 

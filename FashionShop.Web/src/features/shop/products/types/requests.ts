@@ -18,3 +18,8 @@ export interface FilterOptionsRequest {
     brandSlug?: string;
     categorySlug?: string;
 }
+
+export interface ProductCollectionsQueryParams {
+    isBestSeller?: boolean;
+    isNew?: boolean;
+}
