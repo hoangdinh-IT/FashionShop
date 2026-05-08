@@ -108,6 +108,7 @@ namespace FashionShop.API
             // 1. Lấy dữ liệu từ appsettings bind vào class CloudinarySettings
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("BrevoSettings"));
 
             // 2. Đăng ký PhotoService
 

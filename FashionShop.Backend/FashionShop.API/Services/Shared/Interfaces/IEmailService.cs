@@ -1,4 +1,6 @@
-﻿namespace FashionShop.API.Services.Shared.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace FashionShop.API.Services.Shared.Interfaces
 {
     public interface IEmailService
     {
