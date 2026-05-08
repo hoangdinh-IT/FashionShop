@@ -11,9 +11,6 @@ namespace FashionShop.Core.Common
         public static string GetResetPasswordTemplate(string fullName, string otpCode)
         {
             string name = string.IsNullOrWhiteSpace(fullName) ? "Quý khách" : fullName;
-
-            // Giao diện Email mang phong cách Sang trọng, Tối giản (Luxury Minimalist)
-            // Tone màu chủ đạo: Đen, Trắng, và Vàng Gold (Champagne)
             return $@"
             <!DOCTYPE html>
             <html>

@@ -160,16 +160,6 @@ namespace FashionShop.API.Repositories.Shop
                 .AsNoTracking()
                 .AsQueryable();
 
-            //if (request.IsNew.HasValue)
-            //{
-            //    query = query.FilterByNew(request.IsNew.Value);
-            //}
-
-            //if (request.IsBestSeller.HasValue)
-            //{
-            //    query = query.FilterByBestSeller(request.IsBestSeller.Value);
-            //}
-
             if (!string.IsNullOrEmpty(request.BrandSlug))
             {
                 query = query.FilterByBrandSlug(request.BrandSlug);
@@ -209,15 +199,11 @@ namespace FashionShop.API.Repositories.Shop
                 .AsNoTracking()
                 .AsQueryable();
 
-            if (request.IsNew.HasValue)
-            {
+            if (request.IsNew.HasValue) 
                 query = query.FilterByNew(request.IsNew.Value);
-            }
 
-            if (request.IsBestSeller.HasValue)
-            {
+            if (request.IsBestSeller.HasValue) 
                 query = query.FilterByBestSeller(request.IsBestSeller.Value);
-            }
 
             query = query.OrderByDescending(p => p.CreatedDate);
 

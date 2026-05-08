@@ -1,21 +1,25 @@
 ﻿using FashionShop.API.Services;
-using FashionShop.Core.Exceptions;
+using FashionShop.API.Services.Shared.Interfaces;
 using FashionShop.Core.Contracts;
+using FashionShop.Core.Contracts.Shared.Auth.Requests;
+using FashionShop.Core.Exceptions;
+using FashionShop.Core.Settings;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using FashionShop.API.Services.Shared.Interfaces;
-using FashionShop.Core.Contracts.Shared.Auth.Requests;
 
 namespace FashionShop.API.Controllers
 {
     public class AuthController : BaseApiControllers
     {
         private readonly IAuthService _authService;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IConfiguration configuration)
         {
             _authService = authService;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -57,6 +61,26 @@ namespace FashionShop.API.Controllers
                 // Chỉ trả về 500 khi thực sự là lỗi hệ thống không lường trước
                 return StatusCode(500, new { message = "Lỗi hệ thống cục bộ", error = ex.Message });
             }
+        }
+
+        [HttpGet("debug-email-settings")]
+        public IActionResult DebugEmailSettings()
+        {
+            var settings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
+
+            return Ok(new
+            {
+                Status = "OK",
+                Environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+                Host = settings?.Host,
+                Port = settings?.Port,
+                SenderEmail = settings?.SenderEmail,
+                SenderName = settings?.SenderName,
+                PasswordExists = !string.IsNullOrEmpty(settings?.Password),
+                PasswordLength = settings?.Password?.Length ?? 0,
+                AllKeys = _configuration.GetSection("EmailSettings").GetChildren()
+                          .Select(x => $"{x.Key} = {x.Value}").ToList()
+            });
         }
 
         [HttpPost("forgot-password")]
