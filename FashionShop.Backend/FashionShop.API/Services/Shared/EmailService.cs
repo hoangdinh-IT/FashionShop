@@ -1,90 +1,55 @@
-﻿//using FashionShop.API.Services.Shared.Interfaces;
-//using FashionShop.Core.Settings;
-//using MailKit.Net.Smtp;
-//using MailKit.Security;
-//using Microsoft.Extensions.Options;
-//using MimeKit;
-
-//namespace FashionShop.API.Services.Shared
-//{
-//    public class EmailService : IEmailService
-//    {
-//        private readonly EmailSettings _emailSettings;
-
-//        public EmailService(IOptions<EmailSettings> emailSettings)
-//        {
-//            _emailSettings = emailSettings.Value;
-//        }
-
-//        public async Task SendEmailAsync(string toEmail, string subject, string htmlMessage)
-//        {
-//            var email = new MimeMessage();
-
-//            // Người gửi
-//            email.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
-//            // Người nhận
-//            email.To.Add(new MailboxAddress("Khách hàng", toEmail));
-
-//            // Tiêu đề
-//            email.Subject = subject;
-
-//            // Nội dung (Hỗ trợ HTML để làm email đẹp hơn)
-//            var builder = new BodyBuilder { HtmlBody = htmlMessage };
-//            email.Body = builder.ToMessageBody();
-
-//            // Kết nối SMTP và gửi
-//            using var smtp = new SmtpClient();
-//            try
-//            {
-//                await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
-//                await smtp.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.Password);
-//                await smtp.SendAsync(email);
-//            }
-//            catch (Exception ex)
-//            {
-//                // Ghi log lỗi tại đây nếu gửi thất bại
-//                Console.WriteLine($"Lỗi gửi email: {ex.Message}");
-//                throw new Exception("Lỗi hệ thống: Không thể gửi email vào lúc này.");
-//            }
-//            finally
-//            {
-//                await smtp.DisconnectAsync(true);
-//            }
-//        }
-//    }
-//}
-
-
-
-
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using brevo_csharp.Api;
 using brevo_csharp.Client;
 using brevo_csharp.Model;
 using FashionShop.API.Services.Shared.Interfaces;
 using FashionShop.Core.Settings;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Threading.Tasks;   // Giữ dòng này
+
+using NetTask = System.Threading.Tasks.Task;
+using BrevoConfig = brevo_csharp.Client.Configuration;
 
 namespace FashionShop.API.Services.Shared
 {
     public class EmailService : IEmailService
     {
         private readonly BrevoSettings _settings;
-        private readonly TransactionalEmailsApi _api;
 
         public EmailService(IOptions<BrevoSettings> settings)
         {
             _settings = settings.Value;
-            _api = new TransactionalEmailsApi();
-            _api.Configuration.ApiKey.Add("api-key", _settings.ApiKey);
         }
 
-        public async System.Threading.Tasks.Task SendEmailAsync(string toEmail, string subject, string htmlMessage)
+        public async NetTask SendEmailAsync(string toEmail, string subject, string htmlMessage)
         {
+            if (string.IsNullOrEmpty(_settings.ApiKey))
+            {
+                throw new Exception("Lỗi: Không tìm thấy API Key trong cấu hình hệ thống (BrevoSettings).");
+            }
+
+            if (string.IsNullOrWhiteSpace(toEmail))
+            {
+                throw new Exception("Không thể gửi mail vì địa chỉ email nhận bị trống.");
+            }
+
             try
             {
-                var email = new SendSmtpEmail
+                // 1. Kiểm tra đầu vào ngay lập tức để tránh lỗi Required của Brevo
+                if (string.IsNullOrWhiteSpace(toEmail))
+                {
+                    throw new Exception("Email người nhận không được để trống.");
+                }
+
+                // 2. Khởi tạo cấu hình
+                var config = new BrevoConfig();
+                config.ApiKey["api-key"] = _settings.ApiKey.Trim();
+
+                var apiInstance = new TransactionalEmailsApi(config);
+
+                // 3. Tạo đối tượng Email
+                var sendSmtpEmail = new SendSmtpEmail
                 {
                     Subject = subject,
                     HtmlContent = htmlMessage,
@@ -95,23 +60,24 @@ namespace FashionShop.API.Services.Shared
                     },
                     To = new List<SendSmtpEmailTo>
                     {
-                        new SendSmtpEmailTo { Email = toEmail }
+                        new SendSmtpEmailTo(toEmail.Trim())
                     }
                 };
 
-                var result = await _api.SendTransacEmailAsync(email);
-
-                Console.WriteLine($"✅ [Brevo] Gửi email thành công đến {toEmail} | ID: {result.MessageId}");
+                // 4. Gửi Email
+                await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
             }
             catch (ApiException ex)
             {
-                Console.WriteLine($"❌ Brevo API Error: {ex.Message} - Code: {ex.ErrorCode}");
-                throw new Exception("Không thể gửi email. Vui lòng thử lại sau.");
+                throw new Exception(
+                    $"Brevo API Error | StatusCode: {ex.ErrorCode} | Message: {ex.Message}"
+                );
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Lỗi gửi email: {ex.Message}");
-                throw new Exception("Không thể gửi email vào lúc này.");
+                // Quăng các lỗi hệ thống khác
+                var innerMessage = ex.InnerException != null ? $" | Chi tiết: {ex.InnerException.Message}" : "";
+                throw new Exception($"Lỗi hệ thống khi gửi mail: {ex.Message}{innerMessage}");
             }
         }
     }
