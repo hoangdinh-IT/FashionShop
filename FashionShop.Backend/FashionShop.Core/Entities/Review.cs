@@ -19,7 +19,7 @@ namespace FashionShop.Core.Entities
         public Guid ProductId { get; set; }
 
         [Required]
-        public int OrderDetailId { get; set; }
+        public int OrderItemId { get; set; }
 
         [Required]
         public int Rating { get; set; }

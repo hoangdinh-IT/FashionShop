@@ -237,7 +237,7 @@ namespace FashionShop.API.Data
 
             modelBuilder.Entity<Review>(entity =>
             {
-                entity.HasIndex(r => r.OrderDetailId).IsUnique();
+                entity.HasIndex(r => r.OrderItemId).IsUnique();
 
                 entity.HasOne(r => r.User)
                       .WithMany(u => u.Reviews)
@@ -251,7 +251,7 @@ namespace FashionShop.API.Data
 
                 entity.HasOne(r => r.OrderItem)
                       .WithMany(od => od.Reviews)
-                      .HasForeignKey(r => r.OrderDetailId)
+                      .HasForeignKey(r => r.OrderItemId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
