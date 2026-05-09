@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FashionShop.API.Migrations
 {
     [DbContext(typeof(FashionDbContext))]
-    [Migration("20260502043517_InitialNeonDb")]
-    partial class InitialNeonDb
+    [Migration("20260509115258_initialDB")]
+    partial class initialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -371,7 +371,7 @@ namespace FashionShop.API.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("FashionShop.Core.Entities.OrderDetail", b =>
+            modelBuilder.Entity("FashionShop.Core.Entities.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -403,7 +403,7 @@ namespace FashionShop.API.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("FashionShop.Core.Entities.Product", b =>
@@ -418,17 +418,12 @@ namespace FashionShop.API.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -971,16 +966,16 @@ namespace FashionShop.API.Migrations
                     b.Navigation("Voucher");
                 });
 
-            modelBuilder.Entity("FashionShop.Core.Entities.OrderDetail", b =>
+            modelBuilder.Entity("FashionShop.Core.Entities.OrderItem", b =>
                 {
                     b.HasOne("FashionShop.Core.Entities.Order", "Order")
-                        .WithMany("OrderDetails")
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FashionShop.Core.Entities.ProductVariant", "ProductVariant")
-                        .WithMany("OrderDetails")
+                        .WithMany("OrderItems")
                         .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1056,7 +1051,7 @@ namespace FashionShop.API.Migrations
 
             modelBuilder.Entity("FashionShop.Core.Entities.Review", b =>
                 {
-                    b.HasOne("FashionShop.Core.Entities.OrderDetail", "OrderDetail")
+                    b.HasOne("FashionShop.Core.Entities.OrderItem", "OrderItem")
                         .WithMany("Reviews")
                         .HasForeignKey("OrderDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1074,7 +1069,7 @@ namespace FashionShop.API.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("OrderDetail");
+                    b.Navigation("OrderItem");
 
                     b.Navigation("Product");
 
@@ -1164,12 +1159,12 @@ namespace FashionShop.API.Migrations
 
             modelBuilder.Entity("FashionShop.Core.Entities.Order", b =>
                 {
-                    b.Navigation("OrderDetails");
+                    b.Navigation("OrderItems");
 
                     b.Navigation("VoucherUsages");
                 });
 
-            modelBuilder.Entity("FashionShop.Core.Entities.OrderDetail", b =>
+            modelBuilder.Entity("FashionShop.Core.Entities.OrderItem", b =>
                 {
                     b.Navigation("Reviews");
                 });
@@ -1187,7 +1182,7 @@ namespace FashionShop.API.Migrations
                 {
                     b.Navigation("CartItems");
 
-                    b.Navigation("OrderDetails");
+                    b.Navigation("OrderItems");
 
                     b.Navigation("Wishlists");
                 });
