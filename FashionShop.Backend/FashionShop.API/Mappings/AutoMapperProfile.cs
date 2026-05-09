@@ -118,9 +118,9 @@ namespace FashionShop.API.Mappings
 
             // Order
             CreateMap<ShopCreateOrderRequest, Order>()
-                .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
+                .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
 
-            CreateMap<OrderDetail, ShopOrderDetailResponse>()
+            CreateMap<OrderItem, ShopOrderItemResponse>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductVariant.Product.Name));
 
             CreateMap<Order, ShopOrderResponse>();

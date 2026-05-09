@@ -35,7 +35,7 @@ namespace FashionShop.Core.Entities
         public virtual Product Product { get; set; }
 
         [ForeignKey("OrderDetailId")]
-        public virtual OrderDetail OrderDetail { get; set; }
+        public virtual OrderItem OrderItem { get; set; }
 
         public virtual ICollection<ReviewImage> ReviewImages { get; set; } = new List<ReviewImage>();
     }

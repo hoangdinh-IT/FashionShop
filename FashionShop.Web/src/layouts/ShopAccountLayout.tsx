@@ -7,18 +7,22 @@ const ShopAccountLayout: React.FC = () => {
     const { logout } = useAuth();
 
     return (
-        <div className="w-full py-10 font-sans">
+        <div className="w-full font-sans bg-white">
             <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-16 xl:px-24">
-                
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
                     
-                    {/* Component Bên Trái (Sidebar) */}
-                    <SidebarAccount 
-                        onLogout={logout}
-                    />
+                    {/* Sidebar: Đóng băng tại đây */}
+                    <aside className="hidden lg:block w-64 xl:w-72 shrink-0 sticky top-24">
+                        <SidebarAccount onLogout={logout} />
+                    </aside>
 
-                    {/* Component Bên Phải (Nội dung thay đổi theo URL) */}
-                    <div className="flex-1">
+                    {/* Mobile Sidebar: Hiện trên cùng nếu là mobile */}
+                    <div className="lg:hidden w-full">
+                        <SidebarAccount onLogout={logout} />
+                    </div>
+
+                    {/* Nội dung bên phải */}
+                    <div className="flex-1 min-w-0">
                         <Outlet />
                     </div>
 

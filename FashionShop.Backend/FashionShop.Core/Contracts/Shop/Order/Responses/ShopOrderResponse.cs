@@ -9,7 +9,7 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
 {
     public class ShopOrderResponse
     {
-        public Guid Id { get; set; }
+        public Guid OrderId { get; set; }
         public DateTime OrderDate { get; set; }
 
         // Thông tin địa chỉ giao hàng
@@ -35,6 +35,6 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
         public DateTime? PaymentDate { get; set; }
 
         // Danh sách chi tiết các sản phẩm trong đơn
-        public List<ShopOrderDetailResponse> OrderDetails { get; set; } = new List<ShopOrderDetailResponse>();
+        public List<ShopOrderItemResponse> OrderItems { get; set; } = new List<ShopOrderItemResponse>();
     }
 }

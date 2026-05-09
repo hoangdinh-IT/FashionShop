@@ -23,17 +23,17 @@ namespace FashionShop.API.Services.Admin
 
         // --- READ METHODS --- //
 
-        public async Task<PagedResult<AdminOrderResponse>> GetOrdersAsync(AdminOrderListRequest request)
+        public async Task<PagedResult<AdminOrderSummaryResponse>> GetOrdersAsync(AdminOrderListRequest request)
             => await _unitOfWork.AdminOrders.GetOrdersAsync(request);
 
-        public async Task<AdminOrderResponse?> GetOrderByIdAsync(Guid orderId)
+        public async Task<AdminOrderDetailResponse?> GetOrderByIdAsync(Guid orderId)
             => await _unitOfWork.AdminOrders.GetOrderByIdAsync(orderId);
 
 
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminOrderResponse?> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request)
+        public async Task<AdminOrderDetailResponse?> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request)
         {
             var order = await _unitOfWork.AdminOrders.FindOrderByIdAsync(orderId);
             if (order == null) throw new KeyNotFoundException("Không tìm thấy đơn hàng!");
@@ -60,7 +60,7 @@ namespace FashionShop.API.Services.Admin
                     break;
 
                 case OrderStatus.Cancelled:
-                    foreach (var detail in order.OrderDetails)
+                    foreach (var detail in order.OrderItems)
                     {
                         var variant = await _unitOfWork.AdminProducts.GetProductVariantByIdAsync(detail.ProductVariantId);
                         if (variant != null)
@@ -94,9 +94,7 @@ namespace FashionShop.API.Services.Admin
             // 2. Lấy một phần của Guid để đảm bảo tính duy nhất (tránh trùng nếu tạo nhiều đơn cùng 1 giây)
             string uniquePart = orderId.ToString().Substring(0, 4).ToUpper();
 
-            // 3. Kết hợp: Tiền tố + Ngày + Unique
             return $"RKA{datePart}{uniquePart}";
-            // Kết quả dạng: SHP260501B4D2
         }
     }
 }

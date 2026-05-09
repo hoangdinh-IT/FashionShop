@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Shop.Order.Requests
 {
-    public class ShopOrderDetailRequest
+    public class ShopOrderItemRequest
     {
         [Required]
         public Guid ProductVariantId { get; set; }

@@ -1,6 +1,6 @@
 import { MapPin } from 'lucide-react';
-import AddressString from '../../addresses/components/AddressString';
-import type { Address } from '../../addresses/types/address';
+import AddressString from '../../../addresses/components/AddressString';
+import type { Address } from '../../../addresses/types/address';
 
 interface Props {
     address?: Address;

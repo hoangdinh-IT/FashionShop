@@ -46,7 +46,7 @@ namespace FashionShop.Core.Entities
 
         public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
         public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
     }

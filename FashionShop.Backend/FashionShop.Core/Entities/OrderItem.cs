@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Entities
 {
-    [Table("OrderDetails")]
-    public class OrderDetail
+    [Table("OrderItems")]
+    public class OrderItem
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

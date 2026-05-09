@@ -1,7 +1,6 @@
 import { useState } from "react";
-import type { Order } from "../../../features/admin/orders/types/order";
 import type { OrderFilters, OrderQueryParams, OrderStatus, PaymentStatus } from "../../../features/admin/orders/types/requests";
-import { useOrderMutations, useOrders } from "../../../features/admin/orders/hooks/useOrders";
+import { useOrder, useOrderMutations, useOrders } from "../../../features/admin/orders/hooks/useOrders";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import Pagination from "../../../components/common/Pagination";
 import OrderTable from "../../../features/admin/orders/components/OrderTable";
@@ -10,7 +9,7 @@ import OrderToolbar from "../../../features/admin/orders/components/OrderToolbar
 
 const OrderPage = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(undefined);
+    const [activeOrderId, setActiveOrderId] = useState<string | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<OrderQueryParams>({
         keyword: undefined,
@@ -28,8 +27,13 @@ const OrderPage = () => {
     const {
         pagedOrders,
         totalRecord,
-        isFetching
+        isLoading: isLoadingSummary
     } = useOrders(queryParams);
+
+    const { 
+        order, 
+        isLoading: isLoadingDetail 
+    } = useOrder(activeOrderId);
 
     const { updateOrder } = useOrderMutations();
 
@@ -76,13 +80,13 @@ const OrderPage = () => {
         })
     }
 
-    const handleViewDetail = (order: Order) => {
-        setSelectedOrder(order);
+    const handleViewDetail = (orderId: string) => {
+        setActiveOrderId(orderId);
         setIsDialogOpen(true);
     }
 
     const handleCloseDetail = () => {
-        setSelectedOrder(undefined);
+        setActiveOrderId(undefined);
         setIsDialogOpen(false);
     }
 
@@ -113,7 +117,7 @@ const OrderPage = () => {
                 >
                     <OrderTable 
                         data={pagedOrders} 
-                        isLoading={isFetching}
+                        isLoading={isLoadingSummary}
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
                         onSort={handleSortChange}
@@ -122,7 +126,7 @@ const OrderPage = () => {
                     />
                 </div>
                 
-                {!isFetching && pagedOrders.length > 0 && (
+                {!isLoadingSummary && pagedOrders.length > 0 && (
                     <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3 mt-auto">
                         <Pagination
                             totalRecord={totalRecord} 
@@ -137,7 +141,8 @@ const OrderPage = () => {
             <OrderDetailDialog 
                 isOpen={isDialogOpen}
                 onClose={handleCloseDetail}
-                order={selectedOrder}
+                order={order}
+                isLoading={isLoadingDetail}
             />
         </div>
     );

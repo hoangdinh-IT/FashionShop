@@ -27,7 +27,7 @@ namespace FashionShop.Core.Contracts.Shop.Cart.Responses
         public int SizeId { get; set; }
         public string SizeName { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal UnitPrice { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; } = null;
     }

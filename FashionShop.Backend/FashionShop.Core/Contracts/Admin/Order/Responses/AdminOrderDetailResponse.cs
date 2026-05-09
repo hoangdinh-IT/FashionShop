@@ -8,20 +8,31 @@ namespace FashionShop.Core.Contracts.Admin.Order.Responses
 {
     public class AdminOrderDetailResponse
     {
-        public int Id { get; set; }
-        public Guid ProductVariantId { get; set; }
+        // --- Thông tin định danh & Trạng thái ---
+        public Guid OrderId { get; set; }
+        public DateTime OrderDate { get; set; }
+        public string OrderStatus { get; set; }
+        public string PaymentMethod { get; set; }
+        public string PaymentStatus { get; set; }
+        public string? ShippingTrackingCode { get; set; }
+        public DateTime? PaymentDate { get; set; }
 
-        // Thông tin sản phẩm bổ sung để FE hiển thị (Lấy từ bảng Product/Variant)
-        public string ProductName { get; set; }
-        public string VariantName { get; set; } // Ví dụ: "Màu Đỏ, Size L"
-        public string? ImageUrl { get; set; }
+        // --- Thông tin khách hàng & Giao hàng ---
+        public string FullName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ShippingAddress { get; set; }
+        public string ShippingCommune { get; set; }
+        public string ShippingDistrict { get; set; }
+        public string ShippingCity { get; set; }
+        public string? Note { get; set; }
 
-        // Giá tại thời điểm mua
-        public decimal UnitPrice { get; set; }
-        public int Quantity { get; set; }
-        public decimal TotalLine { get; set; }
+        // --- Thông tin tài chính (Hiển thị ở Footer Modal) ---
+        public decimal SubTotal { get; set; }
+        public decimal ShippingFee { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
-        // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
-        public bool IsReviewed { get; set; }
+        // --- Danh sách mặt hàng chi tiết ---
+        public List<AdminOrderItemDetailResponse> OrderItems { get; set; } = new List<AdminOrderItemDetailResponse>();
     }
 }

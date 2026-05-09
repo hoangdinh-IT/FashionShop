@@ -1,17 +1,5 @@
-interface OrderDetail {
-    id: number;
-    productVariantId: string;
-    productName: string;
-    variantName: string;
-    imageUrl?: string;
-    unitPrice: number;
-    quantity: number;
-    totalLine: number;
-    isReviewed: boolean;
-}
-
 export interface Order {
-    id: string;
+    orderId: string;
     orderDate: Date;
     shippingAddress: string;
     shippingCommune: string;
@@ -27,5 +15,32 @@ export interface Order {
     note?: string;
     ShippingTrackingCode?: string;
     paymentDate?: Date;
-    orderDetails: OrderDetail[];
+    orderItems: OrderItem[];
+}
+
+interface OrderItem {
+    orderItemId: number;
+    productVariantId: string;
+    productName: string;
+    productSlug: string;
+    variantName: string;
+    brandName: string;
+    imageUrl?: string;
+    unitPrice: number;
+    quantity: number;
+    totalLine: number;
+    isReviewed: boolean;
+}
+
+export interface RepurchaseOrderItem {
+    productVariantId: string;
+    productName: string;
+    productSlug: string;
+    variantName: string;
+    stockQuantity: number;
+    brandName: string;
+    imageUrl?: string;
+    unitPrice: number;
+    quantity: number;
+    totalLine: number;
 }

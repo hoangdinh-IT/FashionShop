@@ -1,8 +1,3 @@
-interface OrderDetailRequest {
-    productVariantId: string;
-    quantity: number;
-}
-
 export interface OrderRequest {
     shippingAddress: string;
     shippingCommune: string;
@@ -11,7 +6,12 @@ export interface OrderRequest {
     paymentMethod: PaymentMethod;
     voucherId?: string;
     note?: string;
-    orderDetails: OrderDetailRequest[];
+    orderItems: OrderItemRequest[];
+}
+
+interface OrderItemRequest {
+    productVariantId: string;
+    quantity: number;
 }
 
 export const PaymentMethod = {

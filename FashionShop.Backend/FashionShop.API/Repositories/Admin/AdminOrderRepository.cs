@@ -20,10 +20,10 @@ namespace FashionShop.API.Repositories.Admin
             _context = context;
         }
 
-        private readonly Expression<Func<Order, AdminOrderResponse>> _orderSelector =
-            order => new AdminOrderResponse
+        private readonly Expression<Func<Order, AdminOrderSummaryResponse>> _orderSummarySelector =
+            order => new AdminOrderSummaryResponse
             {
-                Id = order.Id,
+                OrderId = order.Id,
                 OrderDate = order.OrderDate,
                 FullName = order.User.FullName ?? "",
                 PhoneNumber = order.User.PhoneNumber ?? "",
@@ -34,16 +34,47 @@ namespace FashionShop.API.Repositories.Admin
                 OrderStatus = order.OrderStatus.ToString(),
                 PaymentMethod = order.PaymentMethod.ToString(),
                 PaymentStatus = order.PaymentStatus.ToString(),
+                TotalAmount = order.TotalAmount,
+
+                TotalItemCount = order.OrderItems.Count,
+                OrderItems = order.OrderItems.Select(od => new AdminOrderItemSummaryResponse
+                {
+                    ImageUrl = od.ProductVariant.Product.ProductImages
+                        .Where(pi => pi.ColorId == od.ProductVariant.ColorId)
+                        .OrderBy(pi => pi.SortOrder)
+                        .Select(pi => pi.ImageUrl)
+                        .FirstOrDefault()
+                        ?? od.ProductVariant.Product.ThumbnailUrl,
+                }).ToList()
+            };
+
+        private readonly Expression<Func<Order, AdminOrderDetailResponse>> _orderDetailSelector =
+            order => new AdminOrderDetailResponse
+            {
+                OrderId = order.Id,
+                OrderDate = order.OrderDate,
+                OrderStatus = order.OrderStatus.ToString(),
+                PaymentMethod = order.PaymentMethod.ToString(),
+                PaymentStatus = order.PaymentStatus.ToString(),
+                ShippingTrackingCode = order.ShippingTrackingCode,
+                PaymentDate = order.PaymentDate,
+
+                FullName = order.User.FullName ?? "",
+                PhoneNumber = order.User.PhoneNumber ?? "",
+                ShippingAddress = order.ShippingAddress,
+                ShippingCommune = order.ShippingCommune,
+                ShippingDistrict = order.ShippingDistrict,
+                ShippingCity = order.ShippingCity,
+                Note = order.Note,
+
                 SubTotal = order.SubTotal,
                 ShippingFee = order.ShippingFee,
                 DiscountAmount = order.DiscountAmount,
                 TotalAmount = order.TotalAmount,
-                Note = order.Note,
-                ShippingTrackingCode = order.ShippingTrackingCode,
-                PaymentDate = order.PaymentDate,
-                OrderDetails = order.OrderDetails.Select(od => new AdminOrderDetailResponse
+
+                OrderItems = order.OrderItems.Select(od => new AdminOrderItemDetailResponse
                 {
-                    Id = od.Id,
+                    OrderItemId = od.Id,
                     ProductVariantId = od.ProductVariantId,
                     ProductName = od.ProductVariant.Product.Name,
                     VariantName = od.ProductVariant.Color.Name + " - " + od.ProductVariant.Size.Name,
@@ -53,10 +84,10 @@ namespace FashionShop.API.Repositories.Admin
                         .Select(pi => pi.ImageUrl)
                         .FirstOrDefault()
                         ?? od.ProductVariant.Product.ThumbnailUrl,
-                    UnitPrice = od.UnitPrice,
+                    UnitPrice = od.ProductVariant.Product.Price,
                     Quantity = od.Quantity,
                     TotalLine = od.TotalLine,
-                    IsReviewed = od.Reviews.Any()
+                    IsReviewed = od.Reviews.Any(),
                 }).ToList()
             };
 
@@ -64,7 +95,7 @@ namespace FashionShop.API.Repositories.Admin
 
         // --- READ METHODS --- //
 
-        public async Task<PagedResult<AdminOrderResponse>> GetOrdersAsync(AdminOrderListRequest request)
+        public async Task<PagedResult<AdminOrderSummaryResponse>> GetOrdersAsync(AdminOrderListRequest request)
         {
             var query = _context.Orders.AsNoTracking().AsQueryable();
 
@@ -78,10 +109,10 @@ namespace FashionShop.API.Repositories.Admin
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                                   .Take(request.PageSize)
-                                  .Select(_orderSelector)
+                                  .Select(_orderSummarySelector)
                                   .ToListAsync();
 
-            return new PagedResult<AdminOrderResponse>
+            return new PagedResult<AdminOrderSummaryResponse>
             {
                 Items = data,
                 TotalRecord = totalRecord,
@@ -95,13 +126,13 @@ namespace FashionShop.API.Repositories.Admin
             return await _context.Orders.FirstOrDefaultAsync(order => order.Id == orderId);
         }
 
-        public async Task<AdminOrderResponse?> GetOrderByIdAsync(Guid orderId)
+        public async Task<AdminOrderDetailResponse?> GetOrderByIdAsync(Guid orderId)
         {
             return await _context.Orders
                 .AsNoTracking()
                 .Where(order => order.Id == orderId)
-                .Select(_orderSelector)
-                .FirstOrDefaultAsync();
+                .Select(_orderDetailSelector)
+                .FirstOrDefaultAsync(); 
         }
     }
 }

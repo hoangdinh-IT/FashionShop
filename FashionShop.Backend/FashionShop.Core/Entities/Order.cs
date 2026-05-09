@@ -75,7 +75,7 @@ namespace FashionShop.Core.Entities
         [ForeignKey("VoucherId")]
         public virtual Voucher Voucher { get; set; }
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
         public virtual ICollection<VoucherUsage> VoucherUsages { get; set; } = new List<VoucherUsage>();
     }

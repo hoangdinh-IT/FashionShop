@@ -22,7 +22,7 @@ export interface CartItem {
     sizeId: number;
     sizeName: string;
     
-    price: number;
+    unitPrice: number;
     createDate: Date;
     updatedDate: Date;
 }

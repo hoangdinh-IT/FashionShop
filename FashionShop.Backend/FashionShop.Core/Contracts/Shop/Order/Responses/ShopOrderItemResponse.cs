@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Shop.Order.Responses
 {
-    public class ShopOrderDetailResponse
+    public class ShopOrderItemResponse
     {
-        public int Id { get; set; }
+        public int OrderItemId { get; set; }
         public Guid ProductVariantId { get; set; }
 
         // Thông tin sản phẩm bổ sung để FE hiển thị (Lấy từ bảng Product/Variant)
         public string ProductName { get; set; }
-        public string VariantName { get; set; } // Ví dụ: "Màu Đỏ, Size L"
+        public string ProductSlug { get; set; }
+        public string VariantName { get; set; }
+        public string BrandName { get; set; }
         public string? ImageUrl { get; set; }
 
         // Giá tại thời điểm mua

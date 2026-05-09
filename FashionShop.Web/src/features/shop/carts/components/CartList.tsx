@@ -139,7 +139,7 @@ const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
                                             </button>
                                         </div>
                                         <div className="text-xl font-bold text-zinc-900 tracking-tighter">
-                                            {item.price.toLocaleString('vi-VN')} <span className="text-sm font-medium underline">đ</span>
+                                            {item.unitPrice.toLocaleString('vi-VN')} <span className="text-sm font-medium underline">đ</span>
                                         </div>
                                     </div>
                                 </div>

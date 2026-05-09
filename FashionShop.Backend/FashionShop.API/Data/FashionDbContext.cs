@@ -19,7 +19,7 @@ namespace FashionShop.API.Data
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<VoucherUsage> VoucherUsages{ get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -54,7 +54,7 @@ namespace FashionShop.API.Data
             
             modelBuilder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
             
-            modelBuilder.Entity<OrderDetail>().HasQueryFilter(od => !od.IsDeleted);
+            modelBuilder.Entity<OrderItem>().HasQueryFilter(od => !od.IsDeleted);
             
             modelBuilder.Entity<Voucher>().HasQueryFilter(v => !v.IsDeleted);
             
@@ -197,15 +197,15 @@ namespace FashionShop.API.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<OrderDetail>(entity =>
+            modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.HasOne(od => od.Order)
-                      .WithMany(o => o.OrderDetails)
+                      .WithMany(o => o.OrderItems)
                       .HasForeignKey(od => od.OrderId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(od => od.ProductVariant)
-                      .WithMany(pv => pv.OrderDetails)
+                      .WithMany(pv => pv.OrderItems)
                       .HasForeignKey(od => od.ProductVariantId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
@@ -249,7 +249,7 @@ namespace FashionShop.API.Data
                       .HasForeignKey(r => r.ProductId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(r => r.OrderDetail)
+                entity.HasOne(r => r.OrderItem)
                       .WithMany(od => od.Reviews)
                       .HasForeignKey(r => r.OrderDetailId)
                       .OnDelete(DeleteBehavior.Cascade);

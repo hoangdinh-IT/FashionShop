@@ -7,7 +7,7 @@ import {
     Landmark, 
     Check 
 } from 'lucide-react';
-import type { PaymentMethod } from '../types/requests';
+import type { PaymentMethod } from '../../types/requests';
 
 interface Props {
     subTotal: number;

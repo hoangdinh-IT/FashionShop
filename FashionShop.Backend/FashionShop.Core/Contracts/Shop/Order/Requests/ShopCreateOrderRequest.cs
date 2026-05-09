@@ -39,6 +39,6 @@ namespace FashionShop.Core.Contracts.Shop.Order.Requests
         // Danh sách sản phẩm đặt mua
         [Required]
         [MinLength(1, ErrorMessage = "Đơn hàng phải có ít nhất một sản phẩm")]
-        public List<ShopOrderDetailRequest> OrderDetails { get; set; } = new List<ShopOrderDetailRequest>();
+        public List<ShopOrderItemRequest> OrderItems { get; set; } = new List<ShopOrderItemRequest>();
     }
 }

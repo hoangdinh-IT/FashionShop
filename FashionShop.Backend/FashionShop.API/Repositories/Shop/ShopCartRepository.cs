@@ -42,7 +42,7 @@ namespace FashionShop.API.Repositories.Shop
                 SizeId = ci.ProductVariant.SizeId,
                 SizeName = ci.ProductVariant.Size.Name,
 
-                Price = ci.ProductVariant.Price,
+                UnitPrice = ci.ProductVariant.Price,
                 CreatedDate = ci.CreatedDate,
                 UpdatedDate = ci.UpdatedDate,
             };

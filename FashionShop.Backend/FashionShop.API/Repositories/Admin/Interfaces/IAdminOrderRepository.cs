@@ -10,8 +10,8 @@ namespace FashionShop.API.Repositories.Admin.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<PagedResult<AdminOrderResponse>> GetOrdersAsync(AdminOrderListRequest request);
+        Task<PagedResult<AdminOrderSummaryResponse>> GetOrdersAsync(AdminOrderListRequest request);
         Task<Order?> FindOrderByIdAsync(Guid orderId);
-        Task<AdminOrderResponse?> GetOrderByIdAsync(Guid orderId);
+        Task<AdminOrderDetailResponse?> GetOrderByIdAsync(Guid orderId);
     }
 }

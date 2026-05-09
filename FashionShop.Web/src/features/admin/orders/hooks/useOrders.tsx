@@ -13,7 +13,20 @@ export const useOrders = (params: OrderQueryParams) => {
     return {
         pagedOrders: query.data?.data?.items || [],
         totalRecord: query.data?.data?.totalRecord || 0,
-        isFetching: query.isFetching,
+        isLoading: query.isLoading,
+    }
+}
+
+export const useOrder = (orderId?: string) => {
+    const query = useQuery({
+        queryKey: ["orders"],
+        queryFn: () => orderService.getById(orderId!),
+        enabled: !!orderId,
+    })
+
+    return {
+        order: query.data?.data,
+        isLoading: query.isLoading,
     }
 }
 

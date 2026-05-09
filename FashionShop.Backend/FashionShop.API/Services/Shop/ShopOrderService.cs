@@ -25,7 +25,13 @@ namespace FashionShop.API.Services.Shop
             => await _unitOfWork.ShopOrders.GetOrdersAsync(userId);
 
         public async Task<ShopOrderResponse?> GetOrderByIdAsync(Guid userId, Guid orderId)
-            => await _unitOfWork.ShopOrders.GetOrderByIdAsync(userId, orderId);
+        {
+            var order = await _unitOfWork.ShopOrders.FindOrderByIdAsync(userId, orderId);
+
+            if (order == null) throw new KeyNotFoundException("Không tìm thấy đơn hàng!");
+
+            return await _unitOfWork.ShopOrders.GetOrderByIdAsync(userId, orderId);
+        }
 
 
 
@@ -37,9 +43,9 @@ namespace FashionShop.API.Services.Shop
             try
             {
                 decimal subTotal = 0;
-                var orderDetails = new List<OrderDetail>();
+                var orderDetails = new List<OrderItem>();
 
-                foreach (var item in request.OrderDetails)
+                foreach (var item in request.OrderItems)
                 {
                     var variant = await _unitOfWork.ShopProducts.FindProductVariantByIdAsync(item.ProductVariantId);
                     if (variant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm!");
@@ -50,7 +56,7 @@ namespace FashionShop.API.Services.Shop
                     decimal totalLine = variant.Price * item.Quantity;
                     subTotal += totalLine;
 
-                    orderDetails.Add(new OrderDetail
+                    orderDetails.Add(new OrderItem
                     {
                         ProductVariantId = item.ProductVariantId,
                         UnitPrice = variant.Price,
@@ -100,7 +106,7 @@ namespace FashionShop.API.Services.Shop
                 newOrder.ShippingFee = 30000;
                 newOrder.DiscountAmount = discountAmount;
                 newOrder.TotalAmount = subTotal + 30000 - discountAmount;
-                newOrder.OrderDetails = orderDetails;
+                newOrder.OrderItems = orderDetails;
 
                 _unitOfWork.ShopOrders.Create(newOrder);
 

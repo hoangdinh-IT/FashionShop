@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { X, MapPin, Phone, Check } from 'lucide-react';
-import type { Address } from '../../addresses/types/address';
-import AddressString from '../../addresses/components/AddressString';
+import type { Address } from '../../../addresses/types/address';
+import AddressString from '../../../addresses/components/AddressString';
 
 interface Props {
     isOpen: boolean;

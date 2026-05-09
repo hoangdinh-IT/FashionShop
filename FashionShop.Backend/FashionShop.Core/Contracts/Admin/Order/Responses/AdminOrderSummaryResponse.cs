@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Order.Responses
 {
-    public class AdminOrderResponse
+    public class AdminOrderSummaryResponse
     {
-        public Guid Id { get; set; }
+        public Guid OrderId { get; set; }
         public DateTime OrderDate { get; set; }
 
         // Thông tin địa chỉ giao hàng
@@ -26,17 +26,18 @@ namespace FashionShop.Core.Contracts.Admin.Order.Responses
         public string PaymentStatus { get; set; }
 
         // Tài chính
-        public decimal SubTotal { get; set; }
-        public decimal ShippingFee { get; set; }
-        public decimal DiscountAmount { get; set; }
+        //public decimal SubTotal { get; set; }
+        //public decimal ShippingFee { get; set; }
+        //public decimal DiscountAmount { get; set; }
         public decimal TotalAmount { get; set; }
 
         // Khác
-        public string? Note { get; set; }
-        public string? ShippingTrackingCode { get; set; }
-        public DateTime? PaymentDate { get; set; }
+        //public string? Note { get; set; }
+        //public string? ShippingTrackingCode { get; set; }
+        //public DateTime? PaymentDate { get; set; }
 
         // Danh sách chi tiết các sản phẩm trong đơn
-        public List<AdminOrderDetailResponse> OrderDetails { get; set; } = new List<AdminOrderDetailResponse>();
+        public int TotalItemCount { get; set; }
+        public List<AdminOrderItemSummaryResponse> OrderItems { get; set; } = new List<AdminOrderItemSummaryResponse>();
     }
 }

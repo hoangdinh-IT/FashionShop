@@ -14,7 +14,7 @@ import {
 } from "react-icons/io5";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import type { Order } from "../types/order";
+import type { OrderSummary } from "../types/order";
 import AddressString from "../../../shop/addresses/components/AddressString";
 import type { OrderStatus, PaymentStatus } from "../types/requests";
 
@@ -46,12 +46,12 @@ const PAYMENT_STATUS_OPTIONS = Object.entries(PAYMENT_CONFIG).map(([value, confi
 }));
 
 interface Props {
-    data: Order[];
+    data: OrderSummary[];
     isLoading: boolean;
     sortBy: string;
     isAscending?: boolean;
     onSort: (colKey: string, direction: boolean) => void;
-    onViewDetail: (order: Order) => void;
+    onViewDetail: (orderId: string) => void;
     onUpdateOrder: (orderId: string, orderStatus?: OrderStatus, paymentStatus?: PaymentStatus) => void;
 }
 
@@ -141,12 +141,12 @@ const OrderTable: React.FC<Props> = ({
                                 const payment = PAYMENT_CONFIG[item.paymentStatus] || PAYMENT_CONFIG.Unpaid;
 
                                 return (
-                                    <tr key={item.id} className="group hover:bg-gray-50/80 transition-all duration-300">
+                                    <tr key={item.orderId} className="group hover:bg-gray-50/80 transition-all duration-300">
                                         {/* 1. MÃ ĐƠN & NGÀY */}
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col gap-1">
                                                 <span className="font-black text-gray-900 text-[14px] tracking-tight uppercase">
-                                                    #{item.id.slice(0, 8)}
+                                                    {/* #{item.id.slice(0, 8)} */}
                                                 </span>
                                                 <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-medium">
                                                     <IoCalendarOutline size={13} />
@@ -190,15 +190,15 @@ const OrderTable: React.FC<Props> = ({
                                         <td className="px-6 py-6">
                                             <div className="flex items-center gap-3">
                                                 <div className="flex -space-x-3 overflow-hidden">
-                                                    {item.orderDetails.slice(0, 3).map((detail, i) => (
+                                                    {item.orderItems.slice(0, 3).map((detail, i) => (
                                                         <div key={i} className="inline-block h-10 w-10 rounded-2xl ring-4 ring-white bg-white overflow-hidden border border-gray-100 shadow-sm transition-transform group-hover:scale-110" style={{ transitionDelay: `${i * 50}ms` }}>
                                                             <img src={detail.imageUrl || '/placeholder.png'} alt="item" className="h-full w-full object-cover" />
                                                         </div>
                                                     ))}
                                                 </div>
-                                                {item.orderDetails.length > 3 && (
+                                                {item.orderItems.length > 3 && (
                                                     <span className="text-[10px] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded-lg">
-                                                        +{item.orderDetails.length - 3}
+                                                        +{item.orderItems.length - 3}
                                                     </span>
                                                 )}
                                             </div>
@@ -217,48 +217,69 @@ const OrderTable: React.FC<Props> = ({
                                             </div>
                                         </td>
 
-                                        {/* 5. TRẠNG THÁI (Đã sửa lỗi index và nâng cấp UI) */}
+                                        {/* 5. TRẠNG THÁI */}
                                         <td className="px-6 py-6">
                                             <div className="flex flex-col items-center gap-2.5">
                                                 {/* Order Status */}
                                                 <div className="group/select relative w-full max-w-[160px]">
-                                                    <div className={`flex items-center justify-between px-3 py-2 rounded-xl border-2 transition-all duration-300 ${status.bg} ${status.border} group-hover/select:shadow-lg group-hover/select:shadow-indigo-500/10 cursor-pointer`}>
+                                                    <div className={`flex items-center justify-between px-3 py-2 rounded-xl border-2 transition-all duration-300 
+                                                        ${status.bg} ${status.border} 
+                                                        ${(item.orderStatus !== 'Success' && item.orderStatus !== 'Cancelled') 
+                                                            ? 'group-hover/select:shadow-lg group-hover/select:shadow-indigo-500/10 cursor-pointer' 
+                                                            : 'cursor-default'}`}
+                                                    >
                                                         <div className="flex items-center gap-2">
-                                                            <span className={`w-2 h-2 rounded-full animate-pulse ${status.dot}`} />
+                                                            {/* Chỉ cho dot nháy nếu chưa hoàn thành/hủy */}
+                                                            <span className={`w-2 h-2 rounded-full ${status.dot} 
+                                                                ${(item.orderStatus !== 'Success' && item.orderStatus !== 'Cancelled') ? 'animate-pulse' : ''}`} 
+                                                            />
                                                             <span className={`text-[11px] font-bold uppercase tracking-tight ${status.color}`}>
                                                                 {status.label}
                                                             </span>
                                                         </div>
-                                                        <IoChevronDownOutline className={`transition-transform duration-300 group-hover/select:rotate-180 opacity-40 ${status.color}`} />
+                                                        
+                                                        {/* Ẩn mũi tên nếu không thể thay đổi */}
+                                                        {(item.orderStatus !== 'Success' && item.orderStatus !== 'Cancelled') && (
+                                                            <IoChevronDownOutline className={`transition-transform duration-300 group-hover/select:rotate-180 opacity-40 ${status.color}`} />
+                                                        )}
                                                     </div>
-                                                    <select
-                                                        value={item.orderStatus}
-                                                        onChange={(e) => onUpdateOrder(item.id, e.target.value as OrderStatus, undefined)}
-                                                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                                                    >
-                                                        {ORDER_STATUS_OPTIONS.map(opt => (
-                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                        ))}
-                                                    </select>
+
+                                                    {/* Chỉ render select nếu KHÔNG PHẢI Success hoặc Cancelled */}
+                                                    {(item.orderStatus !== 'Success' && item.orderStatus !== 'Cancelled') && (
+                                                        <select
+                                                            value={item.orderStatus}
+                                                            onChange={(e) => onUpdateOrder(item.orderId, e.target.value as OrderStatus, undefined)}
+                                                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                                        >
+                                                            {ORDER_STATUS_OPTIONS.map(opt => (
+                                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                            ))}
+                                                        </select>
+                                                    )}
                                                 </div>
 
                                                 {/* Payment Status */}
                                                 <div className="group/pay relative">
-                                                    <div className={`flex items-center px-2.5 py-1 rounded-lg border transition-all duration-200 ${payment.bg} border-transparent group-hover/pay:border-gray-300 cursor-pointer`}>
+                                                    <div className={`flex items-center px-2.5 py-1 rounded-lg border transition-all duration-200 ${payment.bg} border-transparent 
+                                                        ${(item.orderStatus !== 'Success' && item.orderStatus !== 'Cancelled') ? 'group-hover/pay:border-gray-300 cursor-pointer' : 'cursor-default'}`}>
                                                         <span className={`flex items-center text-[10px] font-extrabold uppercase tracking-tighter ${payment.color}`}>
                                                             {payment.icon}
                                                             {payment.label}
                                                         </span>
                                                     </div>
-                                                    <select
-                                                        value={item.paymentStatus}
-                                                        onChange={(e) => onUpdateOrder(item.id, undefined, e.target.value as PaymentStatus)}
-                                                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                                                    >
-                                                        {PAYMENT_STATUS_OPTIONS.map(opt => (
-                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                        ))}
-                                                    </select>
+
+                                                    {/* Tương tự: Chỉ cho phép đổi trạng thái thanh toán nếu đơn hàng chưa chốt */}
+                                                    {(item.orderStatus !== 'Success' && item.orderStatus !== 'Cancelled') && (
+                                                        <select
+                                                            value={item.paymentStatus}
+                                                            onChange={(e) => onUpdateOrder(item.orderId, undefined, e.target.value as PaymentStatus)}
+                                                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                                        >
+                                                            {PAYMENT_STATUS_OPTIONS.map(opt => (
+                                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                            ))}
+                                                        </select>
+                                                    )}
                                                 </div>
                                             </div>
                                         </td>
@@ -266,7 +287,7 @@ const OrderTable: React.FC<Props> = ({
                                         {/* 6. HÀNH ĐỘNG */}
                                         <td className="px-8 py-6 text-right">
                                             <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                                <button onClick={() => onViewDetail(item)} className="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-600 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-indigo-200 hover:shadow-xl active:scale-95">
+                                                <button onClick={() => onViewDetail(item?.orderId)} className="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-600 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-indigo-200 hover:shadow-xl active:scale-95">
                                                     <IoEyeOutline size={20} />
                                                 </button>
                                                 <button className="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-white border border-transparent hover:border-gray-200 rounded-2xl transition-all duration-300 shadow-sm">

@@ -19,7 +19,7 @@ namespace FashionShop.API.Repositories.Shop
         private readonly Expression<Func<Order, ShopOrderResponse>> _orderSelector =
             order => new ShopOrderResponse
             {
-                Id = order.Id,
+                OrderId = order.Id,
                 OrderDate = order.OrderDate,
                 ShippingAddress = order.ShippingAddress,
                 ShippingCommune = order.ShippingCommune,
@@ -35,22 +35,24 @@ namespace FashionShop.API.Repositories.Shop
                 Note = order.Note,
                 ShippingTrackingCode = order.ShippingTrackingCode,
                 PaymentDate = order.PaymentDate,
-                OrderDetails = order.OrderDetails.Select(od => new ShopOrderDetailResponse
+                OrderItems = order.OrderItems.Select(orderItem => new ShopOrderItemResponse
                 {
-                    Id = od.Id,
-                    ProductVariantId = od.ProductVariantId,
-                    ProductName = od.ProductVariant.Product.Name,
-                    VariantName = od.ProductVariant.Color.Name + " - " + od.ProductVariant.Size.Name,
-                    ImageUrl = od.ProductVariant.Product.ProductImages
-                        .Where(pi => pi.ColorId == od.ProductVariant.ColorId)
+                    OrderItemId = orderItem.Id,
+                    ProductVariantId = orderItem.ProductVariantId,
+                    ProductName = orderItem.ProductVariant.Product.Name,
+                    ProductSlug = orderItem.ProductVariant.Product.Slug,
+                    VariantName = orderItem.ProductVariant.Color.Name + " - " + orderItem.ProductVariant.Size.Name,
+                    BrandName = orderItem.ProductVariant.Product.Brand.Name,
+                    ImageUrl = orderItem.ProductVariant.Product.ProductImages
+                        .Where(pi => pi.ColorId == orderItem.ProductVariant.ColorId)
                         .OrderBy(pi => pi.SortOrder)
                         .Select(pi => pi.ImageUrl)
                         .FirstOrDefault()
-                        ?? od.ProductVariant.Product.ThumbnailUrl,
-                    UnitPrice = od.UnitPrice,
-                    Quantity = od.Quantity,
-                    TotalLine = od.TotalLine,
-                    IsReviewed = od.Reviews.Any()
+                        ?? orderItem.ProductVariant.Product.ThumbnailUrl,
+                    UnitPrice = orderItem.UnitPrice,
+                    Quantity = orderItem.Quantity,
+                    TotalLine = orderItem.TotalLine,
+                    IsReviewed = orderItem.Reviews.Any()
                 }).ToList()
             };
 

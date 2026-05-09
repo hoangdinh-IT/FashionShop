@@ -11,9 +11,21 @@ export const useOrders = () => {
 
     return {
         orders: query.data?.data || [],
-        isFetching: query.isFetching,
+        isLoading: query.isLoading,
     }
 }
+
+export const useOrderItems = (orderId?: string) => {
+    const query = useQuery({
+        queryKey: ["orders"],
+        queryFn: () => orderService.getOrderItemsByOrderId(orderId!),
+    })
+
+    return {
+        orderItems: query.data?.data || [],
+        isLoading: query.isLoading
+    }
+} 
 
 export const useOrderMutations = () => {
     const createSideEffects = useMutationSideEffects();

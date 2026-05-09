@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCarts } from '../../../features/shop/carts/hooks/useCarts';
 import { useAddresses } from '../../../features/shop/addresses/hooks/useAddresses';
-import AddressDialog from '../../../features/shop/orders/components/AddressDialog';
-import CheckoutAddress from '../../../features/shop/orders/components/CheckoutAddress';
-import CheckoutItems from '../../../features/shop/orders/components/CheckoutItems';
-import CheckoutSummary from '../../../features/shop/orders/components/CheckoutSummary';
+import AddressDialog from '../../../features/shop/orders/components/Checkout/AddressDialog';
+import CheckoutAddress from '../../../features/shop/orders/components/Checkout/CheckoutAddress';
+import CheckoutItems from '../../../features/shop/orders/components/Checkout/CheckoutItems';
+import CheckoutSummary from '../../../features/shop/orders/components/Checkout/CheckoutSummary';
 import type { Address } from '../../../features/shop/addresses/types/address';
 import { useOrderMutations } from '../../../features/shop/orders/hooks/useOrders';
 import { PaymentMethod, type OrderRequest } from '../../../features/shop/orders/types/requests';
@@ -17,7 +17,7 @@ const CheckoutPage = () => {
 
     const { cartItems, isLoading: isCartLoading } = useCarts();
     const { addresses, isLoading: isAddrLoading } = useAddresses();
-    const { createOrder, isCreating: isOrdering } = useOrderMutations();
+    const { createOrder, isCreating } = useOrderMutations();
     
     // 1. Quản lý địa chỉ đang được chọn
     const [selectedAddress, setSelectedAddress] = useState<Address | undefined>(undefined);
@@ -38,7 +38,7 @@ const CheckoutPage = () => {
     const selectedItems = cartItems.filter(item => item.isSelected);
 
     // Tính tổng tiền
-    const subTotal = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const subTotal = selectedItems.reduce((acc, item) => acc + (item.unitPrice * item.quantity), 0);
 
     // Chặn nếu giỏ hàng trống (không có item được chọn)
     useEffect(() => {
@@ -66,7 +66,7 @@ const CheckoutPage = () => {
             paymentMethod: paymentMethod,
             note: note,
             voucherId: undefined,
-            orderDetails: selectedItems.map(item => ({
+            orderItems: selectedItems.map(item => ({
                 productVariantId: item.productVariantId,
                 quantity: item.quantity,
             }))

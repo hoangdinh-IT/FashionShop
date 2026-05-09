@@ -1,4 +1,4 @@
-import type { CartItem } from "../../carts/types/cart";
+import type { CartItem } from "../../../carts/types/cart";
 
 interface Props {
     items: CartItem[];
@@ -19,12 +19,12 @@ const CheckoutItems = ({ items }: Props) => {
                         <div className="flex-1 flex flex-col justify-between py-1">
                             <div>
                                 <h3 className="font-bold text-zinc-900 leading-tight">{item.productName}</h3>
-                                <p className="text-sm text-zinc-500 mt-1.5">{item.colorName} / {item.sizeName}</p>
+                                <p className="text-sm text-zinc-500 mt-1.5">{item.colorName} • {item.sizeName}</p>
                             </div>
                             <div className="flex justify-between items-end">
                                 <span className="text-sm text-zinc-400 font-medium">Số lượng: {item.quantity}</span>
                                 <span className="font-bold text-lg text-zinc-900">
-                                    {(item.price * item.quantity).toLocaleString('vi-VN')}đ
+                                    {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}đ
                                 </span>
                             </div>
                         </div>

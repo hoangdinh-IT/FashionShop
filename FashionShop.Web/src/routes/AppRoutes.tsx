@@ -26,7 +26,7 @@ import ShopProductPage from "../pages/shop/products/ProductPage";
 import ShopProductDetailPage from "../pages/shop/products/ProductDetailPage";
 import CartPage from "../pages/shop/carts/CartPage";
 import CheckoutPage from "../pages/shop/orders/CheckoutPage";
-import PurchaseHistory from "../pages/shop/orders/PurchaseHistory";
+import PurchaseHistoryPage from "../pages/shop/orders/PurchaseHistoryPage";
 
 export const AppRoutes = () => {
     const elements = useRoutes([
@@ -133,7 +133,7 @@ export const AppRoutes = () => {
                                 },
                                 {
                                     path: "purchase-histories",
-                                    element: <PurchaseHistory />
+                                    element: <PurchaseHistoryPage />
                                 }
                             ]
                         },

@@ -27,7 +27,7 @@ const CartPage = () => {
 
     const selectedTotalPrice = cartItems
         .filter(item => item.isSelected)
-        .reduce((acc, item) => acc + item.price * item.quantity, 0);
+        .reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
 
     if (isLoading) {
         return (
@@ -46,10 +46,6 @@ const CartPage = () => {
     // --- TRẠNG THÁI HOÀN TẤT ---
     return (
         <div className="bg-[#fafafa] min-h-screen pb-24 font-sans text-zinc-900">
-            {/* 1. Header Giỏ hàng: 
-            - sticky top-[chiều cao header tổng]: Giả sử Header tổng cao 64px (h-16).
-            - z-20: Đảm bảo cao hơn nội dung item nhưng thấp hơn MegaMenu (z-100).
-            */}
             <div className="bg-white/80 backdrop-blur-md sticky top-[64px] z-20 border-b border-zinc-100">
                 <div className="max-w-[1200px] mx-auto px-6 py-5 flex justify-center items-center">
                     <h1 className="text-2xl font-extrabold tracking-tighter uppercase">Giỏ hàng</h1>
@@ -70,10 +66,6 @@ const CartPage = () => {
                             />
                         </div>
 
-                        {/* 2. Sidebar Thanh toán: 
-                        - sticky: Cố định khi cuộn.
-                        - top-[100px]: Cách mép trên trình duyệt một khoảng để không dính sát Header.
-                        */}
                         <div className="w-full lg:w-[400px] lg:sticky lg:top-[100px] z-10">
                             <CartSummary 
                                 total={selectedTotalPrice} 
