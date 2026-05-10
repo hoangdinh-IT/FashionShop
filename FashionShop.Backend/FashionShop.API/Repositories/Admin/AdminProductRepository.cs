@@ -50,7 +50,7 @@ namespace FashionShop.API.Repositories.Admin
                 ColorName = x.Color.Name,
                 ColorHexCode = x.Color.HexCode,
                 SizeName = x.Size.Name,
-                SKU = x.Sku,
+                Sku = x.Sku,
                 StockQuantity = x.StockQuantity,
                 Price = x.Price,
                 IsActive = x.IsActive,
@@ -100,7 +100,7 @@ namespace FashionShop.API.Repositories.Admin
                         ProductId = v.ProductId,
                         ColorId = v.ColorId,
                         SizeId = v.SizeId,
-                        SKU = v.Sku,
+                        Sku = v.Sku,
                         StockQuantity = v.StockQuantity,
                         Price = v.Price,
                         IsActive = v.IsActive,
@@ -197,7 +197,7 @@ namespace FashionShop.API.Repositories.Admin
 
         // --- VALIDATION METHODS --- //
 
-        public async Task<bool> CheckExistSlugAsync(string slug)
+        public async Task<bool> CheckExistProductSlugAsync(string slug)
             => await _context.Products.AnyAsync(prod => prod.Slug == slug);
 
 
@@ -271,8 +271,16 @@ namespace FashionShop.API.Repositories.Admin
 
         // --- VALIDATION METHODS --- //
 
-        public async Task<bool> CheckExistSKUAsync(string sku)
+        public async Task<bool> CheckExistVariantSkuAsync(string sku)
             => await _context.ProductVariants.AnyAsync(x => x.Sku == sku);
+
+        public async Task<List<string>> GetExistingSkusAsync(List<string> requestedSkus)
+        {
+            return await _context.ProductVariants
+                .Where(v => requestedSkus.Contains(v.Sku))
+                .Select(v => v.Sku)
+                .ToListAsync();
+        }
 
 
 

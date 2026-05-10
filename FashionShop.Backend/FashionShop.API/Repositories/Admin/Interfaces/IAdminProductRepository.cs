@@ -28,7 +28,7 @@ namespace FashionShop.API.Repositories.Admin.Interfaces
 
         // --- VALIDATION METHODS --- //
 
-        Task<bool> CheckExistSlugAsync(string slug);
+        Task<bool> CheckExistProductSlugAsync(string slug);
 
 
 
@@ -54,7 +54,8 @@ namespace FashionShop.API.Repositories.Admin.Interfaces
 
         // --- VALIDATION METHODS --- //
 
-        Task<bool> CheckExistSKUAsync(string sku);
+        Task<bool> CheckExistVariantSkuAsync(string sku);
+        Task<List<string>> GetExistingSkusAsync(List<string> requestedSkus);
 
 
 

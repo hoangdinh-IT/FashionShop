@@ -72,7 +72,7 @@ namespace FashionShop.API.Services.Admin
 
         public async Task<AdminProductResponse?> CreateProductAsync(CreateProductRequest request)
         {
-            var isExistSlug = await _unitOfWork.AdminProducts.CheckExistSlugAsync(request.Slug);
+            var isExistSlug = await _unitOfWork.AdminProducts.CheckExistProductSlugAsync(request.Slug);
 
             if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
 
@@ -94,31 +94,23 @@ namespace FashionShop.API.Services.Admin
 
         public async Task<AdminProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest request)
         {
-            //await _unitOfWork.BeginTransactionAsync();
+            // Kiểm tra xem có Sku nào trong request trùng nhau không?
+            var duplicateSkusInRequest = request.ProductVariants
+                .GroupBy(v => v.Sku)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
 
-            //try
-            //{
-            //    var createdProduct = await CreateProductAsync(request);
+            if (duplicateSkusInRequest.Any())
+                throw new ArgumentException($"Các mã Sku sau bị lặp trong danh sách: {string.Join(", ", duplicateSkusInRequest)}");
 
-            //    if (request.ProductVariants != null && request.ProductVariants.Any())
-            //    {
-            //        foreach (var variantrequest in request.ProductVariants)
-            //        {
-            //            variantrequest.ProductId = createdProduct!.Id;
+            // Kiểm tra xem có Sku nào trong request đã tồn tại trong database không?
+            var requestedSkus = request.ProductVariants.Select(v => v.Sku).ToList();
 
-            //            await CreateProductVariantAsync(variantrequest);
-            //        }
-            //    }
+            var alreadyExistsSkus = await _unitOfWork.AdminProducts.GetExistingSkusAsync(requestedSkus);
 
-            //    await _unitOfWork.CommitTransactionAsync();
-
-            //    return await GetProductDetailByIdAsync(createdProduct!.Id);
-            //} 
-            //catch (Exception)
-            //{
-            //    await _unitOfWork.RollbackTransactionAsync();
-            //    throw;
-            //}
+            if (alreadyExistsSkus.Any())
+                throw new ArgumentException($"Mã SKU đã tồn tại: {string.Join(", ", alreadyExistsSkus)}");
 
             string? uploadedImagePublicId = null;
 
@@ -166,7 +158,7 @@ namespace FashionShop.API.Services.Admin
 
             if (request.Slug != existingProduct.Slug)
             {
-                var isExistSlug = await _unitOfWork.AdminProducts.CheckExistSlugAsync(request.Slug);
+                var isExistSlug = await _unitOfWork.AdminProducts.CheckExistProductSlugAsync(request.Slug);
 
                 if (isExistSlug) throw new ConflictException("Slug này đã tồn tại, vui lòng chọn tên khác!");
             }
@@ -202,66 +194,40 @@ namespace FashionShop.API.Services.Admin
             return await _unitOfWork.AdminProducts.GetProductByIdAsync(productId);
         }
 
-        //public async Task<AdminProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest request)
-        //{
-        //    using var transaction = await _unitOfWork.AdminProducts.BeginTransactionAsync();
-
-        //    try
-        //    {
-        //        var updatedProduct = await UpdateProductAsync(productId, request);
-
-        //        var existingProductVariants = await _unitOfWork.AdminProducts.GetProductVariantsByProductIdAsync(productId);
-
-        //        var inputIDs = request.ProductVariants
-        //                          .Where(v => v.Id.HasValue)
-        //                          .Select(v => v.Id!.Value)
-        //                          .ToList();
-
-        //        foreach (var variantrequest in request.ProductVariants)
-        //        {
-        //            // TH1: THÊM MỚI
-        //            if (!variantrequest.Id.HasValue)
-        //            {
-        //                var newVariant = _mapper.Map<CreateProductVariantRequest>(variantrequest);
-        //                newVariant.ProductId = productId;
-        //                await CreateProductVariantAsync(newVariant);
-        //            }
-        //            // TH2: CẬP NHẬT
-        //            else
-        //            {
-        //                await UpdateProductVariantAsync(variantrequest.Id.Value, variantrequest);
-        //            }
-        //        }
-
-        //        // TH3: XOÁ
-        //        var variantsToDelete = existingProductVariants.Where(v => !inputIDs.Contains(v.Id)).ToList();
-        //        foreach (var variantrequest in variantsToDelete)
-        //        {
-        //            await DeleteProductVariantAsync(variantrequest.Id);
-        //        }
-
-        //        await transaction.CommitAsync();
-
-        //        return await GetProductDetailByIdAsync(productId);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        throw;
-        //    }
-        //}
-
         public async Task<AdminProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest request)
         {
+            // 1. Lấy Product kèm theo toàn bộ Variants hiện có từ DB lên bộ nhớ
+            var existingProduct = await _unitOfWork.AdminProducts.FindProductDetailByIdAsync(productId);
+            if (existingProduct == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm!");
+
+            // Kiểm tra xem có Sku nào trong request trùng nhau không?
+            var duplicateSkusInRequest = request.ProductVariants
+                .GroupBy(v => v.Sku)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicateSkusInRequest.Any())
+                throw new ConflictException($"Mã SKU bị trùng lặp trong danh sách: [{string.Join(", ", duplicateSkusInRequest)}].");
+
+            // Kiểm tra xem có Sku nào trong request đã tồn tại trong database không?
+            var currentVariantSkus = existingProduct.ProductVariants.Select(v => v.Sku).ToList();
+
+            var skusToCheck = request.ProductVariants
+                .Where(v => !currentVariantSkus.Contains(v.Sku))
+                .Select(v => v.Sku)
+                .ToList();
+
+            var alreadyExistsSkus = await _unitOfWork.AdminProducts.GetExistingSkusAsync(skusToCheck);
+
+            if (alreadyExistsSkus.Any())
+                throw new ConflictException($"Mã SKU đã có trên hệ thống: [{string.Join(", ", alreadyExistsSkus)}]. Vui lòng chọn mã khác.");
+
             // Biến tạm để xử lý rác hình ảnh (nếu Product có update ảnh)
             string? oldThumbnailPublicId = null;
 
             // Biến lưu ID ảnh mới để xóa (rollback) nếu DB CẬP NHẬT LỖI
             string? newThumbnailPublicId = null;
-
-            // 1. Lấy Product kèm theo toàn bộ Variants hiện có từ DB lên bộ nhớ
-            var existingProduct = await _unitOfWork.AdminProducts.FindProductDetailByIdAsync(productId);
-            if (existingProduct == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm!");
 
             try
             {
@@ -317,20 +283,8 @@ namespace FashionShop.API.Services.Admin
                     else
                     {
                         var existingVariant = await _unitOfWork.AdminProducts.FindProductVariantByIdAsync(variantRequest.Id.Value);
-                        //if (existingVariant != null)
-                        //{
-                        //    _mapper.Map(variantRequest, existingVariant);
-                        //    existingVariant.UpdatedDate = DateTime.UtcNow;
-                        //}
 
                         if (existingVariant == null) throw new KeyNotFoundException("Không tìm thấy biến thể sản phẩm!");
-
-                        if (variantRequest.Sku != existingVariant.Sku)
-                        {
-                            var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(variantRequest.Sku);
-
-                            if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
-                        }
 
                         _mapper.Map(variantRequest, existingVariant);
                         existingVariant.UpdatedDate = DateTime.UtcNow;
@@ -427,7 +381,7 @@ namespace FashionShop.API.Services.Admin
 
         public async Task<AdminProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest request)
         {
-            var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(request.SKU);
+            var isExistSKU = await _unitOfWork.AdminProducts.CheckExistVariantSkuAsync(request.Sku);
 
             if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
 
@@ -446,7 +400,7 @@ namespace FashionShop.API.Services.Admin
 
             if (request.Sku != existingProductVariant.Sku)
             {
-                var isExistSKU = await _unitOfWork.AdminProducts.CheckExistSKUAsync(request.Sku);
+                var isExistSKU = await _unitOfWork.AdminProducts.CheckExistVariantSkuAsync(request.Sku);
 
                 if (isExistSKU) throw new ConflictException("SKU này đã tồn tại, vui lòng chọn tên khác!");
             }
