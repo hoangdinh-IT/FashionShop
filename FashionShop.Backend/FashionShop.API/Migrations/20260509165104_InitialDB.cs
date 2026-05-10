@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FashionShop.API.Migrations
 {
     /// <inheritdoc />
-    public partial class initialDB : Migration
+    public partial class InitialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -481,10 +481,11 @@ namespace FashionShop.API.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderDetailId = table.Column<int>(type: "integer", nullable: false),
+                    OrderItemId = table.Column<int>(type: "integer", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: true),
                     LikeCount = table.Column<int>(type: "integer", nullable: false),
+                    OrderDetailId = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -493,8 +494,8 @@ namespace FashionShop.API.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_OrderItems_OrderDetailId",
-                        column: x => x.OrderDetailId,
+                        name: "FK_Reviews_OrderItems_OrderItemId",
+                        column: x => x.OrderItemId,
                         principalTable: "OrderItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -659,9 +660,9 @@ namespace FashionShop.API.Migrations
                 column: "ReviewId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_OrderDetailId",
+                name: "IX_Reviews_OrderItemId",
                 table: "Reviews",
-                column: "OrderDetailId",
+                column: "OrderItemId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

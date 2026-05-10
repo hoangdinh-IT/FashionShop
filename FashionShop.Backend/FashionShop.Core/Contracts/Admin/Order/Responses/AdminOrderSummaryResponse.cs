@@ -26,10 +26,10 @@ namespace FashionShop.Core.Contracts.Admin.Order.Responses
         public string PaymentStatus { get; set; }
 
         // Tài chính
-        //public decimal SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
         //public decimal ShippingFee { get; set; }
         //public decimal DiscountAmount { get; set; }
-        public decimal TotalAmount { get; set; }
+        //public decimal TotalAmount { get; set; }
 
         // Khác
         //public string? Note { get; set; }

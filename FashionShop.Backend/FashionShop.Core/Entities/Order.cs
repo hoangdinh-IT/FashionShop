@@ -48,7 +48,7 @@ namespace FashionShop.Core.Entities
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalAmount { get; set; }  // TotalAmount = SubTotal - DiscountAmount
+        public decimal TotalAmount { get; set; }  // TotalAmount = SubTotal + ShippingFee - DiscountAmount
 
         [Required]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;

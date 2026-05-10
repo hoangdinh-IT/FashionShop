@@ -34,7 +34,7 @@ namespace FashionShop.API.Repositories.Admin
                 OrderStatus = order.OrderStatus.ToString(),
                 PaymentMethod = order.PaymentMethod.ToString(),
                 PaymentStatus = order.PaymentStatus.ToString(),
-                TotalAmount = order.TotalAmount,
+                SubTotal = order.SubTotal,
 
                 TotalItemCount = order.OrderItems.Count,
                 OrderItems = order.OrderItems.Select(od => new AdminOrderItemSummaryResponse

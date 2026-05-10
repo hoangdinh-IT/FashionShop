@@ -20,14 +20,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return (
         <Link 
             to={productUrl} 
-            className="group flex flex-col gap-3 cursor-pointer"
+            className="group/product flex flex-col gap-3 cursor-pointer"
         >
             {/* 1. IMAGE CONTAINER */}
             <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F7F7F7] z-10">
                 <img
                     src={currentImageUrl}
                     alt={product.name}
-                    className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="h-full w-full object-cover object-center group-hover/product:scale-105 transition-transform duration-700 ease-out"
                     loading="lazy"
                 />
 
@@ -47,8 +47,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
                 {/* Overlay Thêm nhanh */}
                 <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-sm p-3 flex flex-col justify-end rounded-lg
-                                opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out
-                                pointer-events-none group-hover:pointer-events-auto z-20">
+                                opacity-0 group-hover/product:opacity-100 transition-opacity duration-300 ease-out
+                                pointer-events-none group-hover/product:pointer-events-auto z-20">
                     
                     {/* Lưới kích thước */}
                     <div className="flex flex-wrap justify-center gap-1.5">
@@ -120,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Tên và Giá sản phẩm */}
                 <div className="flex flex-col gap-1">
                     <h3 
-                        className="text-base font-medium text-zinc-700 group-hover:text-black transition-colors" 
+                        className="text-base font-medium text-zinc-700 group-hover/product:text-black transition-colors" 
                         title={product.name}
                     >
                         {product.name}

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FashionShop.API.Migrations
 {
     [DbContext(typeof(FashionDbContext))]
-    [Migration("20260509115258_initialDB")]
-    partial class initialDB
+    [Migration("20260509165104_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -593,6 +593,9 @@ namespace FashionShop.API.Migrations
                     b.Property<int>("OrderDetailId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("OrderItemId")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
@@ -607,7 +610,7 @@ namespace FashionShop.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderDetailId")
+                    b.HasIndex("OrderItemId")
                         .IsUnique();
 
                     b.HasIndex("ProductId");
@@ -1053,7 +1056,7 @@ namespace FashionShop.API.Migrations
                 {
                     b.HasOne("FashionShop.Core.Entities.OrderItem", "OrderItem")
                         .WithMany("Reviews")
-                        .HasForeignKey("OrderDetailId")
+                        .HasForeignKey("OrderItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

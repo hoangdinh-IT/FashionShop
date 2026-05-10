@@ -153,7 +153,7 @@ const SizeFormDialog: React.FC<Props> = ({
                                     </label>
                                     <input
                                         {...register("name", { 
-                                            required: "Tên kích thước là bắt buộc",
+                                            required: "Vui lòng nhập Tên kích thước",
                                             maxLength: { value: 50, message: "Tên không quá 50 ký tự!" },
                                             onChange: handleNameChange
                                         })}
@@ -179,7 +179,7 @@ const SizeFormDialog: React.FC<Props> = ({
                                     <div className="relative">
                                         <input
                                             {...register("slug", { 
-                                                required: "Slug là bắt buộc",
+                                                required: "Vui lòng nhập Slug",
                                                 maxLength: {
                                                     value: 50,
                                                     message: "Slug không được vượt quá 50 ký tự!"
@@ -233,11 +233,14 @@ const SizeFormDialog: React.FC<Props> = ({
                                     <div className="space-y-1.5 col-span-2 sm:col-span-1">
                                         <label className="text-sm font-semibold text-gray-700">Thứ tự hiển thị</label>
                                         <input
-                                            {...register("sortOrder", { valueAsNumber: true, min: { value: 0, message: "Không được âm" } })}
+                                            {...register("sortOrder", { 
+                                                required: "Vui lòng nhập Thứ tự", 
+                                                valueAsNumber: true, min: { value: 0, message: "Không được âm" } })}
                                             type="number"
                                             min="0"
-                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-indigo-500 outline-none transition-all text-sm font-medium"
+                                            className={`w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-indigo-500 outline-none transition-all text-sm font-medium ${errors.sortOrder ? 'border-red-500' : ''}`}
                                         />
+                                        <span className="text-xs text-red-500 font-medium">{errors.sortOrder?.message}</span>
                                     </div>
                                 </div>
 
