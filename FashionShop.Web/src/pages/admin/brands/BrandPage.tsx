@@ -13,6 +13,7 @@ import type { BrandFilters, BrandQueryParams } from "../../../features/admin/bra
 
 const BrandPage: React.FC = () => {
     const { showDialog } = useDialog();
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedBrand, setSelectedBrand] = useState<Brand | undefined>(undefined);
 
@@ -24,12 +25,6 @@ const BrandPage: React.FC = () => {
         sortBy: "createddate",
         isAscending: false
     });
-
-    // const getActiveParam = (value?: GeneralStatus): (boolean | undefined) => {
-    //     if (value == GeneralStatus.Active) return true;
-    //     else if (value == GeneralStatus.Inactive) return false;
-    //     return undefined;
-    // }
 
     const {
         pagedBrands,
@@ -70,7 +65,7 @@ const BrandPage: React.FC = () => {
 
     const handleFilterChange = (newFilters: BrandFilters) => {
         setQueryParams(prev => ({
-            ...prev, 
+            ...prev,
             ...newFilters,
             pageIndex: 1,
         }));
@@ -86,35 +81,55 @@ const BrandPage: React.FC = () => {
     }
 
     const handlePageChange = (newPage: number) => {
-        setQueryParams(prev => ({ 
-            ...prev, 
-            pageIndex: newPage 
+        setQueryParams(prev => ({
+            ...prev,
+            pageIndex: newPage
         }));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
-    
+
     const tableContainerStyle = useTableMinHeight(queryParams.pageSize);
 
     return (
-        <div className="h-full flex flex-col p-3 md:p-4 space-y-3 bg-gray-50/50"> 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 shrink-0">
+        <div className="h-full flex flex-col p-2.5 md:p-3 space-y-2.5 bg-gray-50/50">
+
+            {/* HEADER */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-2.5 shrink-0">
+
                 <div className="flex items-center justify-center w-full">
-                    <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">
+                    <h1 className="text-[28px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">
                         QUẢN LÝ THƯƠNG HIỆU
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    <button 
+                <div className="flex items-center gap-2.5 w-full md:w-auto">
+                    <button
                         onClick={handleOpenCreate}
-                        className="flex-none flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm whitespace-nowrap ml-auto md:ml-0 cursor-pointer"
+                        className="
+                            flex-none flex items-center gap-1.5
+                            bg-gray-900 hover:bg-gray-800
+                            text-white
+                            px-2.5 py-1.5
+                            rounded-lg
+                            text-[13px] font-semibold
+                            transition-all
+                            shadow-sm
+                            whitespace-nowrap
+                            ml-auto md:ml-0
+                            cursor-pointer
+                        "
                     >
-                        <IoAdd className="text-lg" />
+                        <IoAdd className="text-base" />
                         <span>Thêm mới</span>
                     </button>
                 </div>
             </div>
 
+            {/* TOOLBAR */}
             <div className="shrink-0 z-20">
                 <BrandToolbar
                     onSearch={handleSearch}
@@ -122,14 +137,15 @@ const BrandPage: React.FC = () => {
                 />
             </div>
 
-            <div className="flex-1 flex flex-col min-h-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                
-                <div 
+            {/* TABLE */}
+            <div className="flex-1 flex flex-col min-h-0 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+
+                <div
                     className="flex-1 overflow-auto custom-scrollbar relative"
                     style={tableContainerStyle}
                 >
-                    <BrandTable 
-                        data={pagedBrands} 
+                    <BrandTable
+                        data={pagedBrands}
                         isLoading={isLoading || isFetching}
                         sortBy={queryParams.sortBy}
                         isAscending={queryParams.isAscending}
@@ -138,9 +154,9 @@ const BrandPage: React.FC = () => {
                         onDelete={handleDelete}
                     />
                 </div>
-                
+
                 {!isLoading && pagedBrands.length > 0 && (
-                    <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3">
+                    <div className="shrink-0 border-t border-gray-100 bg-white px-3 py-2.5">
                         <Pagination
                             totalRecord={totalRecord}
                             pageSize={queryParams.pageSize}
@@ -151,7 +167,8 @@ const BrandPage: React.FC = () => {
                 )}
             </div>
 
-            <BrandFormDialog 
+            {/* DIALOG */}
+            <BrandFormDialog
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
                 initialData={selectedBrand}

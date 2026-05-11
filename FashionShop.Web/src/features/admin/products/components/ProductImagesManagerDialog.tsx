@@ -25,7 +25,7 @@ interface DisplayImage extends Partial<ProductImage> {
     file?: File;
 }
 
-const ProductImageManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId }) => {
+const ProductImagesManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId }) => {
     const [selectedColorForUpload, setSelectedColorForUpload] = useState<number | null>(null);
     const [activeTab, setActiveTab] = useState<'ALL' | number | null>('ALL');
 
@@ -491,4 +491,4 @@ const ImageCard: React.FC<ImageCardProps> = ({
     );
 }
 
-export default ProductImageManagerDialog;
+export default ProductImagesManagerDialog;

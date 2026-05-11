@@ -4,7 +4,6 @@ import {
     IoCallOutline, 
     IoLocationOutline, 
     IoTimeOutline, 
-    IoBagCheckOutline,
     IoWalletOutline,
     IoCardOutline
 } from "react-icons/io5";
@@ -13,6 +12,7 @@ import { vi } from "date-fns/locale";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import AddressString from "../../../shop/addresses/components/AddressString";
 import type { OrderDetail } from "../types/order";
+import Loading from "../../../../components/common/Loading";
 
 // --- ANIMATION VARIANTS (Đồng bộ với Voucher) --- //
 const backdropVariants: Variants = {
@@ -21,28 +21,15 @@ const backdropVariants: Variants = {
 };
 
 const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    hidden: { opacity: 0, y: 24, scale: 0.96 },
     visible: { 
         opacity: 1, y: 0, scale: 1, 
         transition: { type: "spring", stiffness: 300, damping: 28 } 
     },
     exit: { 
-        opacity: 0, y: 20, scale: 0.95, 
+        opacity: 0, y: 16, scale: 0.96, 
         transition: { duration: 0.2, ease: "easeIn" } 
     }
-};
-
-// Hiệu ứng 3 dấu chấm cho Loading
-const dotVariants: Variants = {
-    animate: (i: number) => ({
-        y: [0, -10, 0],
-        transition: {
-            duration: 0.6,
-            repeat: Infinity,
-            delay: i * 0.1,
-            ease: "easeInOut"
-        }
-    })
 };
 
 interface Props {
@@ -61,11 +48,11 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
     return (
         <AnimatePresence>
             {isOpen && order && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 font-sans">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 font-sans">
                     
-                    {/* 1. BACKDROP (Lớp nền mờ) */}
+                    {/* 1. BACKDROP */}
                     <motion.div
-                        className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+                        className="absolute inset-0 bg-slate-900/55 backdrop-blur-sm"
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
@@ -73,9 +60,9 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                         onClick={onClose}
                     />
 
-                    {/* 2. MODAL CONTENT (Khung chi tiết) */}
+                    {/* 2. MODAL CONTENT */}
                     <motion.div
-                        className="relative w-full max-w-4xl bg-[#F8F9FB] rounded-[40px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col h-[92vh]" // Đổi max-h thành h để giữ form
+                        className="relative w-full max-w-3xl bg-[#F8F9FB] rounded-[32px] shadow-[0_24px_48px_-14px_rgba(0,0,0,0.28)] overflow-hidden flex flex-col h-[88vh]"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -83,69 +70,57 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                         onClick={(e) => e.stopPropagation()}
                     >
                         {isLoading ? (
-                            <div className="flex-1 flex flex-col items-center justify-center bg-white">
-                                <div className="flex gap-2">
-                                    {[0, 1, 2].map((i) => (
-                                        <motion.div
-                                            key={i}
-                                            custom={i}
-                                            variants={dotVariants}
-                                            animate="animate"
-                                            className="w-3 h-3 bg-indigo-500 rounded-full"
-                                        />
-                                    ))}
-                                </div>
-                                <p className="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] animate-pulse">
-                                    Đang tải dữ liệu đơn hàng...
-                                </p>
-                            </div>
+                            <Loading message="Đang tải dữ liệu đơn hàng" />
                         ) : order ? (
                             <>
                                 {/* --- HEADER --- */}
-                                <div className="relative bg-white px-8 py-7 sm:px-10 border-b border-gray-100 shrink-0">
+                                <div className="relative bg-white px-6 py-5 sm:px-8 border-b border-gray-100 shrink-0">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <span className="bg-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                                            <div className="flex items-center gap-2.5 mb-1.5">
+                                                <span className="bg-indigo-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-[0.18em]">
                                                     Chi tiết vận đơn
                                                 </span>
-                                                <span className="text-gray-400 font-bold text-sm tracking-tight">
+                                                <span className="text-gray-400 font-bold text-xs tracking-tight">
                                                     #{order.orderId.slice(0, 8).toUpperCase()}
                                                 </span>
                                             </div>
-                                            <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-none">
+
+                                            <h2 className="text-[26px] font-black text-gray-900 tracking-tight leading-none">
                                                 {order.fullName}
                                             </h2>
                                         </div>
+
                                         <button 
                                             onClick={onClose}
-                                            className="p-3 bg-gray-50 hover:bg-rose-50 text-gray-400 hover:text-rose-500 rounded-2xl transition-all duration-300 active:scale-90"
+                                            className="p-2.5 bg-gray-50 hover:bg-rose-50 text-gray-400 hover:text-rose-500 rounded-xl transition-all duration-300 active:scale-90"
                                         >
-                                            <IoCloseOutline size={28} />
+                                            <IoCloseOutline size={24} />
                                         </button>
                                     </div>
 
-                                    {/* Quick Info Bar */}
-                                    <div className="flex flex-wrap gap-x-8 gap-y-4 mt-6">
-                                        <div className="flex items-center gap-2.5 text-gray-600 font-bold text-sm">
-                                            <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-100/50">
-                                                <IoCallOutline size={16} />
+                                    {/* Quick Info */}
+                                    <div className="flex flex-wrap gap-x-6 gap-y-3 mt-5">
+                                        <div className="flex items-center gap-2 text-gray-600 font-bold text-[13px]">
+                                            <div className="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-100/50">
+                                                <IoCallOutline size={14} />
                                             </div>
                                             {order.phoneNumber}
                                         </div>
 
-                                        <div className="flex items-center gap-2.5 text-gray-600 font-bold text-sm">
-                                            <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm border border-amber-100/50">
-                                                <IoTimeOutline size={16} />
+                                        <div className="flex items-center gap-2 text-gray-600 font-bold text-[13px]">
+                                            <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm border border-amber-100/50">
+                                                <IoTimeOutline size={14} />
                                             </div>
                                             {format(new Date(order.orderDate), "HH:mm, dd/MM/yyyy", { locale: vi })}
                                         </div>
 
-                                        <div className="w-full flex items-center gap-2.5 text-gray-600 font-bold text-sm">
-                                            <div className="shrink-0 w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-100/50">
-                                                <IoLocationOutline size={16} />
+                                        <div className="w-full flex items-center gap-2 text-gray-600 font-bold text-[13px]">
+                                            <div className="shrink-0 w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-100/50">
+                                                <IoLocationOutline size={14} />
                                             </div>
-                                            <div className="line-clamp-1 italic text-gray-500 font-medium">
+
+                                            <div className="line-clamp-1 italic text-gray-500 font-medium text-[12px]">
                                                 <AddressString 
                                                     addressDetail={order.shippingAddress}
                                                     communeCode={order.shippingCommune}
@@ -157,29 +132,27 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                     </div>
                                 </div>
 
-                                {/* --- BODY (SCROLLABLE) --- */}
+                                {/* --- BODY --- */}
                                 <div className="flex-1 overflow-y-auto bg-[#f6f8fc] custom-scrollbar">
-                                    <div className="px-6 sm:px-8 py-7">
+                                    <div className="px-5 sm:px-6 py-5">
 
-                                        {/* Product List */}
-                                        <div className="space-y-4">
+                                        <div className="space-y-3">
                                             {order.orderItems.map((item, index) => (
                                                 <motion.div
                                                     key={item.orderItemId}
-                                                    initial={{ opacity: 0, y: 16 }}
+                                                    initial={{ opacity: 0, y: 12 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: index * 0.04 }}
-                                                    whileHover={{ y: -2 }}
-                                                    className="relative overflow-hidden rounded-[28px] bg-white border border-slate-200/60 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)] transition-all duration-300 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]"
+                                                    transition={{ delay: index * 0.035 }}
+                                                    whileHover={{ y: -1.5 }}
+                                                    className="relative overflow-hidden rounded-[22px] bg-white border border-slate-200/60 p-3.5 shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition-all duration-300 hover:shadow-[0_14px_36px_rgba(15,23,42,0.07)]"
                                                 >
-                                                    {/* glow effect */}
-                                                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-50/0 via-indigo-50/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-50/0 via-indigo-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
 
-                                                    <div className="relative flex items-center gap-5">
+                                                    <div className="relative flex items-center gap-4">
                                                         
                                                         {/* Product Image */}
                                                         <div className="relative shrink-0">
-                                                            <div className="w-24 h-24 rounded-[22px] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-50 border border-slate-200">
+                                                            <div className="w-20 h-20 rounded-[18px] overflow-hidden bg-gradient-to-br from-slate-100 to-slate-50 border border-slate-200">
                                                                 <img
                                                                     src={item.imageUrl || "/placeholder.png"}
                                                                     alt={item.productName}
@@ -188,27 +161,27 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                                             </div>
 
                                                             {/* Quantity */}
-                                                            <div className="absolute -bottom-2 -right-2 min-w-[30px] h-[30px] px-2 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center shadow-lg border-4 border-white">
+                                                            <div className="absolute -bottom-1.5 -right-1.5 min-w-[26px] h-[26px] px-2 rounded-full bg-slate-900 text-white text-[11px] font-semibold flex items-center justify-center shadow-lg border-[3px] border-white">
                                                                 {item.quantity}
                                                             </div>
                                                         </div>
 
                                                         {/* Info */}
                                                         <div className="flex-1 min-w-0">
-                                                            <h4 className="text-[16px] font-semibold text-slate-900 truncate">
+                                                            <h4 className="text-[14px] font-semibold text-slate-900 truncate">
                                                                 {item.productName}
                                                             </h4>
 
-                                                            <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                                                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
+                                                            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                                                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium">
                                                                     {item.variantName}
                                                                 </span>
 
-                                                                <span className="text-slate-300">
+                                                                <span className="text-slate-300 text-xs">
                                                                     •
                                                                 </span>
 
-                                                                <span className="text-sm text-slate-400">
+                                                                <span className="text-[12px] text-slate-400">
                                                                     {formatCurrency(item.unitPrice)} / sản phẩm
                                                                 </span>
                                                             </div>
@@ -216,11 +189,11 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
 
                                                         {/* Price */}
                                                         <div className="text-right shrink-0">
-                                                            <div className="text-[20px] font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                                                            <div className="text-[17px] font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                                                                 {formatCurrency(item.totalLine)}
                                                             </div>
 
-                                                            <div className="text-[11px] text-slate-400 mt-1 font-medium">
+                                                            <div className="text-[10px] text-slate-400 mt-1 font-medium">
                                                                 Thành tiền
                                                             </div>
                                                         </div>
@@ -231,43 +204,53 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                     </div>
                                 </div>
 
-                                {/* --- FOOTER / SUMMARY --- */}
-                                <div className="bg-white px-8 py-8 sm:px-10 border-t border-gray-100 shrink-0">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+                                {/* --- FOOTER --- */}
+                                <div className="bg-white px-6 py-6 sm:px-8 border-t border-gray-100 shrink-0">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                                         
-                                        {/* Note Section */}
-                                        <div className="bg-gray-50/80 rounded-3xl p-5 border border-gray-100/50">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <IoWalletOutline className="text-gray-400" />
-                                                <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Ghi chú đơn hàng</span>
+                                        {/* Note */}
+                                        <div className="bg-gray-50/80 rounded-2xl p-4 border border-gray-100/50">
+                                            <div className="flex items-center gap-2 mb-1.5">
+                                                <IoWalletOutline className="text-gray-400 text-sm" />
+                                                <span className="text-[9px] font-black uppercase text-gray-400 tracking-[0.16em]">
+                                                    Ghi chú đơn hàng
+                                                </span>
                                             </div>
-                                            <p className="text-xs text-gray-600 italic font-semibold leading-relaxed">
+
+                                            <p className="text-[11px] text-gray-600 italic font-semibold leading-relaxed">
                                                 {order.note || "Không có ghi chú bổ sung."}
                                             </p>
                                         </div>
 
-                                        {/* Totals Section */}
-                                        <div className="space-y-3">
-                                            <div className="flex justify-between items-center text-[13px] font-bold">
-                                                <span className="text-gray-400 uppercase tracking-tighter">Tạm tính:</span>
+                                        {/* Totals */}
+                                        <div className="space-y-2.5">
+                                            <div className="flex justify-between items-center text-[12px] font-bold">
+                                                <span className="text-gray-400 uppercase tracking-tight">Tạm tính:</span>
                                                 <span className="text-gray-600">{formatCurrency(order.subTotal)}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[13px] font-bold">
-                                                <span className="text-gray-400 uppercase tracking-tighter">Vận chuyển:</span>
+
+                                            <div className="flex justify-between items-center text-[12px] font-bold">
+                                                <span className="text-gray-400 uppercase tracking-tight">Vận chuyển:</span>
                                                 <span className="text-gray-600">+{formatCurrency(order.shippingFee)}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[13px] font-bold">
-                                                <span className="text-gray-400 uppercase tracking-tighter">Khuyến mãi:</span>
+
+                                            <div className="flex justify-between items-center text-[12px] font-bold">
+                                                <span className="text-gray-400 uppercase tracking-tight">Khuyến mãi:</span>
                                                 <span className="text-gray-600">-{formatCurrency(order.discountAmount)}</span>
                                             </div>
-                                            <div className="pt-4 mt-2 border-t border-dashed border-gray-200 flex justify-between items-center">
+
+                                            <div className="pt-3 mt-1 border-t border-dashed border-gray-200 flex justify-between items-center">
                                                 <div className="flex flex-col">
-                                                    <span className="text-gray-900 font-black text-xl leading-none">TỔNG CỘNG</span>
-                                                    <span className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-1.5 flex items-center gap-1">
+                                                    <span className="text-gray-900 font-black text-lg leading-none">
+                                                        TỔNG CỘNG
+                                                    </span>
+
+                                                    <span className="text-[8px] font-black text-indigo-500 uppercase tracking-[0.18em] mt-1 flex items-center gap-1">
                                                         <IoCardOutline /> Final Amount
                                                     </span>
                                                 </div>
-                                                <span className="text-4xl font-black bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent tracking-tighter drop-shadow-sm">
+
+                                                <span className="text-[32px] font-black bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent tracking-tight drop-shadow-sm">
                                                     {formatCurrency(order.totalAmount)}
                                                 </span>
                                             </div>

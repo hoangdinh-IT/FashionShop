@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCartMutations } from '../../../features/shop/carts/hooks/useCarts';
 import type { CartFormInputs } from '../../../features/shop/carts/types/requests';
 import { useSnackbar } from '../../../contexts';
+import Loading from '../../../components/common/Loading';
 
 const ProductDetailPage = () => {
     const { showSnackbar } = useSnackbar();
@@ -101,11 +102,70 @@ const ProductDetailPage = () => {
 
     // --- RENDERING ---
     if (isLoading) {
-        return <div className="text-center py-20 text-zinc-500 font-medium">Đang tải chi tiết sản phẩm...</div>;
+        // return <div className="text-center py-20 text-zinc-500 font-medium">Đang tải chi tiết sản phẩm...</div>;
+        return <Loading />
     }
 
     if (!productDetail) {
-        return <div className="text-center py-20 text-zinc-500 font-medium">Không tìm thấy thông tin sản phẩm.</div>;
+        return (
+            <div className="min-h-[78vh] flex items-center justify-center px-4 py-10 bg-[#fafafa]">
+                
+                <div className="relative w-full max-w-2xl">
+                    
+                    {/* Soft Background Glow */}
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-zinc-100 rounded-full blur-3xl opacity-60" />
+
+                    {/* Main Card */}
+                    <div className="relative overflow-hidden rounded-[36px] border border-zinc-200/70 bg-white/90 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(15,23,42,0.08)]">
+                        
+                        {/* Minimal Top Border */}
+                        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
+
+                        <div className="px-8 md:px-14 py-16 text-center">
+
+                            {/* Icon */}
+                            <div className="relative mx-auto w-28 h-28 flex items-center justify-center">
+                                
+                                {/* subtle ring */}
+                                <div className="absolute inset-0 rounded-full border border-zinc-200 bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]" />
+
+                                <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-900/10">
+                                    <ShoppingBag 
+                                        size={28}
+                                        className="text-white"
+                                        strokeWidth={2}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Text */}
+                            <div className="mt-10">
+                                
+                                <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-zinc-400 font-semibold">
+                                    Product unavailable
+                                </span>
+
+                                <h1 className="mt-4 text-[38px] md:text-[44px] leading-tight font-bold tracking-[-0.04em] text-zinc-900">
+                                    Không tìm thấy sản phẩm
+                                </h1>
+
+                                <p className="mt-5 max-w-xl mx-auto text-[15px] leading-8 text-zinc-500 font-medium">
+                                    Sản phẩm bạn đang tìm kiếm có thể đã được gỡ khỏi cửa hàng
+                                    hoặc hiện không còn khả dụng.
+                                </p>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="flex items-center justify-center gap-3 mt-10">
+                                <div className="w-16 h-px bg-zinc-200" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                                <div className="w-16 h-px bg-zinc-200" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (

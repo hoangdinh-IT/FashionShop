@@ -14,8 +14,6 @@ import {
 } from "react-icons/io5";
 import { useAuth } from '../../../contexts/AuthContext';
 
-
-
 interface SidebarProps {
     onHover: (value: boolean) => void;
     isExpanded: boolean;
@@ -38,24 +36,24 @@ const Sidebar: React.FC<SidebarProps> = ({ onHover, isExpanded }) => {
 
     return (
         <aside
-            // ✅ Gọi hàm từ cha khi di chuột
             onMouseEnter={() => onHover(true)}
             onMouseLeave={() => onHover(false)}
             
             className={`
                 fixed left-0 top-0 z-20 h-screen bg-white border-r border-gray-100 shadow-sm
                 transition-all duration-300 ease-in-out
-                ${isExpanded ? 'w-64' : 'w-20 hover:w-64'} 
+                ${isExpanded ? 'w-60' : 'w-[72px] hover:w-60'} 
             `}
         >
 
-            <div className="group flex h-16 items-center border-b border-gray-50 px-6 overflow-hidden">
-                <div className="flex items-center gap-3 text-indigo-600 font-bold text-xl whitespace-nowrap">
-                    <IoDiamondOutline className="text-2xl min-w-[24px]" />
+            {/* Logo */}
+            <div className="group flex h-14 items-center border-b border-gray-50 px-5 overflow-hidden">
+                <div className="flex items-center gap-2.5 text-indigo-600 font-bold text-lg whitespace-nowrap">
+                    <IoDiamondOutline className="text-xl min-w-[20px]" />
+
                     <span 
                         className={`
                             whitespace-nowrap transition-all ease-in-out
-                            /* 1. Sửa duration-300 thành duration-200 để đồng bộ tốc độ với Menu */
                             duration-200
                             ${isExpanded 
                                 ? 'opacity-100 translate-x-0' 
@@ -67,8 +65,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onHover, isExpanded }) => {
                 </div>
             </div>
 
-            {/* 2. Menu Items */}
-            <nav className="mt-6 flex flex-col gap-2 px-3">
+            {/* Menu */}
+            <nav className="mt-5 flex flex-col gap-1.5 px-2.5">
                 {MENU_ITEMS.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path;
@@ -78,12 +76,24 @@ const Sidebar: React.FC<SidebarProps> = ({ onHover, isExpanded }) => {
                             key={item.path}
                             to={item.path}
                             className={`
-                                group flex items-center gap-3 rounded-xl px-3 py-3 font-medium transition-colors overflow-hidden
-                                ${isActive ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-500'}
+                                group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors overflow-hidden
+                                ${isActive 
+                                    ? 'bg-indigo-50 text-indigo-600' 
+                                    : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-500'
+                                }
                             `}
                         >
-                            <Icon className="text-xl min-w-[20px]" />
-                            <span className={`whitespace-nowrap transition-all duration-200 ${isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 w-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:w-auto'}`}>
+                            <Icon className="text-lg min-w-[18px]" />
+
+                            <span 
+                                className={`
+                                    whitespace-nowrap transition-all duration-200
+                                    ${isExpanded 
+                                        ? 'opacity-100 translate-x-0' 
+                                        : 'opacity-0 -translate-x-4 w-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:w-auto'
+                                    }
+                                `}
+                            >
                                 {item.label}
                             </span>
                         </Link>
@@ -91,14 +101,23 @@ const Sidebar: React.FC<SidebarProps> = ({ onHover, isExpanded }) => {
                 })}
             </nav>
 
-             {/* Footer ... */}
-             <div className="absolute bottom-4 left-0 w-full px-3">
+            {/* Footer */}
+            <div className="absolute bottom-3 left-0 w-full px-2.5">
                 <button 
-                    className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors overflow-hidden"
+                    className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors overflow-hidden"
                     onClick={logout}
                 >
-                    <IoLogOutOutline className="text-xl min-w-[20px]" />
-                    <span className={`whitespace-nowrap transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0 group-hover:opacity-100 group-hover:w-auto'}`}>
+                    <IoLogOutOutline className="text-lg min-w-[18px]" />
+
+                    <span 
+                        className={`
+                            whitespace-nowrap transition-all duration-200
+                            ${isExpanded 
+                                ? 'opacity-100' 
+                                : 'opacity-0 w-0 group-hover:opacity-100 group-hover:w-auto'
+                            }
+                        `}
+                    >
                         Đăng xuất
                     </span>
                 </button>

@@ -9,9 +9,8 @@ import {
     IoSearchOutline 
 } from "react-icons/io5";
 
-// Giả định các types được import theo project của bạn
 import type { OrderFilters } from "../types/requests";
-import { OrderStatus, PaymentStatus, PaymentMethod } from "../types/requests"; // Cần đảm bảo có export các enums này
+import { OrderStatus, PaymentStatus, PaymentMethod } from "../types/requests";
 
 interface Props {
     onSearch: (text: string) => void;
@@ -47,13 +46,15 @@ const OrderToolbar: React.FC<Props> = ({
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-200/80 overflow-hidden font-sans">
-            {/* TOP BAR: SEARCH & TOGGLE */}
-            <div className="p-3 flex gap-3 justify-between items-center bg-white relative z-10">
+        <div className="bg-white rounded-[10px] shadow-[0_2px_8px_-3px_rgba(6,81,237,0.08)] border border-slate-200/80 overflow-hidden font-sans">
+            {/* TOP BAR */}
+            <div className="p-2.5 flex gap-2.5 justify-between items-center bg-white relative z-10">
                 <div className="relative w-full md:max-w-md group">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors">
-                        <IoSearchOutline className="text-[1.1rem]" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                        <IoSearchOutline className="text-[1rem]" />
                     </div>
+
+                    {/* INPUT GIỮ NGUYÊN */}
                     <input
                         type="text"
                         onChange={(e) => onSearch?.(e.target.value)}
@@ -67,18 +68,24 @@ const OrderToolbar: React.FC<Props> = ({
                         setIsFilterOpen(!isFilterOpen)
                         if (isFilterOpen) handleReset()
                     }}
-                    className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all border ${
+                    className={`flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-medium text-[13px] transition-all border ${
                         isFilterOpen 
                             ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-sm' 
                             : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow'
                     }`}
                 >
-                    {isFilterOpen ? <IoClose className="text-lg" /> : <IoFilterOutline className="text-lg" />}
-                    <span className="hidden sm:inline">{isFilterOpen ? 'Đóng bộ lọc' : 'Lọc nâng cao'}</span>
+                    {isFilterOpen 
+                        ? <IoClose className="text-[16px]" /> 
+                        : <IoFilterOutline className="text-[16px]" />
+                    }
+
+                    <span className="hidden sm:inline">
+                        {isFilterOpen ? 'Đóng' : 'Bộ lọc'}
+                    </span>
                 </button>
             </div>
 
-            {/* EXPANDABLE FILTER AREA */}
+            {/* FILTER AREA */}
             <AnimatePresence>
                 {isFilterOpen && (
                     <motion.div
@@ -88,18 +95,24 @@ const OrderToolbar: React.FC<Props> = ({
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="bg-slate-50/60 border-t border-slate-100"
                     >
-                        <div className="p-4 md:p-5">
-                            {/* Bố cục Grid: 4 Cột */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
+                        <div className="p-3.5 md:p-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                                 
-                                {/* DÒNG 1 - CỘT 1: TRẠNG THÁI VẬN CHUYỂN */}
+                                {/* TRẠNG THÁI VẬN CHUYỂN */}
                                 <div className="space-y-1.5 col-span-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Trạng thái vận chuyển</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide ml-1">
+                                        Trạng thái vận chuyển
+                                    </label>
+
+                                    {/* SELECT GIỮ NGUYÊN */}
                                     <select
                                         value={filters.orderStatus === undefined ? "all" : filters.orderStatus}
                                         onChange={(e) => {
                                             const val = e.target.value;
-                                            handleFilterChange("orderStatus", val === "all" ? undefined : val as OrderStatus);
+                                            handleFilterChange(
+                                                "orderStatus",
+                                                val === "all" ? undefined : val as OrderStatus
+                                            );
                                         }}
                                         className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer transition-all shadow-sm"
                                     >
@@ -112,14 +125,21 @@ const OrderToolbar: React.FC<Props> = ({
                                     </select>
                                 </div>
 
-                                {/* DÒNG 1 - CỘT 2: TRẠNG THÁI THANH TOÁN */}
+                                {/* THANH TOÁN */}
                                 <div className="space-y-1.5 col-span-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Thanh toán</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide ml-1">
+                                        Thanh toán
+                                    </label>
+
+                                    {/* SELECT GIỮ NGUYÊN */}
                                     <select
                                         value={filters.paymentStatus === undefined ? "all" : filters.paymentStatus}
                                         onChange={(e) => {
                                             const val = e.target.value;
-                                            handleFilterChange("paymentStatus", val === "all" ? undefined : val as PaymentStatus);
+                                            handleFilterChange(
+                                                "paymentStatus",
+                                                val === "all" ? undefined : val as PaymentStatus
+                                            );
                                         }}
                                         className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer transition-all shadow-sm"
                                     >
@@ -129,14 +149,21 @@ const OrderToolbar: React.FC<Props> = ({
                                     </select>
                                 </div>
 
-                                {/* DÒNG 1 - CỘT 3: PHƯƠNG THỨC THANH TOÁN */}
+                                {/* PHƯƠNG THỨC */}
                                 <div className="space-y-1.5 col-span-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Phương thức</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide ml-1">
+                                        Phương thức
+                                    </label>
+
+                                    {/* SELECT GIỮ NGUYÊN */}
                                     <select
                                         value={filters.paymentMethod === undefined ? "all" : filters.paymentMethod}
                                         onChange={(e) => {
                                             const val = e.target.value;
-                                            handleFilterChange("paymentMethod", val === "all" ? undefined : val as PaymentMethod);
+                                            handleFilterChange(
+                                                "paymentMethod",
+                                                val === "all" ? undefined : val as PaymentMethod
+                                            );
                                         }}
                                         className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer transition-all shadow-sm"
                                     >
@@ -146,39 +173,51 @@ const OrderToolbar: React.FC<Props> = ({
                                     </select>
                                 </div>
 
-                                {/* DÒNG 1 - CỘT 4: Ô TRỐNG ĐỂ ÉP XUỐNG DÒNG (Hiển thị trên màn hình lớn) */}
                                 <div className="hidden lg:block col-span-1"></div>
 
-                                {/* DÒNG 2 - CỘT 1&2: THỜI GIAN ĐẶT HÀNG */}
+                                {/* KHOẢNG NGÀY */}
                                 <div className="space-y-1.5 md:col-span-2 lg:col-span-2">
-                                    <label className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">
-                                        <IoCalendarOutline className="text-sm" /> Khoảng ngày đặt
+                                    <label className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wide ml-1">
+                                        <IoCalendarOutline className="text-[13px]" />
+                                        Khoảng ngày đặt
                                     </label>
+
                                     <div className="flex items-center gap-2">
+
+                                        {/* INPUT GIỮ NGUYÊN */}
                                         <input
                                             type="date"
                                             value={filters.fromOrderDate ? new Date(filters.fromOrderDate).toISOString().split('T')[0] : ""}
-                                            onChange={(e) => handleFilterChange("fromOrderDate", e.target.value ? new Date(e.target.value) : undefined)}
+                                            onChange={(e) => handleFilterChange(
+                                                "fromOrderDate",
+                                                e.target.value ? new Date(e.target.value) : undefined
+                                            )}
                                             className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all shadow-sm"
                                         />
-                                        <span className="text-slate-400 font-medium">-</span>
+
+                                        <span className="text-slate-400 text-sm font-medium">-</span>
+
+                                        {/* INPUT GIỮ NGUYÊN */}
                                         <input
                                             type="date"
                                             value={filters.toOrderDate ? new Date(filters.toOrderDate).toISOString().split('T')[0] : ""}
-                                            onChange={(e) => handleFilterChange("toOrderDate", e.target.value ? new Date(e.target.value) : undefined)}
+                                            onChange={(e) => handleFilterChange(
+                                                "toOrderDate",
+                                                e.target.value ? new Date(e.target.value) : undefined
+                                            )}
                                             className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all shadow-sm"
                                         />
                                     </div>
                                 </div>
 
-                                {/* DÒNG 2 - CỘT 3: NÚT RESET (NẰM NGAY DƯỚI PHƯƠNG THỨC) */}
+                                {/* RESET */}
                                 <div className="col-span-1">
                                     <button
                                         onClick={handleReset}
-                                        className="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-semibold text-rose-600 bg-rose-50/50 border border-rose-200 rounded-lg hover:bg-rose-100 hover:border-rose-300 transition-all shadow-sm"
+                                        className="flex items-center justify-center gap-1.5 w-full px-3 py-2 text-[13px] font-semibold text-rose-600 bg-rose-50/50 border border-rose-200 rounded-lg hover:bg-rose-100 hover:border-rose-300 transition-all shadow-sm"
                                         title="Đặt lại mặc định"
                                     >
-                                        <IoRefreshOutline className="text-lg" />
+                                        <IoRefreshOutline className="text-[16px]" />
                                         <span>Đặt lại mặc định</span>
                                     </button>
                                 </div>

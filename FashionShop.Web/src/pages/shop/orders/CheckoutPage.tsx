@@ -10,6 +10,7 @@ import type { Address } from '../../../features/shop/addresses/types/address';
 import { useOrderMutations } from '../../../features/shop/orders/hooks/useOrders';
 import { PaymentMethod, type OrderRequest } from '../../../features/shop/orders/types/requests';
 import { useSnackbar } from '../../../contexts';
+import Loading from '../../../components/common/Loading';
 
 const CheckoutPage = () => {
     const navigate = useNavigate();
@@ -80,7 +81,7 @@ const CheckoutPage = () => {
     };
 
     if (isCartLoading || isAddrLoading) {
-        return <div className="min-h-screen flex items-center justify-center font-bold text-zinc-500">Đang tải thông tin đơn hàng...</div>;
+        return <Loading />
     }
 
     return (

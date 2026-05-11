@@ -24,6 +24,7 @@ import { useSnackbar } from "../../../../contexts";
 // Components
 import RenderToggle from "../../../../components/common/RenderToggle";
 import ProductVariantsManager from "./ProductVariantsManager";
+import Loading from "../../../../components/common/Loading";
 
 
 // ==========================================
@@ -45,7 +46,7 @@ const generateSlug = (str: string) => {
 };
 
 const getInputClassName = (hasError?: boolean) => {
-    const baseStyle = "w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm text-slate-900 transition-all outline-none focus:bg-white";
+    const baseStyle = "w-full px-3.5 py-2 bg-slate-50 border rounded-lg text-[13px] text-slate-900 transition-all outline-none focus:bg-white";
     const errorStyle = "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-500/10";
     const normalStyle = "border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
     
@@ -261,7 +262,7 @@ const ProductFormDialog: React.FC<Props> = ({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 font-sans">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 font-sans">
                     {/* Backdrop */}
                     <motion.div
                         className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
@@ -274,35 +275,32 @@ const ProductFormDialog: React.FC<Props> = ({
 
                     {/* Modal Content */}
                     <motion.div
-                        className="relative w-full max-w-6xl bg-slate-50 rounded-[24px] shadow-2xl flex flex-col max-h-[95vh] ring-1 ring-slate-900/5 overflow-hidden"
+                        className="relative w-full max-w-5xl bg-slate-50 rounded-[22px] shadow-2xl flex flex-col h-[92vh] ring-1 ring-slate-900/5 overflow-hidden"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full overflow-hidden">
-                            <FormHeader
-                                isEdit={!!productDetail}
-                                isProcessing={isProcessing}
-                                isCreating={isCreatingDetail}
-                                isUpdating={isUpdatingDetail}
-                                isDataReady={isDataReady}
-                                onClose={onClose}
-                            />
+                        {!isDataReady ? (
+                            <Loading message="Đang tải dữ liệu sản phẩm" />
+                        ) : (
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full overflow-hidden">
+                                <FormHeader
+                                    isEdit={!!productDetail}
+                                    isProcessing={isProcessing}
+                                    isCreating={isCreatingDetail}
+                                    isUpdating={isUpdatingDetail}
+                                    isDataReady={isDataReady}
+                                    onClose={onClose}
+                                />
 
-                            <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar scroll-smooth relative">
-                                {!isDataReady ? (
-                                    <div className="flex flex-col items-center justify-center h-full min-h-[400px] space-y-4">
-                                        <div className="w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
-                                        <p className="text-sm font-semibold text-slate-500">Đang chuẩn bị dữ liệu...</p>
-                                    </div>
-                                ) : (
-                                    <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300">
-                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <div className="flex-1 overflow-y-auto p-3 md:p-6 custom-scrollbar scroll-smooth relative">
+                                    <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-300">
+                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                                             
                                             {/* CỘT TRÁI */}
-                                            <div className="lg:col-span-2 space-y-6">
+                                            <div className="lg:col-span-2 space-y-5">
                                                 <BasicInfoSection
                                                     register={register}
                                                     errors={errors}
@@ -319,7 +317,7 @@ const ProductFormDialog: React.FC<Props> = ({
                                             </div>
 
                                             {/* CỘT PHẢI */}
-                                            <div className="lg:col-span-1 space-y-6">
+                                            <div className="lg:col-span-1 space-y-5">
                                                 <ThumbnailSection
                                                     register={register}
                                                     errors={errors}
@@ -337,7 +335,7 @@ const ProductFormDialog: React.FC<Props> = ({
                                         </div>
 
                                         {/* PHÂN LOẠI (VARIANTS) */}
-                                        <div className="pt-2 pb-10">
+                                        <div className="pt-1 pb-8">
                                             <ProductVariantsManager
                                                 fields={fields}
                                                 append={append}
@@ -347,9 +345,10 @@ const ProductFormDialog: React.FC<Props> = ({
                                             />
                                         </div>
                                     </div>
-                                )}
-                            </div>
-                        </form>
+                                </div>
+                            </form>
+                        )}
+                        
                     </motion.div>
                 </div>
             )}
@@ -365,26 +364,26 @@ export default ProductFormDialog;
 // ==========================================
 
 const FormHeader = ({ isEdit, isProcessing, isCreating, isUpdating, isDataReady, onClose }: any) => (
-    <div className="px-6 py-5 md:px-8 border-b border-slate-200 flex flex-wrap gap-4 items-center justify-between bg-white shrink-0 z-20 sticky top-0">
+    <div className="px-5 py-4 md:px-6 border-b border-slate-200 flex flex-wrap gap-3 items-center justify-between bg-white shrink-0 z-20 sticky top-0">
         <div>
-            <div className="flex items-center gap-3">
-                <h3 className="text-xl font-bold text-slate-800 tracking-tight">
+            <div className="flex items-center gap-2.5">
+                <h3 className="text-lg font-bold text-slate-800 tracking-tight">
                     {isEdit ? "Cập nhật sản phẩm" : "Thêm sản phẩm mới"}
                 </h3>
-                <span className="px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 rounded-md">
+                <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 rounded-md">
                     {isEdit ? "Chỉnh sửa" : "Tạo mới"}
                 </span>
             </div>
-            <p className="text-sm text-slate-500 mt-1 font-medium">
+            <p className="text-[13px] text-slate-500 mt-1 font-medium">
                 Cấu hình thông tin, hình ảnh và các phân loại của sản phẩm
             </p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
             <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors"
+                className="px-4 py-2 rounded-lg text-[13px] font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors"
             >
                 Hủy bỏ
             </button>
@@ -392,7 +391,7 @@ const FormHeader = ({ isEdit, isProcessing, isCreating, isUpdating, isDataReady,
                 type="submit"
                 disabled={isProcessing || !isDataReady}
                 className={`
-                    px-5 py-2.5 rounded-xl text-sm font-semibold text-white disabled:bg-blue-400 disabled:cursor-not-allowed transition-all
+                    px-4 py-2 rounded-lg text-[13px] font-semibold text-white disabled:bg-blue-400 disabled:cursor-not-allowed transition-all
                     ${isCreating || isUpdating 
                         ? 'bg-indigo-400 cursor-wait' 
                         : 'bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5' 
@@ -402,29 +401,29 @@ const FormHeader = ({ isEdit, isProcessing, isCreating, isUpdating, isDataReady,
                 {isProcessing ? "Đang xử lý..." : "Lưu sản phẩm"}
             </button>
             
-            <div className="hidden sm:block w-px h-8 bg-slate-200 mx-2"></div>
+            <div className="hidden sm:block w-px h-7 bg-slate-200 mx-1"></div>
             
             <button
                 type="button"
                 onClick={onClose}
-                className="p-2.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
             >
-                <IoClose className="text-xl" />
+                <IoClose className="text-lg" />
             </button>
         </div>
     </div>
 );
 
-const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
-    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-        <h4 className="text-base font-bold text-slate-800 mb-5 flex items-center gap-2">
-            <IoInformationCircleOutline className="text-xl text-blue-500" /> 
+const BasicInfoSection = ({ register, errors, onNameChange }: any) => (
+    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <IoInformationCircleOutline className="text-lg text-blue-500" /> 
             Thông tin chung
         </h4>
 
         {/* Name */}
         <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                 Tên sản phẩm <span className="text-red-500">*</span>
             </label>
             <input
@@ -436,23 +435,15 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                     onNameChange(e);
                 }}
             />
-            <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500 text-[12px] font-semibold">
-                    {errors.name?.message}
-                </span>
-                <span className={`${(watch("name") || "").length >= 200 ? "text-red-500 font-bold" : "text-slate-400"}`}>
-                    {(watch("name") || "").length}/200
-                </span>
-            </div>
         </div>
 
         {/* Slug */}
         <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                 Đường dẫn (Slug) <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center">
-                <span className="px-3 py-2.5 bg-slate-100 border border-r-0 border-slate-200 rounded-l-xl text-sm text-slate-500 font-mono">
+                <span className="px-3 py-2 bg-slate-100 border border-r-0 border-slate-200 rounded-l-lg text-[13px] text-slate-500 font-mono">
                     /url/
                 </span>
                 <input
@@ -462,45 +453,32 @@ const BasicInfoSection = ({ register, errors, watch, onNameChange }: any) => (
                     {...register("slug", { required: "Vui lòng nhập Slug", maxLength: 200 })}
                 />
             </div>
-            <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500 text-[12px] font-semibold">
-                    {errors.slug?.message}
-                </span>
-                <span className={`${(watch("slug") || "").length >= 200 ? "text-red-500 font-bold" : "text-slate-400"}`}>
-                    {(watch("slug") || "").length}/200
-                </span>
-            </div>
         </div>
 
         {/* Description */}
         <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                 Mô tả <span className="text-red-500">*</span>
             </label>
             <textarea
-                rows={20}
+                rows={18}
                 className={`resize-none ${getInputClassName(errors.description)}`}
                 {...register("description", { required: "Vui lòng nhập Mô tả" })}
             />
-            <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500 text-[12px] font-semibold">
-                    {errors.description?.message}
-                </span>
-            </div>
         </div>
     </div>
 );
 
-const AttributesSection = ({ register, errors, watch, categories, brands }: any) => (
-    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h4 className="text-base font-bold text-slate-800 mb-5 flex items-center gap-2">
-            <IoLayersOutline className="text-xl text-indigo-500" /> 
+const AttributesSection = ({ register, errors, categories, brands }: any) => (
+    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <IoLayersOutline className="text-lg text-indigo-500" /> 
             Tổ chức & Thuộc tính
         </h4>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                     Danh mục <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -514,15 +492,10 @@ const AttributesSection = ({ register, errors, watch, categories, brands }: any)
                         </option>
                     ))}
                 </select>
-                <div className="flex justify-between mt-1.5 text-xs">
-                    <span className="text-red-500 text-[12px] font-semibold">
-                        {errors.categoryId?.message}
-                    </span>
-                </div>
             </div>
             
             <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                     Thương hiệu <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -536,15 +509,10 @@ const AttributesSection = ({ register, errors, watch, categories, brands }: any)
                         </option>
                     ))}
                 </select>
-                <div className="flex justify-between mt-1.5 text-xs">
-                    <span className="text-red-500 text-[12px] font-semibold">
-                        {errors.brandId?.message}
-                    </span>
-                </div>
             </div>
             
             <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                     Chất liệu <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -552,27 +520,19 @@ const AttributesSection = ({ register, errors, watch, categories, brands }: any)
                     className={getInputClassName(errors.material)}
                     {...register("material", { required: "Vui lòng nhập Chất liệu", maxLength: 100 })}
                 />
-                <div className="flex justify-between mt-1.5 text-xs">
-                    <span className="text-red-500 text-[12px] font-semibold">
-                        {errors.material?.message}
-                    </span>
-                    <span className={`${(watch("material") || "").length >= 100 ? "text-red-500 font-bold" : "text-slate-400"}`}>
-                        {(watch("material") || "").length}/100
-                    </span>
-                </div>
             </div>
             
             <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                     Giá bán mặc định <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                     <input
                         type="number"
-                        className="w-full pl-4 pr-12 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-blue-500"
+                        className="w-full pl-3.5 pr-11 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[13px] font-medium outline-none focus:border-blue-500"
                         {...register("price")}
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[11px] font-bold">
                         VNĐ
                     </span>
                 </div>
@@ -591,12 +551,12 @@ const ThumbnailSection = ({
     isEdit,
 }: any) => {
     
-    const wrapperClass = `group relative w-full aspect-[4/5] rounded-xl border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center overflow-hidden 
+    const wrapperClass = `group relative w-full aspect-[4/5] rounded-lg border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center overflow-hidden 
         ${errors.thumbnail ? "border-red-400 bg-red-50" : "border-slate-300 bg-slate-50 hover:border-blue-500"}`;
 
     return (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h4 className="text-base font-bold text-slate-800 mb-4">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h4 className="text-[15px] font-bold text-slate-800 mb-4">
                 Ảnh đại diện <span className="text-red-500">*</span>
             </h4>
             
@@ -625,41 +585,35 @@ const ThumbnailSection = ({
                                 e.stopPropagation();
                                 onRemove();
                             }}
-                            className="absolute top-3 right-3 z-20 p-2 bg-white text-red-500 rounded-full shadow-md opacity-0 group-hover:opacity-100"
+                            className="absolute top-2.5 right-2.5 z-20 p-1.5 bg-white text-red-500 rounded-full shadow-md opacity-0 group-hover:opacity-100"
                         >
                             <IoClose />
                         </button>
                     </>
                 ) : (
-                    <div className="flex flex-col items-center text-center p-6 text-slate-400">
-                        <IoImageOutline className="text-4xl mb-2" />
-                        <p className="text-sm font-semibold text-slate-600">Nhấn để tải ảnh</p>
+                    <div className="flex flex-col items-center text-center p-5 text-slate-400">
+                        <IoImageOutline className="text-3xl mb-2" />
+                        <p className="text-[13px] font-semibold text-slate-600">Nhấn để tải ảnh</p>
                     </div>
                 )}
-            </div>
-            
-            <div className="flex justify-between mt-1.5 text-xs">
-                <span className="text-red-500 text-[12px] font-semibold">
-                    {errors.thumbnail?.message}
-                </span>
             </div>
         </div>
     );
 };
 
 const StatusSection = ({ register }: any) => (
-    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        <h4 className="text-base font-bold text-slate-800 mb-2">Trạng thái</h4>
+    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <h4 className="text-[15px] font-bold text-slate-800 mb-2">Trạng thái</h4>
         
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
             <RenderToggle label="Hoạt động" name="isActive" register={register} />
         </div>
         
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
             <RenderToggle label="Bán chạy" name="isBestSeller" register={register} />
         </div>
         
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
             <RenderToggle label="Hàng mới" name="isNew" register={register} />
         </div>
     </div>

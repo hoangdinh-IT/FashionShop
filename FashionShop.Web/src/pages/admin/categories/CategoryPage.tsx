@@ -92,20 +92,20 @@ const CategoryPage: React.FC = () => {
     const tableContainerStyle = useTableMinHeight(queryParams.pageSize);
 
     return (
-        <div className="h-full flex flex-col p-3 md:p-4 space-y-3 bg-gray-50/50"> 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 shrink-0">
+        <div className="h-full flex flex-col p-2.5 md:p-3 space-y-2.5 bg-gray-50/50"> 
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-2.5 shrink-0">
                 <div className="flex items-center justify-center w-full">
-                    <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">
+                    <h1 className="text-[28px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">
                         QUẢN LÝ DANH MỤC
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="flex items-center gap-2.5 w-full md:w-auto">
                     <button 
                         onClick={handleOpenCreate}
-                        className="flex-none flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm whitespace-nowrap ml-auto md:ml-0"
+                        className="flex-none flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 text-white px-2.5 py-1.5 rounded-lg text-[13px] font-semibold transition-all shadow-sm whitespace-nowrap ml-auto md:ml-0"
                     >
-                        <IoAdd className="text-lg" />
+                        <IoAdd className="text-base" />
                         <span>Thêm mới</span>
                     </button>
                 </div>
@@ -119,7 +119,7 @@ const CategoryPage: React.FC = () => {
                 />
             </div>
 
-            <div className="flex-1 flex flex-col min-h-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="flex-1 flex flex-col min-h-0 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 
                 <div 
                     className="flex-1 overflow-auto custom-scrollbar relative"
@@ -137,7 +137,7 @@ const CategoryPage: React.FC = () => {
                 </div>
                 
                 {!isLoading && categories.length > 0 && (
-                    <div className="shrink-0 border-t border-gray-100 bg-white px-4 py-3">
+                    <div className="shrink-0 border-t border-gray-100 bg-white px-3 py-2.5">
                         <Pagination
                             totalRecord={totalRecord}
                             pageSize={queryParams.pageSize}

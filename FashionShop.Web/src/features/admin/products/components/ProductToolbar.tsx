@@ -54,12 +54,12 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
                 
                 <div className="relative w-full md:max-w-sm group">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600">
-                        <IoSearchOutline className="text-lg" />
+                        <IoSearchOutline className="text-base" />
                     </div>
                     <input
                         type="text"
                         onChange={(e) => onSearch?.(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 bg-slate-50 border border-transparent focus:bg-white focus:border-indigo-500 rounded-lg text-slate-700 text-sm font-medium transition-all outline-none placeholder-slate-400"
+                        className="block w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-transparent focus:bg-white focus:border-indigo-500 rounded-lg text-[13px] text-slate-700 font-medium transition-all outline-none placeholder-slate-400"
                         placeholder="Tìm kiếm sản phẩm..."
                     />
                 </div>
@@ -69,13 +69,13 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
                         setIsFilterOpen(!isFilterOpen);
                         if (isFilterOpen) handleReset();
                     }}
-                    className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all border ${
+                    className={`flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg font-medium text-[13px] transition-all border ${
                         isFilterOpen 
                             ? 'bg-indigo-50 border-indigo-200 text-indigo-700' 
                             : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
                     }`}
                 >
-                    {isFilterOpen ? <IoClose className="text-lg" /> : <IoFilterOutline className="text-lg" />}
+                    {isFilterOpen ? <IoClose className="text-base" /> : <IoFilterOutline className="text-base" />}
                     <span className="hidden sm:inline">{isFilterOpen ? 'Đóng' : 'Bộ lọc'}</span>
                 </button>
             </div>
@@ -89,16 +89,18 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
                         transition={{ duration: 0.2 }}
                         className="bg-slate-50/50 border-t border-slate-100"
                     >
-                        <div className="p-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="p-3.5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
                                 
                                 {/* DANH MỤC */}
                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Danh mục</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
+                                        Danh mục
+                                    </label>
                                     <select
                                         value={filters.categoryId || ''}
                                         onChange={(e) => handleFilterChange('categoryId', e.target.value)}
-                                        className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
+                                        className="block w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
                                     >
                                         <option value="">Tất cả danh mục</option>
                                         {leafCategories.map(cat => (
@@ -109,11 +111,13 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
 
                                 {/* THƯƠNG HIỆU */}
                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Thương hiệu</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
+                                        Thương hiệu
+                                    </label>
                                     <select
                                         value={filters.brandId || ''}
                                         onChange={(e) => handleFilterChange('brandId', e.target.value)}
-                                        className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
+                                        className="block w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
                                     >
                                         <option value="">Tất cả thương hiệu</option>
                                         {brands.map(brand => (
@@ -124,11 +128,13 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
 
                                 {/* TRẠNG THÁI */}
                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Trạng thái</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
+                                        Trạng thái
+                                    </label>
                                     <select
                                         value={filters.isActive === undefined ? "all" : filters.isActive.toString()}
                                         onChange={(e) => handleBooleanSelect('isActive', e.target.value)}
-                                        className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
+                                        className="block w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
                                     >
                                         <option value="all">Tất cả</option>
                                         <option value="true">Hoạt động</option>
@@ -140,20 +146,22 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
                                 <div className="flex items-end">
                                     <button
                                         onClick={handleReset}
-                                        className="flex items-center justify-center gap-2 w-full px-4 py-2 text-sm font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-lg hover:bg-rose-100 hover:border-rose-300 transition-all shadow-sm"
+                                        className="flex items-center justify-center gap-2 w-full px-3 py-1.5 text-[13px] font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-lg hover:bg-rose-100 hover:border-rose-300 transition-all shadow-sm"
                                     >
-                                        <IoRefreshOutline className="text-lg" />
+                                        <IoRefreshOutline className="text-base" />
                                         <span>Đặt lại bộ lọc</span>
                                     </button>
                                 </div>
 
                                 {/* BESTSELLER */}
                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Bán chạy nhất</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
+                                        Bán chạy nhất
+                                    </label>
                                     <select
                                         value={filters.isBestSeller === undefined ? "all" : filters.isBestSeller.toString()}
                                         onChange={(e) => handleBooleanSelect('isBestSeller', e.target.value)}
-                                        className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
+                                        className="block w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
                                     >
                                         <option value="all">Tất cả</option>
                                         <option value="true">Có</option>
@@ -163,11 +171,13 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
 
                                 {/* NEW */}
                                 <div className="space-y-1">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Mới nhất</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
+                                        Mới nhất
+                                    </label>
                                     <select
                                         value={filters.isNew === undefined ? "all" : filters.isNew.toString()}
                                         onChange={(e) => handleBooleanSelect('isNew', e.target.value)}
-                                        className="block w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
+                                        className="block w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg text-slate-700 focus:border-indigo-500 outline-none cursor-pointer"
                                     >
                                         <option value="all">Tất cả</option>
                                         <option value="true">Có</option>
@@ -177,22 +187,24 @@ const ProductToolbar: React.FC<ProductToolbarProps> = ({
 
                                 {/* PRICE */}
                                 <div className="space-y-1 sm:col-span-2">
-                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Khoảng giá (VNĐ)</label>
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
+                                        Khoảng giá (VNĐ)
+                                    </label>
                                     <div className="flex gap-2 items-center">
                                         <input
                                             type="number"
                                             placeholder="Thấp nhất"
                                             value={filters.minPrice || ''}
                                             onChange={(e) => handleFilterChange('minPrice', e.target.value ? Number(e.target.value) : undefined)}
-                                            className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 outline-none"
+                                            className="w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg focus:border-indigo-500 outline-none"
                                         />
-                                        <span className="text-slate-400">-</span>
+                                        <span className="text-slate-400 text-sm">-</span>
                                         <input
                                             type="number"
                                             placeholder="Cao nhất"
                                             value={filters.maxPrice || ''}
                                             onChange={(e) => handleFilterChange('maxPrice', e.target.value ? Number(e.target.value) : undefined)}
-                                            className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 outline-none"
+                                            className="w-full px-3 py-1.5 text-[13px] bg-white border border-slate-200 rounded-lg focus:border-indigo-500 outline-none"
                                         />
                                     </div>
                                 </div>
