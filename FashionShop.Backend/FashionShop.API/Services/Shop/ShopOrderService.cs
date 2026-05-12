@@ -21,10 +21,10 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<ShopOrderResponse?>> GetOrdersAsync(Guid userId)
+        public async Task<IEnumerable<ShopOrderSummaryResponse?>> GetOrdersAsync(Guid userId)
             => await _unitOfWork.ShopOrders.GetOrdersAsync(userId);
 
-        public async Task<ShopOrderResponse?> GetOrderByIdAsync(Guid userId, Guid orderId)
+        public async Task<ShopOrderDetailResponse?> GetOrderByIdAsync(Guid userId, Guid orderId)
         {
             var order = await _unitOfWork.ShopOrders.FindOrderByIdAsync(userId, orderId);
 
@@ -37,7 +37,7 @@ namespace FashionShop.API.Services.Shop
 
         // --- WRITE METHODS --- //
 
-        public async Task<ShopOrderResponse?> CreateOrderAsync(Guid userId, ShopCreateOrderRequest request)
+        public async Task<ShopOrderDetailResponse?> CreateOrderAsync(Guid userId, ShopCreateOrderRequest request)
         {
             await _unitOfWork.BeginTransactionAsync();
             try
@@ -121,7 +121,7 @@ namespace FashionShop.API.Services.Shop
             }
         }
 
-        public async Task<ShopOrderResponse?> UpdateCancelledAsync(Guid userId, Guid orderId)
+        public async Task<ShopOrderDetailResponse?> UpdateCancelledAsync(Guid userId, Guid orderId)
         {
             var order = await _unitOfWork.ShopOrders.FindOrderByIdAsync(userId, orderId);
             if (order == null) throw new KeyNotFoundException("Không tìm thấy đơn hàng!");

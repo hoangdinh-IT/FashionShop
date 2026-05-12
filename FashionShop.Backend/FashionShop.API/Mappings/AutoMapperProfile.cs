@@ -120,10 +120,10 @@ namespace FashionShop.API.Mappings
             CreateMap<ShopCreateOrderRequest, Order>()
                 .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
 
-            CreateMap<OrderItem, ShopOrderItemResponse>()
+            CreateMap<OrderItem, ShopOrderItemSummaryResponse>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductVariant.Product.Name));
 
-            CreateMap<Order, ShopOrderResponse>();
+            CreateMap<Order, ShopOrderSummaryResponse>();
         }
     }
 }

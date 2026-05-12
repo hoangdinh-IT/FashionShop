@@ -15,14 +15,15 @@ export const useOrders = () => {
     }
 }
 
-export const useOrderItems = (orderId?: string) => {
+export const useOrder = (orderId?: string) => {
     const query = useQuery({
-        queryKey: ["orders"],
-        queryFn: () => orderService.getOrderItemsByOrderId(orderId!),
+        queryKey: ["order"],
+        queryFn: () => orderService.getById(orderId!),
+        enabled: !!orderId,
     })
 
     return {
-        orderItems: query.data?.data || [],
+        order: query.data?.data,
         isLoading: query.isLoading
     }
 } 

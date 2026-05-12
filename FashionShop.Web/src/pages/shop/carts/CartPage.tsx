@@ -43,7 +43,6 @@ const CartPage = () => {
         );
     }
 
-    // --- TRẠNG THÁI HOÀN TẤT ---
     return (
         <div className="bg-[#fafafa] min-h-screen pb-24 font-sans text-zinc-900">
             <div className="bg-white/80 backdrop-blur-md sticky top-[64px] z-20 border-b border-zinc-100">
@@ -73,8 +72,42 @@ const CartPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="text-center py-20">
-                        <p className="text-zinc-400 font-medium">Giỏ hàng của bạn đang trống.</p>
+                    <div className="flex items-center justify-center py-24">
+                        <div className="relative w-full max-w-xl">
+                            <div className="absolute inset-0 bg-gradient-to-br from-zinc-100/60 via-white to-zinc-100/40 blur-3xl rounded-full scale-125 opacity-70" />
+                            <div className="relative overflow-hidden rounded-[36px] border border-zinc-200/70 bg-white/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.04)] px-10 py-14 text-center">
+                                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(0,0,0,0.03),transparent_35%)] pointer-events-none" />
+                                <div className="relative mx-auto w-28 h-28 flex items-center justify-center">
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]" />
+                                    <div className="relative w-16 h-16 rounded-2xl bg-white border border-zinc-200 flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+                                        <svg 
+                                            className="w-8 h-8 text-zinc-700" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                strokeWidth={1.5} 
+                                                d="M3 5h2l2.2 10.2a1 1 0 00.98.8h8.9a1 1 0 00.98-.8L21 8H7" 
+                                            />
+                                            <circle cx="10" cy="19" r="1.5" fill="currentColor" stroke="none" />
+                                            <circle cx="18" cy="19" r="1.5" fill="currentColor" stroke="none" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="mt-10 space-y-3">
+                                    <h2 className="text-3xl font-bold tracking-tight text-zinc-900">
+                                        Giỏ hàng đang trống
+                                    </h2>
+
+                                    <p className="text-zinc-500 text-[15px] leading-relaxed max-w-md mx-auto font-medium">
+                                        Hãy khám phá những sản phẩm mới và thêm vào giỏ hàng để bắt đầu trải nghiệm mua sắm của bạn.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

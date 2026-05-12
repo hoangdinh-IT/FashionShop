@@ -45,7 +45,7 @@ const CartSummary: React.FC<Props> = ({ total }) => {
                     <button 
                         disabled={total === 0}
                         onClick={() => navigate("/shop/order")}
-                        className={`w-full font-bold py-5 rounded-2xl flex items-center justify-center gap-3 transition-all mt-6 shadow-lg group cursor-pointer 
+                        className={`w-full font-bold py-5 rounded-2xl flex items-center justify-center gap-3 transition-all mt-6 shadow-lg group 
                             ${total === 0 
                                 ? 'bg-zinc-200 text-zinc-400 cursor-not-allowed shadow-none' 
                                 : 'bg-zinc-900 hover:bg-black active:scale-[0.98] text-white shadow-zinc-200'}`}

@@ -60,10 +60,7 @@ const CheckoutPage = () => {
         }
 
         const orderRequest: OrderRequest = {
-            shippingAddress: selectedAddress.addressDetail,
-            shippingCommune: selectedAddress.commune,
-            shippingDistrict: selectedAddress.district,
-            shippingCity: selectedAddress.city,
+            addressId: selectedAddress.id,
             paymentMethod: paymentMethod,
             note: note,
             voucherId: undefined,

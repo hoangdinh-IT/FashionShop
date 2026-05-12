@@ -6,7 +6,7 @@ export interface User {
     phoneNumber: string;
     gender: Gender;
     dateOfBirth: Date;
-    avatarUrl: string;
+    avatar: string;
     membershipClass: MembershipClass;
 }
 

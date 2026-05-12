@@ -1,4 +1,5 @@
-﻿using FashionShop.Core.Enums;
+﻿using FashionShop.Core.Contracts.Admin.Order.Responses;
+using FashionShop.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Shop.Order.Responses
 {
-    public class ShopOrderResponse
+    public class ShopOrderSummaryResponse
     {
         public Guid OrderId { get; set; }
         public DateTime OrderDate { get; set; }
@@ -35,6 +36,6 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
         public DateTime? PaymentDate { get; set; }
 
         // Danh sách chi tiết các sản phẩm trong đơn
-        public List<ShopOrderItemResponse> OrderItems { get; set; } = new List<ShopOrderItemResponse>();
+        public List<ShopOrderItemSummaryResponse> OrderItems { get; set; } = new List<ShopOrderItemSummaryResponse>();
     }
 }

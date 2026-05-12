@@ -9,11 +9,12 @@ import App from './App.tsx'
 import { AppContextProvider } from './contexts';
 
 const queryClient = new QueryClient();
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 // Thiết lập môi trường (Config & Providers)
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <GoogleOAuthProvider clientId="1002098911051-q6cohq1ltgcj1jb35r1klgv3f08q5man.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter>
                     <AppContextProvider>

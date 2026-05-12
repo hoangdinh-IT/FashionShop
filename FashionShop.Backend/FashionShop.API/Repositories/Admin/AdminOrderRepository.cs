@@ -25,26 +25,26 @@ namespace FashionShop.API.Repositories.Admin
             {
                 OrderId = order.Id,
                 OrderDate = order.OrderDate,
-                FullName = order.User.FullName ?? "",
-                PhoneNumber = order.User.PhoneNumber ?? "",
-                ShippingAddress = order.ShippingAddress,
-                ShippingCommune = order.ShippingCommune,
-                ShippingDistrict = order.ShippingDistrict,
-                ShippingCity = order.ShippingCity,
+                FullName = order.Address.FullName ?? "",
+                PhoneNumber = order.Address.PhoneNumber ?? "",
+                ShippingAddress = order.Address.AddressDetail,
+                ShippingCommune = order.Address.Commune,
+                ShippingDistrict = order.Address.District,
+                ShippingCity = order.Address.City,
                 OrderStatus = order.OrderStatus.ToString(),
                 PaymentMethod = order.PaymentMethod.ToString(),
                 PaymentStatus = order.PaymentStatus.ToString(),
                 SubTotal = order.SubTotal,
 
                 TotalItemCount = order.OrderItems.Count,
-                OrderItems = order.OrderItems.Select(od => new AdminOrderItemSummaryResponse
+                OrderItems = order.OrderItems.Select(orderItem => new AdminOrderItemSummaryResponse
                 {
-                    ImageUrl = od.ProductVariant.Product.ProductImages
-                        .Where(pi => pi.ColorId == od.ProductVariant.ColorId)
+                    ImageUrl = orderItem.ProductVariant.Product.ProductImages
+                        .Where(pi => pi.ColorId == orderItem.ProductVariant.ColorId)
                         .OrderBy(pi => pi.SortOrder)
                         .Select(pi => pi.ImageUrl)
                         .FirstOrDefault()
-                        ?? od.ProductVariant.Product.ThumbnailUrl,
+                        ?? orderItem.ProductVariant.Product.ThumbnailUrl,
                 }).ToList()
             };
 
@@ -59,12 +59,12 @@ namespace FashionShop.API.Repositories.Admin
                 ShippingTrackingCode = order.ShippingTrackingCode,
                 PaymentDate = order.PaymentDate,
 
-                FullName = order.User.FullName ?? "",
-                PhoneNumber = order.User.PhoneNumber ?? "",
-                ShippingAddress = order.ShippingAddress,
-                ShippingCommune = order.ShippingCommune,
-                ShippingDistrict = order.ShippingDistrict,
-                ShippingCity = order.ShippingCity,
+                FullName = order.Address.FullName,
+                PhoneNumber = order.Address.PhoneNumber ?? "",
+                ShippingAddress = order.Address.AddressDetail,
+                ShippingCommune = order.Address.Commune,
+                ShippingDistrict = order.Address.District,
+                ShippingCity = order.Address.City,
                 Note = order.Note,
 
                 SubTotal = order.SubTotal,
@@ -72,22 +72,22 @@ namespace FashionShop.API.Repositories.Admin
                 DiscountAmount = order.DiscountAmount,
                 TotalAmount = order.TotalAmount,
 
-                OrderItems = order.OrderItems.Select(od => new AdminOrderItemDetailResponse
+                OrderItems = order.OrderItems.Select(orderItem => new AdminOrderItemDetailResponse
                 {
-                    OrderItemId = od.Id,
-                    ProductVariantId = od.ProductVariantId,
-                    ProductName = od.ProductVariant.Product.Name,
-                    VariantName = od.ProductVariant.Color.Name + " - " + od.ProductVariant.Size.Name,
-                    ImageUrl = od.ProductVariant.Product.ProductImages
-                        .Where(pi => pi.ColorId == od.ProductVariant.ColorId)
+                    OrderItemId = orderItem.Id,
+                    ProductVariantId = orderItem.ProductVariantId,
+                    ProductName = orderItem.ProductVariant.Product.Name,
+                    VariantName = orderItem.ProductVariant.Color.Name + " - " + orderItem.ProductVariant.Size.Name,
+                    ImageUrl = orderItem.ProductVariant.Product.ProductImages
+                        .Where(pi => pi.ColorId == orderItem.ProductVariant.ColorId)
                         .OrderBy(pi => pi.SortOrder)
                         .Select(pi => pi.ImageUrl)
                         .FirstOrDefault()
-                        ?? od.ProductVariant.Product.ThumbnailUrl,
-                    UnitPrice = od.ProductVariant.Product.Price,
-                    Quantity = od.Quantity,
-                    TotalLine = od.TotalLine,
-                    IsReviewed = od.Reviews.Any(),
+                        ?? orderItem.ProductVariant.Product.ThumbnailUrl,
+                    UnitPrice = orderItem.ProductVariant.Product.Price,
+                    Quantity = orderItem.Quantity,
+                    TotalLine = orderItem.TotalLine,
+                    IsReviewed = orderItem.Reviews.Any(),
                 }).ToList()
             };
 

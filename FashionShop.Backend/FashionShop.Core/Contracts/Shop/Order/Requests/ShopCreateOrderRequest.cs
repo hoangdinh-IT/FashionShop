@@ -11,21 +11,24 @@ namespace FashionShop.Core.Contracts.Shop.Order.Requests
     public class ShopCreateOrderRequest
     {
         // Thông tin địa chỉ giao hàng
-        [Required(ErrorMessage = "Vui lòng nhập địa chỉ cụ thể")]
-        [MaxLength(200)]
-        public string ShippingAddress { get; set; }
+        //[Required(ErrorMessage = "Vui lòng nhập địa chỉ cụ thể")]
+        //[MaxLength(200)]
+        //public string ShippingAddress { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn Phường/Xã")]
-        [MaxLength(200)]
-        public string ShippingCommune { get; set; }
+        //[Required(ErrorMessage = "Vui lòng chọn Phường/Xã")]
+        //[MaxLength(200)]
+        //public string ShippingCommune { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn Quận/Huyện")]
-        [MaxLength(200)]
-        public string ShippingDistrict { get; set; }
+        //[Required(ErrorMessage = "Vui lòng chọn Quận/Huyện")]
+        //[MaxLength(200)]
+        //public string ShippingDistrict { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn Tỉnh/Thành phố")]
-        [MaxLength(200)]
-        public string ShippingCity { get; set; }
+        //[Required(ErrorMessage = "Vui lòng chọn Tỉnh/Thành phố")]
+        //[MaxLength(200)]
+        //public string ShippingCity { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng chọn địa chỉ giao hàng")]
+        public Guid AddressId { get; set; }
 
         // Thông tin thanh toán & giảm giá
         [Required]

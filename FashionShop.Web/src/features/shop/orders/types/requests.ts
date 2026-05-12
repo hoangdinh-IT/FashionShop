@@ -1,8 +1,5 @@
 export interface OrderRequest {
-    shippingAddress: string;
-    shippingCommune: string;
-    shippingDistrict: string;
-    shippingCity: string;
+    addressId: string;
     paymentMethod: PaymentMethod;
     voucherId?: string;
     note?: string;

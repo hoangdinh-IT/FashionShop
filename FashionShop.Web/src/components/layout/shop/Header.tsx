@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MegaMenu from '../../../features/shop/brands/components/MegaMenu';
+import { useUsers } from '../../../features/shop/users/hooks/useUsers';
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const { user, isLoading } = useUsers();
 
     return (
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm font-sans transition-all duration-300">
@@ -50,19 +53,94 @@ const Header: React.FC = () => {
                         />
                     </div>
 
-                    {/* Giỏ hàng (Túi xách nét mảnh) */}
-                    <Link to="/shop/cart" className="text-gray-800 hover:text-black hover:-translate-y-0.5 transition-all duration-300 relative">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
+                    {/* Giỏ hàng */}
+                    <Link 
+                        to="/shop/cart" 
+                        className="group relative flex items-center justify-center"
+                    >
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 opacity-0 group-hover:opacity-100 blur-md transition-all duration-500 scale-110" />
+
+                        {/* Cart Container */}
+                        <div className="relative w-11 h-11 rounded-full border border-zinc-200 bg-white flex items-center justify-center overflow-hidden shadow-[0_4px_18px_rgba(0,0,0,0.06)] group-hover:shadow-[0_8px_28px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:-translate-y-0.5">
+                            
+                            {/* subtle gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white via-zinc-50 to-zinc-100 opacity-80" />
+
+                            {/* Icon */}
+                            <svg 
+                                className="relative w-[22px] h-[22px] text-zinc-700 transition-all duration-300 group-hover:scale-110 group-hover:text-black" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    strokeWidth={1.5} 
+                                    d="M3 5h2l2.2 10.2a1 1 0 00.98.8h8.9a1 1 0 00.98-.8L21 8H7" 
+                                />
+                                <circle cx="10" cy="19" r="1.7" fill="currentColor" stroke="none" />
+                                <circle cx="18" cy="19" r="1.7" fill="currentColor" stroke="none" />
+                            </svg>
+
+                        </div>
                     </Link>
 
                     {/* Tài khoản */}
-                    <Link to="/shop/account/information" className="flex items-center gap-2 text-gray-800 hover:text-black group transition-colors">
-                        <svg className="w-6 h-6 group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span className="font-medium text-sm hidden sm:block tracking-wide">Hoàng</span>
+                    <Link 
+                        to="/shop/account/information" 
+                        className="group relative flex items-center justify-center"
+                    >
+                        {/* Glow nền nhẹ */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 opacity-0 group-hover:opacity-100 blur-md transition-all duration-500 scale-110" />
+
+                        {/* Avatar Container */}
+                        <div className="relative w-11 h-11 rounded-full overflow-hidden border border-zinc-200 bg-white shadow-[0_4px_18px_rgba(0,0,0,0.06)] group-hover:shadow-[0_8px_28px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:-translate-y-0.5">
+                            
+                            {isLoading ? (
+                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100">
+                                    <svg 
+                                        className="w-5 h-5 text-zinc-400" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round" 
+                                            strokeWidth={1.4} 
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                                        />
+                                    </svg>
+                                </div>
+                            ) : user?.avatar ? (
+                                <img
+                                    src={user.avatar}
+                                    alt={user.fullName || "User Avatar"}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100">
+                                    <svg 
+                                        className="w-5 h-5 text-zinc-500" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round" 
+                                            strokeWidth={1.4} 
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                                        />
+                                    </svg>
+                                </div>
+                            )}
+
+                            {/* Online Dot */}
+                            <div className="absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow-sm" />
+                        </div>
                     </Link>
                 </div>
 

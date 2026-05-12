@@ -19,20 +19,7 @@ namespace FashionShop.Core.Entities
         public Guid? VoucherId { get; set; }
 
         [Required]
-        [MaxLength(200)]
-        public string ShippingAddress { get; set; }
-
-        [Required]
-        [MaxLength(200)]
-        public string ShippingCommune { get; set; }
-
-        [Required]
-        [MaxLength(200)]
-        public string ShippingDistrict { get; set; }
-
-        [Required]
-        [MaxLength(200)]
-        public string ShippingCity { get; set; }
+        public Guid AddressId { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -74,6 +61,9 @@ namespace FashionShop.Core.Entities
 
         [ForeignKey("VoucherId")]
         public virtual Voucher Voucher { get; set; }
+
+        [ForeignKey("AddressId")]
+        public virtual Address Address { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 

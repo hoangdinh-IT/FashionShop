@@ -8,9 +8,9 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<ShopOrderResponse?>> GetOrdersAsync(Guid userId);
+        Task<IEnumerable<ShopOrderSummaryResponse?>> GetOrdersAsync(Guid userId);
         Task<Order?> FindOrderByIdAsync(Guid userId, Guid orderId);
-        Task<ShopOrderResponse?> GetOrderByIdAsync(Guid userId, Guid orderId);
+        Task<ShopOrderDetailResponse?> GetOrderByIdAsync(Guid userId, Guid orderId);
 
 
 

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoReceiptOutline } from "react-icons/io5";
 
-import type { Order } from "../../../features/shop/orders/types/order";
-import { useOrderMutations, useOrders } from "../../../features/shop/orders/hooks/useOrders";
+import type { OrderSummary } from "../../../features/shop/orders/types/order";
+import { useOrder, useOrderMutations, useOrders } from "../../../features/shop/orders/hooks/useOrders";
 import PurchaseOrderItem from "../../../features/shop/orders/components/PurchaseHistory/PurchaseOrderItem";
+import OrderDetailDialog from "../../../features/shop/orders/components/PurchaseHistory/OrderDetailDialog";
 
 // Export để file con (PurchaseOrderItem) có thể sử dụng lại mà không cần khai báo lại
 export const STATUS_TABS = [
@@ -25,17 +26,25 @@ export const STATUS_THEME: Record<string, { color: string, bg: string, border: s
 };
 
 const PurchaseHistory = () => {
-    const { orders } = useOrders(); 
-    const { updateCancelledOrder } = useOrderMutations();
-
     const [activeTab, setActiveTab] = useState('All');
+    const [selectedOrderId, setSelectedOrderId] = useState<string | undefined>(undefined);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+    const { orders, isLoading: isLoadingOrders } = useOrders();
+    const { order, isLoading: isLoadingOrder } = useOrder(selectedOrderId);
+    const { updateCancelledOrder } = useOrderMutations();
 
     const filteredOrders = activeTab === "All"
         ? orders
-        : orders.filter((order: Order) => order.orderStatus === activeTab);
+        : orders.filter((order: OrderSummary) => order.orderStatus === activeTab);
 
     const handleCancelledOrder = (orderId: string) => {
         updateCancelledOrder(orderId);
+    }
+
+    const handleViewDetailOrder = (orderId: string) => {
+        setSelectedOrderId(orderId);
+        setIsDetailOpen(true);
     }
 
     return (
@@ -94,7 +103,7 @@ const PurchaseHistory = () => {
                     <AnimatePresence mode="popLayout">
                         {filteredOrders.length > 0 ? (
                             <div className="grid grid-cols-1 gap-5">
-                                {filteredOrders.map((order: Order, index: number) => (
+                                {filteredOrders.map((order: OrderSummary, index: number) => (
                                     <motion.div
                                         key={order.orderId}
                                         initial={{ opacity: 0, scale: 0.98 }}
@@ -105,6 +114,7 @@ const PurchaseHistory = () => {
                                         <PurchaseOrderItem 
                                             order={order}
                                             onCancelledOrder={handleCancelledOrder}
+                                            onViewDetail={handleViewDetailOrder}
                                         />
                                     </motion.div>
                                 ))}
@@ -164,6 +174,16 @@ const PurchaseHistory = () => {
                 .hide-scrollbar::-webkit-scrollbar { display: none; }
                 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
+
+            <OrderDetailDialog
+                order={order}
+                isOpen={isDetailOpen}
+                onClose={() => {
+                    setSelectedOrderId(undefined)
+                    setIsDetailOpen(false)
+                }}
+                isLoading={isLoadingOrder}
+            />
         </div>
     );
 };

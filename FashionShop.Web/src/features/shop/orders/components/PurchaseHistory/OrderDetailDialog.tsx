@@ -1,18 +1,11 @@
+import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { IoCloseOutline, IoLocationOutline, IoWalletOutline, IoTimeOutline, IoCardOutline, IoCallOutline } from "react-icons/io5";
+import type { OrderDetail } from "../../types/order";
 import React from "react";
-import { 
-    IoCloseOutline, 
-    IoCallOutline, 
-    IoLocationOutline, 
-    IoTimeOutline, 
-    IoWalletOutline,
-    IoCardOutline
-} from "react-icons/io5";
+import Loading from "../../../../../components/common/Loading";
+import AddressString from "../../../addresses/components/AddressString";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
-import AddressString from "../../../shop/addresses/components/AddressString";
-import type { OrderDetail } from "../types/order";
-import Loading from "../../../../components/common/Loading";
 
 // --- ANIMATION VARIANTS (Đồng bộ với Voucher) --- //
 const backdropVariants: Variants = {
@@ -266,4 +259,4 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
     );
 };
 
-export default OrderDetailDialog;
+export default OrderDetailDialog
