@@ -45,12 +45,12 @@ namespace FashionShop.API.Repositories.Shop
 
         // --- WRITE METHODS --- //
 
-        public void CreateUser(User user)
+        public void Create(User user)
         {
             _context.Users.Add(user);
         }
 
-        public void DeleteUser(User user)
+        public void Delete(User user)
         {
             user.IsDeleted = true;
         }

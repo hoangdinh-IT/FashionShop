@@ -50,7 +50,7 @@ export const RegisterForm: React.FC = () => {
                     <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-white/20 ring-1 ring-white/40 shadow-lg backdrop-blur-sm">
                         <span className="text-4xl drop-shadow-md">✨</span>
                     </div>
-                    <h2 className="text-3xl font-bold tracking-wide text-white drop-shadow-sm">Tạo tài khoản</h2>
+                    <h2 className="text-3xl font-bold tracking-wide text-white uppercase drop-shadow-sm">Tạo tài khoản</h2>
                     <p className="mt-2 text-sm font-medium text-white/70 uppercase tracking-widest">Tham gia cùng chúng tôi</p>
                 </div>
 

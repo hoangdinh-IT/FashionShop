@@ -9,6 +9,7 @@ using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Enums;
 using FashionShop.Core.Exceptions;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -33,7 +34,7 @@ namespace FashionShop.API.Services.Shared
             _emailService = emailService;
         }
 
-        public async Task<ShopUserResponse?> CreateUserAsync(AppRegisterRequest request)
+        public async Task<ShopUserResponse?> CreateAsync(AppRegisterRequest request)
         {
             if (await _unitOfWork.ShopUsers.CheckUserExistAsync(request.Email))
             {
@@ -45,7 +46,7 @@ namespace FashionShop.API.Services.Shared
             newUser.Role = RoleUser.Customer;
             newUser.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            _unitOfWork.ShopUsers.CreateUser(newUser);
+            _unitOfWork.ShopUsers.Create(newUser);
 
             if (newUser == null)
             {
@@ -57,7 +58,7 @@ namespace FashionShop.API.Services.Shared
             return _mapper.Map<ShopUserResponse>(newUser);
         }
 
-        public async Task<AuthResponse?> LoginUserAsync(AppLoginRequest request)
+        public async Task<AuthResponse?> LoginAsync(AppLoginRequest request)
         {
             var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(request.Email);
 
@@ -76,6 +77,8 @@ namespace FashionShop.API.Services.Shared
             
             var userResponse = _mapper.Map<ShopUserResponse>(user);
 
+            await _unitOfWork.SaveChangesAsync();
+
             return new AuthResponse
             {
                 User = userResponse,
@@ -83,6 +86,66 @@ namespace FashionShop.API.Services.Shared
                 RefreshToken = user.RefreshToken,
                 RefreshTokenExpiryTime = user.RefreshTokenExpiryTime.Value,
             };
+        }
+
+        public async Task<AuthResponse?> GoogleLoginAsync(GoogleLoginRequest request)
+        {
+            try
+            {
+                // 1. Xác thực Token gửi từ Frontend với Google
+                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string>() { _configuration["Google:ClientId"] }
+                };
+
+                var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token, settings);
+
+                // 2. Tìm user trong Database theo Email từ Google trả về
+                var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(payload.Email);
+
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        Id = Guid.NewGuid(),
+                        Email = payload.Email,
+                        Password = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString()),
+                        FullName = payload.Name,
+                        Avatar = payload.Picture
+                    };
+
+                    _unitOfWork.ShopUsers.Create(user);
+                }
+
+                // 4. Tạo AccessToken và RefreshToken
+                var accessToken = GenerateAccessToken(user);
+                user.RefreshToken = GenerateRefreshToken();
+
+                if (user.Role == RoleUser.Admin)
+                    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(3);
+                else
+                    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+                var userResponse = _mapper.Map<ShopUserResponse>(user);
+
+                await _unitOfWork.SaveChangesAsync();
+
+                return new AuthResponse
+                {
+                    User = userResponse,
+                    AccessToken = accessToken,
+                    RefreshToken = user.RefreshToken,
+                    RefreshTokenExpiryTime = user.RefreshTokenExpiryTime.Value,
+                };
+            }
+            catch (InvalidJwtException)
+            {
+                throw new UnauthorizedAccessException("Token Google không hợp lệ hoặc đã hết hạn.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi hệ thống khi đăng nhập Google: " + ex.Message);
+            }
         }
 
         private string GenerateAccessToken(User user)

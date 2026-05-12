@@ -10,6 +10,10 @@ export interface LoginFormInputs {
     remember?: boolean
 }
 
+export interface GoogleLoginRequest {
+    token: string;
+}
+
 export interface ForgotPasswordFormInputs {
     email: string;
 }

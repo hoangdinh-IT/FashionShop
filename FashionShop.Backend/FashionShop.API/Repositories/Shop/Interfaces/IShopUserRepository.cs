@@ -21,7 +21,7 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
 
         // --- WRITE METHODS --- //
 
-        void CreateUser(User user);
-        void DeleteUser(User user);
+        void Create(User user);
+        void Delete(User user);
     }
 }

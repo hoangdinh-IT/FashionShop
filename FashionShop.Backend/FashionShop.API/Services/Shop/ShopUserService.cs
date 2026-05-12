@@ -91,7 +91,7 @@ namespace FashionShop.API.Services.Shop
 
             if (existingUser == null) throw new KeyNotFoundException("Không tìm thấy người dùng");
 
-            _unitOfWork.ShopUsers.DeleteUser(existingUser);
+            _unitOfWork.ShopUsers.Delete(existingUser);
 
             await _unitOfWork.SaveChangesAsync();
         }

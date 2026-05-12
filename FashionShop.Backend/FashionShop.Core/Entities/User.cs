@@ -38,6 +38,7 @@ namespace FashionShop.Core.Entities
 
         [Required]
         public DateOnly DateOfBirth { get; set; }
+        public string? Avatar { get; set; }
         public MembershipClass MembershipClass { get; set; } = MembershipClass.New;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }

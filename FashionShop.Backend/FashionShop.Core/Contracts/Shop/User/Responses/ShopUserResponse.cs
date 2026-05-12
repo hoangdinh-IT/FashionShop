@@ -16,6 +16,7 @@ namespace FashionShop.Core.Contracts.Shop.User.Responses
         public string PhoneNumber { get; set; }
         public Gender Gender { get; set; }
         public DateOnly DateOfBirth { get; set; }
+        public string Avatar { get; set; }
         public MembershipClass MembershipClass { get; set; }
     }
 }

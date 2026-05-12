@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"
 import { useAuth, useSnackbar } from "../../../contexts";
 import { authService } from "../../../services/auth.service";
-import type { ForgotPasswordFormInputs, LoginFormInputs, RegisterFormInputs, ResetPasswordFormInputs } from "../types/requests";
+import type { ForgotPasswordFormInputs, GoogleLoginRequest, LoginFormInputs, RegisterFormInputs, ResetPasswordFormInputs } from "../types/requests";
 
 export const useRegister = () => {
     const { showSnackbar } = useSnackbar();
@@ -69,6 +69,45 @@ export const useLogin = () => {
         isLoading: mutation.isPending,
     };
 }
+
+export const useGoogleLogin = () => {
+    const { showSnackbar } = useSnackbar();
+    const { login } = useAuth(); // Lấy hàm login từ AppContext để lưu user/token
+    const navigate = useNavigate();
+
+    const mutation = useMutation({
+        // Sử dụng service googleLogin bạn đã định nghĩa
+        mutationFn: (request: GoogleLoginRequest) => authService.googleLogin(request),
+        onSuccess: (response) => {
+            if (response.succeeded) {
+                showSnackbar("Đăng nhập bằng Google thành công!", "success");
+                
+                const { user, accessToken, refreshToken } = response.data;
+                
+                // Lưu thông tin đăng nhập vào hệ thống (giống login thường)
+                login(user, accessToken, refreshToken);
+
+                // Điều hướng dựa trên Role của User trả về từ Backend
+                if (user.role === "Admin") {
+                    navigate("/admin", { replace: true });
+                } else {
+                    navigate("/shop/collection", { replace: true });
+                }
+            } else {
+                showSnackbar(response.message || "Đăng nhập Google thất bại!", "error");
+            }
+        },
+        onError: (error: any) => {
+            // Hiển thị lỗi từ Backend hoặc lỗi hệ thống
+            showSnackbar(error.response?.data?.Message || "Không thể kết nối với máy chủ Google", "error");
+        }
+    });
+
+    return {
+        googleLogin: mutation.mutate, // Hàm này sẽ được gọi khi bấm nút Google
+        isLoading: mutation.isPending,
+    };
+};
 
 export const useForgotPassword = () => {
     const { showSnackbar } = useSnackbar()

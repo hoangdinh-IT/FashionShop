@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { IoEye, IoEyeOff, IoHome } from "react-icons/io5";
 import { HiOutlineLockClosed, HiOutlineMail } from 'react-icons/hi';
-import { useLogin } from "../hooks/useAuth";
+import { useGoogleLogin, useLogin } from "../hooks/useAuth";
 import type { LoginFormInputs } from '../types/requests';
+import { GoogleLogin } from '@react-oauth/google';
 
 interface Props {
     initialData?: { email: string; password: string };
@@ -14,7 +15,9 @@ interface Props {
 export const LoginForm: React.FC<Props> = ({ initialData }) => {
     const [showPassword, setShowPassword] = useState(false);
 
-    const { login, isLoading } = useLogin();
+    const { login, isLoading: isLoginLoading } = useLogin();
+    const { googleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
+
 
     const { 
         register, 
@@ -27,6 +30,14 @@ export const LoginForm: React.FC<Props> = ({ initialData }) => {
     const onSubmit: SubmitHandler<LoginFormInputs> = (request) => {
         login({ email: request.email, password: request.password });
     };
+
+    const handleSuccess = (credentialResponse: any) => {
+        googleLogin({ token: credentialResponse.credential });
+    }
+
+    const handleError = () => {
+        console.log("Đăng nhập bằng Google thất bại!");
+    }
 
     return (
         <motion.div 
@@ -142,15 +153,15 @@ export const LoginForm: React.FC<Props> = ({ initialData }) => {
                     {/* --- Submit Button --- */}
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoginLoading || isGoogleLoginLoading}
                         className={`w-full rounded-xl py-3.5 text-base font-bold transition-all shadow-lg flex items-center justify-center gap-2
-                            ${isLoading 
+                            ${isLoginLoading || isGoogleLoginLoading 
                                 ? "bg-white/50 cursor-not-allowed text-gray-800" 
                                 : "bg-white text-gray-900 hover:scale-[1.02] hover:bg-gray-100 active:scale-95"
                             }
                         `}
                     >
-                        {isLoading ? (
+                        {isLoginLoading ? (
                             <>
                                 <svg className="animate-spin h-5 w-5 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -162,6 +173,27 @@ export const LoginForm: React.FC<Props> = ({ initialData }) => {
                             "ĐĂNG NHẬP"
                         )}
                     </button>
+
+                    <div className="relative my-6 flex items-center py-2">
+                        <div className="flex-grow border-t border-white/20"></div>
+                        <span className="mx-4 flex-shrink text-xs font-medium uppercase tracking-widest text-white/50">Hoặc tiếp tục với</span>
+                        <div className="flex-grow border-t border-white/20"></div>
+                    </div>
+
+                    {/* --- Google Login Button --- */}
+                    <div className="flex flex-col items-center justify-center w-full mt-6">
+                        <div className="transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            <GoogleLogin
+                                onSuccess={handleSuccess}
+                                onError={handleError}
+                                theme="filled_blue"
+                                shape="pill"
+                                size="large"
+                                width="360" // Lưu ý: width ở đây truyền giá trị number hoặc string số (không kèm px)
+                                text="signin_with"
+                            />
+                        </div>
+                    </div>
                 </form>
 
                 <p className="mt-8 text-center text-sm text-white/60">

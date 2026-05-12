@@ -25,14 +25,21 @@ namespace FashionShop.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] AppRegisterRequest request)
         {
-            var result = await _authService.CreateUserAsync(request);
+            var result = await _authService.CreateAsync(request);
             return Created(result, "Đăng ký tài khoản thành công!");
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AppLoginRequest request)
         {
-            var result = await _authService.LoginUserAsync(request);
+            var result = await _authService.LoginAsync(request);
+            return Success(result, "Đăng nhập thành công!");
+        }
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            var result = await _authService.GoogleLoginAsync(request);
             return Success(result, "Đăng nhập thành công!");
         }
 

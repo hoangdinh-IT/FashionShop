@@ -45,8 +45,8 @@ const LoginPage: React.FC = () => {
                         role="Admin"
                         icon={<IoShieldCheckmark className="text-blue-400" />}
                         email="admin@fashionshop.com"
-                        password="123456"
-                        onClick={() => handleSelectAccount("admin@fashionshop.com", "123456")}
+                        password="******"
+                        onClick={() => handleSelectAccount("admin@fashionshop.com", "000000")}
                     />
 
                     {/* Card Khách hàng */}
@@ -54,8 +54,8 @@ const LoginPage: React.FC = () => {
                         role="Khách hàng"
                         icon={<IoPerson className="text-emerald-400" />}
                         email="hoangdinh20040104@gmail.com"
-                        password="123456"
-                        onClick={() => handleSelectAccount("hoangdinh20040104@gmail.com", "123456")}
+                        password="******"
+                        onClick={() => handleSelectAccount("hoangdinh20040104@gmail.com", "000000")}
                     />
                 </div>
             </div>
@@ -66,18 +66,22 @@ const LoginPage: React.FC = () => {
 // Component con cho Form phụ - Thiết kế cực kỳ nhẹ nhàng
 const QuickAccessCard = ({ role, icon, email, password, onClick }: any) => (
     <motion.button
-        whileHover={{ x: 10, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ x: 10, backgroundColor: "rgba(255, 255, 255, 0.12)" }}
+        whileTap={{ scale: 0.98 }}
         onClick={onClick}
-        className="group w-full flex flex-col items-start gap-1 rounded-2xl border border-white/10 bg-white/5 p-4 text-left transition-all backdrop-blur-sm"
+        className="group w-full min-w-[280px] flex flex-col items-start gap-1 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-left transition-all backdrop-blur-md shadow-lg"
     >
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2.5 mb-1.5">
             {icon}
-            <span className="text-xs font-bold text-white/80">{role}</span>
+            <span className="text-xs font-bold text-white/90 uppercase tracking-wider">{role}</span>
         </div>
-        <div className="space-y-0.5 opacity-50 group-hover:opacity-100 transition-opacity">
-            <p className="text-[10px] text-white font-mono">E: {email}</p>
-            <p className="text-[10px] text-white font-mono">P: {password}</p>
+        <div className="space-y-1 opacity-60 group-hover:opacity-100 transition-opacity w-full">
+            <p className="text-[11px] text-white font-mono break-all leading-relaxed">
+                <span className="text-white/50">Email:</span> {email}
+            </p>
+            <p className="text-[11px] text-white font-mono">
+                <span className="text-white/50">Password:</span> {password}
+            </p>
         </div>
     </motion.button>
 );

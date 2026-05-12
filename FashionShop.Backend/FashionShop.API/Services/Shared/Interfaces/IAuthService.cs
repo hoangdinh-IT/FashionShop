@@ -6,8 +6,9 @@ namespace FashionShop.API.Services.Shared.Interfaces
 {
     public interface IAuthService
     {
-        Task<ShopUserResponse?> CreateUserAsync(AppRegisterRequest dto);
-        Task<AuthResponse?> LoginUserAsync(AppLoginRequest dto);
+        Task<ShopUserResponse?> CreateAsync(AppRegisterRequest request);
+        Task<AuthResponse?> LoginAsync(AppLoginRequest request);
+        Task<AuthResponse?> GoogleLoginAsync(GoogleLoginRequest request);
         Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request);
         Task ForgotPasswordAsync(AppForgotPasswordRequest request);
         Task ResetPasswordAsync(AppResetPasswordRequest request);
