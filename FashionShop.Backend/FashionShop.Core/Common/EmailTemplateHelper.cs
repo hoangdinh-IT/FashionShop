@@ -68,5 +68,68 @@ namespace FashionShop.Core.Common
             </body>
             </html>";
         }
+
+        public static string GetGoogleLoginNotificationTemplate(string fullName, string email)
+        {
+            string name = string.IsNullOrWhiteSpace(fullName) ? "Quý khách" : fullName;
+            string currentTime = DateTime.UtcNow.AddHours(7).ToString("HH:mm:ss dd/MM/yyyy"); // Định dạng giờ Việt Nam (ICT)
+
+            return $@"
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            </head>
+            <body style='margin: 0; padding: 0; font-family: ""Helvetica Neue"", Helvetica, Arial, sans-serif; background-color: #f9f9f9;'>
+                <table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color: #f9f9f9; padding: 40px 0;'>
+                    <tr>
+                        <td align='center'>
+                            <table width='600' cellpadding='0' cellspacing='0' border='0' style='background-color: #ffffff; border: 1px solid #eaeaea; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);'>
+                                <tr>
+                                    <td align='center' style='padding: 40px 0; background-color: #000000;'>
+                                        <h1 style='color: #ffffff; margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 4px;'>FASHION SHOP</h1>
+                                    </td>
+                                </tr>
+                            
+                                <tr>
+                                    <td style='padding: 40px 50px; color: #333333;'>
+                                        <p style='font-size: 16px; margin-bottom: 20px;'>Kính chào <strong>{name}</strong>,</p>
+                                        <p style='font-size: 16px; line-height: 1.6; color: #555555; margin-bottom: 25px;'>
+                                            Chúng tôi xin thông báo tài khoản Google của bạn đã được sử dụng để đăng nhập thành công vào hệ thống của <strong>FashionShop</strong>.
+                                        </p>
+                                    
+                                        <div style='background-color: #fcfaf2; border-left: 4px solid #d4af37; padding: 20px; margin-bottom: 25px; border-radius: 4px;'>
+                                            <p style='margin: 0 0 10px 0; font-size: 14px; color: #555555;'><strong>Chi tiết đăng nhập:</strong></p>
+                                            <p style='margin: 0 0 5px 0; font-size: 14px; color: #333333;'>• <strong>Tài khoản:</strong> {email}</p>
+                                            <p style='margin: 0; font-size: 14px; color: #333333;'>• <strong>Thời gian:</strong> {currentTime} (Giờ Việt Nam)</p>
+                                        </div>
+                                    
+                                        <p style='font-size: 14px; color: #888888; margin-bottom: 25px;'>
+                                            Nếu hành động này là do bạn thực hiện, bạn không cần phải làm gì thêm.
+                                        </p>
+                                    
+                                        <p style='font-size: 14px; color: #d9534f; font-weight: bold;'>
+                                            Nếu bạn không thực hiện đăng nhập này, vui lòng liên hệ ngay với Đội ngũ Chăm sóc Khách hàng của chúng tôi để được hỗ trợ bảo mật tài khoản kịp thời.
+                                        </p>
+                                    </td>
+                                </tr>
+                            
+                                <tr>
+                                    <td align='center' style='padding: 25px 50px; background-color: #fafafa; border-top: 1px solid #eaeaea;'>
+                                        <p style='margin: 0; font-size: 12px; color: #999999; line-height: 1.5;'>
+                                            Trân trọng,<br>
+                                            <strong>Đội ngũ Chăm sóc Khách hàng FashionShop</strong><br>
+                                            <a href='#' style='color: #000000; text-decoration: none;'>www.fashionshop.com</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+            </html>";
+        }
     }
 }

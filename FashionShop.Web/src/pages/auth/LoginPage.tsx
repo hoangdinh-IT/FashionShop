@@ -1,17 +1,3 @@
-// import React from 'react';
-// import { LoginForm } from '../../features/auth/components/LoginForm';
-
-// const LoginPage: React.FC = () => {
-//     return (
-//         <LoginForm />
-//     );
-// };
-
-// export default LoginPage;
-
-
-
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { IoShieldCheckmark, IoPerson } from "react-icons/io5";
