@@ -72,7 +72,7 @@ You can use the following credentials to explore the system with different roles
 
 | Role  | Email | Password |
 | :--- | :--- | :--- |
-| **Admin** | `hoangdinh.040104@gmail.com` | `123456` |
+| **Admin** | `admin@fashionshop.com` | `000000` |
 | **Customer** | `hoangdinh20040104@gmail.com` | `000000` |
 
 *Note: Please do not change the password or delete existing data to ensure a smooth experience for others.*
