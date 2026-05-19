@@ -38,7 +38,7 @@ namespace FashionShop.API.Services.Shared
         {
             if (await _unitOfWork.ShopUsers.CheckUserExistAsync(request.Email))
             {
-                throw new ConflictException("Email đã được đăng ký!");
+                throw new ConflictException("Email đã được sử dụng!");
             }
 
             var newUser = _mapper.Map<User>(request);
@@ -64,7 +64,7 @@ namespace FashionShop.API.Services.Shared
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                throw new UnauthorizedAccessException("Thông tin đăng nhập không chính xác.");
+                throw new UnauthorizedAccessException("Thông tin đăng nhập không chính xác!");
             }
 
             var accessToken = GenerateAccessToken(user);

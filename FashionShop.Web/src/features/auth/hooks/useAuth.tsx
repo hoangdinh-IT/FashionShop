@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth, useSnackbar } from "../../../contexts";
 import { authService } from "../../../services/auth.service";
 import type { ForgotPasswordFormInputs, GoogleLoginRequest, LoginFormInputs, RegisterFormInputs, ResetPasswordFormInputs } from "../types/requests";
+import { handleApiError } from "../../../utils/handleApiError";
 
 export const useRegister = () => {
     const { showSnackbar } = useSnackbar();
@@ -25,8 +26,8 @@ export const useRegister = () => {
             }
         },
         onError: (error: any) => {
-            showSnackbar(error.response?.data?.message || "Lỗi hệ thống", "error");
-        }
+            handleApiError(error, showSnackbar);
+        },
     });
 
     return {
@@ -60,8 +61,8 @@ export const useLogin = () => {
             }
         },
         onError: (error: any) => {
-            showSnackbar(error.response?.data?.Message || "Lỗi hệ thống", "error");
-        }
+            handleApiError(error, showSnackbar);
+        },
     });
 
     return {
@@ -104,7 +105,7 @@ export const useGoogleLogin = () => {
     });
 
     return {
-        googleLogin: mutation.mutate, // Hàm này sẽ được gọi khi bấm nút Google
+        googleLogin: mutation.mutate,
         isLoading: mutation.isPending,
     };
 };
@@ -120,8 +121,8 @@ export const useForgotPassword = () => {
             }
         },
         onError: (error: any) => {
-            showSnackbar(error.response?.data?.message || "Lỗi hệ thống", "error");
-        }
+            handleApiError(error, showSnackbar);
+        },
     });
 
     return {
@@ -141,16 +142,8 @@ export const useResetPassword = () => {
             }
         },
         onError: (error: any) => {
-            const errorData = error.response?.data;
-
-            if (errorData?.Errors && errorData.Errors.length > 0) {
-                showSnackbar(errorData.Errors[0], "error"); 
-            } else if (errorData?.Message) {
-                showSnackbar(errorData.Message, "error");
-            } else {
-                showSnackbar("Lỗi hệ thống hoặc không thể kết nối đến máy chủ", "error");
-            }
-        }
+            handleApiError(error, showSnackbar);
+        },
     });
 
     return {

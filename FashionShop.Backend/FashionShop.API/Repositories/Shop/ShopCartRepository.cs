@@ -29,6 +29,7 @@ namespace FashionShop.API.Repositories.Shop
                 ProductName = ci.ProductVariant.Product.Name,
                 ProductSlug = ci.ProductVariant.Product.Slug,
                 BrandName = ci.ProductVariant.Product.Brand.Name,
+                BrandLogoUrl = ci.ProductVariant.Product.Brand.LogoUrl,
                 ImageUrl = ci.ProductVariant.Product.ProductImages
                     .Where(x => x.ColorId == ci.ProductVariant.ColorId)
                     .OrderBy(x => x.SortOrder)

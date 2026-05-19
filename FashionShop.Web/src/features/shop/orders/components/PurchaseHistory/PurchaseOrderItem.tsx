@@ -35,132 +35,138 @@ const PurchaseOrderItem: React.FC<Props> = ({ order, onCancelledOrder, onViewDet
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="group relative bg-white rounded-[24px] border border-slate-100 hover:border-slate-200 transition-all duration-500 shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden"
+            className="group relative overflow-hidden rounded-[28px] border border-zinc-100 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1"
         >
-            <div className="p-1"> {/* Inner border effect */}
-                <div className="bg-white rounded-[22px]">
-                    
-                    {Object.entries(groupedItems || {}).map(([brandName, items], brandIdx) => (
-                        <div key={brandName} className={brandIdx > 0 ? "border-t border-slate-50 mt-2" : ""}>
+            {/* ACCENT LINE (nhẹ hơn, minimal hơn) */}
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-indigo-400 via-zinc-900 to-cyan-400 opacity-40" />
+
+            <div className="relative p-6">
+                
+                {Object.entries(groupedItems || {}).map(([brandName, items], brandIdx) => (
+                    <div
+                        key={brandName}
+                        className={brandIdx > 0 ? "mt-7 pt-7 border-t border-zinc-100" : ""}
+                    >
+                        {/* BRAND HEADER */}
+                        <div className="flex items-start justify-between mb-5">
                             
-                            {/* HEADER CỦA TỪNG BRAND */}
-                            <div className="flex items-center justify-between px-6 py-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
-                                        <IoStorefrontOutline size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] leading-none mb-1">BRAND</p>
-                                        <p className="text-sm font-bold text-slate-800 tracking-tight">{brandName}</p>
-                                    </div>
+                            <div className="flex items-center gap-4">
+                                
+                                <div className="w-12 h-12 rounded-2xl bg-white border border-zinc-100 flex items-center justify-center overflow-hidden">
+                                    <img
+                                        src={items?.[0]?.brandLogoUrl}
+                                        alt={brandName}
+                                        className="w-full h-full object-contain p-2"
+                                    />
                                 </div>
 
-                                {brandIdx === 0 && (
-                                    <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full border ${currentStatusTheme.bg} ${currentStatusTheme.border}`}>
-                                        <span className={`text-[10px] font-black uppercase tracking-widest ${currentStatusTheme.color}`}>
-                                            {currentStatusLabel}
+                                <div>
+                                    <h3 className="text-base font-bold text-zinc-900 tracking-tight mt-1">
+                                        {brandName}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            {brandIdx === 0 && (
+                                <div className={`px-3 h-9 rounded-full border flex items-center text-[10px] uppercase tracking-[0.2em] font-bold ${currentStatusTheme.bg} ${currentStatusTheme.border} ${currentStatusTheme.color}`}>
+                                    {currentStatusLabel}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* PRODUCTS */}
+                        <div className="space-y-3">
+                            {items.map((item) => (
+                                <Link
+                                    key={item.orderItemId}
+                                    to={`/shop/product/${item.productSlug}`}
+                                    className="group/item flex items-center gap-4 rounded-2xl border border-transparent hover:border-zinc-100 hover:bg-zinc-50/60 transition-all duration-300 p-3"
+                                >
+                                    {/* IMAGE */}
+                                    <div className="relative shrink-0">
+                                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-100">
+                                            <img
+                                                src={item.imageUrl || "/placeholder.png"}
+                                                alt={item.productName}
+                                                className="w-full h-full object-cover transition-transform duration-300 group-hover/item:scale-105"
+                                            />
+                                        </div>
+
+                                        <div className="absolute -bottom-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-zinc-900 text-white text-[10px] font-bold flex items-center justify-center border border-white">
+                                            {item.quantity}
+                                        </div>
+                                    </div>
+
+                                    {/* INFO */}
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-[14px] font-semibold text-zinc-900 line-clamp-1 group-hover/item:text-indigo-600 transition-colors">
+                                            {item.productName}
+                                        </h4>
+
+                                        <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-semibold">
+                                            {item.variantName}
+                                        </p>
+                                    </div>
+
+                                    {/* PRICE */}
+                                    <div className="text-right shrink-0">
+                                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 mb-1">
+                                            Price
+                                        </p>
+
+                                        <span className="text-[14px] font-bold text-zinc-900">
+                                            {formatCurrency(item.unitPrice)}
                                         </span>
                                     </div>
-                                )}
-                            </div>
-
-                            {/* DANH SÁCH SẢN PHẨM THUỘC BRAND NÀY */}
-                            <div className="px-6 pb-4 space-y-4">
-                                {items.map((item) => (
-                                    <Link 
-                                        key={item.orderItemId} 
-                                        to={`/shop/product/${item.productSlug}`} // Điều hướng dựa trên productSlug
-                                        className="flex gap-6 group/item cursor-pointer outline-none"
-                                    >
-                                        {/* Ảnh sản phẩm */}
-                                        <div className="relative shrink-0">
-                                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 group-hover/item:border-indigo-100 transition-colors">
-                                                <img 
-                                                    src={item.imageUrl || '/placeholder.png'} 
-                                                    alt={item.productName} 
-                                                    className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" 
-                                                />
-                                            </div>
-                                            <div className="absolute -bottom-1.5 -right-1.5 w-5 h-5 bg-slate-900 text-white text-[9px] font-bold rounded-lg flex items-center justify-center border-2 border-white shadow-sm">
-                                                {item.quantity}
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Thông tin sản phẩm */}
-                                        <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                            <h5 className="text-sm font-bold text-slate-800 line-clamp-1 group-hover/item:text-indigo-600 transition-colors">
-                                                {item.productName}
-                                            </h5>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                                    {item.variantName}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Giá tiền */}
-                                        <div className="flex items-center shrink-0">
-                                            <span className="text-sm font-black text-slate-900">
-                                                {formatCurrency(item.unitPrice)}
-                                            </span>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
+                                </Link>
+                            ))}
                         </div>
-                    ))}
+                    </div>
+                ))}
+                
+                {/* FOOTER */}
+                <div className="mt-7 pt-6 border-t border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                    
+                    {/* TOTAL */}
+                    <div>
+                        <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-semibold mb-2">
+                            Total
+                        </p>
 
-                    <div className="px-6 py-5 bg-slate-50/40 border-t border-slate-50 flex flex-col sm:flex-row gap-6 justify-between items-center">
-                        <div className="flex items-baseline gap-3">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Thanh toán</span>
-                            <span className="text-2xl font-black text-indigo-600 tracking-tighter drop-shadow-sm">
-                                {formatCurrency(order.totalAmount)}
-                            </span>
+                        <div className="text-3xl font-black tracking-tight text-zinc-900">
+                            {formatCurrency(order.totalAmount)}
                         </div>
+                    </div>
 
-                        <div className="flex items-center gap-3">
-                            {order.orderStatus === 'Pending' && (
-                                <button 
-                                    onClick={() => onCancelledOrder?.(order.orderId)}
-                                    className="group/cancel px-5 h-11 text-[10px] font-black uppercase tracking-[0.15em] text-rose-500/80 bg-transparent border border-rose-100 hover:bg-rose-50/50 hover:text-rose-600 hover:border-rose-200 transition-all duration-300 active:scale-95 cursor-pointer flex items-center gap-2 rounded-2xl"
-                                >
-                                    <div className="relative flex items-center justify-center">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 group-hover/cancel:scale-125 transition-transform" />
-                                        <span className="absolute w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping opacity-20 group-hover/cancel:opacity-40" />
-                                    </div>
-                                    Hủy đơn
-                                </button>
-                            )}
-
-                            {order.orderStatus === 'Success' && (
-                                <button 
-                                    className="group/review px-5 h-11 text-[10px] font-black uppercase tracking-[0.15em] text-amber-600 bg-amber-50/30 border border-amber-100/50 hover:bg-amber-50 hover:border-amber-200 transition-all duration-500 active:scale-95 cursor-pointer flex items-center gap-2 rounded-2xl relative overflow-hidden"
-                                >
-                                    {/* Hiệu ứng ánh sáng chạy ngang qua khi hover */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/review:animate-[shimmer_1.5s_infinite] transition-transform" />
-                                    
-                                    <div className="flex items-center gap-1.5 relative z-10">
-                                        <IoStarOutline className="group-hover/review:rotate-[20deg] transition-transform duration-300" size={14} />
-                                        <span>Đánh giá</span>
-                                    </div>
-
-                                    {/* Chấm tròn nhỏ biểu thị tương tác */}
-                                    <div className="w-1 h-1 rounded-full bg-amber-400 opacity-0 group-hover/review:opacity-100 transition-opacity" />
-                                </button>
-                            )}
-
-                            {/* Điểm nhấn màu sắc 3: Nút hành động chính */}
-                            <button 
-                                onClick={() => onViewDetail?.(order.orderId)}
-                                className="h-10 pl-5 pr-4 bg-slate-600 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 shadow-sm hover:shadow-indigo-100 active:scale-95 flex items-center gap-2 group/btn cursor-pointer"
+                    {/* ACTIONS */}
+                    <div className="flex items-center gap-3 flex-wrap">
+                        
+                        {order.orderStatus === "Pending" && (
+                            <button
+                                onClick={() => onCancelledOrder?.(order.orderId)}
+                                className="h-10 px-4 rounded-full border border-rose-100 bg-rose-50 text-[10px] uppercase tracking-[0.2em] font-bold text-rose-500 hover:bg-rose-100 transition"
                             >
-                                Chi tiết
-                                <IoChevronForwardOutline className="group-hover:translate-x-0.5 transition-transform" size={12} />
+                                Hủy đơn
                             </button>
-                        </div>
+                        )}
+
+                        {order.orderStatus === "Success" && (
+                            <button className="h-10 px-4 rounded-full border border-amber-100 bg-amber-50 text-[10px] uppercase tracking-[0.2em] font-bold text-amber-600 hover:bg-amber-100 transition flex items-center gap-2">
+                                <IoStarOutline size={14} />
+                                Đánh giá
+                            </button>
+                        )}
+
+                        <button
+                            onClick={() => onViewDetail?.(order.orderId)}
+                            className="h-10 px-5 rounded-full bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-black transition flex items-center gap-2"
+                        >
+                            Chi tiết
+                            <IoChevronForwardOutline size={14} />
+                        </button>
                     </div>
                 </div>
             </div>

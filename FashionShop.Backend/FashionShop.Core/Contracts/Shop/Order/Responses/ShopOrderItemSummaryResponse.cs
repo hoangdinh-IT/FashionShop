@@ -16,6 +16,7 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
         public string ProductSlug { get; set; }
         public string VariantName { get; set; }
         public string BrandName { get; set; }
+        public string BrandLogoUrl { get; set; }
         public string? ImageUrl { get; set; }
 
         // Giá tại thời điểm mua

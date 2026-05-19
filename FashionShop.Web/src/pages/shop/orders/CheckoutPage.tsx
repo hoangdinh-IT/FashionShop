@@ -81,22 +81,59 @@ const CheckoutPage = () => {
         return <Loading />
     }
 
-    return (
-        <div className="min-h-screen bg-[#f4f5f6] py-12 px-6">
-            <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-8 items-start">
+    // CheckoutPage.tsx
+
+return (
+    <div className="min-h-screen bg-[#f6f6f4] text-zinc-900">
+        
+        {/* HEADER */}
+        <div className="sticky top-[64px] z-30 border-b border-black/5 bg-white/80 backdrop-blur-xl">
+            <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-4 flex items-center justify-between">
                 
-                {/* Cột trái: Địa chỉ và Sản phẩm */}
-                <div className="flex-1 space-y-6 w-full">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-black text-white flex items-center justify-center shadow-sm">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h1 className="text-[24px] font-black tracking-[-0.05em] uppercase">
+                            Thanh toán
+                        </h1>
+
+                        <p className="text-[10px] uppercase tracking-[0.24em] text-zinc-400 font-semibold mt-0.5">
+                            Expressive Minimalism
+                        </p>
+                    </div>
+                </div>
+
+                <div className="hidden md:flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-zinc-500 font-semibold">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    Secure Checkout
+                </div>
+            </div>
+        </div>
+
+        {/* CONTENT */}
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-10">
+            
+            <div className="flex flex-col xl:flex-row gap-8 items-start">
+                
+                {/* LEFT */}
+                <div className="flex-1 w-full space-y-6">
+                    
                     <CheckoutAddress 
                         address={selectedAddress} 
                         onOpenAddressDialog={() => setIsAddressModalOpen(true)}
                         note={note}
                         onChangeNote={setNote}
                     />
+
                     <CheckoutItems items={selectedItems} />
                 </div>
 
-                {/* Cột phải: Tổng kết đơn hàng */}
+                {/* RIGHT */}
                 <CheckoutSummary 
                     subTotal={subTotal}
                     shippingFee={30000}
@@ -104,20 +141,21 @@ const CheckoutPage = () => {
                     onOrder={handlePlaceOrder}
                 />
             </div>
-
-            {/* Dialog chọn địa chỉ */}
-            <AddressDialog
-                isOpen={isAddressModalOpen}
-                onClose={() => setIsAddressModalOpen(false)}
-                addresses={addresses}
-                currentSelectedAddress={selectedAddress}
-                onSelect={(address) => {
-                    setSelectedAddress(address); 
-                    setIsAddressModalOpen(false);
-                }}
-            />
         </div>
-    );
+
+        {/* DIALOG */}
+        <AddressDialog
+            isOpen={isAddressModalOpen}
+            onClose={() => setIsAddressModalOpen(false)}
+            addresses={addresses}
+            currentSelectedAddress={selectedAddress}
+            onSelect={(address) => {
+                setSelectedAddress(address); 
+                setIsAddressModalOpen(false);
+            }}
+        />
+    </div>
+);
 };
 
 export default CheckoutPage;

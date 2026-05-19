@@ -102,65 +102,54 @@ const ProductDetailPage = () => {
 
     // --- RENDERING ---
     if (isLoading) {
-        // return <div className="text-center py-20 text-zinc-500 font-medium">Đang tải chi tiết sản phẩm...</div>;
         return <Loading />
     }
 
     if (!productDetail) {
         return (
-            <div className="min-h-[78vh] flex items-center justify-center px-4 py-10 bg-[#fafafa]">
-                
+            <div className="min-h-screen bg-[#fcfcfc] flex items-center justify-center px-6 py-16 overflow-hidden">
                 <div className="relative w-full max-w-2xl">
                     
-                    {/* Soft Background Glow */}
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-zinc-100 rounded-full blur-3xl opacity-60" />
+                    {/* Background Glow */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-[420px] h-[420px] rounded-full bg-zinc-100 blur-3xl opacity-70" />
+                    </div>
 
-                    {/* Main Card */}
-                    <div className="relative overflow-hidden rounded-[36px] border border-zinc-200/70 bg-white/90 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(15,23,42,0.08)]">
+                    {/* Card */}
+                    <div className="relative bg-white border border-zinc-200 rounded-[40px] px-10 md:px-16 py-20 text-center shadow-[0_30px_80px_rgba(0,0,0,0.04)] overflow-hidden">
                         
-                        {/* Minimal Top Border */}
-                        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
+                        {/* Decorative Line */}
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
 
-                        <div className="px-8 md:px-14 py-16 text-center">
+                        {/* Icon */}
+                        <div className="relative mx-auto w-28 h-28 rounded-full border border-zinc-200 bg-white flex items-center justify-center">
+                            <div className="absolute inset-2 rounded-full border border-zinc-100" />
 
-                            {/* Icon */}
-                            <div className="relative mx-auto w-28 h-28 flex items-center justify-center">
-                                
-                                {/* subtle ring */}
-                                <div className="absolute inset-0 rounded-full border border-zinc-200 bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]" />
-
-                                <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-900/10">
-                                    <ShoppingBag 
-                                        size={28}
-                                        className="text-white"
-                                        strokeWidth={2}
-                                    />
-                                </div>
+                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-900/10">
+                                <ShoppingBag size={28} className="text-white" strokeWidth={2} />
                             </div>
+                        </div>
 
-                            {/* Text */}
-                            <div className="mt-10">
-                                
-                                <span className="inline-block text-[11px] uppercase tracking-[0.25em] text-zinc-400 font-semibold">
-                                    Product unavailable
-                                </span>
+                        {/* Content */}
+                        <div className="mt-10">
+                            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-zinc-400">
+                                Product unavailable
+                            </span>
 
-                                <h1 className="mt-4 text-[38px] md:text-[44px] leading-tight font-bold tracking-[-0.04em] text-zinc-900">
-                                    Không tìm thấy sản phẩm
-                                </h1>
+                            <h1 className="mt-5 text-[36px] md:text-[48px] leading-none font-black tracking-[-0.06em] text-zinc-900">
+                                Không tìm thấy sản phẩm
+                            </h1>
 
-                                <p className="mt-5 max-w-xl mx-auto text-[15px] leading-8 text-zinc-500 font-medium">
-                                    Sản phẩm bạn đang tìm kiếm có thể đã được gỡ khỏi cửa hàng
-                                    hoặc hiện không còn khả dụng.
-                                </p>
-                            </div>
+                            <p className="mt-6 max-w-xl mx-auto text-[15px] leading-8 text-zinc-500 font-medium">
+                                Sản phẩm bạn đang tìm kiếm có thể đã được gỡ khỏi cửa hàng hoặc hiện không còn khả dụng.
+                            </p>
+                        </div>
 
-                            {/* Divider */}
-                            <div className="flex items-center justify-center gap-3 mt-10">
-                                <div className="w-16 h-px bg-zinc-200" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                                <div className="w-16 h-px bg-zinc-200" />
-                            </div>
+                        {/* Divider */}
+                        <div className="flex items-center justify-center gap-4 mt-12">
+                            <div className="w-14 h-px bg-zinc-200" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                            <div className="w-14 h-px bg-zinc-200" />
                         </div>
                     </div>
                 </div>
@@ -169,287 +158,351 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <div className="w-[85%] max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 py-8 font-sans text-zinc-900">
-            {/* MAIN CONTENT GRID */}
-            <div className="flex flex-col lg:flex-row gap-10">
-                
-                {/* --- LEFT: GALLERY KHU VỰC ẢNH --- */}
-                <div className="w-full lg:w-[60%] flex gap-2">
-    
-                    {/* List ảnh nhỏ */}
-                    <div className="flex flex-col gap-2 w-[50px] shrink-0"> 
-                        {currentImages.map((imgUrl, index) => (
-                            <button 
-                                key={index}
-                                onClick={() => {
-                                    setDirection(index > selectedImageIndex ? 1 : -1);
-                                    setSelectedImageIndex(index);
-                                }}
-                                className={`w-full aspect-[3/4] rounded-md overflow-hidden border-2 transition-all duration-300 cursor-pointer ${
-                                    selectedImageIndex === index 
-                                        ? 'border-zinc-800' 
-                                        : 'border-transparent hover:border-zinc-200'
-                                }`}
-                            >
-                                <img 
-                                    src={imgUrl} 
-                                    alt={`Thumbnail ${index}`} 
-                                    className="w-full h-full object-cover" 
-                                />
-                            </button>
-                        ))}
-                    </div>
+    <div className="w-full max-w-[1500px] mx-auto px-4 md:px-6 py-6 text-zinc-900">
+        {!productDetail ? (
+            <div className="min-h-[70vh] flex items-center justify-center">
+                <div className="relative w-full max-w-xl overflow-hidden rounded-[32px] border border-zinc-200 bg-white px-8 py-14 text-center shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
 
-                    {/* Ảnh lớn */}
-                    <div className="relative flex-1">
-                        
-                        {/* Wrapper để giữ đúng positioning */}
-                        <div className="relative w-full h-[600px] bg-[#f7f7f7] rounded-2xl overflow-hidden group flex items-center justify-center">
-                            
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={selectedImageIndex}
-                                    src={currentImages[selectedImageIndex] || "https://placehold.co/600x800/e2e8f0/64748b?text=No+Image"}
-                                    alt={productDetail.name}
-                                    className="w-full h-full object-contain absolute top-0 left-0"
+                    <div className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[260px] h-[260px] rounded-full bg-zinc-100 blur-3xl opacity-70" />
 
-                                    initial={{ 
-                                        x: direction > 0 ? 300 : -300,
-                                        opacity: 0 
-                                    }}
-                                    animate={{ 
-                                        x: 0, 
-                                        opacity: 1 
-                                    }}
-                                    exit={{ 
-                                        x: direction > 0 ? -300 : 300,
-                                        opacity: 0 
-                                    }}
-                                    transition={{ 
-                                        duration: 0.25, 
-                                        ease: "easeInOut" 
-                                    }}
-                                />
-                            </AnimatePresence>
+                    <div className="relative z-10">
+                        <div className="mx-auto w-20 h-20 rounded-[24px] bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-900/10">
+                            <ShoppingBag size={22} className="text-white" strokeWidth={2} />
+                        </div>
 
-                            {/* ✅ Nút nằm CHẮC CHẮN trong góc dưới phải */}
-                            {currentImages.length > 1 && (
-                                <div className="absolute bottom-3 right-3 z-10 flex gap-2 
-                                                bg-black/40 backdrop-blur-md rounded-full 
-                                                p-1.5 border border-white/20 shadow-lg">
-                                    
-                                    <button 
-                                        onClick={() => {
-                                            setDirection(-1);
-                                            setSelectedImageIndex(prev => 
-                                                prev > 0 ? prev - 1 : currentImages.length - 1
-                                            );
-                                        }}
-                                        className="w-8 h-8 flex items-center justify-center 
-                                                rounded-full bg-white text-zinc-700 
-                                                hover:bg-black hover:text-white transition cursor-pointer"
-                                    >
-                                        <ChevronLeft size={16} />
-                                    </button>
+                        <div className="mt-8">
+                            <span className="text-[10px] uppercase tracking-[0.3em] font-semibold text-zinc-400">
+                                Product unavailable
+                            </span>
 
-                                    <button 
-                                        onClick={() => {
-                                            setDirection(1);
-                                            setSelectedImageIndex(prev => 
-                                                prev < currentImages.length - 1 ? prev + 1 : 0
-                                            );
-                                        }}
-                                        className="w-8 h-8 flex items-center justify-center 
-                                                rounded-full bg-white text-zinc-700 
-                                                hover:bg-black hover:text-white transition cursor-pointer"
-                                    >
-                                        <ChevronRight size={16} />
-                                    </button>
-                                </div>
-                            )}
+                            <h1 className="mt-3 text-[30px] md:text-[36px] font-black tracking-[-0.04em] text-zinc-900">
+                                Không tìm thấy sản phẩm
+                            </h1>
 
+                            <p className="mt-4 text-sm leading-7 text-zinc-500 max-w-md mx-auto">
+                                Sản phẩm bạn đang tìm kiếm có thể đã được gỡ khỏi cửa hàng hoặc hiện không còn khả dụng.
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-center gap-3 mt-8">
+                            <div className="w-12 h-px bg-zinc-200" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                            <div className="w-12 h-px bg-zinc-200" />
                         </div>
                     </div>
                 </div>
+            </div>
+        ) : (
+            <>
+                {/* MAIN */}
+                <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_0.8fr] gap-8">
 
-                {/* --- RIGHT: THÔNG TIN SẢN PHẨM --- */}
-                <div className="w-full lg:w-[45%] flex flex-col gap-6">
-                    
-                    {/* Header: Giá & Tên */}
-                    <div className="space-y-3">
-                        <h1 className="text-2xl font-semibold text-zinc-800 tracking-tight">
-                            {productDetail.name}
-                        </h1>
-                        <div className="flex items-center gap-3">
-                            <span className="text-2xl font-bold text-red-600">
-                                {new Intl.NumberFormat('vi-VN').format(productDetail.price)}đ
-                            </span>
-                            {/* Chỗ này nếu BE có trả về Giá Gốc (OriginalPrice) thì bạn lắp vào nhé */}
-                            {productDetail.isNew && (
-                                <span className="bg-red-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded">MỚI</span>
-                            )}
-                            {productDetail.isBestSeller && (
-                                <span className="bg-yellow-500 text-white text-[11px] font-bold px-1.5 py-0.5 rounded">BÁN CHẠY</span>
-                            )}
-                        </div>
-                    </div>
+                    {/* LEFT */}
+                    <div className="flex gap-3">
 
-                    {/* Chọn Màu sắc */}
-                    <div className="space-y-3">
-                        <div className="text-sm font-medium">
-                            Màu sắc: <span className="font-semibold">{selectedColorName}</span>
-                        </div>
-                        <div className="flex gap-3">
-                            {productDetail.productColors?.map((color) => (
+                        {/* THUMBNAILS */}
+                        <div className="flex flex-col gap-2 w-[58px] shrink-0">
+                            {currentImages.map((imgUrl, index) => (
                                 <button
-                                    key={color.colorId}
-                                    onClick={() => setActiveColorId(color.colorId)}
-                                    title={color.colorName}
-                                    className={`relative w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all cursor-pointer ${
-                                        activeColorId === color.colorId ? 'border-blue-600' : 'border-transparent hover:border-zinc-300'
+                                    key={index}
+                                    onClick={() => {
+                                        setDirection(index > selectedImageIndex ? 1 : -1);
+                                        setSelectedImageIndex(index);
+                                    }}
+                                    className={`relative overflow-hidden rounded-2xl aspect-[3/4] border transition-all duration-300 ${
+                                        selectedImageIndex === index
+                                            ? 'border-zinc-900 shadow-sm'
+                                            : 'border-zinc-200 hover:border-zinc-400'
                                     }`}
                                 >
-                                    <span 
-                                        className="w-8 h-8 rounded-full border border-black/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]"
-                                        style={{ backgroundColor: color.colorHexCode }}
-                                    />
+                                    <img src={imgUrl} alt={`Thumbnail ${index}`} className="w-full h-full object-cover" />
                                 </button>
                             ))}
                         </div>
+
+                        {/* MAIN IMAGE */}
+                        <div className="relative flex-1 overflow-hidden rounded-[32px] border border-zinc-200 bg-[#f5f5f5]">
+
+                            <div className="absolute top-5 left-5 z-20 flex flex-col gap-2">
+                                {productDetail.isNew && (
+                                    <span className="px-3 py-1 rounded-full bg-white text-[10px] font-bold uppercase tracking-[0.2em] border border-zinc-200">
+                                        New
+                                    </span>
+                                )}
+
+                                {productDetail.isBestSeller && (
+                                    <span className="px-3 py-1 rounded-full bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-[0.2em]">
+                                        Best Seller
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="relative h-[520px] overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.img
+                                        key={selectedImageIndex}
+                                        src={currentImages[selectedImageIndex] || "https://placehold.co/600x800/e2e8f0/64748b?text=No+Image"}
+                                        alt={productDetail.name}
+                                        className="absolute inset-0 w-full h-full object-contain p-8"
+
+                                        initial={{
+                                            opacity: 0,
+                                            x: direction > 0 ? 80 : -80
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            x: 0
+                                        }}
+                                        exit={{
+                                            opacity: 0,
+                                            x: direction > 0 ? -80 : 80
+                                        }}
+                                        transition={{
+                                            duration: 0.25,
+                                            ease: "easeInOut"
+                                        }}
+                                    />
+                                </AnimatePresence>
+                            </div>
+
+                            {currentImages.length > 1 && (
+                                <div className="absolute bottom-5 right-5 flex items-center gap-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md p-1.5">
+
+                                    <button
+                                        onClick={() => {
+                                            setDirection(-1);
+                                            setSelectedImageIndex(prev =>
+                                                prev > 0 ? prev - 1 : currentImages.length - 1
+                                            );
+                                        }}
+                                        className="w-9 h-9 rounded-full bg-white text-zinc-700 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-all cursor-pointer"
+                                    >
+                                        <ChevronLeft size={15} />
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            setDirection(1);
+                                            setSelectedImageIndex(prev =>
+                                                prev < currentImages.length - 1 ? prev + 1 : 0
+                                            );
+                                        }}
+                                        className="w-9 h-9 rounded-full bg-white text-zinc-700 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-all cursor-pointer"
+                                    >
+                                        <ChevronRight size={15} />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    {/* Chọn Kích thước */}
-                    <div className="space-y-3 mt-4">
-                        <div className="flex justify-between items-center text-sm">
-                            <span className="font-medium text-zinc-800">
-                                Kích thước: <span className="font-normal text-zinc-600">{selectedSizeName}</span>
-                            </span>
-                            <a href="#" className="text-blue-600 hover:underline">Hướng dẫn chọn size</a>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                            {productDetail.productSizes?.map((size) => {
-                                // Kiểm tra size này với màu hiện tại có tồn kho không
-                                const variantCheck = productDetail.productVariants?.find(
-                                    v => v.colorId === activeColorId && v.sizeId === size.sizeId
-                                );
-                                const sizeOutOfStock = !variantCheck || variantCheck.quantity <= 0;
+                    {/* RIGHT */}
+                    <div className="flex flex-col">
 
-                                return (
+                        {/* TITLE */}
+                        <div className="pb-6 border-b border-zinc-100">
+                            <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-zinc-400">
+                                Fashion Collection
+                            </span>
+
+                            <h1 className="mt-3 text-[28px] leading-tight font-black tracking-[-0.04em] text-zinc-900">
+                                {productDetail.name}
+                            </h1>
+
+                            <div className="mt-5 flex items-center gap-3">
+                                <span className="text-[26px] font-black tracking-tight text-zinc-900">
+                                    {new Intl.NumberFormat('vi-VN').format(productDetail.price)}đ
+                                </span>
+
+                                {isOutOfStock ? (
+                                    <span className="px-2.5 py-1 rounded-full bg-red-50 text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 border border-red-100">
+                                        Out stock
+                                    </span>
+                                ) : (
+                                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600 border border-emerald-100">
+                                        {stockQuantity} available
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* COLORS */}
+                        <div className="pt-6">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[11px] uppercase tracking-[0.22em] font-bold text-zinc-400">
+                                    Color
+                                </span>
+
+                                <span className="text-sm font-medium text-zinc-700">
+                                    {selectedColorName}
+                                </span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                                {productDetail.productColors?.map((color) => (
                                     <button
-                                        key={size.sizeId}
-                                        onClick={() => {
-                                            if (!sizeOutOfStock) setActiveSizeId(size.sizeId);
-                                        }}
-                                        className={`relative min-w-[4rem] h-11 px-4 rounded-xl text-sm font-bold transition-all overflow-hidden cursor-pointer ${
-                                            activeSizeId === size.sizeId 
-                                                ? 'bg-black text-white' 
-                                                : sizeOutOfStock
-                                                    ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed opacity-60'
-                                                    : 'bg-[#e5e5e5] text-zinc-800 hover:bg-[#d4d4d4]'
+                                        key={color.colorId}
+                                        onClick={() => setActiveColorId(color.colorId)}
+                                        title={color.colorName}
+                                        className={`w-10 h-10 rounded-full p-1 transition-all duration-300 cursor-pointer ${
+                                            activeColorId === color.colorId
+                                                ? 'border-2 border-zinc-900 scale-105'
+                                                : 'border border-zinc-200 hover:border-zinc-400'
                                         }`}
                                     >
-                                        {size.sizeName}
-                                        {/* Đường gạch chéo báo hết hàng */}
-                                        {sizeOutOfStock && (
-                                            <div className="absolute h-[1.5px] w-[150%] bg-zinc-400 origin-center rotate-[-30deg] pointer-events-none left-[-20%] top-1/2" />
-                                        )}
+                                        <span
+                                            className="block w-full h-full rounded-full border border-black/5"
+                                            style={{ backgroundColor: color.colorHexCode }}
+                                        />
                                     </button>
-                                );
-                            })}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Trạng thái tồn kho của loại đang chọn */}
-                    {isOutOfStock ? (
-                        <div className="text-red-500 text-sm font-semibold mt-2">Sản phẩm tạm thời hết hàng</div>
-                    ) : (
-                        <div className="text-zinc-500 text-sm mt-2">Còn lại {stockQuantity} sản phẩm</div>
-                    )}
+                        {/* SIZES */}
+                        <div className="pt-8">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[11px] uppercase tracking-[0.22em] font-bold text-zinc-400">
+                                    Size
+                                </span>
 
-                    {/* Số lượng & Nút Thêm vào giỏ */}
-                    <div className="flex pt-4 w-full">
-                        {/* Khuôn ngoài cùng: Hình viên thuốc màu đen (đóng vai trò là nền của cả cụm).
-                          Thuộc tính p-1.5 (padding) tạo một lớp đệm mỏng màu đen bao quanh khối số lượng.
-                        */}
-                        <div className={`flex items-center w-full h-[60px] rounded-full transition-colors shadow-sm ${
-                            isOutOfStock ? 'bg-zinc-200' : 'bg-black'
-                        }`}>
-                            
-                            {/* KHỐI SỐ LƯỢNG: Nằm gọn bên trong, bo tròn 4 góc (rounded-full) */}
-                            <div className="flex items-center justify-between bg-[#595959] text-white w-[130px] h-full px-2 shrink-0 rounded-full transition-opacity">
-                                <button 
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setQuantity(Math.max(1, quantity - 1));
-                                    }}
-                                    disabled={isOutOfStock}
-                                    className="w-10 h-full flex items-center justify-center hover:text-white/70 disabled:opacity-50 text-2xl font-light pb-1 cursor-pointer"
+                                <span className="text-sm font-medium text-zinc-700">
+                                    {selectedSizeName}
+                                </span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                                {productDetail.productSizes?.map((size) => {
+                                    const variantCheck = productDetail.productVariants?.find(
+                                        v => v.colorId === activeColorId && v.sizeId === size.sizeId
+                                    );
+
+                                    const sizeOutOfStock = !variantCheck || variantCheck.quantity <= 0;
+
+                                    return (
+                                        <button
+                                            key={size.sizeId}
+                                            onClick={() => {
+                                                if (!sizeOutOfStock) setActiveSizeId(size.sizeId);
+                                            }}
+                                            className={`relative min-w-[56px] h-10 px-4 rounded-2xl text-xs font-bold transition-all overflow-hidden cursor-pointer ${
+                                                activeSizeId === size.sizeId
+                                                    ? 'bg-zinc-900 text-white'
+                                                    : sizeOutOfStock
+                                                        ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed opacity-60'
+                                                        : 'bg-zinc-50 text-zinc-700 border border-zinc-200 hover:border-zinc-900'
+                                            }`}
+                                        >
+                                            {size.sizeName}
+
+                                            {sizeOutOfStock && (
+                                                <div className="absolute w-[140%] h-px bg-zinc-400 rotate-[-30deg] left-[-20%] top-1/2" />
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* ACTIONS */}
+                        <div className="mt-10">
+
+                            <div className={`flex items-center gap-2 p-1.5 rounded-full border transition-all ${
+                                isOutOfStock
+                                    ? 'border-zinc-200 bg-zinc-100'
+                                    : 'border-zinc-900 bg-zinc-900'
+                            }`}>
+
+                                {/* QUANTITY */}
+                                <div className="flex items-center justify-between w-[120px] h-[52px] rounded-full bg-white px-2">
+
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setQuantity(Math.max(1, quantity - 1));
+                                        }}
+                                        disabled={isOutOfStock}
+                                        className="w-9 h-9 rounded-full flex items-center justify-center text-lg text-zinc-700 hover:bg-zinc-100 disabled:opacity-40 cursor-pointer"
+                                    >
+                                        -
+                                    </button>
+
+                                    <input
+                                        type="text"
+                                        value={isOutOfStock ? 0 : quantity}
+                                        readOnly
+                                        className="w-8 bg-transparent text-center text-sm font-bold outline-none border-none"
+                                    />
+
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setQuantity(Math.min(stockQuantity, quantity + 1));
+                                        }}
+                                        disabled={isOutOfStock || quantity >= stockQuantity}
+                                        className="w-9 h-9 rounded-full flex items-center justify-center text-lg text-zinc-700 hover:bg-zinc-100 disabled:opacity-40 cursor-pointer"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+
+                                {/* BUTTON */}
+                                <button
+                                    onClick={handleAddToCart}
+                                    disabled={isOutOfStock || isCreating}
+                                    className={`flex-1 h-[52px] rounded-full flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-[0.15em] transition-all ${
+                                        isOutOfStock || isCreating
+                                            ? 'text-zinc-500 cursor-not-allowed'
+                                            : 'text-white hover:bg-white/10 cursor-pointer'
+                                    }`}
                                 >
-                                    -
-                                </button>
-                                <input 
-                                    type="text" 
-                                    value={isOutOfStock ? 0 : quantity} 
-                                    readOnly
-                                    className="w-8 text-center text-base font-semibold border-none outline-none focus:ring-0 bg-transparent text-white p-0 pointer-events-none"
-                                />
-                                <button 
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setQuantity(Math.min(stockQuantity, quantity + 1));
-                                    }}
-                                    disabled={isOutOfStock || quantity >= stockQuantity}
-                                    className="w-10 h-full flex items-center justify-center hover:text-white/70 disabled:opacity-50 text-xl font-light cursor-pointer"
-                                >
-                                    +
+                                    {isCreating ? (
+                                        <span className="animate-pulse">Đang xử lý...</span>
+                                    ) : (
+                                        <>
+                                            {!isOutOfStock && <ShoppingBag size={17} strokeWidth={2} />}
+                                            {isOutOfStock ? 'Hết hàng' : 'Thêm vào giỏ'}
+                                        </>
+                                    )}
                                 </button>
                             </div>
-                            
-                            {/* NÚT THÊM VÀO GIỎ: Bắt trọn phần diện tích còn lại */}
-                            <button 
-                                onClick={handleAddToCart}
-                                disabled={isOutOfStock || isCreating} // Vô hiệu hóa khi hết hàng hoặc đang gửi request
-                                className={`flex-1 h-full flex items-center justify-center gap-2 font-bold text-base rounded-full transition-colors cursor-pointer ${
-                                    isOutOfStock || isCreating
-                                    ? 'text-zinc-500 cursor-not-allowed'
-                                    : 'text-white hover:bg-white/10'
-                                }`}
-                            >
-                                {isCreating ? (
-                                    <span className="animate-pulse">Đang xử lý...</span>
-                                ) : (
-                                    <>
-                                        {!isOutOfStock && <ShoppingBag size={20} strokeWidth={2} />}
-                                        {isOutOfStock ? 'HẾT HÀNG' : 'Thêm vào giỏ'}
-                                    </>
-                                )}
-                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* --- TAB CHI TIẾT SẢN PHẨM Ở DƯỚI --- */}
-            <div className="mt-16 border border-zinc-200 rounded-lg overflow-hidden">
-                <div className="border-b border-zinc-200">
-                    <button className="px-6 py-4 text-base font-bold text-zinc-900 border-b-2 border-zinc-900">
-                        Chi tiết sản phẩm
-                    </button>
-                </div>
-                {/* Dùng whitespace-pre-line để giữ nguyên dấu xuống dòng \r\n từ DB trả về */}
-                <div className="p-6 bg-white text-zinc-700 text-sm leading-relaxed whitespace-pre-line">
-                    {productDetail.description || "Chưa có thông tin chi tiết cho sản phẩm này."}
-                    
-                    {productDetail.material && (
-                        <div className="mt-6 pt-6 border-t border-zinc-100">
-                            <h3 className="font-bold text-zinc-900 mb-2">Chất liệu:</h3>
-                            <p>{productDetail.material}</p>
+                {/* DESCRIPTION */}
+                <div className="mt-14 overflow-hidden rounded-[28px] border border-zinc-200 bg-white">
+
+                    <div className="px-6 py-5 border-b border-zinc-100 flex items-center justify-between">
+                        <div>
+                            <span className="text-[10px] uppercase tracking-[0.28em] font-bold text-zinc-400">
+                                Product Details
+                            </span>
+
+                            <h2 className="mt-2 text-xl font-black tracking-tight text-zinc-900">
+                                Chi tiết sản phẩm
+                            </h2>
                         </div>
-                    )}
+                    </div>
+
+                    <div className="px-6 py-6 text-sm leading-8 text-zinc-600 whitespace-pre-line">
+                        {productDetail.description || "Chưa có thông tin chi tiết cho sản phẩm này."}
+
+                        {productDetail.material && (
+                            <div className="mt-8 pt-8 border-t border-zinc-100">
+                                <h3 className="mb-2 text-sm font-bold uppercase tracking-[0.15em] text-zinc-900">
+                                    Chất liệu
+                                </h3>
+
+                                <p>{productDetail.material}</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </div>
-    );
+            </>
+        )}
+    </div>
+);
 };
 
 export default ProductDetailPage;

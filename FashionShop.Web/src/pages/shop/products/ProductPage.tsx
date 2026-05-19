@@ -28,14 +28,14 @@ const CollectionBanner: React.FC<{ type: "new-arrivals" | "best-sellers" }> = ({
     return (
         <div className="relative w-full h-[400px] md:h-[500px] bg-zinc-100 overflow-hidden mb-16 first:mt-4">
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-6">
-                <motion.span 
+                <motion.span
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-zinc-500 mb-4"
                 >
                     {isNew ? "Spring // Summer 2026" : "Most Wanted Items"}
                 </motion.span>
-                <motion.h2 
+                <motion.h2
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
@@ -43,7 +43,7 @@ const CollectionBanner: React.FC<{ type: "new-arrivals" | "best-sellers" }> = ({
                 >
                     {isNew ? "New Arrivals" : "Best Sellers"}
                 </motion.h2>
-                <motion.button 
+                <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-8 py-3 bg-zinc-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-800 transition-colors"
@@ -93,7 +93,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
         priceRange: urlPriceRange.length > 0 ? urlPriceRange : [],
         pageSize: 5,
         pageIndex: 1,
-        sortBy: urlSort, 
+        sortBy: urlSort,
     });
 
     const [collectionQueryParams, setCollectionQueryParams] = useState<ProductCollectionsQueryParams>({
@@ -149,9 +149,9 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
         const newParams = new URLSearchParams(searchParams);
 
         const validSizes = filters.sizeSlugs?.filter(size => size && size !== "undefined") || [];
-        if (validSizes.length > 0) 
+        if (validSizes.length > 0)
             newParams.set("size", validSizes.join(","));
-        else 
+        else
             newParams.delete("size");
 
         if (filters.colorSlug && filters.colorSlug !== "" && filters.colorSlug !== "undefined")
@@ -160,9 +160,9 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
             newParams.delete("color");
 
         const validPrices = filters.priceRange.filter(price => price && price !== "undefined") || [];
-        if (validPrices.length > 0) 
+        if (validPrices.length > 0)
             newParams.set("price_range", validPrices.join(","));
-        else 
+        else
             newParams.delete("price_range");
 
         setSearchParams(newParams);
@@ -193,174 +193,334 @@ const ProductPage: React.FC<ProductPageProps> = ({ collectionType }) => {
         }
     };
 
-    // --- RENDER GIAO DIỆN MỚI ---
     return (
-        <div className="w-full max-w-[1600px] mx-auto px-6 py-8">
-            <AnimatePresence mode="wait">
-                {!isShopView ? (
-                    /* =========================================================
-                       CHẾ ĐỘ 1: TRANG CHỦ (BANNER + SẢN PHẨM ĐÃ ĐƯỢC LỌC TỪ API) 
-                    ============================================================ */
-                    <motion.div 
-                        key="landing"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    >
-                        {/* ================= SECTION: NEW ARRIVALS ================= */}
-                        {(!collectionType || collectionType === 'new-arrivals') && (
-                            <div className="mb-24">
-                                <CollectionBanner type="new-arrivals" />
-                                
-                                {/* Thêm relative và group để định vị mũi tên và hiệu ứng hover */}
-                                <div className="mt-10 relative group">
-                                    
-                                    {/* Nút mũi tên trái */}
-                                    <button
-                                        onClick={() => scrollNewArrivals('left')}
-                                        className="absolute left-0 top-[40%] -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white hidden md:flex"
-                                    >
-                                        <ChevronLeft size={24} />
-                                    </button>
+        <div className="relative min-h-screen overflow-hidden bg-[#fcfcfc]">
 
-                                    {/* Container chứa sản phẩm trượt ngang */}
-                                    <div 
-                                        ref={newArrivalsRef}
-                                        className="flex overflow-x-auto gap-6 snap-x snap-mandatory scroll-smooth pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                                    >
-                                        {isLoading && currentDisplayedCount === 0 ? (
-                                            Array.from({ length: 4 }).map((_, i) => (
-                                                <div key={`sk-new-${i}`} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.3333%-16px)] xl:w-[calc(25%-18px)] shrink-0 snap-start">
-                                                    <ProductSkeleton />
-                                                </div>
-                                            ))
-                                        ) : (
-                                            collectionProducts
-                                                ?.filter(product => !collectionType ? product.isNew : true)
-                                                .map((product) => (
-                                                    <div key={`new-${product.productId}`} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.3333%-16px)] xl:w-[calc(25%-18px)] shrink-0 snap-start">
-                                                        <ProductCard product={product} />
+            {/* BACKGROUND DECOR */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <div className="absolute top-[-10%] left-[-5%] w-[420px] h-[420px] rounded-full bg-zinc-100 blur-3xl opacity-70" />
+                <div className="absolute bottom-[-10%] right-[-5%] w-[320px] h-[320px] rounded-full bg-stone-100 blur-3xl opacity-80" />
+            </div>
+
+            <div className="relative z-10 w-full max-w-[1600px] mx-auto px-5 md:px-8 py-10">
+
+                <AnimatePresence mode="wait">
+                    {!isShopView ? (
+                        /* =========================================================
+                        LANDING MODE
+                        ============================================================ */
+                        <motion.div
+                            key="landing"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.35 }}
+                            className="space-y-28"
+                        >
+
+                            {/* ================= NEW ARRIVALS ================= */}
+                            {(!collectionType || collectionType === 'new-arrivals') && (
+                                <section className="relative">
+
+                                    <CollectionBanner type="new-arrivals" />
+
+                                    <div className="relative mt-12 group">
+
+                                        {/* LEFT ARROW */}
+                                        <button
+                                            onClick={() => scrollNewArrivals('left')}
+                                            className="
+                                                hidden lg:flex
+                                                absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5
+                                                z-20
+                                                w-12 h-12
+                                                items-center justify-center
+                                                rounded-full
+                                                border border-zinc-200/80
+                                                bg-white/90 backdrop-blur-xl
+                                                shadow-[0_10px_30px_rgba(0,0,0,0.06)]
+                                                text-zinc-700
+                                                opacity-0 group-hover:opacity-100
+                                                hover:bg-zinc-900 hover:text-white
+                                                transition-all duration-300
+                                            "
+                                        >
+                                            <ChevronLeft size={20} />
+                                        </button>
+
+                                        {/* PRODUCTS */}
+                                        <div
+                                            ref={newArrivalsRef}
+                                            className="
+                                                flex gap-5 overflow-x-auto
+                                                scroll-smooth snap-x snap-mandatory
+                                                pb-3
+                                                [&::-webkit-scrollbar]:hidden
+                                                [-ms-overflow-style:none]
+                                                [scrollbar-width:none]
+                                            "
+                                        >
+                                            {isLoading && currentDisplayedCount === 0 ? (
+                                                Array.from({ length: 4 }).map((_, i) => (
+                                                    <div
+                                                        key={`sk-new-${i}`}
+                                                        className="
+                                                            w-full
+                                                            sm:w-[calc(50%-10px)]
+                                                            lg:w-[calc(33.333%-14px)]
+                                                            xl:w-[calc(25%-16px)]
+                                                            shrink-0 snap-start
+                                                        "
+                                                    >
+                                                        <ProductSkeleton />
                                                     </div>
                                                 ))
-                                        )}
-                                    </div>
-
-                                    {/* Nút mũi tên phải */}
-                                    <button
-                                        onClick={() => scrollNewArrivals('right')}
-                                        className="absolute right-0 top-[40%] -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white hidden md:flex"
-                                    >
-                                        <ChevronRight size={24} />
-                                    </button>
-
-                                </div>
-                            </div>
-                        )}
-
-                        {/* ================= SECTION: BEST SELLERS ================= */}
-                        {(!collectionType || collectionType === 'best-sellers') && (
-                            <div className="mb-20">
-                                <CollectionBanner type="best-sellers" />
-                                <div className="mt-10">
-                                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
-                                        {isLoading && currentDisplayedCount === 0 ? (
-                                            Array.from({ length: 4 }).map((_, i) => <ProductSkeleton key={`sk-best-${i}`} />)
-                                        ) : (
-                                            pagedProducts
-                                                ?.filter(product => !collectionType ? product.isBestSeller : true)
-                                                .map((product) => (
-                                                    <ProductCard key={`best-${product.productId}`} product={product} />
-                                                ))
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* State: Không có sản phẩm (Dùng chung) */}
-                        {!isLoading && currentDisplayedCount === 0 && (
-                            <div className="text-center py-20">
-                                <p className="text-zinc-400 italic">Hiện tại chưa có sản phẩm nào trong bộ sưu tập này.</p>
-                            </div>
-                        )}
-                    </motion.div>
-                ) : (
-                    /* =========================================================
-                       CHẾ ĐỘ 2: TRANG CỬA HÀNG (HEADER + SIDEBAR + SẢN PHẨM)
-                    ============================================================ */
-                    <motion.div 
-                        key="shop"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    >
-                        <ProductHeader
-                            brandName={filterOptions?.brandName}
-                            categoryName={filterOptions?.categoryName}
-                            urlSort={urlSort}
-                            sortOptions={SORT_OPTIONS}
-                            onSortSelect={handleSortSelect}
-                            customTitle={collectionType === 'new-arrivals' ? "New Arrivals" : collectionType === 'best-sellers' ? "Best Sellers" : undefined}
-                        />
-
-                        <div className="flex flex-col md:flex-row gap-12 mt-10">
-                            {/* CỘT TRÁI: SIDEBAR FILTER */}
-                            <aside className="w-full md:w-[280px] shrink-0">
-                                <div className="sticky top-24">
-                                    <SidebarFilter
-                                        totalProducts={totalProducts}
-                                        filterOptions={filterOptions}
-                                        selectedSizeSlugs={urlSizeSlugs} 
-                                        selectedColorSlug={urlColorSlug} 
-                                        selectedPriceRange={urlPriceRange} 
-                                        onFilterChange={handleFilterChange}
-                                    />
-                                </div>
-                            </aside>
-
-                            {/* CỘT PHẢI: LƯỚI SẢN PHẨM */}
-                            <main className="flex-1 min-w-0">
-                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
-                                    {isLoading && currentDisplayedCount === 0 ? (
-                                        Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)
-                                    ) : (
-                                        pagedProducts?.map((product) => (
-                                            <ProductCard key={product.productId} product={product} />
-                                        ))
-                                    )}
-                                </div>
-
-                                {/* State: Không có sản phẩm */}
-                                {!isLoading && currentDisplayedCount === 0 && (
-                                    <div className="text-center py-40">
-                                        <p className="text-zinc-400 italic">Không tìm thấy sản phẩm nào khớp với bộ lọc.</p>
-                                    </div>
-                                )}
-
-                                {/* Load More */}
-                                {!isLoading && totalProducts > 0 && currentDisplayedCount < totalProducts && (
-                                    <div className="mt-20 flex flex-col items-center gap-6">
-                                        <div className="flex flex-col items-center gap-2">
-                                            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
-                                                Bạn đã xem {currentDisplayedCount} trong tổng số {totalProducts}
-                                            </p>
-                                            <div className="w-64 h-[2px] bg-zinc-100 rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full bg-zinc-900 transition-all duration-700 ease-in-out"
-                                                    style={{ width: `${progressPercentage}%` }}
-                                                />
-                                            </div>
+                                            ) : (
+                                                collectionProducts
+                                                    ?.filter(product =>
+                                                        !collectionType
+                                                            ? product.isNew
+                                                            : true
+                                                    )
+                                                    .map((product) => (
+                                                        <div
+                                                            key={`new-${product.productId}`}
+                                                            className="
+                                                                w-full
+                                                                sm:w-[calc(50%-10px)]
+                                                                lg:w-[calc(33.333%-14px)]
+                                                                xl:w-[calc(25%-16px)]
+                                                                shrink-0 snap-start
+                                                            "
+                                                        >
+                                                            <ProductCard product={product} />
+                                                        </div>
+                                                    ))
+                                            )}
                                         </div>
+
+                                        {/* RIGHT ARROW */}
                                         <button
-                                            className="px-12 py-4 bg-white border border-zinc-200 text-zinc-900 font-bold rounded-full hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all duration-300 shadow-sm disabled:opacity-50 uppercase text-xs tracking-widest"
-                                            onClick={handleLoadMore}
-                                            disabled={isLoading}
+                                            onClick={() => scrollNewArrivals('right')}
+                                            className="
+                                                hidden lg:flex
+                                                absolute right-0 top-1/2 -translate-y-1/2 translate-x-5
+                                                z-20
+                                                w-12 h-12
+                                                items-center justify-center
+                                                rounded-full
+                                                border border-zinc-200/80
+                                                bg-white/90 backdrop-blur-xl
+                                                shadow-[0_10px_30px_rgba(0,0,0,0.06)]
+                                                text-zinc-700
+                                                opacity-0 group-hover:opacity-100
+                                                hover:bg-zinc-900 hover:text-white
+                                                transition-all duration-300
+                                            "
                                         >
-                                            {isLoading ? 'Đang tải...' : 'Xem thêm sản phẩm'}
+                                            <ChevronRight size={20} />
                                         </button>
                                     </div>
-                                )}
-                            </main>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                </section>
+                            )}
+
+                            {/* ================= BEST SELLERS ================= */}
+                            {(!collectionType || collectionType === 'best-sellers') && (
+                                <section>
+
+                                    <CollectionBanner type="best-sellers" />
+
+                                    <div className="mt-12">
+                                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-12">
+
+                                            {isLoading && currentDisplayedCount === 0 ? (
+                                                Array.from({ length: 4 }).map((_, i) => (
+                                                    <ProductSkeleton key={`sk-best-${i}`} />
+                                                ))
+                                            ) : (
+                                                pagedProducts
+                                                    ?.filter(product =>
+                                                        !collectionType
+                                                            ? product.isBestSeller
+                                                            : true
+                                                    )
+                                                    .map((product) => (
+                                                        <ProductCard
+                                                            key={`best-${product.productId}`}
+                                                            product={product}
+                                                        />
+                                                    ))
+                                            )}
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* EMPTY */}
+                            {!isLoading && currentDisplayedCount === 0 && (
+                                <div className="py-28 flex flex-col items-center text-center">
+
+                                    <div className="w-20 h-20 rounded-[28px] border border-zinc-200 bg-white shadow-sm flex items-center justify-center mb-6">
+                                        <div className="w-3 h-3 rounded-full bg-zinc-300" />
+                                    </div>
+
+                                    <h3 className="text-lg font-semibold text-zinc-900">
+                                        Chưa có sản phẩm
+                                    </h3>
+
+                                    <p className="mt-2 text-sm text-zinc-400">
+                                        Hiện tại chưa có sản phẩm trong bộ sưu tập này.
+                                    </p>
+                                </div>
+                            )}
+                        </motion.div>
+                    ) : (
+                        /* =========================================================
+                        SHOP MODE
+                        ============================================================ */
+                        <motion.div
+                            key="shop"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.35 }}
+                        >
+
+                            {/* HEADER */}
+                            <div className="mb-12">
+                                <ProductHeader
+                                    brandName={filterOptions?.brandName}
+                                    categoryName={filterOptions?.categoryName}
+                                    urlSort={urlSort}
+                                    sortOptions={SORT_OPTIONS}
+                                    onSortSelect={handleSortSelect}
+                                    customTitle={
+                                        collectionType === 'new-arrivals'
+                                            ? 'New Arrivals'
+                                            : collectionType === 'best-sellers'
+                                                ? 'Best Sellers'
+                                                : undefined
+                                    }
+                                />
+                            </div>
+
+                            {/* LAYOUT */}
+                            <div className="flex flex-col lg:flex-row gap-10 xl:gap-14">
+
+                                {/* SIDEBAR */}
+                                <aside className="w-full lg:w-[280px] shrink-0">
+                                    <div className="sticky top-24">
+                                        <div className="rounded-[32px] border border-zinc-200/70 bg-white/80 backdrop-blur-xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
+                                            <SidebarFilter
+                                                totalProducts={totalProducts}
+                                                filterOptions={filterOptions}
+                                                selectedSizeSlugs={urlSizeSlugs}
+                                                selectedColorSlug={urlColorSlug}
+                                                selectedPriceRange={urlPriceRange}
+                                                onFilterChange={handleFilterChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </aside>
+
+                                {/* PRODUCTS */}
+                                <main className="flex-1 min-w-0">
+
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-12">
+
+                                        {isLoading && currentDisplayedCount === 0 ? (
+                                            Array.from({ length: 8 }).map((_, i) => (
+                                                <ProductSkeleton key={i} />
+                                            ))
+                                        ) : (
+                                            pagedProducts?.map((product) => (
+                                                <ProductCard
+                                                    key={product.productId}
+                                                    product={product}
+                                                />
+                                            ))
+                                        )}
+                                    </div>
+
+                                    {/* EMPTY */}
+                                    {!isLoading && currentDisplayedCount === 0 && (
+                                        <div className="py-40 flex flex-col items-center text-center">
+
+                                            <div className="w-20 h-20 rounded-[28px] border border-zinc-200 bg-white shadow-sm flex items-center justify-center mb-6">
+                                                <div className="w-3 h-3 rounded-full bg-zinc-300" />
+                                            </div>
+
+                                            <h3 className="text-lg font-semibold text-zinc-900">
+                                                Không tìm thấy sản phẩm
+                                            </h3>
+
+                                            <p className="mt-2 text-sm text-zinc-400">
+                                                Hãy thử thay đổi bộ lọc của bạn.
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* LOAD MORE */}
+                                    {!isLoading &&
+                                        totalProducts > 0 &&
+                                        currentDisplayedCount < totalProducts && (
+                                            <div className="mt-24 flex flex-col items-center">
+
+                                                {/* PROGRESS */}
+                                                <div className="mb-7 flex flex-col items-center gap-3">
+
+                                                    <p className="text-[11px] font-bold tracking-[0.25em] uppercase text-zinc-400">
+                                                        {currentDisplayedCount} / {totalProducts} sản phẩm
+                                                    </p>
+
+                                                    <div className="w-64 h-[3px] rounded-full bg-zinc-100 overflow-hidden">
+                                                        <div
+                                                            className="h-full rounded-full bg-zinc-900 transition-all duration-700"
+                                                            style={{
+                                                                width: `${progressPercentage}%`,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* BUTTON */}
+                                                <button
+                                                    className="
+                                                        group
+                                                        relative overflow-hidden
+                                                        px-10 py-4
+                                                        rounded-full
+                                                        border border-zinc-200
+                                                        bg-white
+                                                        text-[11px]
+                                                        font-black
+                                                        uppercase
+                                                        tracking-[0.25em]
+                                                        text-zinc-900
+                                                        shadow-sm
+                                                        hover:bg-zinc-900
+                                                        hover:text-white
+                                                        hover:border-zinc-900
+                                                        transition-all duration-300
+                                                        disabled:opacity-50
+                                                    "
+                                                    onClick={handleLoadMore}
+                                                    disabled={isLoading}
+                                                >
+                                                    <span className="relative z-10">
+                                                        {isLoading
+                                                            ? 'Đang tải...'
+                                                            : 'Xem thêm sản phẩm'}
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        )}
+                                </main>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 };

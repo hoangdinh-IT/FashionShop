@@ -18,189 +18,218 @@ export const LoginForm: React.FC<Props> = ({ initialData }) => {
     const { login, isLoading: isLoginLoading } = useLogin();
     const { googleLogin, isLoading: isGoogleLoginLoading } = useGoogleLogin();
 
-
-    const { 
-        register, 
-        handleSubmit, 
-        formState: { errors } 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
     } = useForm<LoginFormInputs>({
         values: initialData
     });
 
     const onSubmit: SubmitHandler<LoginFormInputs> = (request) => {
-        login({ email: request.email, password: request.password });
+        login({
+            email: request.email,
+            password: request.password
+        });
     };
 
     const handleSuccess = (credentialResponse: any) => {
         googleLogin({ token: credentialResponse.credential });
-    }
+    };
 
     const handleError = () => {
         console.log("Đăng nhập bằng Google thất bại!");
-    }
+    };
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="w-full max-w-[480px]"
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-[520px]"
         >
-            <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-white/10 px-10 py-10 shadow-2xl backdrop-blur-md">
+            <div className="rounded-[40px] border border-black/10 bg-white/80 p-8 shadow-[0_20px_80px_rgba(0,0,0,0.08)] backdrop-blur-xl sm:p-10">
                 
-                {/* Nút Home */}
-                <Link to="/" className="absolute left-6 top-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition-all hover:bg-white hover:text-black">
-                    <IoHome size={16} />
-                </Link>
+                {/* TOP */}
+                <div className="mb-10 flex items-start justify-between">
+                    <div>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-400">
+                            Welcome Back
+                        </p>
 
-                {/* Header */}
-                <div className="mb-8 text-center">
-                    <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-white/20 ring-1 ring-white/40 shadow-lg backdrop-blur-sm">
-                        <span className="text-4xl drop-shadow-md">🛍️</span>
+                        <h2 className="mt-3 text-4xl font-black tracking-[-0.04em] text-zinc-900">
+                            Sign In
+                        </h2>
                     </div>
-                    <h2 className="text-3xl font-bold tracking-wide text-white drop-shadow-sm">Fashion Shop</h2>
-                    <p className="mt-2 text-sm font-medium text-white/70 uppercase tracking-widest">Chào mừng bạn quay trở lại</p>
+
+                    <Link
+                        to="/"
+                        className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-zinc-900 transition-all hover:border-black hover:bg-black hover:text-white"
+                    >
+                        <IoHome size={18} />
+                    </Link>
                 </div>
 
-                {/* Form: Sử dụng handleSubmit của RHF */}
-                <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                    
-                    {/* --- Input Email --- */}
-                    <div className="group relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5 text-white/60 transition-colors group-focus-within:text-white">
-                            <HiOutlineMail size={22} />
+                {/* FORM */}
+                <form
+                    className="space-y-6"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
+                    {/* EMAIL */}
+                    <div>
+                        <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                            Email Address
+                        </label>
+
+                        <div className="relative">
+                            <HiOutlineMail
+                                size={20}
+                                className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"
+                            />
+
+                            <input
+                                type="email"
+                                {...register("email", {
+                                    required: "Vui lòng nhập email",
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Email không hợp lệ"
+                                    }
+                                })}
+                                placeholder="Enter your email"
+                                className={`h-14 w-full rounded-2xl border bg-[#f8f8f7] pl-14 pr-5 text-sm text-zinc-900 outline-none transition-all focus:bg-white
+                                    ${
+                                        errors.email
+                                            ? "border-red-400"
+                                            : "border-transparent focus:border-black"
+                                    }`}
+                            />
                         </div>
-                        <input
-                            type="email"
-                            // 5. Đăng ký input với RHF và thêm Validate
-                            {...register("email", { 
-                                required: "Vui lòng nhập email",
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: "Email không hợp lệ"
-                                }
-                            })}
-                            className={`block w-full rounded-xl border bg-white/5 py-3.5 pl-14 pr-4 text-base text-white placeholder-white/40 backdrop-blur-sm transition-all focus:bg-white/10 focus:outline-none focus:ring-1 
-                                ${errors.email 
-                                    ? "border-red-400 focus:border-red-400 focus:ring-red-400" 
-                                    : "border-white/20 focus:border-white focus:ring-white/50"
-                                }`}
-                            placeholder="Email"
-                        />
-                        {/* Hiển thị lỗi Email */}
+
                         {errors.email && (
-                            <p className="mt-1 ml-1 text-xs font-medium text-red-300 animate-pulse">
+                            <p className="mt-2 text-xs text-red-500">
                                 {errors.email.message}
                             </p>
                         )}
                     </div>
 
-                    {/* --- Input Password --- */}
-                    <div className="group relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5 text-white/60 transition-colors group-focus-within:text-white">
-                            <HiOutlineLockClosed size={22} />
-                        </div>
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            // 6. Đăng ký password
-                            {...register("password", { 
-                                required: "Vui lòng nhập mật khẩu",
-                                minLength: {
-                                    value: 6,
-                                    message: "Mật khẩu phải có ít nhất 6 ký tự"
-                                }
-                            })}
-                            className={`block w-full rounded-xl border bg-white/5 py-3.5 pl-14 pr-14 text-base text-white placeholder-white/40 backdrop-blur-sm transition-all focus:bg-white/10 focus:outline-none focus:ring-1
-                                ${errors.password 
-                                    ? "border-red-400 focus:border-red-400 focus:ring-red-400" 
-                                    : "border-white/20 focus:border-white focus:ring-white/50"
-                                }`}
-                            placeholder="Mật khẩu"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 flex items-center pr-5 text-white/60 hover:text-white transition-colors"
-                        >
-                            {showPassword ? <IoEyeOff size={20} /> : <IoEye size={20} />}
-                        </button>
-                    </div>
-                    {/* Hiển thị lỗi Password */}
-                    {errors.password && (
-                        <p className="-mt-3 ml-1 text-xs font-medium text-red-300 animate-pulse">
-                            {errors.password.message}
-                        </p>
-                    )}
-
-                    {/* --- Options --- */}
-                    <div className="flex items-center justify-between text-sm sm:text-base">
-                        <label className="flex cursor-pointer items-center gap-2 text-white/80 hover:text-white">
-                            <input 
-                                type="checkbox" 
-                                {...register("remember")} // Đăng ký checkbox
-                                className="h-4 w-4 rounded border-white/30 bg-white/10 text-white focus:ring-offset-0" 
-                            />
-                            <span>Ghi nhớ</span>
+                    {/* PASSWORD */}
+                    <div>
+                        <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                            Password
                         </label>
-                        <Link 
-                            to="/auth/forgot-password" 
-                            className="font-medium text-white/80 hover:text-white hover:underline transition-all"
+
+                        <div className="relative">
+                            <HiOutlineLockClosed
+                                size={20}
+                                className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"
+                            />
+
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                {...register("password", {
+                                    required: "Vui lòng nhập mật khẩu",
+                                    minLength: {
+                                        value: 6,
+                                        message: "Mật khẩu phải có ít nhất 6 ký tự"
+                                    }
+                                })}
+                                placeholder="Enter your password"
+                                className={`h-14 w-full rounded-2xl border bg-[#f8f8f7] pl-14 pr-14 text-sm text-zinc-900 outline-none transition-all focus:bg-white
+                                    ${
+                                        errors.password
+                                            ? "border-red-400"
+                                            : "border-transparent focus:border-black"
+                                    }`}
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword(!showPassword)
+                                }
+                                className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900"
+                            >
+                                {showPassword ? (
+                                    <IoEyeOff size={20} />
+                                ) : (
+                                    <IoEye size={20} />
+                                )}
+                            </button>
+                        </div>
+
+                        {errors.password && (
+                            <p className="mt-2 text-xs text-red-500">
+                                {errors.password.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* OPTIONS */}
+                    <div className="flex items-center justify-between text-sm">
+                        <label className="flex items-center gap-2 text-zinc-600">
+                            <input
+                                type="checkbox"
+                                {...register("remember")}
+                                className="h-4 w-4 rounded border-zinc-300"
+                            />
+
+                            Ghi nhớ
+                        </label>
+
+                        <Link
+                            to="/auth/forgot-password"
+                            className="font-medium text-zinc-900 hover:underline"
                         >
                             Quên mật khẩu?
                         </Link>
                     </div>
 
-                    {/* --- Submit Button --- */}
+                    {/* BUTTON */}
                     <button
                         type="submit"
-                        disabled={isLoginLoading || isGoogleLoginLoading}
-                        className={`w-full rounded-xl py-3.5 text-base font-bold transition-all shadow-lg flex items-center justify-center gap-2
-                            ${isLoginLoading || isGoogleLoginLoading 
-                                ? "bg-white/50 cursor-not-allowed text-gray-800" 
-                                : "bg-white text-gray-900 hover:scale-[1.02] hover:bg-gray-100 active:scale-95"
-                            }
-                        `}
+                        disabled={
+                            isLoginLoading || isGoogleLoginLoading
+                        }
+                        className={`flex h-14 w-full items-center justify-center rounded-2xl text-sm font-bold uppercase tracking-[0.2em] transition-all
+                            ${
+                                isLoginLoading || isGoogleLoginLoading
+                                    ? "cursor-not-allowed bg-zinc-300 text-zinc-500"
+                                    : "bg-black text-white hover:scale-[1.01]"
+                            }`}
                     >
-                        {isLoginLoading ? (
-                            <>
-                                <svg className="animate-spin h-5 w-5 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                <span>ĐANG XỬ LÝ...</span>
-                            </>
-                        ) : (
-                            "ĐĂNG NHẬP"
-                        )}
+                        {isLoginLoading ? "Đang xử lý..." : "Đăng nhập"}
                     </button>
 
-                    <div className="relative my-6 flex items-center py-2">
-                        <div className="flex-grow border-t border-white/20"></div>
-                        <span className="mx-4 flex-shrink text-xs font-medium uppercase tracking-widest text-white/50">Hoặc tiếp tục với</span>
-                        <div className="flex-grow border-t border-white/20"></div>
+                    {/* DIVIDER */}
+                    <div className="flex items-center gap-4 py-2">
+                        <div className="h-px flex-1 bg-zinc-200" />
+                        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                            Or Continue
+                        </span>
+                        <div className="h-px flex-1 bg-zinc-200" />
                     </div>
 
-                    {/* --- Google Login Button --- */}
-                    <div className="flex flex-col items-center justify-center w-full mt-6">
-                        <div className="transition-all hover:scale-[1.02] active:scale-[0.98]">
-                            <GoogleLogin
-                                onSuccess={handleSuccess}
-                                onError={handleError}
-                                theme="filled_blue"
-                                shape="pill"
-                                size="large"
-                                width="360" // Lưu ý: width ở đây truyền giá trị number hoặc string số (không kèm px)
-                                text="signin_with"
-                            />
-                        </div>
+                    {/* GOOGLE */}
+                    <div className="flex justify-center">
+                        <GoogleLogin
+                            onSuccess={handleSuccess}
+                            onError={handleError}
+                            theme="outline"
+                            shape="pill"
+                            size="large"
+                            width="320"
+                            text="signin_with"
+                        />
                     </div>
                 </form>
 
-                <p className="mt-8 text-center text-sm text-white/60">
-                    Bạn chưa có tài khoản? 
-                    <Link 
-                        to="/auth/register" 
-                        className="ml-2 font-bold text-white transition-colors hover:underline"
+                {/* FOOTER */}
+                <p className="mt-8 text-center text-sm text-zinc-500">
+                    Bạn chưa có tài khoản?
+                    <Link
+                        to="/auth/register"
+                        className="ml-2 font-bold text-zinc-900 hover:underline"
                     >
                         Đăng ký ngay
                     </Link>

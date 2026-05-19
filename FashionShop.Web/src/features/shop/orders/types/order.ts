@@ -25,6 +25,7 @@ interface OrderItemSummary {
     productSlug: string;
     variantName: string;
     brandName: string;
+    brandLogoUrl: string;
     imageUrl?: string;
     unitPrice: number;
     quantity: number;

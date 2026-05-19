@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import MegaMenu from '../../../features/shop/brands/components/MegaMenu';
-import { useUsers } from '../../../features/shop/users/hooks/useUsers';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+    HiOutlineMenuAlt3,
+    HiOutlineSearch,
+    HiOutlineShoppingBag,
+    HiOutlineUser,
+} from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion";
+
+import MegaMenu from "../../../features/shop/brands/components/MegaMenu";
+import { useUsers } from "../../../features/shop/users/hooks/useUsers";
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,148 +17,142 @@ const Header: React.FC = () => {
     const { user, isLoading } = useUsers();
 
     return (
-        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm font-sans transition-all duration-300">
-            <div className="w-full px-6 lg:px-12 h-20 flex items-center justify-between">
-                
-                {/* 1. Trái: Nút Danh mục (Giữ nguyên khung nhưng làm thanh lịch hơn) */}
-                <div className="flex-1 flex justify-start">
-                    <button 
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="flex items-center gap-2.5 border border-gray-200 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all duration-300 cursor-pointer"
-                    >
-                        {/* Icon Menu cách điệu (các đường line không bằng nhau tạo sự hiện đại) */}
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 7h16M4 12h16M4 17h10" />
-                        </svg>
-                        <span className="tracking-wide">Danh mục</span>
-                    </button>
-                </div>
+        <>
+            <header className="sticky top-0 z-50 border-b border-black/5 bg-[#f5f3ee]/90 backdrop-blur-xl">
+                <div className="mx-auto flex h-[78px] w-full items-center justify-between px-5 sm:px-8 lg:px-14">
 
-                {/* 2. Giữa: Logo rKA Shop (Đổi sang phong cách Luxury: Chữ in hoa, khoảng cách rộng, màu đen tuyền) */}
-                <div className="flex-1 flex justify-center">
-                    <Link 
-                        to="/" 
-                        className="text-2xl md:text-3xl font-bold uppercase tracking-[0.15em] text-black hover:opacity-60 transition-opacity"
-                    >
-                        RKA Shop
-                    </Link>
-                </div>
+                    {/* LEFT */}
+                    <div className="flex flex-1 items-center gap-3">
+                        <motion.button
+                            whileTap={{ scale: 0.96 }}
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="group flex h-11 items-center gap-3 rounded-full border border-black/10 bg-white/70 px-5 transition-all duration-300 hover:border-black hover:bg-white"
+                        >
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white">
+                                <HiOutlineMenuAlt3 className="text-[18px]" />
+                            </div>
 
-                {/* 3. Phải: Tìm kiếm, Giỏ hàng & User (Icon nét mảnh, bỏ màu rực rỡ) */}
-                <div className="flex-1 flex justify-end items-center gap-5 md:gap-7">
-                    
-                    {/* Ô tìm kiếm */}
-                    <div className="relative hidden lg:block w-full max-w-[260px] group">
-                        <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 group-focus-within:text-black transition-colors">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </span>
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm..." 
-                            className="w-full border border-gray-200 rounded-full pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all bg-transparent text-gray-800 placeholder-gray-400"
-                        />
+                            <span className="hidden text-[12px] font-semibold uppercase tracking-[0.18em] text-zinc-700 sm:block">
+                                Danh mục
+                            </span>
+                        </motion.button>
                     </div>
 
-                    {/* Giỏ hàng */}
-                    <Link 
-                        to="/shop/cart" 
-                        className="group relative flex items-center justify-center"
-                    >
-                        {/* Glow effect */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 opacity-0 group-hover:opacity-100 blur-md transition-all duration-500 scale-110" />
+                    {/* CENTER */}
+                    <div className="flex flex-1 justify-center">
+                        <Link
+                            to="/"
+                            className="group relative"
+                        >
+                            <div className="absolute inset-0 scale-75 rounded-full bg-black/5 blur-2xl transition-all duration-500 group-hover:scale-110" />
 
-                        {/* Cart Container */}
-                        <div className="relative w-11 h-11 rounded-full border border-zinc-200 bg-white flex items-center justify-center overflow-hidden shadow-[0_4px_18px_rgba(0,0,0,0.06)] group-hover:shadow-[0_8px_28px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:-translate-y-0.5">
-                            
-                            {/* subtle gradient */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white via-zinc-50 to-zinc-100 opacity-80" />
+                            <div className="relative flex flex-col items-center">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.45em] text-zinc-400">
+                                    Expressive
+                                </span>
 
-                            {/* Icon */}
-                            <svg 
-                                className="relative w-[22px] h-[22px] text-zinc-700 transition-all duration-300 group-hover:scale-110 group-hover:text-black" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24"
+                                <h1 className="text-2xl font-black uppercase tracking-[-0.08em] text-black sm:text-3xl">
+                                    RKA
+                                </h1>
+                            </div>
+                        </Link>
+                    </div>
+
+                    {/* RIGHT */}
+                    <div className="flex flex-1 items-center justify-end gap-3 sm:gap-4">
+
+                        {/* SEARCH */}
+                        <div className="relative hidden lg:block">
+                            <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+
+                            <input
+                                type="text"
+                                placeholder="Tìm kiếm sản phẩm..."
+                                className="h-11 w-[250px] rounded-full border border-black/10 bg-white/70 pl-11 pr-4 text-sm text-zinc-800 outline-none transition-all duration-300 placeholder:text-zinc-400 focus:border-black focus:bg-white"
+                            />
+                        </div>
+
+                        {/* CART */}
+                        <motion.div
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <Link
+                                to="/shop/cart"
+                                className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white/70 transition-all duration-300 hover:border-black hover:bg-white"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth={1.5} 
-                                    d="M3 5h2l2.2 10.2a1 1 0 00.98.8h8.9a1 1 0 00.98-.8L21 8H7" 
-                                />
-                                <circle cx="10" cy="19" r="1.7" fill="currentColor" stroke="none" />
-                                <circle cx="18" cy="19" r="1.7" fill="currentColor" stroke="none" />
-                            </svg>
+                                <div className="absolute inset-0 rounded-full bg-black/[0.03] opacity-0 blur-xl transition-all duration-500 group-hover:opacity-100" />
 
-                        </div>
-                    </Link>
+                                <HiOutlineShoppingBag className="relative text-[20px] text-zinc-700 transition-all duration-300 group-hover:scale-110 group-hover:text-black" />
+                            </Link>
+                        </motion.div>
 
-                    {/* Tài khoản */}
-                    <Link 
-                        to="/shop/account/information" 
-                        className="group relative flex items-center justify-center"
-                    >
-                        {/* Glow nền nhẹ */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 opacity-0 group-hover:opacity-100 blur-md transition-all duration-500 scale-110" />
+                        {/* USER */}
+                        <motion.div
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <Link
+                                to="/shop/account/information"
+                                className="group relative block"
+                            >
+                                <div className="absolute inset-0 rounded-full bg-black/[0.04] opacity-0 blur-xl transition-all duration-500 group-hover:opacity-100" />
 
-                        {/* Avatar Container */}
-                        <div className="relative w-11 h-11 rounded-full overflow-hidden border border-zinc-200 bg-white shadow-[0_4px_18px_rgba(0,0,0,0.06)] group-hover:shadow-[0_8px_28px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:-translate-y-0.5">
-                            
-                            {isLoading ? (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100">
-                                    <svg 
-                                        className="w-5 h-5 text-zinc-400" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth={1.4} 
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                                <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-black/10 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:border-black">
+                                    
+                                    {isLoading ? (
+                                        <div className="flex items-center justify-center">
+                                            <div className="h-4 w-4 animate-spin rounded-full border border-zinc-300 border-t-black" />
+                                        </div>
+                                    ) : user?.avatar ? (
+                                        <img
+                                            src={user.avatar}
+                                            alt={user.fullName || "User Avatar"}
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                            onError={(e) => {
+                                                e.currentTarget.style.display =
+                                                    "none";
+                                            }}
                                         />
-                                    </svg>
-                                </div>
-                            ) : user?.avatar ? (
-                                <img
-                                    src={user.avatar}
-                                    alt={user.fullName || "User Avatar"}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100">
-                                    <svg 
-                                        className="w-5 h-5 text-zinc-500" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth={1.4} 
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
-                                        />
-                                    </svg>
-                                </div>
-                            )}
+                                    ) : (
+                                        <HiOutlineUser className="text-[20px] text-zinc-500" />
+                                    )}
 
-                            {/* Online Dot */}
-                            <div className="absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow-sm" />
-                        </div>
-                    </Link>
+                                    {/* STATUS */}
+                                    <AnimatePresence>
+                                        {!isLoading && (
+                                            <motion.div
+                                                initial={{
+                                                    scale: 0,
+                                                    opacity: 0,
+                                                }}
+                                                animate={{
+                                                    scale: 1,
+                                                    opacity: 1,
+                                                }}
+                                                exit={{
+                                                    scale: 0,
+                                                    opacity: 0,
+                                                }}
+                                                className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full border border-white bg-emerald-500"
+                                            />
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </Link>
+                        </motion.div>
+                    </div>
                 </div>
 
-            </div>
+                {/* Bottom subtle line */}
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-black/10 to-transparent" />
+            </header>
 
-            <MegaMenu 
+            <MegaMenu
                 isOpen={isMenuOpen}
                 onClose={() => setIsMenuOpen(false)}
             />
-        </header>
+        </>
     );
 };
 

@@ -44,6 +44,7 @@ namespace FashionShop.API.Repositories.Shop
                     ProductSlug = orderItem.ProductVariant.Product.Slug,
                     VariantName = orderItem.ProductVariant.Color.Name + " - " + orderItem.ProductVariant.Size.Name,
                     BrandName = orderItem.ProductVariant.Product.Brand.Name,
+                    BrandLogoUrl = orderItem.ProductVariant.Product.Brand.LogoUrl,
                     ImageUrl = orderItem.ProductVariant.Product.ProductImages
                         .Where(pi => pi.ColorId == orderItem.ProductVariant.ColorId)
                         .OrderBy(pi => pi.SortOrder)
