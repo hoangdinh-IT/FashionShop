@@ -50,7 +50,11 @@ const AccountInformation: React.FC<Props> = ({ user, isLoading }) => {
 
         if (isNaN(date.getTime())) return "--";
 
-        return date.toLocaleDateString("vi-VN");
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+
+        return `${day}/${month}/${year}`;
     }, [user?.dateOfBirth]);
 
     const profileItems = [

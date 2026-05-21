@@ -32,14 +32,14 @@ const BrandTable: React.FC<BrandTableProps> = ({ data, isLoading, sortBy, isAsce
         align?: 'left' | 'center' | 'right'
     }) => {
 
-        const isActive = sortBy.toLowerCase() === colKey.toLowerCase();
+    const isActive = sortBy.toLowerCase() === colKey.toLowerCase();
 
-        const alignClass =
-            align === 'center'
-                ? 'justify-center'
-                : align === 'right'
-                    ? 'justify-end'
-                    : 'justify-start';
+    const alignClass =
+        align === 'center'
+            ? 'justify-center'
+            : align === 'right'
+                ? 'justify-end'
+                : 'justify-start';
 
         return (
             <div

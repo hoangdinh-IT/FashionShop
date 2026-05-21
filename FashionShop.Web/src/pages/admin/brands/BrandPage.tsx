@@ -109,19 +109,7 @@ const BrandPage: React.FC = () => {
                 <div className="flex items-center gap-2.5 w-full md:w-auto">
                     <button
                         onClick={handleOpenCreate}
-                        className="
-                            flex-none flex items-center gap-1.5
-                            bg-gray-900 hover:bg-gray-800
-                            text-white
-                            px-2.5 py-1.5
-                            rounded-lg
-                            text-[13px] font-semibold
-                            transition-all
-                            shadow-sm
-                            whitespace-nowrap
-                            ml-auto md:ml-0
-                            cursor-pointer
-                        "
+                        className="flex-none flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 text-white px-2.5 py-1.5 rounded-lg text-[13px] font-semibold transition-all shadow-sm whitespace-nowrap ml-auto md:ml-0 cursor-pointer"
                     >
                         <IoAdd className="text-base" />
                         <span>Thêm mới</span>

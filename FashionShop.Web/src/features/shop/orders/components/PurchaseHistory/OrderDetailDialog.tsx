@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoCallOutline, IoCloseOutline, IoLocationOutline, IoTimeOutline } from "react-icons/io5";
 import type { OrderDetail } from "../../types/order";
 import React from "react";
 import Loading from "../../../../../components/common/Loading";
@@ -111,24 +111,28 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
 
                                     {/* meta */}
                                     <div className="mt-5 flex flex-wrap gap-4 text-[12px] text-zinc-500">
+                                        <span className="flex items-center gap-2">
+                                            <IoCallOutline className="text-[15px] text-zinc-400" />
+                                            {order.phoneNumber}
+                                        </span>
 
                                         <span className="flex items-center gap-2">
-                                            📞 {order.phoneNumber}
+                                            <IoTimeOutline className="text-[15px] text-zinc-400" />
+                                            {format(new Date(order.orderDate), "HH:mm, dd/MM/yyyy", { locale: vi })}
                                         </span>
 
-                                        <span>
-                                            🕒 {format(new Date(order.orderDate), "HH:mm, dd/MM/yyyy", { locale: vi })}
-                                        </span>
+                                        <span className="flex items-center gap-2 italic min-w-0">
+                                            <IoLocationOutline className="shrink-0 text-[15px] text-zinc-400" />
 
-                                        <span className="italic">
-                                            <AddressString
-                                                addressDetail={order.shippingAddress}
-                                                communeCode={order.shippingCommune}
-                                                districtCode={order.shippingDistrict}
-                                                cityCode={order.shippingCity}
-                                            />
+                                            <span className="truncate">
+                                                <AddressString
+                                                    addressDetail={order.shippingAddress}
+                                                    communeCode={order.shippingCommune}
+                                                    districtCode={order.shippingDistrict}
+                                                    cityCode={order.shippingCity}
+                                                />
+                                            </span>
                                         </span>
-
                                     </div>
 
                                 </div>

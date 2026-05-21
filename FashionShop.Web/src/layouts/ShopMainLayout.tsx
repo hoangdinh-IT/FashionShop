@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/layout/shop/Header';
+import Footer from '../components/layout/shop/Footer';
 
 const ShopMainLayout: React.FC = () => {
     return (
@@ -9,9 +10,7 @@ const ShopMainLayout: React.FC = () => {
             <main className="flex-1 w-full bg-white">
                 <Outlet />
             </main>
-            <footer className="py-12 bg-zinc-50 border-t border-zinc-100 text-center">
-                <p className="text-zinc-400 text-sm italic">© 2026 FashionShop. Limited Edition.</p>
-            </footer>
+            <Footer />            
         </div>
     );
 };

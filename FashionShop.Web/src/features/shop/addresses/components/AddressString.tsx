@@ -8,35 +8,62 @@ interface Props {
     cityCode?: string | number;
 }
 
-const AddressString: React.FC<Props> = ({ addressDetail, communeCode, districtCode, cityCode }) => {
-    const [locationName, setLocationName] = useState<string>("Đang tải dữ liệu...");
+const AddressString: React.FC<Props> = ({
+    addressDetail,
+    communeCode,
+    districtCode,
+    cityCode
+}) => {
+
+    const [locationName, setLocationName] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Nếu không có đủ mã thì không gọi API
+
         if (!cityCode || !districtCode || !communeCode) {
             setLocationName("");
+            setIsLoading(false);
             return;
         }
 
-        // Gọi API song song để lấy Tên từ 3 Mã
+        setIsLoading(true);
+
         Promise.all([
             axios.get(`https://provinces.open-api.vn/api/w/${communeCode}`),
             axios.get(`https://provinces.open-api.vn/api/d/${districtCode}`),
             axios.get(`https://provinces.open-api.vn/api/p/${cityCode}`)
         ])
         .then(([wardRes, districtRes, cityRes]) => {
-            // Nối chuỗi tên lại với nhau
-            setLocationName(`${wardRes.data.name}, ${districtRes.data.name}, ${cityRes.data.name}`);
+
+            setLocationName(
+                `${wardRes.data.name}, ${districtRes.data.name}, ${cityRes.data.name}`
+            );
         })
-        .catch(err => {
+        .catch((err) => {
+
             console.error("Lỗi dịch địa chỉ:", err);
             setLocationName("Lỗi hiển thị khu vực");
+        })
+        .finally(() => {
+            setIsLoading(false);
         });
+
     }, [communeCode, districtCode, cityCode]);
 
     return (
         <span className="leading-relaxed whitespace-pre-line">
-            {addressDetail}{locationName ? `, ${locationName}` : ""}
+            {isLoading ? (
+
+                <span className="inline-flex items-center ml-2 gap-2 align-middle">
+                    <span className="h-4 w-28 animate-pulse rounded-full bg-zinc-200" />
+                    <span className="h-4 w-64 animate-pulse rounded-full bg-zinc-100" />
+                </span>
+
+            ) : locationName ? (
+
+                `${addressDetail}, ${locationName}`
+
+            ) : null}
         </span>
     );
 };

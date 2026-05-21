@@ -124,16 +124,16 @@ export const AppRoutes = () => {
                                     element: <Navigate to="information" replace /> // Mặc định vào thẳng information
                                 },
                                 {
-                                    path: "information", // URL: /shop/account/information
+                                    path: "information",
                                     element: <InformationPage /> 
-                                },
-                                {
-                                    path: "address", // URL: /shop/account/address
-                                    element: <AddressPage />
                                 },
                                 {
                                     path: "purchase-histories",
                                     element: <PurchaseHistoryPage />
+                                },
+                                {
+                                    path: "address",
+                                    element: <AddressPage />
                                 }
                             ]
                         },

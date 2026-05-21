@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { 
-    IoStorefrontOutline, 
     IoChevronForwardOutline,
     IoStarOutline,
 } from "react-icons/io5";

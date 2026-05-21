@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { IoShieldCheckmark, IoPerson } from "react-icons/io5";
-import { LoginForm } from '../../features/auth/components/LoginForm';
+import LoginForm from '../../features/auth/components/LoginForm';
 
 const LoginPage: React.FC = () => {
     const [selectedAccount, setSelectedAccount] = useState({

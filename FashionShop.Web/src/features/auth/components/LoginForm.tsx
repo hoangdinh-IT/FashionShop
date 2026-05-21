@@ -12,7 +12,7 @@ interface Props {
     initialData?: { email: string; password: string };
 }
 
-export const LoginForm: React.FC<Props> = ({ initialData }) => {
+const LoginForm: React.FC<Props> = ({ initialData }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const { login, isLoading: isLoginLoading } = useLogin();
@@ -238,3 +238,5 @@ export const LoginForm: React.FC<Props> = ({ initialData }) => {
         </motion.div>
     );
 };
+
+export default LoginForm;
