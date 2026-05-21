@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
                             role="Administrator"
                             icon={<IoShieldCheckmark size={18} />}
                             email="admin@fashionshop.com"
-                            password="000000"
+                            password="●●●●●●"
                             onClick={() =>
                                 handleSelectAccount(
                                     "admin@fashionshop.com",
@@ -62,11 +62,11 @@ const LoginPage: React.FC = () => {
                             role="Customer"
                             icon={<IoPerson size={18} />}
                             email="hoangdinh20040104@gmail.com"
-                            password="000000"
+                            password="●●●●●●"
                             onClick={() =>
                                 handleSelectAccount(
                                     "hoangdinh20040104@gmail.com",
-                                    "000000"
+                                    "123456"
                                 )
                             }
                         />

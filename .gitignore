@@ -3,8 +3,6 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-# dotenv files
-.env
 
 # User-specific files
 *.rsuser
@@ -481,14 +479,24 @@ $RECYCLE.BIN/
 *.lnk
 
 # Vim temporary swap files
-*.swp
+*.swap
 
-# Ignore sensitive app settings
+# ====================================================================
+# SENSITIVE DATA & CONFIGURATIONS (BẢO MẬT DỮ LIỆU CHÍNH)
+# ====================================================================
+
+# Chặn toàn bộ các biến thể của file .env ở mọi ngóc ngách dự án
+.env
+.env.*
+.env.local
+.env.development.local
+.env.production.local
+
+# NGOẠI LỆ: Cho phép giữ lại file .env.example để đẩy lên GitHub
+!**/ .env.example
+!.env.example
+
+# Chặn các cấu hình Database chứa mật khẩu của Back-end (.NET)
 **/appsettings.json
 **/appsettings.Development.json
-
-# Frontend build and dependencies
-node_modules/
-dist/
-build/
-.env*
+**/appsettings.Local.json
