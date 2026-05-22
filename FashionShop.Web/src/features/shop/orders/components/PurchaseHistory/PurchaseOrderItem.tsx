@@ -5,18 +5,20 @@ import {
 } from "react-icons/io5";
 
 // Import Type và các cấu hình màu sắc/trạng thái từ file cha
-import type { OrderSummary } from "../../types/order";
+import type { OrderItemSummary, OrderSummary } from "../../types/order";
 import { STATUS_TABS, STATUS_THEME } from "../../../../../pages/shop/orders/PurchaseHistoryPage";
 import type React from "react";
 import { Link } from "react-router-dom";
 
 interface Props {
     order: OrderSummary;
+    reviewedItemIds?: Set<number>;
     onCancelledOrder: (orderId: string) => void;
     onViewDetail: (orderId: string) => void;
+    onReview: (order: OrderItemSummary) => void;
 }
 
-const PurchaseOrderItem: React.FC<Props> = ({ order, onCancelledOrder, onViewDetail }) => {
+const PurchaseOrderItem: React.FC<Props> = ({ order, reviewedItemIds, onCancelledOrder, onViewDetail, onReview }) => {
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     };
@@ -110,15 +112,39 @@ const PurchaseOrderItem: React.FC<Props> = ({ order, onCancelledOrder, onViewDet
                                         </p>
                                     </div>
 
-                                    {/* PRICE */}
-                                    <div className="text-right shrink-0">
-                                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 mb-1">
-                                            Price
-                                        </p>
+                                    {/* RIGHT SIDE */}
+                                    <div className="flex flex-col items-end justify-center gap-3 shrink-0">
 
-                                        <span className="text-[14px] font-bold text-zinc-900">
-                                            {formatCurrency(item.unitPrice)}
-                                        </span>
+                                        {/* PRICE */}
+                                        <div className="text-right">
+                                            <p className="text-[9px] uppercase tracking-[0.24em] text-zinc-400 mb-1">
+                                                Price
+                                            </p>
+
+                                            <span className="text-[15px] font-black tracking-tight text-zinc-900">
+                                                {formatCurrency(item.unitPrice)}
+                                            </span>
+                                        </div>
+
+                                        {/* REVIEW */}
+                                        {order.orderStatus === "Success" && !item.isReviewed && !reviewedItemIds?.has(item.orderItemId) && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+
+                                                    onReview?.(item);
+                                                }}
+                                                className="group/review h-8 px-3 rounded-full border border-amber-100 bg-white text-[10px] uppercase tracking-[0.22em] font-black text-amber-600 flex items-center gap-1.5 transition-all duration-300 hover:bg-amber-50 hover:border-amber-200 hover:shadow-[0_4px_18px_rgba(251,191,36,0.12)]"
+                                            >
+                                                <IoStarOutline
+                                                    size={12}
+                                                    className="transition-transform duration-300 group-hover/review:rotate-12"
+                                                />
+
+                                                Đánh giá
+                                            </button>
+                                        )}
                                     </div>
                                 </Link>
                             ))}
@@ -149,13 +175,6 @@ const PurchaseOrderItem: React.FC<Props> = ({ order, onCancelledOrder, onViewDet
                                 className="h-10 px-4 rounded-full border border-rose-100 bg-rose-50 text-[10px] uppercase tracking-[0.2em] font-bold text-rose-500 hover:bg-rose-100 transition"
                             >
                                 Hủy đơn
-                            </button>
-                        )}
-
-                        {order.orderStatus === "Success" && (
-                            <button className="h-10 px-4 rounded-full border border-amber-100 bg-amber-50 text-[10px] uppercase tracking-[0.2em] font-bold text-amber-600 hover:bg-amber-100 transition flex items-center gap-2">
-                                <IoStarOutline size={14} />
-                                Đánh giá
                             </button>
                         )}
 

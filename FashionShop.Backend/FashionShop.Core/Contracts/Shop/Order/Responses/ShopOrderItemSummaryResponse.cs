@@ -9,11 +9,13 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
     public class ShopOrderItemSummaryResponse
     {
         public int OrderItemId { get; set; }
+        public Guid ProductId { get; set; }
         public Guid ProductVariantId { get; set; }
 
         // Thông tin sản phẩm bổ sung để FE hiển thị (Lấy từ bảng Product/Variant)
         public string ProductName { get; set; }
         public string ProductSlug { get; set; }
+        public string ProductThumbnailUrl { get; set; }
         public string VariantName { get; set; }
         public string BrandName { get; set; }
         public string BrandLogoUrl { get; set; }

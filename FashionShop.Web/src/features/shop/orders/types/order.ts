@@ -18,11 +18,13 @@ export interface OrderSummary {
     orderItems: OrderItemSummary[];
 }
 
-interface OrderItemSummary {
+export interface OrderItemSummary {
     orderItemId: number;
+    productId: string;
     productVariantId: string;
     productName: string;
     productSlug: string;
+    productThumbnailUrl: string;
     variantName: string;
     brandName: string;
     brandLogoUrl: string;

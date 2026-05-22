@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoReceiptOutline } from "react-icons/io5";
 
-import type { OrderSummary } from "../../../features/shop/orders/types/order";
+import type { OrderItemSummary, OrderSummary } from "../../../features/shop/orders/types/order";
 import { useOrder, useOrderMutations, useOrders } from "../../../features/shop/orders/hooks/useOrders";
 import PurchaseOrderItem from "../../../features/shop/orders/components/PurchaseHistory/PurchaseOrderItem";
 import OrderDetailDialog from "../../../features/shop/orders/components/PurchaseHistory/OrderDetailDialog";
 import { useDialog } from "../../../contexts";
+import ProductReviewDialog from "../../../features/shop/reviews/components/ProductReviewDialog";
 
 // Export để file con (PurchaseOrderItem) có thể sử dụng lại mà không cần khai báo lại
 export const STATUS_TABS = [
@@ -37,11 +38,24 @@ const PurchaseHistoryPage = () => {
     const { showDialog } = useDialog(); 
 
     const [activeTab, setActiveTab] = useState('All');
-    const [selectedOrderId, setSelectedOrderId] = useState<string | undefined>(undefined);
-    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: "DETAIL" | "REVIEW" | null,
+        orderId: string | undefined,
+        orderItem: OrderItemSummary | undefined
+    }>({
+        isOpen: null,
+        orderId: undefined,
+        orderItem: undefined
+    });
+
+    const [reviewedItemIds, setReviewedItemIds] = useState<Set<number>>(new Set());
+
+    const handleReviewSuccess = (orderItemId: number) => {
+        setReviewedItemIds((prev) => new Set(prev).add(orderItemId));
+    };
 
     const { orders, isLoading: isLoadingOrders } = useOrders();
-    const { order, isLoading: isLoadingOrder } = useOrder(selectedOrderId);
+    const { order, isLoading: isLoadingOrder } = useOrder(modalConfig.orderId);
     const { updateCancelledOrder } = useOrderMutations();
 
     const filteredOrders = activeTab === "All"
@@ -59,11 +73,15 @@ const PurchaseHistoryPage = () => {
         });
     }
 
-    const handleViewDetailOrder = (orderId: string) => {
-        setSelectedOrderId(orderId);
-        setIsDetailOpen(true);
-    }
-    
+    const handleViewDetailOrder = (orderId: string) => 
+        setModalConfig({ isOpen: "DETAIL", orderId: orderId, orderItem: undefined });
+
+    const handleReview = (orderItem: OrderItemSummary) =>
+        setModalConfig({ isOpen: "REVIEW", orderId: undefined, orderItem: orderItem });
+
+    const handleClose = () => 
+        setModalConfig({ isOpen: null, orderId: undefined, orderItem: undefined });
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -228,8 +246,10 @@ const PurchaseHistoryPage = () => {
                                     >
                                         <PurchaseOrderItem
                                             order={order}
+                                            reviewedItemIds={reviewedItemIds}
                                             onCancelledOrder={handleCancelledOrder}
                                             onViewDetail={handleViewDetailOrder}
+                                            onReview={handleReview}
                                         />
                                     </motion.div>
                                 ))}
@@ -283,12 +303,20 @@ const PurchaseHistoryPage = () => {
 
             <OrderDetailDialog
                 order={order}
-                isOpen={isDetailOpen}
-                onClose={() => {
-                    setSelectedOrderId(undefined);
-                    setIsDetailOpen(false);
-                }}
+                isOpen={modalConfig.isOpen === "DETAIL"}
+                onClose={handleClose}
                 isLoading={isLoadingOrder}
+            />
+
+            <ProductReviewDialog 
+                isOpen={modalConfig.isOpen === "REVIEW"}
+                onClose={handleClose}
+                orderItem={modalConfig.orderItem}
+                onSuccess={() => {
+                    if (modalConfig.orderItem) {
+                        handleReviewSuccess(modalConfig.orderItem.orderItemId);
+                    }
+                }}
             />
         </motion.div>
     );

@@ -13,8 +13,9 @@ namespace FashionShop.API.Repositories.Shop.Interfaces
 
         Task<PagedResult<ProductGridItemResponse>> GetPagedProductsAsync(ShopProductListRequest request);
         Task<IEnumerable<ProductGridItemResponse>> GetCollectionProductsAsync(ShopCollectionProductListRequest request);
-        Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId);
         Task<ShopProductDetailResponse?> GetProductBySlugAsync(string productSlug);
+        Task<Product?> FindProductByProductSlugAsync(string productSlug);
+        Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId);
         Task<ShopFilterOptionsResponse?> GetFilterOptionsAsync(ShopFilterOptionsRequest request);
 
 

@@ -39,9 +39,11 @@ namespace FashionShop.API.Repositories.Shop
                 OrderItems = order.OrderItems.Select(orderItem => new ShopOrderItemSummaryResponse
                 {
                     OrderItemId = orderItem.Id,
+                    ProductId = orderItem.ProductVariant.ProductId,
                     ProductVariantId = orderItem.ProductVariantId,
                     ProductName = orderItem.ProductVariant.Product.Name,
                     ProductSlug = orderItem.ProductVariant.Product.Slug,
+                    ProductThumbnailUrl = orderItem.ProductVariant.Product.ThumbnailUrl,
                     VariantName = orderItem.ProductVariant.Color.Name + " - " + orderItem.ProductVariant.Size.Name,
                     BrandName = orderItem.ProductVariant.Product.Brand.Name,
                     BrandLogoUrl = orderItem.ProductVariant.Product.Brand.LogoUrl,

@@ -476,7 +476,7 @@ namespace FashionShop.API.Services.Admin
 
             var uploadResults = await Task.WhenAll(uploadTasks);
 
-            var listImages = new List<AdminProductImageResponse>();
+            var listImages = new List<ProductImage>();
 
             var sortedResults = uploadResults.OrderBy(x => x.Index).ToList();
 
@@ -493,11 +493,12 @@ namespace FashionShop.API.Services.Admin
                 };
 
                 _unitOfWork.AdminProducts.CreateProductImage(newImage);
-                await _unitOfWork.SaveChangesAsync();
-                listImages.Add(_mapper.Map<AdminProductImageResponse>(newImage));
+                listImages.Add(newImage);
             }
 
-            return listImages;
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<List<AdminProductImageResponse>>(listImages);
         }
 
         public async Task<IEnumerable<AdminProductImageResponse>> UpdateSortOrderAsync(Guid productId, UpdateSortOrderRequest request)

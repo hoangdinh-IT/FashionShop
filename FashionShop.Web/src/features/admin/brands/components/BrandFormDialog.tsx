@@ -261,11 +261,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                 })}
                                                 type="text"
                                                 placeholder="Nhập tên thương hiệu..."
-                                                className={`w-full px-4 py-2.5 border border-transparent bg-gray-50 rounded-xl outline-none transition-all placeholder:text-gray-400 font-semibold text-sm text-gray-800
-                                                    ${errors.name
-                                                        ? "ring-2 ring-red-500 bg-red-50"
-                                                        : "focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-                                                    }`}
+                                                className={`w-full px-4 py-2.5 border border-transparent bg-gray-50 rounded-xl outline-none transition-all placeholder:text-gray-400 font-semibold text-sm text-gray-800 ${errors.name ? "ring-2 ring-red-500 bg-red-50" : "focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"}`}
                                             />
 
                                             <div className="flex justify-between mt-1">
@@ -273,10 +269,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                     {errors.name?.message}
                                                 </span>
 
-                                                <span className={`text-[11px] ${watchedName.length > 100
-                                                    ? 'text-red-500 font-bold'
-                                                    : 'text-gray-400'
-                                                    }`}>
+                                                <span className={`text-[11px] ${watchedName.length > 100 ? 'text-red-500 font-bold' : 'text-gray-400'}`}>
                                                     {watchedName.length}/100
                                                 </span>
                                             </div>
@@ -300,11 +293,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                     type="text"
                                                     disabled
                                                     placeholder="Nhập slug..."
-                                                    className={`w-full pl-4 pr-14 py-2.5 border border-transparent bg-gray-50 rounded-xl outline-none transition-all placeholder:text-gray-400 font-semibold text-sm text-gray-800
-                                                        ${errors.slug
-                                                            ? "ring-2 ring-red-500 bg-red-50"
-                                                            : "focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-                                                        }`}
+                                                    className={`w-full pl-4 pr-14 py-2.5 border border-transparent bg-gray-50 rounded-xl outline-none transition-all placeholder:text-gray-400 font-semibold text-sm text-gray-800 ${errors.slug ? "ring-2 ring-red-500 bg-red-50" : "focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"}`}
                                                 />
 
                                                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] font-mono bg-gray-100 px-2 py-1 rounded">
@@ -317,10 +306,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                     {errors.slug?.message}
                                                 </span>
 
-                                                <span className={`text-[11px] ${watchedSlug.length > 100
-                                                    ? 'text-red-500 font-bold'
-                                                    : 'text-gray-400'
-                                                    }`}>
+                                                <span className={`text-[11px] ${watchedSlug.length > 100 ? 'text-red-500 font-bold' : 'text-gray-400'}`}>
                                                     {watchedSlug.length}/100
                                                 </span>
                                             </div>
@@ -340,23 +326,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                     }
                                                 })}
                                                 rows={4}
-                                                className="
-                                                    w-full px-4 py-2.5
-                                                    border border-transparent
-                                                    bg-gray-50
-                                                    rounded-xl
-                                                    outline-none
-                                                    transition-all
-                                                    resize-none
-                                                    text-[13px]
-                                                    leading-relaxed
-                                                    placeholder:text-gray-400
-                                                    text-gray-700
-                                                    focus:bg-white
-                                                    focus:ring-2
-                                                    focus:ring-indigo-500/20
-                                                    focus:border-indigo-500
-                                                "
+                                                className={`w-full px-4 py-2.5 border border-transparent bg-gray-50 rounded-xl outline-none transition-all resize-none text-[13px] leading-relaxed placeholder:text-gray-400 text-gray-700 ${errors.description ? "ring-2 ring-red-500 bg-red-50" : "focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"}`}
                                                 placeholder="Nhập thông tin giới thiệu về thương hiệu..."
                                             />
 
@@ -365,10 +335,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                     {errors.description?.message}
                                                 </span>
 
-                                                <span className={`text-[11px] ${watchedDescription.length > 500
-                                                    ? 'text-red-500 font-bold'
-                                                    : 'text-gray-400'
-                                                    }`}>
+                                                <span className={`text-[11px] ${watchedDescription.length > 500 ? 'text-red-500 font-bold' : 'text-gray-400'}`}>
                                                     {watchedDescription.length}/500
                                                 </span>
                                             </div>
@@ -429,11 +396,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
 
                                             <div
                                                 onClick={triggerFileInput}
-                                                className={`group relative w-full aspect-square border-2 border-dashed rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center overflow-hidden bg-gray-50
-                                                    ${errors.logo
-                                                        ? "border-red-400 bg-red-50 hover:bg-red-100/50"
-                                                        : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50/30"
-                                                    }`}
+                                                className={`group relative w-full aspect-square border-2 border-dashed rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center overflow-hidden bg-gray-50 ${errors.logo ? "border-red-400 bg-red-50 hover:bg-red-100/50" : "border-gray-300 hover:border-indigo-500 hover:bg-indigo-50/30"}`}
                                             >
                                                 {previewUrl ? (
                                                     <>
@@ -494,19 +457,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                     type='button'
                                     onClick={onClose}
                                     disabled={isCreating || isUpdating}
-                                    className="
-                                        px-5 py-2
-                                        text-[13px] font-bold
-                                        text-gray-600
-                                        bg-white
-                                        border border-gray-200
-                                        hover:bg-gray-50
-                                        hover:border-gray-300
-                                        rounded-xl
-                                        transition-all
-                                        shadow-sm
-                                        disabled:opacity-50
-                                    "
+                                    className="px-5 py-2 text-[13px] font-bold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 rounded-xl transition-all shadow-sm disabled:opacity-50"
                                 >
                                     Hủy bỏ
                                 </button>
@@ -514,20 +465,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                 <button
                                     type='submit'
                                     disabled={isCreating || isUpdating}
-                                    className={`
-                                        relative overflow-hidden
-                                        flex items-center gap-2
-                                        px-6 py-2
-                                        text-[13px] font-bold
-                                        text-white
-                                        rounded-xl
-                                        shadow-lg shadow-indigo-200
-                                        transition-all duration-300
-                                        ${isCreating || isUpdating
-                                            ? 'bg-indigo-400 cursor-wait'
-                                            : 'bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5'
-                                        }
-                                    `}
+                                    className={`relative overflow-hidden flex items-center gap-2 px-6 py-2 text-[13px] font-bold text-white rounded-xl shadow-lg shadow-indigo-200 transition-all duration-300 ${isCreating || isUpdating ? 'bg-indigo-400 cursor-wait' : 'bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5'}`}
                                 >
                                     {isCreating || isUpdating ? (
                                         <>
@@ -549,11 +487,7 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
                                                 <path
                                                     className="opacity-75"
                                                     fill="currentColor"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 
-                                                    0 0 5.373 0 12h4zm2 
-                                                    5.291A7.962 7.962 0 014 
-                                                    12H0c0 3.042 1.135 5.824 
-                                                    3 7.938l3-2.647z"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                                 />
                                             </svg>
 

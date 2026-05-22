@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
                             onClick={() =>
                                 handleSelectAccount(
                                     "admin@fashionshop.com",
-                                    "000000"
+                                    "admin000"
                                 )
                             }
                         />
@@ -66,7 +66,7 @@ const LoginPage: React.FC = () => {
                             onClick={() =>
                                 handleSelectAccount(
                                     "hoangdinh20040104@gmail.com",
-                                    "123456"
+                                    "customer000"
                                 )
                             }
                         />

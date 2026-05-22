@@ -21,6 +21,8 @@ using FashionShop.Core.Contracts.Shop.Address.Responses;
 using FashionShop.Core.Contracts.Shop.Cart.Responses;
 using FashionShop.Core.Contracts.Shop.Order.Requests;
 using FashionShop.Core.Contracts.Shop.Order.Responses;
+using FashionShop.Core.Contracts.Shop.Review.Requests;
+using FashionShop.Core.Contracts.Shop.Review.Responses;
 using FashionShop.Core.Contracts.Shop.User.Requests;
 using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
@@ -124,6 +126,14 @@ namespace FashionShop.API.Mappings
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductVariant.Product.Name));
 
             CreateMap<Order, ShopOrderSummaryResponse>();
+
+            // Review
+            CreateMap<ShopCreateReviewRequest, Review>()
+                .ForMember(dest => dest.ReviewImages, opt => opt.Ignore());
+
+            CreateMap<Review, ShopReviewResponse>();
+
+            CreateMap<ReviewImage, ShopReviewImageResponse>();
         }
     }
 }

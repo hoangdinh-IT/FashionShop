@@ -24,10 +24,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty)
-            {
-                throw new ArgumentException("ID không hợp lệ!");
-            }
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _addressService.GetAddressesByUserIdAsync(userId);
             return Success(result, "Lấy danh sách địa chỉ giao hàng thành công!");
@@ -50,10 +47,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty || addressId == Guid.Empty)
-            {
-                throw new ArgumentException("ID không hợp lệ!");
-            }
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _addressService.UpdateAddressByUserIdAsync(userId, addressId, request);
             return Success(result, "Cập nhật địa chỉ giao hàng thành công!");
@@ -64,10 +58,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty || addressId == Guid.Empty)
-            {
-                throw new ArgumentException("ID không hợp lệ!");
-            }
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _addressService.UpdateAddressDefaultAsync(userId, addressId);
             return Success(result, "Cập nhật địa chỉ mặc định thành công!");
@@ -78,10 +69,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty || addressId == Guid.Empty)
-            {
-                throw new ArgumentException("ID không hợp lệ!");
-            }
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             await _addressService.DeleteAddressAsync(userId, addressId);
             return Success<object?>(null, "Xoá địa chỉ giao hàng thành công!");

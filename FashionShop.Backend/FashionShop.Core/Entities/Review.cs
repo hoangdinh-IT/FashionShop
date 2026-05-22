@@ -22,6 +22,7 @@ namespace FashionShop.Core.Entities
         public int OrderItemId { get; set; }
 
         [Required]
+        [Range(1, 5)]
         public int Rating { get; set; }
 
         public string? Content { get; set; }
@@ -34,7 +35,7 @@ namespace FashionShop.Core.Entities
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
 
-        [ForeignKey("OrderDetailId")]
+        [ForeignKey("OrderItemId")]
         public virtual OrderItem OrderItem { get; set; }
 
         public virtual ICollection<ReviewImage> ReviewImages { get; set; } = new List<ReviewImage>();

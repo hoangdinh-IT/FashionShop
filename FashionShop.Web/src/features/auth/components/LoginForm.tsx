@@ -97,6 +97,7 @@ const LoginForm: React.FC<Props> = ({ initialData }) => {
                                     }
                                 })}
                                 placeholder="Enter your email"
+                                tabIndex={1}
                                 className={`h-14 w-full rounded-2xl border bg-[#f8f8f7] pl-14 pr-5 text-sm text-zinc-900 outline-none transition-all focus:bg-white
                                     ${
                                         errors.email
@@ -135,6 +136,7 @@ const LoginForm: React.FC<Props> = ({ initialData }) => {
                                     }
                                 })}
                                 placeholder="Enter your password"
+                                tabIndex={2}
                                 className={`h-14 w-full rounded-2xl border bg-[#f8f8f7] pl-14 pr-14 text-sm text-zinc-900 outline-none transition-all focus:bg-white
                                     ${
                                         errors.password
@@ -191,6 +193,7 @@ const LoginForm: React.FC<Props> = ({ initialData }) => {
                         disabled={
                             isLoginLoading || isGoogleLoginLoading
                         }
+                        tabIndex={3}
                         className={`flex h-14 w-full items-center justify-center rounded-2xl text-sm font-bold uppercase tracking-[0.2em] transition-all
                             ${
                                 isLoginLoading || isGoogleLoginLoading

@@ -214,11 +214,6 @@ namespace FashionShop.API.Repositories.Shop
                 .ToListAsync();
         }
 
-        public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)
-        {
-            return await _context.ProductVariants.FindAsync(productVariantId);
-        }
-
         public async Task<ShopProductDetailResponse?> GetProductBySlugAsync(string productSlug)
         {
             return await _context.Products
@@ -227,6 +222,16 @@ namespace FashionShop.API.Repositories.Shop
                 .Where(p => p.Slug == productSlug)
                 .Select(_productDetailSelector)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Product?> FindProductByProductSlugAsync(string productSlug)
+        {
+            return await _context.Products.FirstOrDefaultAsync(product => product.Slug == productSlug);
+        }
+
+        public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)
+        {
+            return await _context.ProductVariants.FindAsync(productVariantId);
         }
 
         public async Task<ShopFilterOptionsResponse?> GetFilterOptionsAsync(ShopFilterOptionsRequest request)

@@ -24,8 +24,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty)
-                throw new ArgumentException("ID không hợp lệ!");
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _cartService.GetCartItemsAsync(userId);
             return Success(result, "Lấy danh sách sản phẩm trong giỏ hàng thành công!");
@@ -40,8 +39,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty)
-                throw new ArgumentException("ID không hợp lệ!");
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _cartService.CreateCartItemAsync(userId, request);
             return Success(result, "Thêm sản phẩm trong giỏ hàng thành công!");
@@ -52,8 +50,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty)
-                throw new ArgumentException("ID không hợp lệ!");
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _cartService.UpdateCartItemAsync(userId, cartItemId, request);
             return Success(result, "Cập nhật biến thể sản phẩm thành công!");
@@ -64,8 +61,7 @@ namespace FashionShop.API.Controllers.Shop
         {
             Guid userId = User.GetUserId();
 
-            if (userId == Guid.Empty)
-                throw new ArgumentException("ID không hợp lệ!");
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             await _cartService.DeleteCartItemAsync(userId, cartItemId);
             return Success<object?>(null, "Xoá sản phẩm trong giỏ hàng thành công!");
