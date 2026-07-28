@@ -1,7 +1,7 @@
 import type React from "react";
 import type { Size } from "../types/size";
 import { SizeType } from "../types/size";
-import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoLayersOutline, IoPencil, IoResizeOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
+import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoLayersOutline, IoPencilOutline, IoResizeOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
 import { format } from "date-fns";
 import Tooltip from "../../../../components/common/Tooltip";
 
@@ -205,23 +205,25 @@ const SizeTable: React.FC<Props> = ({
                                         </td>
 
                                         {/* 7. HÀNH ĐỘNG */}
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                                        <td className="px-6 py-5 text-right">
+                                            <div className="flex items-center justify-end gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-3 group-hover:translate-x-0">
+                                                
                                                 <button 
                                                     onClick={(e) => { e.stopPropagation(); onEdit?.(item); }} 
-                                                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-violet-500 rounded-lg transition-all duration-200 shadow-sm hover:shadow-violet-200 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95" 
+                                                    className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-violet-600 rounded-xl transition-all duration-300 shadow-sm hover:shadow-violet-200 hover:shadow-lg active:scale-95" 
                                                     title="Chỉnh sửa"
                                                 >
-                                                    <IoPencil className="text-[15px]" />
+                                                    <IoPencilOutline size={17} />
                                                 </button>
                                                 
                                                 <button 
                                                     onClick={(e) => { e.stopPropagation(); onDelete?.(item.id); }} 
-                                                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-rose-500 rounded-lg transition-all duration-200 shadow-sm hover:shadow-rose-200 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95" 
+                                                    className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-rose-600 rounded-xl transition-all duration-300 shadow-sm hover:shadow-rose-200 hover:shadow-lg active:scale-95" 
                                                     title="Xóa"
                                                 >
-                                                    <IoTrashBinOutline className="text-[15px]" />
+                                                    <IoTrashBinOutline size={17} />
                                                 </button>
+
                                             </div>
                                         </td>
                                     </tr>

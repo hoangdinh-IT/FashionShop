@@ -24,6 +24,7 @@ namespace FashionShop.API.Data
         public DbSet<VoucherUsage> VoucherUsages{ get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewImage> ReviewImages { get; set; }
+        public DbSet<ReviewLike> ReviewLikes { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,7 +64,9 @@ namespace FashionShop.API.Data
             modelBuilder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
             
             modelBuilder.Entity<ReviewImage>().HasQueryFilter(ri => !ri.IsDeleted);
-            
+
+            modelBuilder.Entity<ReviewLike>().HasQueryFilter(rl => !rl.IsDeleted);
+
             modelBuilder.Entity<Wishlist>().HasQueryFilter(w => !w.IsDeleted);
 
 
@@ -260,6 +263,21 @@ namespace FashionShop.API.Data
                 entity.HasOne(ri => ri.Review)
                       .WithMany(r => r.ReviewImages)
                       .HasForeignKey(ri => ri.ReviewId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ReviewLike>(entity =>
+            {
+                entity.HasKey(rl => new { rl.UserId, rl.ReviewId });
+
+                entity.HasOne(rl => rl.User)
+                      .WithMany(u => u.ReviewLikes)
+                      .HasForeignKey(rl => rl.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(rl => rl.Review)
+                      .WithMany(r => r.ReviewLikes)
+                      .HasForeignKey(rl => rl.ReviewId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 

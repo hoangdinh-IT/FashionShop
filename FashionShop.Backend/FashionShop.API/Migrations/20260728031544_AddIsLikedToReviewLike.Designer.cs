@@ -3,6 +3,7 @@ using System;
 using FashionShop.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FashionShop.API.Migrations
 {
     [DbContext(typeof(FashionDbContext))]
-    partial class FashionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260728031544_AddIsLikedToReviewLike")]
+    partial class AddIsLikedToReviewLike
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -569,6 +572,12 @@ namespace FashionShop.API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<bool?>("IsLiked")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("integer");
+
                     b.Property<int>("OrderItemId")
                         .HasColumnType("integer");
 
@@ -576,9 +585,6 @@ namespace FashionShop.API.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TotalLikes")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedDate")

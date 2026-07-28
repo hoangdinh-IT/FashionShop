@@ -27,12 +27,12 @@ namespace FashionShop.API.Services.Shop
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<ShopReviewResponse?>> GetReviewsAsync(string productSlug)
+        public async Task<IEnumerable<ShopReviewResponse?>> GetReviewsAsync(Guid? currentUserId, string productSlug)
         {
             var product = await _unitOfWork.ShopProducts.FindProductByProductSlugAsync(productSlug);
             if (product == null) throw new KeyNotFoundException("Không tìm thấy sản phẩm!");
 
-            return await _unitOfWork.ShopReviews.GetReviewsAsync(productSlug);
+            return await _unitOfWork.ShopReviews.GetReviewsAsync(currentUserId, productSlug);
         }
 
 
@@ -41,7 +41,7 @@ namespace FashionShop.API.Services.Shop
 
         public async Task<ShopReviewResponse?> CreateReviewAsync(Guid userId, ShopCreateReviewRequest request)
         {
-            var review = await _unitOfWork.ShopReviews.IsExistReview(userId, request.ProductId, request.OrderItemId);
+            bool review = await _unitOfWork.ShopReviews.IsExistReviewAsync(userId, request.ProductId, request.OrderItemId);
             if (review) throw new ConflictException("Đánh giá này đã tồn tại!");
 
             var newReview = _mapper.Map<Review>(request);

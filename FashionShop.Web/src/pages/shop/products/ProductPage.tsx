@@ -3,12 +3,12 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Imports từ project
-import SidebarFilter from '../../../features/shop/products/components/SidebarFilter';
-import ProductCard from '../../../features/shop/products/components/ProductCard';
+import SidebarFilter from '../../../features/shop/products/components/ProductSummary/SidebarFilter';
+import ProductCard from '../../../features/shop/products/components/ProductSummary/ProductCard';
 import { useFilterOptions, useProductCollections, useProducts } from '../../../features/shop/products/hooks/useProducts';
 import type { FilterOptionsRequest, ProductCollectionsQueryParams, ProductQueryParams } from '../../../features/shop/products/types/requests';
 import ProductSkeleton from '../../../components/common/ProductSkeleton';
-import ProductHeader from '../../../features/shop/products/components/ProductHeader';
+import ProductHeader from '../../../features/shop/products/components/ProductSummary/ProductHeader';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ProductPageProps {

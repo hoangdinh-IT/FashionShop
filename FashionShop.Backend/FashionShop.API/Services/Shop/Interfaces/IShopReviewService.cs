@@ -8,7 +8,7 @@ namespace FashionShop.API.Services.Shop.Interfaces
 
         // --- READ METHODS --- //
 
-        Task<IEnumerable<ShopReviewResponse?>> GetReviewsAsync(string productSlug);
+        Task<IEnumerable<ShopReviewResponse?>> GetReviewsAsync(Guid? currentUserId, string productSlug);
 
 
 

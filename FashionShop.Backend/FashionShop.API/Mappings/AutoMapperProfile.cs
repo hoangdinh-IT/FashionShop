@@ -23,6 +23,7 @@ using FashionShop.Core.Contracts.Shop.Order.Requests;
 using FashionShop.Core.Contracts.Shop.Order.Responses;
 using FashionShop.Core.Contracts.Shop.Review.Requests;
 using FashionShop.Core.Contracts.Shop.Review.Responses;
+using FashionShop.Core.Contracts.Shop.ReviewLike.Requests;
 using FashionShop.Core.Contracts.Shop.User.Requests;
 using FashionShop.Core.Contracts.Shop.User.Responses;
 using FashionShop.Core.Entities;
@@ -134,6 +135,9 @@ namespace FashionShop.API.Mappings
             CreateMap<Review, ShopReviewResponse>();
 
             CreateMap<ReviewImage, ShopReviewImageResponse>();
+
+            // ReviewLike
+            CreateMap<ShopUpdateReviewLikeRequest, ReviewLike>();
         }
     }
 }

@@ -16,8 +16,9 @@ namespace FashionShop.API.Repositories.Shop
             _context = context;
         }
 
-        private static readonly Expression<Func<Review, ShopReviewResponse>> _reviewSelector =
-            review => new ShopReviewResponse
+        private static Expression<Func<Review, ShopReviewResponse>> _reviewSelector(Guid? currentUserId)
+        {
+            return review => new ShopReviewResponse
             {
                 ReviewId = review.Id,
                 UserId = review.UserId,
@@ -27,7 +28,8 @@ namespace FashionShop.API.Repositories.Shop
                 OrderItemId = review.OrderItemId,
                 Rating = review.Rating,
                 Content = review.Content,
-                LikeCount = review.LikeCount,
+                IsLiked = currentUserId.HasValue && review.ReviewLikes.Any(rl => rl.UserId == currentUserId.Value && !rl.IsDeleted),
+                TotalLikes = review.ReviewLikes.Count(rl => !rl.IsDeleted),
                 ReviewImages = review.ReviewImages != null
                     ? review.ReviewImages
                             .Select(ri => new ShopReviewImageResponse
@@ -37,34 +39,65 @@ namespace FashionShop.API.Repositories.Shop
                                 SortOrder = ri.SortOrder,
                             })
                             .ToList()
-                    : new List<ShopReviewImageResponse>()
+                    : new List<ShopReviewImageResponse>(),
+                CreatedDate = review.CreatedDate,
             };
+        }
+            
 
 
 
         // --- READ METHODS --- //
 
-        public async Task<IEnumerable<ShopReviewResponse>> GetReviewsAsync(string productSlug)
+        public async Task<IEnumerable<ShopReviewResponse>> GetReviewsAsync(Guid? currentUserId, string productSlug)
         {
             return await _context.Reviews
                 .AsNoTracking()
                 .AsSplitQuery()
                 .Where(review => review.Product.Slug == productSlug)
-                .Select(_reviewSelector)
+                .Select(_reviewSelector(currentUserId))
                 .ToListAsync();
+        }
+
+        public async Task<Review?> FindReviewAsync(Guid reviewId)
+        {
+            return await _context.Reviews.FindAsync(reviewId);
+        }
+
+        public async Task<ShopReviewResponse?> GetReviewAsync(Guid? currentUserId, Guid reviewId)
+        {
+            return await _context.Reviews
+                .AsNoTracking()
+                .Where(review => review.Id == reviewId)
+                .Select(_reviewSelector(currentUserId))
+                .FirstOrDefaultAsync();
         }
 
 
 
         // --- VALIDATE METHODS --- //
 
-        public async Task<bool> IsExistReview(Guid userId, Guid productId, int orderItemId)
+        public async Task<bool> IsExistReviewAsync(Guid userId, Guid productId, int orderItemId)
         {
             return await _context.Reviews
                 .Where(review => review.UserId == userId &&
                                  review.ProductId == productId &&
                                  review.OrderItemId == orderItemId)
                 .AnyAsync();
+        }
+
+        public async Task<bool> IsReviewAuthorAsync(Guid userId, Guid reviewId)
+        {
+            return await _context.Reviews
+                .Where(review => review.UserId == userId &&
+                                 review.Id == reviewId)
+                .AnyAsync();
+        }
+
+        public async Task<bool> IsReviewLikedAsync(Guid userId, Guid reviewId)
+        {
+            return await _context.ReviewLikes
+                .AnyAsync(rl => rl.UserId == userId && rl.ReviewId == reviewId);
         }
 
 

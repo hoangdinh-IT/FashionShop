@@ -20,7 +20,10 @@ namespace FashionShop.API.Controllers.Shop
         [HttpGet("{productSlug}")]
         public async Task<IActionResult> GetReviews(string productSlug)
         {
-            var result = await _reviewService.GetReviewsAsync(productSlug);
+            Guid userId = User.GetUserId();
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
+
+            var result = await _reviewService.GetReviewsAsync(userId, productSlug);
             return Success(result, "Lấy danh sách đánh giá dựa vào sản phẩm thành công!");
         }
 
@@ -32,7 +35,6 @@ namespace FashionShop.API.Controllers.Shop
         public async Task<IActionResult> CreateReview([FromForm] ShopCreateReviewRequest request)
         {
             Guid userId = User.GetUserId();
-
             if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _reviewService.CreateReviewAsync(userId, request);

@@ -103,8 +103,12 @@ namespace FashionShop.API.Services.Shared
                 // 2. Tìm user trong Database theo Email từ Google trả về
                 var user = await _unitOfWork.ShopUsers.GetUserByEmailAsync(payload.Email);
 
+                bool isNewUser = false;
+
                 if (user == null)
                 {
+                    isNewUser = true;
+
                     user = new User
                     {
                         Id = Guid.NewGuid(),
@@ -130,18 +134,21 @@ namespace FashionShop.API.Services.Shared
 
                 await _unitOfWork.SaveChangesAsync();
 
-                try
+                if (isNewUser)
                 {
-                    string emailSubject = "[FashionShop] Thông báo đăng nhập hệ thống bằng tài khoản Google";
-                    string emailBody = EmailTemplateHelper.GetGoogleLoginNotificationTemplate(user.FullName, user.Email);
+                    try
+                    {
+                        string emailSubject = "[FashionShop] Thông báo đăng nhập hệ thống bằng tài khoản Google";
+                        string emailBody = EmailTemplateHelper.GetGoogleLoginNotificationTemplate(user.FullName, user.Email);
 
-                    // Nhờ EmailService đi giao (sử dụng toán tử await giống hệt forgot-password)
-                    await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
-                }
-                catch (Exception emailEx)
-                {
-                    // Log lỗi gửi mail ở đây nếu có hệ thống Logger (ví dụ: _logger.LogError)
-                    // Lưu ý: Không ném (throw) lỗi ra ngoài ở đây để tránh làm gián đoạn luồng đăng nhập chính của khách hàng
+                        // Nhờ EmailService đi giao (sử dụng toán tử await giống hệt forgot-password)
+                        await _emailService.SendEmailAsync(user.Email, emailSubject, emailBody);
+                    }
+                    catch (Exception emailEx)
+                    {
+                        // Log lỗi gửi mail ở đây nếu có hệ thống Logger (ví dụ: _logger.LogError)
+                        // Lưu ý: Không ném (throw) lỗi ra ngoài ở đây để tránh làm gián đoạn luồng đăng nhập chính của khách hàng
+                    }
                 }
 
                 return new AuthResponse

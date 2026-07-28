@@ -251,8 +251,8 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
                                     <textarea
                                         {...register("content", {
                                             maxLength: {
-                                                value: 200,
-                                                message: "Nội dung không được vượt quá 200 ký tự!",
+                                                value: 2000,
+                                                message: "Nội dung không được vượt quá 2000 ký tự!",
                                             },
                                         })}
                                         rows={5}
@@ -271,12 +271,12 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
 
                                         <span
                                             className={`text-[11px] ${
-                                                watchedContent.length > 200
+                                                watchedContent.length > 2000
                                                     ? "font-bold text-red-500"
                                                     : "text-zinc-400"
                                             }`}
                                         >
-                                            {watchedContent.length}/200
+                                            {watchedContent.length}/2000
                                         </span>
                                     </div>
                                 </div>
@@ -366,7 +366,7 @@ const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
                                     className="h-10 w-full rounded-full bg-zinc-900 px-7 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-[0_12px_32px_rgba(0,0,0,0.16)] transition-all duration-300 hover:bg-black disabled:opacity-50 sm:w-auto"
                                 >
                                     {isLoading || isCreating
-                                        ? "Đang gửi..."
+                                        ? "Đang xử lý..."
                                         : "Gửi đánh giá"}
                                 </button>
                             </div>

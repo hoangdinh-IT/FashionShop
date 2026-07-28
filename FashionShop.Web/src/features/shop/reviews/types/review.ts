@@ -15,5 +15,12 @@ export interface Review {
     content?: string;
     likeCount: number;
     reviewImages: ReviewImage[];
-    createDate: Date;
+    createdDate: Date;
+}
+
+export interface ReviewLike {
+    userId: string;
+    reviewId: string;
+    isLiked: boolean;
+    totalLikes: number;
 }

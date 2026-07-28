@@ -22,7 +22,9 @@ namespace FashionShop.Core.Contracts.Shop.Review.Responses
 
         public string? Content { get; set; }
 
-        public int LikeCount { get; set; } = 0;
+        public bool? IsLiked { get; set; }
+
+        public int TotalLikes { get; set; } = 0;
         public ICollection<ShopReviewImageResponse> ReviewImages { get; set; } = new List<ShopReviewImageResponse>();
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }

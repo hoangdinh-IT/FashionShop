@@ -24,10 +24,8 @@ namespace FashionShop.Core.Entities
         [Required]
         [Range(1, 5)]
         public int Rating { get; set; }
-
         public string? Content { get; set; }
-
-        public int LikeCount { get; set; } = 0;
+        public int TotalLikes { get; set; } = 0;
 
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
@@ -39,5 +37,7 @@ namespace FashionShop.Core.Entities
         public virtual OrderItem OrderItem { get; set; }
 
         public virtual ICollection<ReviewImage> ReviewImages { get; set; } = new List<ReviewImage>();
+
+        public virtual ICollection<ReviewLike> ReviewLikes { get; set; } = new List<ReviewLike>();
     }
 }

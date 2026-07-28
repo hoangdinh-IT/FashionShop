@@ -29,6 +29,7 @@ namespace FashionShop.API.Repositories.Shared
         private IShopCartRepository _shopCarts;
         private IShopOrderRepository _shopOrders;
         private IShopReviewRepository _shopReviews;
+        private IShopReviewLikeRepository _shopReviewLikes;
 
         public UnitOfWork(FashionDbContext context)
         {
@@ -51,6 +52,7 @@ namespace FashionShop.API.Repositories.Shared
         public IShopCartRepository ShopCarts => _shopCarts ??= new ShopCartRepository(_context);
         public IShopOrderRepository ShopOrders => _shopOrders ??= new ShopOrderRepository(_context);
         public IShopReviewRepository ShopReviews => _shopReviews ??= new ShopReviewRepository(_context);
+        public IShopReviewLikeRepository ShopReviewLikes => _shopReviewLikes ??= new ShopReviewLikeRepository(_context);
 
         public async Task<int> SaveChangesAsync()
         {

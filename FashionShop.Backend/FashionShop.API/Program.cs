@@ -105,6 +105,7 @@ namespace FashionShop.API
             builder.Services.AddScoped<IShopCartService, ShopCartService>();
             builder.Services.AddScoped<IShopOrderService, ShopOrderService>();
             builder.Services.AddScoped<IShopReviewService, ShopReviewService>();
+            builder.Services.AddScoped<IShopReviewLikeService, ShopReviewLikeService>();
 
             // 1. Lấy dữ liệu từ appsettings bind vào class CloudinarySettings
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));

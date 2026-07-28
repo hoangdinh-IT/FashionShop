@@ -5,3 +5,7 @@ export interface ReviewFormInputs {
     content?: string;
     reviewImages?: File[];
 }
+
+export interface UpdateReviewLike {
+    reviewId: string;
+}

@@ -1,6 +1,6 @@
 import type React from "react";
 import type { Product } from "../types/product";
-import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoEyeOutline, IoImageOutline, IoImagesOutline, IoInformationCircleOutline, IoPencil, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
+import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoEyeOutline, IoImageOutline, IoImagesOutline, IoInformationCircleOutline, IoPencilOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
 import Tooltip from "../../../../components/common/Tooltip";
 import CopyableId from "../../../../components/common/CopyableId";
 import { format } from "date-fns";
@@ -93,7 +93,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                             </th>
 
                             <th className="px-6 py-3.5 sticky top-0 z-20 bg-gray-50/95 backdrop-blur-sm text-right">
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">Hành động</span>
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">Thao tác</span>
                             </th>
                         </tr>
                     </thead>
@@ -236,31 +236,36 @@ const ProductTable: React.FC<ProductTableProps> = ({
                                             </span>
                                         </td>
 
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                                        <td className="px-6 py-5 text-right">
+                                            <div className="flex items-center justify-end gap-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-3 group-hover:translate-x-0">
+                                                
+                                                {/* Nút Quản lý hình ảnh */}
                                                 <button 
                                                     title="Quản lý hình ảnh"
-                                                    className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                                    className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-emerald-600 rounded-xl transition-all duration-300 shadow-sm hover:shadow-emerald-200 hover:shadow-lg active:scale-95"
                                                     onClick={() => openImageManagerModal?.(item.id)}
                                                 >
-                                                    <IoImagesOutline className="text-base" />
+                                                    <IoImagesOutline size={17} />
                                                 </button>
 
+                                                {/* Nút Chỉnh sửa sản phẩm */}
                                                 <button 
                                                     title="Chỉnh sửa sản phẩm"
-                                                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-violet-500 rounded-xl transition-all duration-200 shadow-sm hover:shadow-violet-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95" 
+                                                    className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-violet-600 rounded-xl transition-all duration-300 shadow-sm hover:shadow-violet-200 hover:shadow-lg active:scale-95" 
                                                     onClick={(e) => { e.stopPropagation(); onEdit?.(item.id); }} 
                                                 >
-                                                    <IoPencil className="text-[15px]" />
+                                                    <IoPencilOutline size={17} /> 
                                                 </button>
                                                 
+                                                {/* Nút Xóa sản phẩm */}
                                                 <button 
                                                     title="Xóa sản phẩm"
-                                                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-rose-500 rounded-xl transition-all duration-200 shadow-sm hover:shadow-rose-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95" 
+                                                    className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-rose-600 rounded-xl transition-all duration-300 shadow-sm hover:shadow-rose-200 hover:shadow-lg active:scale-95" 
                                                     onClick={(e) => { e.stopPropagation(); onDelete?.(item.id); }} 
                                                 >
-                                                    <IoTrashBinOutline className="text-[15px]" />
+                                                    <IoTrashBinOutline size={17} />
                                                 </button>
+
                                             </div>
                                         </td>
                                     </tr>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { ProductGridItem } from '../types/product';
+import type { ProductGridItem } from '../../types/product';
 import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
@@ -76,16 +76,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                                     });
                                                 }
                                             }}
-                                            className={`relative overflow-hidden min-w-[42px] h-9 px-3 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
-                                                isOutOfStock
-                                                    ? "bg-zinc-600 text-zinc-400 cursor-not-allowed opacity-60"
-                                                    : "bg-zinc-500/30 text-white hover:bg-white hover:text-zinc-900 hover:scale-105 active:scale-95 cursor-pointer"
-                                            }`}
+                                            className={`relative overflow-hidden min-w-[46px] h-10 px-4 rounded-full flex items-center justify-center text-[12px] font-extrabold uppercase tracking-[1px] border transition-all duration-300 ${isOutOfStock ? "bg-zinc-700/90 border-zinc-500/70 text-zinc-400 cursor-not-allowed opacity-70" : "bg-zinc-900/90 border-white/20 text-white shadow-[0_4px_14px_rgba(0,0,0,0.45)] hover:bg-white hover:text-zinc-900 hover:border-white hover:scale-105 active:scale-95 cursor-pointer"}`}
                                         >
-                                            <span>{s.sizeName}</span>
+                                            {!isOutOfStock && (
+                                                <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+                                            )}
+
+                                            <span className="relative z-10">
+                                                {s.sizeName}
+                                            </span>
 
                                             {isOutOfStock && (
-                                                <div className="absolute w-[160%] h-[1px] bg-zinc-400 rotate-[-35deg]" />
+                                                <div className="absolute w-[160%] h-[1.5px] bg-zinc-300/70 rotate-[-35deg]" />
                                             )}
                                         </button>
                                     );

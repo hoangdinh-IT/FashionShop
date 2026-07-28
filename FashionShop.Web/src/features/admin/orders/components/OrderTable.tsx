@@ -127,7 +127,7 @@ const OrderTable: React.FC<Props> = ({
                                 <SortableHeader label="Trạng thái & Thanh toán" colKey="orderStatus" align="center" />
                             </th>
                             <th className="px-6 py-5 sticky top-0 z-20 bg-gray-50/50 backdrop-blur-xl text-right w-[12%]">
-                                <span className="text-[10px] font-black uppercase tracking-[0.16em] text-gray-400">Hành động</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.16em] text-gray-400">Thao tác</span>
                             </th>
                         </tr>
                     </thead>

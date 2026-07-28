@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, X } from 'lucide-react';
-import type { FilterOptionsResponse } from '../types/product';
+import type { FilterOptionsResponse } from '../../types/product';
 
 interface Props {
     totalProducts: number;
