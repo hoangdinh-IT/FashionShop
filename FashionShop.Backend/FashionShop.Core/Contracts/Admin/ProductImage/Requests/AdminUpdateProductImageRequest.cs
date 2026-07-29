@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.ProductImage.Requests
 {
-    public class UpdateSortOrderRequest
+    public class AdminUpdateProductImageRequest
     {
         public int? ColorId { get; set; }
 
         [Required]
-        public List<Guid> ImageIds { get; set; }
+        public int SortOrder { get; set; } = 0;
     }
 }

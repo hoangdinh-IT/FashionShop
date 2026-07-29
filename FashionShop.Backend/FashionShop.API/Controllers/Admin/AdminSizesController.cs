@@ -48,14 +48,14 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateSize(CreateSizeRequest request)
+        public async Task<IActionResult> CreateSize(AdminCreateSizeRequest request)
         {
             var result = await _sizeService.CreateSizeAsync(request);
             return Created(result, "Thêm kích thước thành công!");
         }
 
         [HttpPut("{sizeId}")]
-        public async Task<IActionResult> UpdateSize(int sizeId, UpdateSizeRequest request)
+        public async Task<IActionResult> UpdateSize(int sizeId, AdminUpdateSizeRequest request)
         {
             if (string.IsNullOrWhiteSpace(Convert.ToString(sizeId))) throw new ArgumentNullException(nameof(sizeId));
 

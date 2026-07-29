@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Voucher.Requests
 {
-    public class CreateVoucherRequest
+    public class AdminCreateVoucherRequest
     {
         [Required]
         public string Name { get; set; }
@@ -48,5 +48,8 @@ namespace FashionShop.Core.Contracts.Admin.Voucher.Requests
 
         [Required]
         public DateTime EndDate { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; } = true;
     }
 }

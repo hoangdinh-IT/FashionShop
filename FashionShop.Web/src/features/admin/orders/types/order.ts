@@ -10,7 +10,7 @@ export interface OrderSummary {
     orderStatus: string;
     paymentMethod: string;
     paymentStatus: string;
-    subTotal: number;
+    totalAmount: number;
     totalItemCount: number;
     orderItems: OrderItemSummary[];
 }

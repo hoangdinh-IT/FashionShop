@@ -17,8 +17,8 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminColorResponse?> CreateColorAsync(CreateColorRequest dto);
-        Task<AdminColorResponse?> UpdateColorAsync(int colorId, UpdateColorRequest dto);
+        Task<AdminColorResponse?> CreateColorAsync(AdminCreateColorRequest dto);
+        Task<AdminColorResponse?> UpdateColorAsync(int colorId, AdminUpdateColorRequest dto);
         Task DeleteColorAsync(int colorId);
     }
 }

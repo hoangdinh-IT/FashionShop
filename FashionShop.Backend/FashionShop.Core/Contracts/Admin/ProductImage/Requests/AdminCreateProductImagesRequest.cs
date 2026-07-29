@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.ProductImage.Requests
 {
-    public class CreateProductImagesRequest
+    public class AdminCreateProductImagesRequest
     {
         public int? ColorId { get; set; }
 

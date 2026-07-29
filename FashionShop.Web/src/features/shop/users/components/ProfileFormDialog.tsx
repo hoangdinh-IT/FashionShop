@@ -11,7 +11,7 @@ import {
 } from "react-icons/io5";
 
 import type { User } from "../types/user";
-import { useUsers } from "../hooks/useUsers";
+import { useUser } from "../hooks/useUser";
 import type { UserFormInputs } from "../types/requests";
 
 // ======================
@@ -61,7 +61,7 @@ const ProfileFormDialog: React.FC<Props> = ({
     initialData,
     isLoading = false,
 }) => {
-    const { updateUser } = useUsers();
+    const { updateUser } = useUser();
 
     const {
         register,

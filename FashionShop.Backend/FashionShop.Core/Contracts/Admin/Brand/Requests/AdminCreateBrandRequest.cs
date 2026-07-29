@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Brand.Requests
 {
-    public class CreateBrandRequest
+    public class AdminCreateBrandRequest
     {
         [Required]
         [MaxLength(100, ErrorMessage = "Tên thương hiệu không được vượt quá 100 ký tự!")]

@@ -16,6 +16,6 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminOrderDetailResponse?> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request);
+        Task<AdminOrderDetailResponse?> UpdateOrderAsync(Guid orderId, AdminUpdateOrderRequest request);
     }
 }

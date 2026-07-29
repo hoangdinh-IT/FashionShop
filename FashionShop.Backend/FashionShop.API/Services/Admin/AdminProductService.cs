@@ -70,7 +70,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminProductResponse?> CreateProductAsync(CreateProductRequest request)
+        public async Task<AdminProductResponse?> CreateProductAsync(AdminCreateProductRequest request)
         {
             var isExistSlug = await _unitOfWork.AdminProducts.CheckExistProductSlugAsync(request.Slug);
 
@@ -92,7 +92,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminProductResponse>(newProduct);
         }
 
-        public async Task<AdminProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest request)
+        public async Task<AdminProductDetailResponse?> CreateProductDetailAsync(AdminCreateProductDetailRequest request)
         {
             // Kiểm tra xem có Sku nào trong request trùng nhau không?
             var duplicateSkusInRequest = request.ProductVariants
@@ -150,7 +150,7 @@ namespace FashionShop.API.Services.Admin
             }
         }
 
-        public async Task<AdminProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest request)
+        public async Task<AdminProductResponse?> UpdateProductAsync(Guid productId, AdminUpdateProductRequest request)
         {
             var existingProduct = await _unitOfWork.AdminProducts.FindProductByIdAsync(productId);
 
@@ -194,7 +194,7 @@ namespace FashionShop.API.Services.Admin
             return await _unitOfWork.AdminProducts.GetProductByIdAsync(productId);
         }
 
-        public async Task<AdminProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest request)
+        public async Task<AdminProductDetailResponse?> UpdateProductDetailAsync(Guid productId, AdminUpdateProductDetailRequest request)
         {
             // 1. Lấy Product kèm theo toàn bộ Variants hiện có từ DB lên bộ nhớ
             var existingProduct = await _unitOfWork.AdminProducts.FindProductDetailByIdAsync(productId);
@@ -379,7 +379,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest request)
+        public async Task<AdminProductVariantResponse> CreateProductVariantAsync(AdminCreateProductVariantRequest request)
         {
             var isExistSKU = await _unitOfWork.AdminProducts.CheckExistVariantSkuAsync(request.Sku);
 
@@ -392,7 +392,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminProductVariantResponse>(newProductVariant);
         }
 
-        public async Task<AdminProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantRequest request)
+        public async Task<AdminProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, AdminUpdateProductVariantRequest request)
         {
             var existingProductVariant = await _unitOfWork.AdminProducts.FindProductVariantByIdAsync(productVariantId);
 
@@ -452,7 +452,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<List<AdminProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest request)
+        public async Task<List<AdminProductImageResponse>> CreateProductImageAsync(Guid productId, AdminCreateProductImagesRequest request)
         {
             if (request.ColorId.HasValue)
             {
@@ -501,7 +501,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<List<AdminProductImageResponse>>(listImages);
         }
 
-        public async Task<IEnumerable<AdminProductImageResponse>> UpdateSortOrderAsync(Guid productId, UpdateSortOrderRequest request)
+        public async Task<IEnumerable<AdminProductImageResponse>> UpdateSortOrderAsync(Guid productId, AdminUpdateSortOrderRequest request)
         {
             var existingProduct = await _unitOfWork.AdminProducts.FindProductByIdAsync(productId);
 
@@ -524,7 +524,7 @@ namespace FashionShop.API.Services.Admin
             return await _unitOfWork.AdminProducts.GetProductImagesAsync(productId, request.ColorId);
         }
 
-        public async Task DeleteProductImageAsync(Guid productId, DeleteProductImagesRequest? request)
+        public async Task DeleteProductImageAsync(Guid productId, AdminDeleteProductImagesRequest? request)
         {
             var affectedColorIds = new HashSet<int?>();
 

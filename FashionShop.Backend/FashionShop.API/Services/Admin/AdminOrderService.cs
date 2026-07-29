@@ -33,7 +33,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminOrderDetailResponse?> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request)
+        public async Task<AdminOrderDetailResponse?> UpdateOrderAsync(Guid orderId, AdminUpdateOrderRequest request)
         {
             var order = await _unitOfWork.AdminOrders.FindOrderByIdAsync(orderId);
             if (order == null) throw new KeyNotFoundException("Không tìm thấy đơn hàng!");

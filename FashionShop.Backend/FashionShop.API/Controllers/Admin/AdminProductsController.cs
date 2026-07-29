@@ -56,21 +56,21 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequest request)
+        public async Task<IActionResult> CreateProduct([FromForm] AdminCreateProductRequest request)
         {
             var result = await _productService.CreateProductAsync(request);
             return Created(result, "Thêm sản phẩm thành công!");
         }
 
         [HttpPost("detail")]
-        public async Task<IActionResult> CreateProductDetail([FromForm] CreateProductDetailRequest request)
+        public async Task<IActionResult> CreateProductDetail([FromForm] AdminCreateProductDetailRequest request)
         {
             var result = await _productService.CreateProductDetailAsync(request);
             return Created(result, "Thêm chi tiết sản phẩm thành công!");
         }
 
         [HttpPut("{productId}")]
-        public async Task<IActionResult> UpdateProduct(Guid productId, [FromForm] UpdateProductRequest request)
+        public async Task<IActionResult> UpdateProduct(Guid productId, [FromForm] AdminUpdateProductRequest request)
         {
             if (productId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
@@ -79,7 +79,7 @@ namespace FashionShop.API.Controllers.Admin
         }
 
         [HttpPut("detail/{productId}")]
-        public async Task<IActionResult> UpdateProductDetail(Guid productId, [FromForm] UpdateProductDetailRequest request)
+        public async Task<IActionResult> UpdateProductDetail(Guid productId, [FromForm] AdminUpdateProductDetailRequest request)
         {
             if (productId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 

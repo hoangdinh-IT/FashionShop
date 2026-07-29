@@ -39,7 +39,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminVoucherResponse> CreateVoucherAsync(CreateVoucherRequest request)
+        public async Task<AdminVoucherResponse> CreateVoucherAsync(AdminCreateVoucherRequest request)
         {
             var isExistCode = await _unitOfWork.AdminVouchers.CheckExistCode(request.Code);
 
@@ -55,7 +55,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminVoucherResponse>(newVoucher);
         }
 
-        public async Task<AdminVoucherResponse> UpdateVoucherAsync(Guid voucherId, UpdateVoucherRequest request)
+        public async Task<AdminVoucherResponse> UpdateVoucherAsync(Guid voucherId, AdminUpdateVoucherRequest request)
         {
             var existingVoucher = await _unitOfWork.AdminVouchers.FindVoucherByIdAsync(voucherId);
 

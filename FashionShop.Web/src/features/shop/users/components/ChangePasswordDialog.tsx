@@ -10,7 +10,7 @@ import {
     IoEyeOffOutline,
     IoColorWandOutline
 } from "react-icons/io5";
-import { useUsers } from "../hooks/useUsers";
+import { useUser } from "../hooks/useUser";
 import type { ChangePasswordFormInputs } from "../types/requests";
 
 // --- HOẠT ẢNH (ANIMATIONS) SIÊU MƯỢT ---
@@ -48,7 +48,7 @@ const ChangePasswordDialog: React.FC<Props> = ({
     email,
     isLoading = false,
 }) => {
-    const { changePassword } = useUsers();
+    const { changePassword } = useUser();
 
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -103,27 +103,31 @@ const ChangePasswordDialog: React.FC<Props> = ({
                         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
                             
                             {/* --- HEADER --- */}
-                            <div className="px-8 pt-8 pb-6 flex items-start justify-between bg-white shrink-0 relative z-10">
-                                <div className="pr-4">
-                                    <div className="flex items-center gap-4 mb-3">
-                                        {/* Icon Container nổi bật */}
-                                        <div className="w-12 h-12 rounded-[14px] bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-900/20">
-                                            <IoColorWandOutline className="text-white text-2xl" />
-                                        </div>
-                                        <h3 className="text-[22px] font-bold text-zinc-900 tracking-tight">
-                                            Đổi mật khẩu
-                                        </h3>
+                            <div className="flex items-start justify-between border-b border-zinc-100 px-6 py-6 sm:px-8 bg-white shrink-0 relative z-10">
+                                <div>
+                                    {/* Icon Container nổi bật */}
+                                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-900 text-white shadow-lg shadow-zinc-900/20">
+                                        <IoColorWandOutline className="text-[22px]" />
                                     </div>
-                                    <p className="text-[14.5px] text-zinc-500 leading-relaxed font-medium">
+
+                                    {/* Tiêu đề chính */}
+                                    <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
+                                        Đổi mật khẩu
+                                    </h2>
+
+                                    {/* Đoạn văn mô tả */}  
+                                    <p className="mt-2 text-sm leading-relaxed text-zinc-500">
                                         Vui lòng nhập mật khẩu cũ và tạo mật khẩu mới an toàn hơn cho tài khoản của bạn.
                                     </p>
                                 </div>
+
+                                {/* Nút đóng (Dấu X) phong cách Minimalist */}
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-zinc-100/80 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 transition-all active:scale-95"
+                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 active:scale-95"
                                 >
-                                    <IoClose className="text-[20px]" />
+                                    <IoClose className="text-xl" />
                                 </button>
                             </div>
 

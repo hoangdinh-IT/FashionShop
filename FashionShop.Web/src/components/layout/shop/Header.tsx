@@ -9,12 +9,12 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import MegaMenu from "../../../features/shop/brands/components/MegaMenu";
-import { useUsers } from "../../../features/shop/users/hooks/useUsers";
+import { useUser } from "../../../features/shop/users/hooks/useUser";
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const { user, isLoading } = useUsers();
+    const { user, isLoading } = useUser();
 
     return (
         <>

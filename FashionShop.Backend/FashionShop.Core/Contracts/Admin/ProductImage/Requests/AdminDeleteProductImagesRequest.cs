@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.ProductImage.Requests
 {
-    public class UpdateProductImageRequest
+    public class AdminDeleteProductImagesRequest
     {
-        public int? ColorId { get; set; }
 
         [Required]
-        public int SortOrder { get; set; } = 0;
+        [MinLength(1, ErrorMessage = "Vui lòng chọn ít nhất 1 hình ảnh để xóa!")]
+        public List<Guid>? ImageIds { get; set; }
     }
 }

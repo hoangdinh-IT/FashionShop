@@ -32,7 +32,7 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductImage(Guid productId, [FromForm] CreateProductImagesRequest request)
+        public async Task<IActionResult> CreateProductImage(Guid productId, [FromForm] AdminCreateProductImagesRequest request)
         {
             var result = await _productService.CreateProductImageAsync(productId, request);
             return Created(result, "Thêm hình ảnh sản phẩm thành công!");
@@ -46,14 +46,14 @@ namespace FashionShop.API.Controllers.Admin
         //}
 
         [HttpPut("sortOrder")]
-        public async Task<IActionResult> UpdateSortOrder(Guid productId, [FromBody] UpdateSortOrderRequest request)
+        public async Task<IActionResult> UpdateSortOrder(Guid productId, [FromBody] AdminUpdateSortOrderRequest request)
         {
             var result = await _productService.UpdateSortOrderAsync(productId, request);
             return Success(result, "Cập nhật thứ tự hình ảnh thành công!");
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteProductImage(Guid productId, [FromBody] DeleteProductImagesRequest? request)
+        public async Task<IActionResult> DeleteProductImage(Guid productId, [FromBody] AdminDeleteProductImagesRequest? request)
         {
             await _productService.DeleteProductImageAsync(productId, request);
             return Success<object?>(null, "Xoá hình ảnh sản phẩm thành công!");

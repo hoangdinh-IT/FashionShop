@@ -32,13 +32,19 @@ interface Props {
     isLoading: boolean;
 }
 
+interface RowProps {
+    label: string;
+    value: number;
+    prefix?: string;
+}
+
 const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading }) => {
     
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     };
 
-    const Row = ({ label, value, prefix = "" }: any) => (
+    const Row: React.FC<RowProps> = ({ label, value, prefix = "" }) => (
         <div className="flex justify-between text-zinc-500">
             <span>{label}</span>
             <span className="text-zinc-700 font-medium">
@@ -49,8 +55,8 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
 
     return (
         <AnimatePresence>
-            {isOpen && order && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 font-sans">
+            {isOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 font-sans select-none">
 
                     {/* BACKDROP */}
                     <motion.div
@@ -64,7 +70,7 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
 
                     {/* MODAL */}
                     <motion.div
-                        className="relative w-full max-w-4xl h-[88vh] overflow-hidden rounded-[28px] bg-white shadow-[0_40px_120px_rgba(0,0,0,0.25)] flex flex-col"
+                        className="relative w-full max-w-4xl h-[88vh] overflow-hidden rounded-[28px] bg-white shadow-[0_40px_120px_rgba(0,0,0,0.25)] flex flex-col z-10"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -73,20 +79,20 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                     >
 
                         {isLoading ? (
-                            <Loading message="Đang tải dữ liệu đơn hàng" />
+                            <Loading message="Đang tải dữ liệu đơn hàng..." />
                         ) : order ? (
                             <>
 
                                 {/* HEADER */}
-                                <div className="relative px-8 py-6 bg-gradient-to-b from-white to-zinc-50 border-b border-zinc-100">
+                                <div className="relative px-8 py-6 bg-gradient-to-b from-white to-zinc-50 border-b border-zinc-100 shrink-0">
 
                                     <div className="flex justify-between items-start">
 
                                         <div className="space-y-1">
 
                                             <div className="flex items-center gap-3">
-                                                <span className="px-3 py-1 rounded-full bg-black text-white text-[10px] font-bold uppercase tracking-[0.2em]">
-                                                    Order Detail
+                                                <span className="px-3 py-1 rounded-full bg-black text-white text-[10px] font-bold uppercase tracking-[0.15em]">
+                                                    Chi tiết đơn hàng
                                                 </span>
 
                                                 <span className="text-[11px] text-zinc-400 font-medium">
@@ -101,15 +107,16 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                         </div>
 
                                         <button
+                                            type="button"
                                             onClick={onClose}
-                                            className="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition"
+                                            className="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition cursor-pointer"
                                         >
                                             <IoCloseOutline size={20} />
                                         </button>
 
                                     </div>
 
-                                    {/* meta */}
+                                    {/* META INFO */}
                                     <div className="mt-5 flex flex-wrap gap-4 text-[12px] text-zinc-500">
                                         <span className="flex items-center gap-2">
                                             <IoCallOutline className="text-[15px] text-zinc-400" />
@@ -134,6 +141,7 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                             </span>
                                         </span>
                                     </div>
+
                                 </div>
 
                                 {/* BODY */}
@@ -153,6 +161,7 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-100">
                                                     <img
                                                         src={item.imageUrl || "/placeholder.png"}
+                                                        alt={item.productName}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition"
                                                     />
                                                 </div>
@@ -190,28 +199,28 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
                                 </div>
 
                                 {/* FOOTER */}
-                                <div className="border-t border-zinc-100 bg-white px-8 py-6">
+                                <div className="border-t border-zinc-100 bg-white px-8 py-6 shrink-0">
 
                                     <div className="grid md:grid-cols-2 gap-6">
 
                                         {/* NOTE */}
                                         <div className="rounded-2xl bg-zinc-50 p-4 text-sm text-zinc-600">
-                                            <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                                                Note
+                                            <div className="text-[10px] uppercase tracking-[0.15em] text-zinc-400 mb-2 font-bold">
+                                                Ghi chú
                                             </div>
                                             {order.note || "Không có ghi chú"}
                                         </div>
 
-                                        {/* TOTAL */}
+                                        {/* TOTAL SUMMARY */}
                                         <div className="space-y-2 text-sm">
 
-                                            <Row label="Subtotal" value={order.subTotal} />
-                                            <Row label="Shipping" value={order.shippingFee} prefix="+" />
-                                            <Row label="Discount" value={order.discountAmount} prefix="-" />
+                                            <Row label="Tiền hàng" value={order.subTotal} />
+                                            <Row label="Phí vận chuyển" value={order.shippingFee} prefix="+" />
+                                            <Row label="Giảm giá" value={order.discountAmount} prefix="-" />
 
                                             <div className="flex justify-between pt-3 border-t border-zinc-200">
                                                 <span className="text-sm font-semibold text-zinc-900">
-                                                    Total
+                                                    Tổng cộng
                                                 </span>
 
                                                 <span className="text-xl font-bold text-black">

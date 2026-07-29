@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Category.Requests
 {
-    public class UpdateCategoryRequest
+    public class AdminUpdateCategoryRequest
     {
         [Required]
         [MaxLength(100, ErrorMessage = "Tên danh mục không được vượt quá 100 ký tự!")]

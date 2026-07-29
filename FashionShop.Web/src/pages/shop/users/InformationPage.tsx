@@ -1,10 +1,10 @@
 import React from 'react';
 import AccountInformation from '../../../features/shop/users/components/AccountInformation';
-import { useUsers } from '../../../features/shop/users/hooks/useUsers';
+import { useUser } from '../../../features/shop/users/hooks/useUser';
 
 const InformationPage: React.FC = () => {
     // Gọi hook lấy data tại Page này thay vì gọi ở Layout
-    const { user, isLoading } = useUsers();
+    const { user, isLoading } = useUser();
 
     return (
         <AccountInformation

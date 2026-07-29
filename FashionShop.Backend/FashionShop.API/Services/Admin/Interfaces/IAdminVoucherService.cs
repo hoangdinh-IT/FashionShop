@@ -16,8 +16,8 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminVoucherResponse> CreateVoucherAsync(CreateVoucherRequest request);
-        Task<AdminVoucherResponse> UpdateVoucherAsync(Guid voucherId, UpdateVoucherRequest request);
+        Task<AdminVoucherResponse> CreateVoucherAsync(AdminCreateVoucherRequest request);
+        Task<AdminVoucherResponse> UpdateVoucherAsync(Guid voucherId, AdminUpdateVoucherRequest request);
         Task DeleteVoucherAsync(Guid voucherId);
     }
 }

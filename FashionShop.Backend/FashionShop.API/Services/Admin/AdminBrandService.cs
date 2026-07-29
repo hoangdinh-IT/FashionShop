@@ -50,7 +50,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminBrandResponse?> CreateBrandAsync(CreateBrandRequest request)
+        public async Task<AdminBrandResponse?> CreateBrandAsync(AdminCreateBrandRequest request)
         {
             var isExistSlug = await _unitOfWork.AdminBrands.CheckExistSlugAsync(request.Slug);
 
@@ -73,7 +73,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminBrandResponse>(newBrand);
         }
 
-        public async Task<AdminBrandResponse?> UpdateBrandAsync(Guid brandId, UpdateBrandRequest request)
+        public async Task<AdminBrandResponse?> UpdateBrandAsync(Guid brandId, AdminUpdateBrandRequest request)
         {
             var existingBrand = await _unitOfWork.AdminBrands.FindBrandByIdAsync(brandId);
 

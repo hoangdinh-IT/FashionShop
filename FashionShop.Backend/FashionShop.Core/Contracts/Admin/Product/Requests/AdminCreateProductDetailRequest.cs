@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Product.Requests
 {
-    public class CreateProductDetailRequest : CreateProductRequest
+    public class AdminCreateProductDetailRequest : AdminCreateProductRequest
     {
         [Required]
         [MinLength(1, ErrorMessage = "Sản phẩm phải có ít nhất 1 biến thể!")]
-        public List<CreateProductVariantRequest> ProductVariants { get; set; }
+        public List<AdminCreateProductVariantRequest> ProductVariants { get; set; }
     }
 }

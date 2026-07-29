@@ -23,7 +23,6 @@ namespace FashionShop.API.Controllers.Shop
         public async Task<IActionResult> GetAddressesByUserId()
         {
             Guid userId = User.GetUserId();
-
             if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _addressService.GetAddressesByUserIdAsync(userId);
@@ -38,6 +37,8 @@ namespace FashionShop.API.Controllers.Shop
         public async Task<IActionResult> CreateAddress(ShopCreateAddressRequest request)
         {
             Guid userId = User.GetUserId();
+            if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
+
             var result = await _addressService.CreateAddressAsync(userId, request);
             return Created(result, "Thêm địa chỉ giao hàng thành công!");
         }
@@ -46,7 +47,6 @@ namespace FashionShop.API.Controllers.Shop
         public async Task<IActionResult> UpdateAddressByUserId(Guid addressId, ShopUpdateAddressRequest request)
         {
             Guid userId = User.GetUserId();
-
             if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _addressService.UpdateAddressByUserIdAsync(userId, addressId, request);
@@ -57,7 +57,6 @@ namespace FashionShop.API.Controllers.Shop
         public async Task<IActionResult> UpdateAddressDefault(Guid addressId)
         {
             Guid userId = User.GetUserId();
-
             if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             var result = await _addressService.UpdateAddressDefaultAsync(userId, addressId);
@@ -68,7 +67,6 @@ namespace FashionShop.API.Controllers.Shop
         public async Task<IActionResult> DeleteAddress(Guid addressId)
         {
             Guid userId = User.GetUserId();
-
             if (userId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 
             await _addressService.DeleteAddressAsync(userId, addressId);

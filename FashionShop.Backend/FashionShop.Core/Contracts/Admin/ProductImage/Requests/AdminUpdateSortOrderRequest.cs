@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.ProductImage.Requests
 {
-    public class DeleteProductImagesRequest
+    public class AdminUpdateSortOrderRequest
     {
+        public int? ColorId { get; set; }
 
         [Required]
-        [MinLength(1, ErrorMessage = "Vui lòng chọn ít nhất 1 hình ảnh để xóa!")]
-        public List<Guid>? ImageIds { get; set; }
+        public List<Guid> ImageIds { get; set; }
     }
 }

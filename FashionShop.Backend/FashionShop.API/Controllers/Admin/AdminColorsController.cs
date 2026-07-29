@@ -47,14 +47,14 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateColor(CreateColorRequest request)
+        public async Task<IActionResult> CreateColor(AdminCreateColorRequest request)
         {
             var result = await _colorService.CreateColorAsync(request);
             return Created(result, "Thêm màu sắc thành công!");
         }
 
         [HttpPut("{colorId}")]
-        public async Task<IActionResult> UpdateColor(int colorId, UpdateColorRequest request)
+        public async Task<IActionResult> UpdateColor(int colorId, AdminUpdateColorRequest request)
         {
             if (string.IsNullOrWhiteSpace(Convert.ToString(colorId))) throw new ArgumentNullException(nameof(colorId));
 

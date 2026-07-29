@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Product.Requests
 {
-    public class UpdateProductRequest
+    public class AdminUpdateProductRequest
     {
         [Required]
         public Guid CategoryId { get; set; }

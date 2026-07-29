@@ -219,7 +219,7 @@ const OrderTable: React.FC<Props> = ({
                                         <td className="px-5 py-5">
                                             <div className="flex flex-col gap-1">
                                                 <div className="font-black text-gray-900 text-[14px]">
-                                                    {formatCurrency(item.subTotal)}
+                                                    {formatCurrency(item.totalAmount)}
                                                 </div>
 
                                                 <div className="flex items-center gap-1 text-[9px] font-black text-gray-400 uppercase tracking-[0.14em]">

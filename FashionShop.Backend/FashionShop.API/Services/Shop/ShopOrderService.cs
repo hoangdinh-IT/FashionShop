@@ -67,10 +67,13 @@ namespace FashionShop.API.Services.Shop
                     variant.StockQuantity -= item.Quantity;
                 }
 
+                var orderId = Guid.NewGuid();
                 decimal discountAmount = 0;
+                VoucherUsage? voucherUsage = null;
+
                 if (request.VoucherId.HasValue)
                 {
-                    var voucher = await _unitOfWork.AdminVouchers.GetVoucherByIdAsync(request.VoucherId.Value);
+                    var voucher = await _unitOfWork.AdminVouchers.FindVoucherByIdAsync(request.VoucherId.Value);
                     if (voucher != null &&
                         voucher.StartDate <= DateTime.UtcNow &&
                         voucher.EndDate >= DateTime.UtcNow &&
@@ -93,13 +96,21 @@ namespace FashionShop.API.Services.Shop
                         }
 
                         voucher.UsedCount += 1;
+
+                        voucherUsage = new VoucherUsage
+                        {
+                            UserId = userId,
+                            VoucherId = voucher.Id,
+                            OrderId = orderId,
+                            UsedDate = DateTime.UtcNow,
+                        };
                     }
                     
                     discountAmount = Math.Min(discountAmount, subTotal);
                 }
 
                 var newOrder = _mapper.Map<Order>(request);
-                newOrder.Id = Guid.NewGuid();
+                newOrder.Id = orderId;
                 newOrder.UserId = userId;
                 newOrder.OrderDate = DateTime.UtcNow;
                 newOrder.SubTotal = subTotal;
@@ -109,6 +120,13 @@ namespace FashionShop.API.Services.Shop
                 newOrder.OrderItems = orderDetails;
 
                 _unitOfWork.ShopOrders.Create(newOrder);
+
+                if (voucherUsage != null)
+                {
+                    _unitOfWork.ShopVouchers.CreateVoucherUsage(voucherUsage);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
 
                 await _unitOfWork.CommitTransactionAsync();
 

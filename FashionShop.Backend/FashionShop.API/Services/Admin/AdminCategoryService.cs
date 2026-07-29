@@ -62,7 +62,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminCategoryResponse?> CreateCategoryAsync(CreateCategoryRequest request)
+        public async Task<AdminCategoryResponse?> CreateCategoryAsync(AdminCreateCategoryRequest request)
         {
             if (request.ParentId.HasValue && request.ParentId != Guid.Empty)
             {
@@ -92,7 +92,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminCategoryResponse>(newCategory);
         }
 
-        public async Task<AdminCategoryResponse?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryRequest request)
+        public async Task<AdminCategoryResponse?> UpdateCategoryAsync(Guid categoryId, AdminUpdateCategoryRequest request)
         {
             var existingCategory = await _unitOfWork.AdminCategories.FindCategoryByIdAsync(categoryId);
 

@@ -26,10 +26,10 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminProductResponse?> CreateProductAsync(CreateProductRequest dto);
-        Task<AdminProductDetailResponse?> CreateProductDetailAsync(CreateProductDetailRequest dto);
-        Task<AdminProductResponse?> UpdateProductAsync(Guid productId, UpdateProductRequest dto);
-        Task<AdminProductDetailResponse?> UpdateProductDetailAsync(Guid productId, UpdateProductDetailRequest dto);
+        Task<AdminProductResponse?> CreateProductAsync(AdminCreateProductRequest dto);
+        Task<AdminProductDetailResponse?> CreateProductDetailAsync(AdminCreateProductDetailRequest dto);
+        Task<AdminProductResponse?> UpdateProductAsync(Guid productId, AdminUpdateProductRequest dto);
+        Task<AdminProductDetailResponse?> UpdateProductDetailAsync(Guid productId, AdminUpdateProductDetailRequest dto);
         Task DeleteProductAsync(Guid productId);
         Task DeleteProductDetailAsync(Guid productId);
         #endregion
@@ -49,8 +49,8 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminProductVariantResponse> CreateProductVariantAsync(CreateProductVariantRequest dto);
-        Task<AdminProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, UpdateProductVariantRequest dto);
+        Task<AdminProductVariantResponse> CreateProductVariantAsync(AdminCreateProductVariantRequest dto);
+        Task<AdminProductVariantResponse?> UpdateProductVariantAsync(Guid productVariantId, AdminUpdateProductVariantRequest dto);
         Task DeleteProductVariantAsync(Guid productVariantId);
         #endregion
 
@@ -68,10 +68,10 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<List<AdminProductImageResponse>> CreateProductImageAsync(Guid productId, CreateProductImagesRequest dto);
+        Task<List<AdminProductImageResponse>> CreateProductImageAsync(Guid productId, AdminCreateProductImagesRequest dto);
         //Task<ProductImageResponse?> UpdateProductImageAsync(Guid productImageId, UpdateProductImageRequest dto);
-        Task<IEnumerable<AdminProductImageResponse>> UpdateSortOrderAsync(Guid productId, UpdateSortOrderRequest request);
-        Task DeleteProductImageAsync(Guid productId, DeleteProductImagesRequest? request);
+        Task<IEnumerable<AdminProductImageResponse>> UpdateSortOrderAsync(Guid productId, AdminUpdateSortOrderRequest request);
+        Task DeleteProductImageAsync(Guid productId, AdminDeleteProductImagesRequest? request);
         #endregion
     }
 }

@@ -3,7 +3,7 @@ import { userService } from "../../../../services/shop/user.service"
 import type { ChangePasswordFormInputs, UserFormInputs } from "../types/requests"
 import { useMutationSideEffects } from "../../../../hooks/useMutationSideEffects";
 
-export const useUsers = () => {
+export const useUser = () => {
     const createSideEffects = useMutationSideEffects();
 
     const getUser = useQuery({

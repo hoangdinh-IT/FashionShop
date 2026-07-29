@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Order.Requests
 {
-    public class UpdateOrderRequest
+    public class AdminUpdateOrderRequest
     {
         public OrderStatus? OrderStatus { get; set; }
         public PaymentStatus? PaymentStatus { get; set; }

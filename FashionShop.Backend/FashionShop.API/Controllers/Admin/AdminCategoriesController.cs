@@ -69,14 +69,14 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryRequest request)
+        public async Task<IActionResult> CreateCategory([FromForm] AdminCreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategoryAsync(request);
             return Created(result, "Thêm danh mục thành công!");
         }
 
         [HttpPut("{categoryId}")]
-        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromForm] UpdateCategoryRequest request)
+        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromForm] AdminUpdateCategoryRequest request)
         {
             if (categoryId == Guid.Empty)
             {

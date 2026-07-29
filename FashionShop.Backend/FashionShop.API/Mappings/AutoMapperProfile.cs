@@ -54,63 +54,63 @@ namespace FashionShop.API.Mappings
             CreateMap<Address, ShopAddressResponse>();
 
             // Category
-            CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<AdminCreateCategoryRequest, Category>();
 
-            CreateMap<UpdateCategoryRequest, Category>();
+            CreateMap<AdminUpdateCategoryRequest, Category>();
 
             CreateMap<Category, AdminCategoryResponse>();
 
             // Brand
-            CreateMap<CreateBrandRequest, Brand>();
+            CreateMap<AdminCreateBrandRequest, Brand>();
 
-            CreateMap<UpdateBrandRequest, Brand>();
+            CreateMap<AdminUpdateBrandRequest, Brand>();
 
             CreateMap<Brand, AdminBrandResponse>();
 
             // Color
-            CreateMap<CreateColorRequest, Color>();
+            CreateMap<AdminCreateColorRequest, Color>();
 
-            CreateMap<UpdateColorRequest, Color>();
+            CreateMap<AdminUpdateColorRequest, Color>();
 
             CreateMap<Color, AdminColorResponse>();
 
             // Size
-            CreateMap<CreateSizeRequest, Size>();
+            CreateMap<AdminCreateSizeRequest, Size>();
 
-            CreateMap<UpdateSizeRequest, Size>();
+            CreateMap<AdminUpdateSizeRequest, Size>();
 
             CreateMap<Size, AdminSizeResponse>();
 
             // Product
-            CreateMap<CreateProductRequest, Product>();
+            CreateMap<AdminCreateProductRequest, Product>();
 
-            CreateMap<CreateProductDetailRequest, Product>();
+            CreateMap<AdminCreateProductDetailRequest, Product>();
 
-            CreateMap<UpdateProductRequest, Product>();
+            CreateMap<AdminUpdateProductRequest, Product>();
 
             CreateMap<Product, AdminProductResponse>();
 
             // ProductVariant
-            CreateMap<CreateProductVariantRequest, ProductVariant>();
+            CreateMap<AdminCreateProductVariantRequest, ProductVariant>();
             
-            CreateMap<UpdateProductVariantRequest, ProductVariant>();
+            CreateMap<AdminUpdateProductVariantRequest, ProductVariant>();
 
             CreateMap<ProductVariant, AdminProductVariantResponse>();
 
-            CreateMap<UpdateProductVariantRequest, CreateProductVariantRequest>();
+            CreateMap<AdminUpdateProductVariantRequest, AdminCreateProductVariantRequest>();
 
             // ProductImage
-            CreateMap<CreateProductImagesRequest, ProductImage>();
+            CreateMap<AdminCreateProductImagesRequest, ProductImage>();
 
-            CreateMap<UpdateProductImageRequest, ProductImage>()
+            CreateMap<AdminUpdateProductImageRequest, ProductImage>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<ProductImage, AdminProductImageResponse>();
 
             // Voucher
-            CreateMap<CreateVoucherRequest, Voucher>();
+            CreateMap<AdminCreateVoucherRequest, Voucher>();
 
-            CreateMap<UpdateVoucherRequest, Voucher>();
+            CreateMap<AdminUpdateVoucherRequest, Voucher>();
 
             CreateMap<Voucher, AdminVoucherResponse>();
 

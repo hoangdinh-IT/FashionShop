@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Size.Requests
 {
-    public class UpdateSizeRequest
+    public class AdminCreateSizeRequest
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Tên kích thước không được quá 50 kí tự!")]
@@ -23,7 +24,5 @@ namespace FashionShop.Core.Contracts.Admin.Size.Requests
 
         [Required]
         public SizeType Type { get; set; }
-
-        public bool IsActive { get; set; }
     }
 }

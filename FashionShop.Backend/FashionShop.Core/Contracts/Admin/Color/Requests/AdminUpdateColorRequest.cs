@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Color.Requests
 {
-    public class UpdateColorRequest
+    public class AdminUpdateColorRequest
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Tên màu sắc không được quá 50 kí tự!")]

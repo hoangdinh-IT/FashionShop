@@ -17,8 +17,8 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminSizeResponse?> CreateSizeAsync(CreateSizeRequest dto);
-        Task<AdminSizeResponse?> UpdateSizeAsync(int sizeId, UpdateSizeRequest dto);
+        Task<AdminSizeResponse?> CreateSizeAsync(AdminCreateSizeRequest dto);
+        Task<AdminSizeResponse?> UpdateSizeAsync(int sizeId, AdminUpdateSizeRequest dto);
         Task DeleteSizeAsync(int sizeId);
     }
 }

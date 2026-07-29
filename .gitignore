@@ -500,3 +500,7 @@ $RECYCLE.BIN/
 **/appsettings.json
 **/appsettings.Development.json
 **/appsettings.Local.json
+
+# Bỏ qua tất cả các file Collection và Environment của Postman
+*.postman_collection.json
+*.postman_environment.json

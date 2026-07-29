@@ -46,14 +46,14 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateBrand([FromForm] CreateBrandRequest request)
+        public async Task<IActionResult> CreateBrand([FromForm] AdminCreateBrandRequest request)
         {
             var result = await _brandService.CreateBrandAsync(request);
             return Created(result, "Thêm thương hiệu thành công!");
         }
 
         [HttpPut("{brandId}")]
-        public async Task<IActionResult> UpdateBrand(Guid brandId, [FromForm] UpdateBrandRequest request)
+        public async Task<IActionResult> UpdateBrand(Guid brandId, [FromForm] AdminUpdateBrandRequest request)
         {
             if (brandId == Guid.Empty) throw new ArgumentException("ID không hợp lệ!");
 

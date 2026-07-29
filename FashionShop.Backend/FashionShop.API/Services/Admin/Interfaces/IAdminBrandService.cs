@@ -18,8 +18,8 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminBrandResponse?> CreateBrandAsync(CreateBrandRequest dto);
-        Task<AdminBrandResponse?> UpdateBrandAsync(Guid brandId, UpdateBrandRequest dto);
+        Task<AdminBrandResponse?> CreateBrandAsync(AdminCreateBrandRequest dto);
+        Task<AdminBrandResponse?> UpdateBrandAsync(Guid brandId, AdminUpdateBrandRequest dto);
         Task DeleteBrandAsync(Guid brandId);
     }
 }

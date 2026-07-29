@@ -174,23 +174,31 @@ const VoucherTable: React.FC<Props> = ({
                                         {/* 2. MỨC GIẢM & ĐIỀU KIỆN */}
                                         <td className="px-5 py-4">
                                             <div className="flex flex-col gap-1">
-                                                <div className="font-bold text-rose-600 text-[14px]">
-                                                    {item.discountType === DiscountType.FixedAmount 
-                                                        ? formatCurrency(item.discountAmount) 
-                                                        : `Giảm ${item.discountAmount}%`
-                                                    }
-                                                    {item.maxDiscountAmount && item.discountType !== DiscountType.FixedAmount && (
-                                                        <span className="text-[11px] text-gray-400 font-normal ml-1">
-                                                            (Tối đa {formatCurrency(item.maxDiscountAmount)})
-                                                        </span>
+                                                <div className="font-bold text-rose-600 text-[14px] flex items-baseline gap-1 flex-wrap">
+                                                {/* 1. Hiển thị mức giảm chính */}
+                                                <span>
+                                                    {item.discountType === DiscountType.FixedAmount
+                                                        ? formatCurrency(item.discountAmount)
+                                                        : `Giảm ${item.discountAmount}%`}
+                                                </span>
+
+                                                {/* 2. Chỉ hiển thị giảm tối đa NẾU là Percentage VÀ maxDiscountAmount > 0 */}
+                                                {item.discountType === DiscountType.Percentage &&
+                                                    Boolean(item.maxDiscountAmount) &&
+                                                    item.maxDiscountAmount! > 0 && (
+                                                    <span className="text-[11px] text-gray-400 font-normal">
+                                                        (Tối đa {formatCurrency(item.maxDiscountAmount!)})
+                                                    </span>
                                                     )}
                                                 </div>
+
+                                                {/* 3. Đơn tối thiểu */}
                                                 <div className="text-[11px] text-gray-500 flex items-center gap-1">
-                                                    <IoWalletOutline className="text-gray-400" />
-                                                    Đơn tối thiểu {formatCurrency(item.minOrderValue)}
+                                                <IoWalletOutline className="text-gray-400" />
+                                                Đơn tối thiểu {formatCurrency(item.minOrderValue)}
                                                 </div>
                                             </div>
-                                        </td>
+                                            </td>
 
                                         {/* 3. LƯỢT DÙNG */}
                                         <td className="px-5 py-4">
@@ -216,7 +224,7 @@ const VoucherTable: React.FC<Props> = ({
                                                 </div>
                                                 <div className="text-[10px] text-gray-400 flex items-center gap-1">
                                                     <IoTimeOutline />
-                                                    {format(new Date(item.endDate), "HH:mm")}
+                                                    {format(new Date(item.startDate), "HH:mm")} - {format(new Date(item.endDate), "HH:mm")}
                                                 </div>
                                             </div>
                                         </td>

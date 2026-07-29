@@ -47,7 +47,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminSizeResponse?> CreateSizeAsync(CreateSizeRequest request)
+        public async Task<AdminSizeResponse?> CreateSizeAsync(AdminCreateSizeRequest request)
         {
             var newSize = _mapper.Map<Size>(request);
             _unitOfWork.AdminSizes.CreateSize(newSize);
@@ -55,7 +55,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminSizeResponse>(newSize);
         }
 
-        public async Task<AdminSizeResponse?> UpdateSizeAsync(int sizeId, UpdateSizeRequest request)
+        public async Task<AdminSizeResponse?> UpdateSizeAsync(int sizeId, AdminUpdateSizeRequest request)
         {
             var existingSize = await _unitOfWork.AdminSizes.FindSizeByIdAsync(sizeId);
 

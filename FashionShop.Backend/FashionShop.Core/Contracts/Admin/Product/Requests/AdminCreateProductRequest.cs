@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FashionShop.Core.Contracts.Admin.Product.Requests
 {
-    public class CreateProductRequest
+    public class AdminCreateProductRequest
     {
         [Required]
         public Guid CategoryId { get; set; }

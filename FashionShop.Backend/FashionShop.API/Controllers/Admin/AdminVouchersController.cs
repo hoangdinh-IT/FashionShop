@@ -37,14 +37,14 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateVoucher(CreateVoucherRequest request)
+        public async Task<IActionResult> CreateVoucher(AdminCreateVoucherRequest request)
         {
             var result = await _voucherService.CreateVoucherAsync(request);
             return Created(result, "Thêm mới mã giảm giá thành công!");
         }
 
         [HttpPut("{voucherId}")]
-        public async Task<IActionResult> UpdateVoucher(Guid voucherId, [FromBody] UpdateVoucherRequest request) 
+        public async Task<IActionResult> UpdateVoucher(Guid voucherId, [FromBody] AdminUpdateVoucherRequest request) 
         {
             var result = await _voucherService.UpdateVoucherAsync(voucherId, request);
             return Success(result, "Cập nhật mã giảm giá thành công!");

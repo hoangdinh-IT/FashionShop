@@ -47,7 +47,7 @@ namespace FashionShop.API.Services.Admin
 
         // --- WRITE METHODS --- //
 
-        public async Task<AdminColorResponse?> CreateColorAsync(CreateColorRequest request)
+        public async Task<AdminColorResponse?> CreateColorAsync(AdminCreateColorRequest request)
         {
             var isExistHexCode = await _unitOfWork.AdminColors.CheckExistHexCodeAsync(request.HexCode);
 
@@ -63,7 +63,7 @@ namespace FashionShop.API.Services.Admin
             return _mapper.Map<AdminColorResponse>(newColor);
         }
 
-        public async Task<AdminColorResponse?> UpdateColorAsync(int colorId, UpdateColorRequest request)
+        public async Task<AdminColorResponse?> UpdateColorAsync(int colorId, AdminUpdateColorRequest request)
         {
             var existingColor = await _unitOfWork.AdminColors.FindColorByIdAsync(colorId);
 

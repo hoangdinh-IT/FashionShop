@@ -19,8 +19,8 @@ namespace FashionShop.API.Services.Admin.Interfaces
 
         // --- WRITE METHODS --- //
 
-        Task<AdminCategoryResponse?> CreateCategoryAsync(CreateCategoryRequest dto);
-        Task<AdminCategoryResponse?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryRequest dto);
+        Task<AdminCategoryResponse?> CreateCategoryAsync(AdminCreateCategoryRequest dto);
+        Task<AdminCategoryResponse?> UpdateCategoryAsync(Guid categoryId, AdminUpdateCategoryRequest dto);
         Task DeleteCategoryAsync(Guid categoryId);
     }
 }

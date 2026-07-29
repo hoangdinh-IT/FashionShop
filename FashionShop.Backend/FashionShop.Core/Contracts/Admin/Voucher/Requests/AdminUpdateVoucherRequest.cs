@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Admin.Voucher.Requests
 {
-    public class UpdateVoucherRequest
+    public class AdminUpdateVoucherRequest
     {
         [Required]
         public string Name { get; set; }

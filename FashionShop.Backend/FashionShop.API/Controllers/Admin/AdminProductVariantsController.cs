@@ -45,14 +45,14 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductVariant(Guid productId, [FromForm] CreateProductVariantRequest request)
+        public async Task<IActionResult> CreateProductVariant(Guid productId, [FromForm] AdminCreateProductVariantRequest request)
         {
             var result = await _productService.CreateProductVariantAsync(request);
             return Created(result, "Thêm sản phẩm biến thể thành công!");
         }
 
         [HttpPut("{productVariantId}")]
-        public async Task<IActionResult> UpdateProductVariant(Guid productId, Guid productVariantId, UpdateProductVariantRequest request)
+        public async Task<IActionResult> UpdateProductVariant(Guid productId, Guid productVariantId, AdminUpdateProductVariantRequest request)
         {
             var result = await _productService.UpdateProductVariantAsync(productVariantId, request);
             return Success(result, "Cập nhật sản phẩm biến thể thành công!");

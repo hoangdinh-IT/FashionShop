@@ -37,7 +37,7 @@ namespace FashionShop.API.Controllers.Admin
         // --- WRITE METHODS --- //
 
         [HttpPut("{orderId}")]
-        public async Task<IActionResult> UpdateOrderStatus(Guid orderId, UpdateOrderRequest request)
+        public async Task<IActionResult> UpdateOrderStatus(Guid orderId, AdminUpdateOrderRequest request)
         {
             var result = await _orderService.UpdateOrderAsync(orderId, request);
             return Success(result, "Cập nhật trạng thái đơn hàng thành công!");
