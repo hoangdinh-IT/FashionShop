@@ -13,7 +13,7 @@ namespace FashionShop.Core.Contracts.Shop.Product.Responses
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
-        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
         public string ThumbnailUrl { get; set; }
         public bool IsNew { get; set; } 
         public bool IsBestSeller { get; set; }

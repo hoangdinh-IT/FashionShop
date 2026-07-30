@@ -25,7 +25,7 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; bg: str
     Confirmed: { label: 'Xác nhận', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', dot: 'bg-blue-400' },
     Shipping: { label: 'Đang giao', color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200', dot: 'bg-indigo-400' },
     Success: { label: 'Thành công', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', dot: 'bg-emerald-400' },
-    Cancelled: { label: 'Đã hủy', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-200', dot: 'bg-rose-400' },
+    Cancelled: { label: 'Huỷ đơn', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-200', dot: 'bg-rose-400' },
     Failed: { label: 'Thất bại', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', dot: 'bg-red-400' },
     Returned: { label: 'Trả hàng', color: 'text-gray-600', bg: 'bg-gray-50', border: 'border-gray-200', dot: 'bg-gray-400' },
     Refunded: { label: 'Hoàn tiền', color: 'text-fuchsia-600', bg: 'bg-fuchsia-50', border: 'border-fuchsia-200', dot: 'bg-fuchsia-400' },

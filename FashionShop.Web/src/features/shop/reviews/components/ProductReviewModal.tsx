@@ -68,9 +68,7 @@ const ProductReviewModal: React.FC<Props> = ({
 
     const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
-
         if (!files.length) return;
-
         setImages((prev) => [...prev, ...files].slice(0, 5));
     };
 
@@ -116,196 +114,163 @@ const ProductReviewModal: React.FC<Props> = ({
         });
     };
 
+    const ratingLabels: Record<number, string> = {
+        1: "Rất không hài lòng",
+        2: "Không hài lòng",
+        3: "Bình thường",
+        4: "Hài lòng",
+        5: "Tuyệt vời",
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[999] flex items-center justify-center bg-black/45 p-3 backdrop-blur-md"
-                >
+                <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6">
+                    {/* Backdrop */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.97 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 12, scale: 0.97 }}
-                        transition={{ duration: 0.22 }}
-                        className="relative w-full max-w-[760px] overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-[0_25px_80px_rgba(0,0,0,0.10)]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={handleClose}
+                        className="fixed inset-0 bg-zinc-950/40 backdrop-blur-sm"
+                    />
+
+                    {/* Modal Window */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        className="relative z-10 w-full max-w-[560px] overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-zinc-900/5"
                     >
-                        {/* BACKGROUND */}
-                        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                            <div className="absolute right-[-40px] top-[-80px] h-[180px] w-[180px] rounded-full bg-indigo-100/40 blur-[80px]" />
-
-                            <div className="absolute bottom-[-80px] left-[-40px] h-[180px] w-[180px] rounded-full bg-zinc-100 blur-[80px]" />
-                        </div>
-
-                        {/* HEADER */}
-                        <div className="relative border-b border-zinc-100 px-5 py-4">
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <p className="mb-1.5 text-[9px] font-black uppercase tracking-[0.32em] text-zinc-400">
-                                        Product Review
-                                    </p>
-
-                                    <h2 className="text-xl font-black italic tracking-tight text-zinc-900 md:text-2xl">
-                                        ĐÁNH GIÁ SẢN PHẨM
-                                    </h2>
-                                </div>
-
-                                <button
-                                    onClick={handleClose}
-                                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 transition-all duration-300 hover:bg-zinc-900 hover:text-white"
-                                >
-                                    <IoClose size={17} />
-                                </button>
+                        {/* Header */}
+                        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
+                            <div>
+                                <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+                                    Đánh giá sản phẩm
+                                </h2>
+                                <p className="text-xs text-zinc-400">
+                                    Chia sẻ cảm nhận thực tế của bạn
+                                </p>
                             </div>
+
+                            <button
+                                type="button"
+                                onClick={handleClose}
+                                className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+                            >
+                                <IoClose size={20} />
+                            </button>
                         </div>
 
-                        {/* BODY */}
+                        {/* Form Form Body */}
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="relative max-h-[72vh] overflow-y-auto px-5 py-5">
-                                {/* PRODUCT */}
-                                <div className="flex items-center gap-4 rounded-[24px] border border-zinc-100 bg-zinc-50/70 p-4">
-                                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-zinc-100 bg-white">
-                                        <img
-                                            src={
-                                                orderItem?.productThumbnailUrl ||
-                                                "/placeholder.png"
-                                            }
-                                            alt={orderItem?.productName}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    </div>
-
+                            <div className="max-h-[75vh] overflow-y-auto px-6 py-6 space-y-6">
+                                
+                                {/* Product Summary Card */}
+                                <div className="flex items-center gap-4 rounded-2xl bg-zinc-50/80 p-3.5 ring-1 ring-inset ring-zinc-100">
+                                    <img
+                                        src={
+                                            orderItem?.productThumbnailUrl ||
+                                            "/placeholder.png"
+                                        }
+                                        alt={orderItem?.productName}
+                                        className="h-16 w-16 shrink-0 rounded-xl object-cover bg-white ring-1 ring-zinc-200/60"
+                                    />
                                     <div className="min-w-0 flex-1">
-                                        <h3 className="line-clamp-2 text-[15px] font-bold tracking-tight text-zinc-900">
+                                        <h3 className="line-clamp-1 text-sm font-medium text-zinc-900">
                                             {orderItem?.productName}
                                         </h3>
-
                                         {orderItem?.variantName && (
-                                            <p className="mt-2 text-[9px] font-black uppercase tracking-[0.22em] text-zinc-400">
-                                                {orderItem.variantName}
+                                            <p className="mt-0.5 text-xs text-zinc-400">
+                                                Phân loại: {orderItem.variantName}
                                             </p>
                                         )}
                                     </div>
                                 </div>
 
-                                {/* RATING */}
-                                <div className="mt-6">
-                                    <div className="mb-3 flex items-center justify-between">
-                                        <div>
-                                            <p className="mb-1 text-[9px] font-black uppercase tracking-[0.28em] text-zinc-400">
-                                                Rating
-                                            </p>
-
-                                            <h4 className="text-[15px] font-bold tracking-tight text-zinc-900">
-                                                Chất lượng sản phẩm
-                                            </h4>
-                                        </div>
-
-                                        <div className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-bold text-zinc-900">
-                                            {rating}.0 / 5
-                                        </div>
+                                {/* Star Rating Section */}
+                                <div className="space-y-2.5">
+                                    <div className="flex items-center justify-between text-xs">
+                                        <span className="font-medium text-zinc-700">
+                                            Mức độ hài lòng
+                                        </span>
+                                        <span className="font-medium text-amber-600">
+                                            {ratingLabels[hoveredStar || rating]}
+                                        </span>
                                     </div>
 
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center justify-between rounded-2xl bg-zinc-50 p-2 ring-1 ring-inset ring-zinc-100">
                                         {[1, 2, 3, 4, 5].map((star) => {
-                                            const active =
-                                                (hoveredStar || rating) >= star;
-
+                                            const isActive = (hoveredStar || rating) >= star;
                                             return (
                                                 <button
                                                     key={star}
                                                     type="button"
-                                                    onMouseEnter={() =>
-                                                        setHoveredStar(star)
-                                                    }
-                                                    onMouseLeave={() =>
-                                                        setHoveredStar(null)
-                                                    }
-                                                    onClick={() =>
-                                                        setRating(star)
-                                                    }
-                                                    className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300 ${
-                                                        active
-                                                            ? "border-amber-200 bg-amber-50 text-amber-500 shadow-[0_8px_24px_rgba(251,191,36,0.12)]"
-                                                            : "border-zinc-200 bg-white text-zinc-300 hover:border-zinc-300"
+                                                    onMouseEnter={() => setHoveredStar(star)}
+                                                    onMouseLeave={() => setHoveredStar(null)}
+                                                    onClick={() => setRating(star)}
+                                                    className={`group relative flex h-11 flex-1 items-center justify-center rounded-xl transition-all ${
+                                                        isActive
+                                                            ? "text-amber-400"
+                                                            : "text-zinc-300 hover:text-zinc-400"
                                                     }`}
                                                 >
-                                                    <IoStar size={19} />
+                                                    <IoStar className="h-6 w-6 transition-transform duration-150 active:scale-125" />
                                                 </button>
                                             );
                                         })}
                                     </div>
                                 </div>
 
-                                {/* CONTENT */}
-                                <div className="mt-6">
-                                    <div className="mb-3">
-                                        <p className="mb-1 text-[9px] font-black uppercase tracking-[0.28em] text-zinc-400">
-                                            Review Content
-                                        </p>
-
-                                        <h4 className="text-[15px] font-bold tracking-tight text-zinc-900">
-                                            Chia sẻ trải nghiệm
-                                        </h4>
+                                {/* Review Content Section */}
+                                <div className="space-y-2">
+                                    <label className="block text-xs font-medium text-zinc-700">
+                                        Nội dung đánh giá
+                                    </label>
+                                    <div className="relative">
+                                        <textarea
+                                            {...register("content", {
+                                                maxLength: {
+                                                    value: 2000,
+                                                    message: "Nội dung không quá 2000 ký tự",
+                                                },
+                                            })}
+                                            rows={4}
+                                            placeholder="Chất lượng sản phẩm thế nào? Bạn có hài lòng với dịch vụ không?"
+                                            className={`w-full rounded-2xl border bg-transparent px-4 py-3 text-sm placeholder:text-zinc-400 focus:outline-none transition-all ${
+                                                errors.content
+                                                    ? "border-red-300 ring-2 ring-red-100"
+                                                    : "border-zinc-200 focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+                                            }`}
+                                        />
                                     </div>
 
-                                    <textarea
-                                        {...register("content", {
-                                            maxLength: {
-                                                value: 2000,
-                                                message: "Nội dung không được vượt quá 2000 ký tự!",
-                                            },
-                                        })}
-                                        rows={5}
-                                        placeholder="Sản phẩm có tốt không? Đúng mô tả chứ?"
-                                        className={`w-full resize-none rounded-[24px] border border-transparent bg-zinc-50 px-5 py-4 text-[14px] leading-relaxed outline-none transition-all placeholder:text-zinc-300 text-zinc-700 ${
-                                            errors.content
-                                                ? "ring-2 ring-red-500 bg-red-50"
-                                                : "focus:bg-white focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900"
-                                        }`}
-                                    />
-
-                                    <div className="mt-1 flex justify-between">
-                                        <span className="min-h-[18px] text-[11px] font-medium text-red-500">
+                                    <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                                        <span className="text-red-500">
                                             {errors.content?.message}
                                         </span>
-
-                                        <span
-                                            className={`text-[11px] ${
-                                                watchedContent.length > 2000
-                                                    ? "font-bold text-red-500"
-                                                    : "text-zinc-400"
-                                            }`}
-                                        >
+                                        <span className={watchedContent.length > 2000 ? "text-red-500 font-medium" : ""}>
                                             {watchedContent.length}/2000
                                         </span>
                                     </div>
                                 </div>
 
-                                {/* IMAGES */}
-                                <div className="mt-6">
-                                    <div className="mb-3 flex items-center justify-between">
-                                        <div>
-                                            <p className="mb-1 text-[9px] font-black uppercase tracking-[0.28em] text-zinc-400">
-                                                Upload Images
-                                            </p>
-
-                                            <h4 className="text-[15px] font-bold tracking-tight text-zinc-900">
-                                                Hình ảnh sản phẩm
-                                            </h4>
-                                        </div>
-
-                                        <span className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-[10px] font-semibold text-zinc-500">
+                                {/* Images Upload Section */}
+                                <div className="space-y-2.5">
+                                    <div className="flex items-center justify-between text-xs">
+                                        <span className="font-medium text-zinc-700">
+                                            Hình ảnh đính kèm
+                                        </span>
+                                        <span className="text-zinc-400">
                                             {images.length}/5 ảnh
                                         </span>
                                     </div>
 
-                                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
-                                        {/* UPLOAD */}
+                                    <div className="grid grid-cols-5 gap-2.5">
+                                        {/* Upload Button */}
                                         {images.length < 5 && (
-                                            <label className="group relative flex aspect-square cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[20px] border border-dashed border-zinc-300 bg-zinc-50 transition-all duration-300 hover:border-zinc-900 hover:bg-white">
+                                            <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/50 text-zinc-400 transition-all hover:border-zinc-900 hover:bg-zinc-50 hover:text-zinc-700">
                                                 <input
                                                     type="file"
                                                     multiple
@@ -313,39 +278,28 @@ const ProductReviewModal: React.FC<Props> = ({
                                                     className="hidden"
                                                     onChange={handleUpload}
                                                 />
-
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-500 transition-all duration-300 group-hover:bg-zinc-900 group-hover:text-white">
-                                                    <IoCloudUploadOutline
-                                                        size={18}
-                                                    />
-                                                </div>
-
-                                                <span className="mt-2 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
-                                                    Upload
-                                                </span>
+                                                <IoCloudUploadOutline size={20} />
+                                                <span className="mt-1 text-[10px] font-medium">Tải lên</span>
                                             </label>
                                         )}
 
-                                        {/* PREVIEW */}
+                                        {/* Image Previews */}
                                         {previewImages.map((image, index) => (
                                             <div
                                                 key={index}
-                                                className="group relative aspect-square overflow-hidden rounded-[20px] border border-zinc-100 bg-zinc-100"
+                                                className="group relative aspect-square overflow-hidden rounded-2xl bg-zinc-100 ring-1 ring-black/5"
                                             >
                                                 <img
                                                     src={image.preview}
-                                                    alt="preview"
+                                                    alt="Preview"
                                                     className="h-full w-full object-cover"
                                                 />
-
                                                 <button
                                                     type="button"
-                                                    onClick={() =>
-                                                        handleRemoveImage(index)
-                                                    }
-                                                    className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100"
+                                                    onClick={() => handleRemoveImage(index)}
+                                                    className="absolute inset-0 flex items-center justify-center bg-zinc-950/40 text-white opacity-0 transition-opacity group-hover:opacity-100"
                                                 >
-                                                    <IoTrashOutline size={13} />
+                                                    <IoTrashOutline size={16} />
                                                 </button>
                                             </div>
                                         ))}
@@ -353,29 +307,26 @@ const ProductReviewModal: React.FC<Props> = ({
                                 </div>
                             </div>
 
-                            {/* FOOTER */}
-                            <div className="relative flex flex-col-reverse items-center justify-between gap-3 border-t border-zinc-100 bg-white/90 px-5 py-4 backdrop-blur-xl sm:flex-row">
+                            {/* Footer Actions */}
+                            <div className="flex items-center justify-end gap-2.5 border-t border-zinc-100 bg-zinc-50/50 px-6 py-4">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="h-10 w-full rounded-full border border-zinc-200 bg-white px-5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 transition-all duration-300 hover:bg-zinc-100 sm:w-auto"
+                                    className="rounded-full px-5 py-2.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60"
                                 >
                                     Hủy bỏ
                                 </button>
-
                                 <button
                                     type="submit"
                                     disabled={isLoading || isCreating}
-                                    className="h-10 w-full rounded-full bg-zinc-900 px-7 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-[0_12px_32px_rgba(0,0,0,0.16)] transition-all duration-300 hover:bg-black disabled:opacity-50 sm:w-auto"
+                                    className="rounded-full bg-zinc-900 px-6 py-2.5 text-xs font-medium text-white shadow-sm transition-all hover:bg-zinc-800 disabled:opacity-50"
                                 >
-                                    {isLoading || isCreating
-                                        ? "Đang xử lý..."
-                                        : "Gửi đánh giá"}
+                                    {isLoading || isCreating ? "Đang gửi..." : "Gửi đánh giá"}
                                 </button>
                             </div>
                         </form>
                     </motion.div>
-                </motion.div>
+                </div>
             )}
         </AnimatePresence>
     );

@@ -103,7 +103,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                             [...Array(5)].map((_, index) => <TableRowSkeleton key={index} />)
                         ) : data.length > 0 ? (
                             data.map((item) => {
-                                const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price);
+                                const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.originalPrice);
                                 
                                 return (
                                     <tr key={item.id} className="group hover:bg-indigo-50/40 transition-colors duration-200">

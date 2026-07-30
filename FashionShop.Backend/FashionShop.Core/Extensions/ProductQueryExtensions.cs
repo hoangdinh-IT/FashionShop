@@ -90,8 +90,8 @@ namespace FashionShop.Core.Extensions
 
         public static IQueryable<Product> FilterByPrice(this IQueryable<Product> query, decimal? minPrice, decimal? maxPrice)
         {
-            if (minPrice.HasValue) query = query.Where(p => p.Price > minPrice);
-            if (maxPrice.HasValue) query = query.Where(p => p.Price <= maxPrice);
+            if (minPrice.HasValue) query = query.Where(p => p.OriginalPrice > minPrice);
+            if (maxPrice.HasValue) query = query.Where(p => p.OriginalPrice <= maxPrice);
             return query;
         }
 
@@ -115,7 +115,7 @@ namespace FashionShop.Core.Extensions
                     if (decimal.TryParse(priceValue, out var minPrice))
                     {
                         currentExpression = Expression.GreaterThan(
-                            Expression.Property(parameter, nameof(Product.Price)),
+                            Expression.Property(parameter, nameof(Product.OriginalPrice)),
                             Expression.Constant(minPrice, typeof(decimal))
                         );
                     }
@@ -131,12 +131,12 @@ namespace FashionShop.Core.Extensions
                         decimal.TryParse(prices[1], out var maxPrice))
                     {
                         var greaterThan = Expression.GreaterThan( // Hoặc GreaterThanOrEqual tuỳ logic của bạn
-                            Expression.Property(parameter, nameof(Product.Price)),
+                            Expression.Property(parameter, nameof(Product.OriginalPrice)),
                             Expression.Constant(minPrice, typeof(decimal))
                         );
 
                         var lessThanOrEqual = Expression.LessThanOrEqual(
-                            Expression.Property(parameter, nameof(Product.Price)),
+                            Expression.Property(parameter, nameof(Product.OriginalPrice)),
                             Expression.Constant(maxPrice, typeof(decimal))
                         );
 
@@ -166,9 +166,9 @@ namespace FashionShop.Core.Extensions
         public static IQueryable<Product> SortByPrice(this IQueryable<Product> query, bool? isAscendingPrice)
         {
             if (isAscendingPrice == true) 
-                return query.OrderBy(x => x.Price);
+                return query.OrderBy(x => x.OriginalPrice);
             else if (isAscendingPrice == false) 
-                return query.OrderByDescending(x => x.Price);
+                return query.OrderByDescending(x => x.OriginalPrice);
             return query;
         }
 
@@ -186,8 +186,8 @@ namespace FashionShop.Core.Extensions
 
                 case "price":
                     return isAscending
-                        ? query.OrderBy(x => x.Price)
-                        : query.OrderByDescending(x => x.Price);
+                        ? query.OrderBy(x => x.OriginalPrice)
+                        : query.OrderByDescending(x => x.OriginalPrice);
 
                 case "createddate":
                     return isAscending
@@ -225,11 +225,11 @@ namespace FashionShop.Core.Extensions
                                 .ThenByDescending(x => x.Id);
 
                 case "price-asc":
-                    return query.OrderBy(x => x.Price)
+                    return query.OrderBy(x => x.OriginalPrice)
                                 .ThenByDescending(x => x.Id);
 
                 case "price-desc":
-                    return query.OrderByDescending(x => x.Price)
+                    return query.OrderByDescending(x => x.OriginalPrice)
                                 .ThenByDescending(x => x.Id);
 
                 default:

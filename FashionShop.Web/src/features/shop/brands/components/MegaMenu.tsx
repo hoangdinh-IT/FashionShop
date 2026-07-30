@@ -23,37 +23,35 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
 
     return (
         <div className="group/item">
-            <div className="flex items-center justify-between py-2.5">
-                {/* Tên Category Level 2 */}
-                <button
-                    onClick={() => {
-                        if (hasChildren) {
-                            onToggle();
-                        } else {
-                            onFilter(category.slug);
-                        }
-                    }}
-                    className="flex items-center gap-3 text-left group/btn cursor-pointer"
-                >
+            {/* Gộp toàn bộ dòng Level 2 thành 1 nút bấm duy nhất */}
+            <button
+                type="button"
+                onClick={() => {
+                    if (hasChildren) {
+                        onToggle();
+                    } else {
+                        onFilter(category.slug);
+                    }
+                }}
+                className="w-full flex items-center justify-between py-2.5 text-left group/btn cursor-pointer select-none"
+            >
+                {/* Trái: Hình đại diện (nếu có) + Tên danh mục */}
+                <div className="flex items-center gap-3">
                     {category.imageUrl && (
                         <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0 opacity-80 group-hover/btn:opacity-100 transition-opacity">
                             <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover" />
                         </div>
                     )}
                     <span className={`text-[15px] tracking-tight transition-colors duration-200 ${
-                        isExpanded ? 'text-black font-semibold' : 'text-zinc-600 font-normal hover:text-black'
+                        isExpanded ? 'text-black font-semibold' : 'text-zinc-600 font-normal group-hover/btn:text-black'
                     }`}>
                         {category.name}
                     </span>
-                </button>
+                </div>
 
-                {/* Nút Toggle mở rộng nếu có con */}
+                {/* Phải: Icon toggle xoay (Chỉ hiển thị nếu có con) */}
                 {hasChildren && (
-                    <button
-                        onClick={onToggle}
-                        className="p-1 text-zinc-400 hover:text-black transition-colors cursor-pointer"
-                        aria-label="Toggle Subcategories"
-                    >
+                    <div className="p-1 text-zinc-400 group-hover/btn:text-black transition-colors">
                         <motion.svg
                             animate={{ rotate: isExpanded ? 45 : 0 }}
                             transition={{ duration: 0.2, ease: "easeOut" }}
@@ -64,9 +62,9 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                         </motion.svg>
-                    </button>
+                    </div>
                 )}
-            </div>
+            </button>
 
             {/* Level 3 Animated Collapse */}
             <AnimatePresence initial={false}>
@@ -81,6 +79,7 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
                         {/* Nút Tất cả Level 2 */}
                         <li>
                             <button
+                                type="button"
                                 onClick={() => onFilter(category.slug)} 
                                 className="text-[13px] font-medium text-black hover:underline underline-offset-4 cursor-pointer py-0.5 block" 
                             >
@@ -92,6 +91,7 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
                         {category.children.map((child: any) => (
                             <li key={child.id}>
                                 <button
+                                    type="button"
                                     onClick={() => onFilter(child.slug)} 
                                     className="text-[13px] text-zinc-500 hover:text-black transition-colors cursor-pointer py-0.5 block text-left"
                                 >

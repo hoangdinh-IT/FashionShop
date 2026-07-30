@@ -147,7 +147,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
                         <p className="text-sm font-bold text-zinc-900">
                             {new Intl.NumberFormat("vi-VN").format(
-                                product.price
+                                product.originalPrice
                             )}
                             ₫
                         </p>

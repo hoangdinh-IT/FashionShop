@@ -30,7 +30,7 @@ namespace FashionShop.Core.Entities
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
 
         [Required]
         [MaxLength(500)]

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { IoCallOutline, IoCloseOutline, IoLocationOutline, IoTimeOutline } from "react-icons/io5";
+import { IoCallOutline, IoCloseOutline, IoLocationOutline, IoQrCodeOutline, IoTimeOutline } from "react-icons/io5";
 import type { OrderDetail } from "../../types/order";
 import React from "react";
 import Loading from "../../../../../components/common/Loading";
@@ -69,7 +69,7 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
 
                                         <div className="space-y-1">
 
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-3 flex-wrap">
                                                 <span className="px-3 py-1 rounded-full bg-black text-white text-[10px] font-bold uppercase tracking-[0.15em]">
                                                     Chi tiết đơn hàng
                                                 </span>
@@ -77,6 +77,13 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
                                                 <span className="text-[11px] text-zinc-400 font-medium">
                                                     #{order.orderId.slice(0, 8).toUpperCase()}
                                                 </span>
+
+                                                {order.transferCode && (
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-[11px] font-bold tracking-tight">
+                                                        <IoQrCodeOutline className="text-indigo-500" size={13} />
+                                                        <span className="font-mono">{order.transferCode}</span>
+                                                    </span>
+                                                )}
                                             </div>
 
                                             <h2 className="text-2xl font-semibold text-zinc-900 tracking-tight">
@@ -182,12 +189,27 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
 
                                     <div className="grid md:grid-cols-2 gap-6">
 
-                                        {/* NOTE */}
-                                        <div className="rounded-2xl bg-zinc-50 p-4 text-sm text-zinc-600">
-                                            <div className="text-[10px] uppercase tracking-[0.15em] text-zinc-400 mb-2 font-bold">
-                                                Ghi chú
+                                        <div className="space-y-3">
+                                            {/* MÃ CHUYỂN KHOẢN (Hiển thị chi tiết ở Footer) */}
+                                            {order.transferCode && (
+                                                <div className="rounded-2xl bg-indigo-50/60 border border-indigo-100 p-4 text-sm text-indigo-950">
+                                                    <div className="text-[10px] uppercase tracking-[0.15em] text-indigo-500 mb-1 font-bold flex items-center gap-1.5">
+                                                        <IoQrCodeOutline size={14} />
+                                                        Mã chuyển khoản
+                                                    </div>
+                                                    <div className="font-mono font-bold text-base text-indigo-700 tracking-wide">
+                                                        {order.transferCode}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* GHI CHÚ */}
+                                            <div className="rounded-2xl bg-zinc-50 p-4 text-sm text-zinc-600">
+                                                <div className="text-[10px] uppercase tracking-[0.15em] text-zinc-400 mb-2 font-bold">
+                                                    Ghi chú
+                                                </div>
+                                                {order.note || "Không có ghi chú"}
                                             </div>
-                                            {order.note || "Không có ghi chú"}
                                         </div>
 
                                         {/* TOTAL SUMMARY */}

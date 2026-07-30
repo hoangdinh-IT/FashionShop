@@ -30,7 +30,7 @@ namespace FashionShop.API.Repositories.Shop
                 Id = p.Id,
                 Name = p.Name,
                 Slug = p.Slug,
-                Price = p.Price,
+                OriginalPrice = p.OriginalPrice,
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsBestSeller = p.IsBestSeller,
                 IsNew = p.IsNew,
@@ -88,7 +88,7 @@ namespace FashionShop.API.Repositories.Shop
                 Name = p.Name,
                 Slug = p.Slug,
                 Description = p.Description,
-                Price = p.Price,
+                OriginalPrice = p.OriginalPrice,
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsNew = p.IsNew,
                 IsBestSeller = p.IsBestSeller,
@@ -133,6 +133,7 @@ namespace FashionShop.API.Repositories.Shop
                             ColorId = v.ColorId,
                             SizeId = v.SizeId,
                             Quantity = v.StockQuantity,
+                            Price = v.Price,
                         })
                         .ToList()
                     : new List<ShopProductVariantDto>(),

@@ -8,7 +8,7 @@ export interface Product {
     slug: string;
     description: string;
     material: string;
-    price: number;
+    originalPrice: number;
     thumbnailUrl: string;
     isActive: boolean;
     isBestSeller: boolean;

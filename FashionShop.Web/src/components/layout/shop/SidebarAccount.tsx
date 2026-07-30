@@ -36,9 +36,6 @@ interface SidebarAccountProps {
     onLogout: () => void;
 }
 
-// Custom Easing cho hiệu ứng trượt cao cấp
-const customEase = [0.16, 1, 0.3, 1] as const;
-
 const SidebarAccount: React.FC<SidebarAccountProps> = ({ onLogout }) => {
     const location = useLocation();
 
@@ -64,17 +61,10 @@ const SidebarAccount: React.FC<SidebarAccountProps> = ({ onLogout }) => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className="relative flex items-center justify-between px-3.5 py-3 rounded-2xl transition-colors duration-200 group cursor-pointer"
+                                className={`relative flex items-center justify-between px-3.5 py-3 rounded-2xl transition-all duration-200 group cursor-pointer overflow-hidden ${
+                                    isActive ? "bg-zinc-900 text-white shadow-xs" : "hover:bg-zinc-100/80 text-zinc-600"
+                                }`}
                             >
-                                {/* Active Background Sliding Pill */}
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="activePill"
-                                        transition={{ duration: 0.35, ease: customEase }}
-                                        className="absolute inset-0 bg-zinc-900 rounded-2xl shadow-xs"
-                                    />
-                                )}
-
                                 {/* Content */}
                                 <div className="relative z-10 flex items-center gap-3">
                                     <Icon
@@ -97,12 +87,7 @@ const SidebarAccount: React.FC<SidebarAccountProps> = ({ onLogout }) => {
 
                                 {/* Minimal Indicator Dot */}
                                 {isActive && (
-                                    <motion.div 
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="relative z-10 w-1.5 h-1.5 rounded-full bg-white"
-                                    />
+                                    <span className="relative z-10 w-1.5 h-1.5 rounded-full bg-white animate-in fade-in zoom-in duration-200" />
                                 )}
                             </Link>
                         );

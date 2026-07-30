@@ -190,35 +190,40 @@ export const BankTransferModal = ({
                     {/* Lightbox Phóng to - Dành cho ai muốn soi rõ hơn */}
                     <AnimatePresence>
                         {isZoomed && (
-                            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+                            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 sm:p-6">
+                                
+                                {/* Backdrop phủ kín toàn bộ màn hình */}
                                 <motion.div
-                                    className="fixed inset-0 bg-black/80 backdrop-blur-xs"
+                                    className="fixed inset-0 bg-black/80 backdrop-blur-sm"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     onClick={() => setIsZoomed(false)}
                                 />
+
+                                {/* Modal Container - Tăng max-w lên max-w-lg (512px) hoặc max-w-xl (576px) */}
                                 <motion.div
-                                    className="relative z-10 bg-white p-5 rounded-2xl max-w-xs w-full flex flex-col items-center gap-3 shadow-2xl"
-                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    className="relative z-10 bg-white p-6 sm:p-8 rounded-3xl max-w-lg w-full flex flex-col items-center gap-4 shadow-2xl"
+                                    initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
-                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
                                 >
                                     <button
                                         onClick={() => setIsZoomed(false)}
-                                        className="absolute top-2.5 right-2.5 w-7 h-7 flex items-center justify-center rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition-colors"
+                                        className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition-colors cursor-pointer"
+                                        aria-label="Đóng"
                                     >
-                                        <X size={16} />
+                                        <X size={18} />
                                     </button>
-                                    <h4 className="font-bold text-zinc-900 text-xs pt-0.5">Mã QR phóng to</h4>
-                                    <img
-                                        src={qrUrl}
-                                        alt="VietQR Zoomed"
-                                        className="w-64 h-64 object-contain rounded-lg bg-white p-2 border border-zinc-100 shadow-xs"
-                                    />
-                                    <p className="text-[11px] text-zinc-500 text-center">
-                                        Đưa camera điện thoại lại gần mã để quét
-                                    </p>
+
+                                    {/* Tăng kích thước khung chứa ảnh lên max-w-[440px] */}
+                                    <div className="w-full max-w-[440px] aspect-square rounded-2xl bg-white p-3 border border-zinc-200/80 shadow-inner flex items-center justify-center">
+                                        <img
+                                            src={qrUrl}
+                                            alt="VietQR Zoomed"
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
                                 </motion.div>
                             </div>
                         )}

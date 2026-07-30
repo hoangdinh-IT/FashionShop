@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ShoppingBag, Minus, Plus, Loader2 } from "lucide-react";
 import type { ProductDetail } from "../../types/product";
 
@@ -33,6 +33,25 @@ const ProductInfo: React.FC<Props> = ({
     handleAddToCart,
     isCreating,
 }) => {
+    const currentPrice = useMemo(() => {
+        if (!productDetail?.productVariants?.length) {
+            return productDetail?.originalPrice || 0;
+        }
+
+        // Tìm variant khớp cả ColorId và SizeId đang chọn
+        const matchedVariant = productDetail.productVariants.find(
+            (variant) =>
+                variant.colorId === activeColorId && variant.sizeId === activeSizeId
+        );
+
+        // Trả về giá tương ứng -> Giá variant đầu tiên -> Giá gốc (originalPrice)
+        return (
+            matchedVariant?.price ??
+            productDetail.productVariants[0]?.price ??
+            productDetail.originalPrice
+        );
+    }, [productDetail, activeColorId, activeSizeId]);
+
     return (
         <div className="flex flex-col gap-6">
             
@@ -51,7 +70,7 @@ const ProductInfo: React.FC<Props> = ({
 
                 <div className="mt-1 flex items-center justify-between">
                     <span className="text-2xl font-black tracking-tight text-zinc-900">
-                        {new Intl.NumberFormat('vi-VN').format(productDetail.price)}đ
+                        {new Intl.NumberFormat('vi-VN').format(currentPrice)}đ
                     </span>
 
                     {isOutOfStock ? (

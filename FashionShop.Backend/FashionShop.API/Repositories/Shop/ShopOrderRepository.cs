@@ -96,7 +96,7 @@ namespace FashionShop.API.Repositories.Shop
                         .Select(pi => pi.ImageUrl)
                         .FirstOrDefault()
                         ?? orderItem.ProductVariant.Product.ThumbnailUrl,
-                    UnitPrice = orderItem.ProductVariant.Product.Price,
+                    UnitPrice = orderItem.ProductVariant.Product.OriginalPrice,
                     Quantity = orderItem.Quantity,
                     TotalLine = orderItem.TotalLine,
                     IsReviewed = orderItem.Reviews.Any(),
