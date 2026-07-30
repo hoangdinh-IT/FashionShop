@@ -23,7 +23,7 @@ interface Props {
     isLoading?: boolean;
 }
 
-const ProfileFormDialog: React.FC<Props> = ({
+const ProfileFormModal: React.FC<Props> = ({
     isOpen,
     onClose,
     initialData,
@@ -264,4 +264,4 @@ const ProfileFormDialog: React.FC<Props> = ({
     );
 };
 
-export default ProfileFormDialog;
+export default ProfileFormModal;

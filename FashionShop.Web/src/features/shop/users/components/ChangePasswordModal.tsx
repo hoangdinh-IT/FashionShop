@@ -22,7 +22,7 @@ interface Props {
     isLoading?: boolean;
 }
 
-const ChangePasswordDialog: React.FC<Props> = ({
+const ChangePasswordModal: React.FC<Props> = ({
     isOpen,
     onClose,
     email,
@@ -252,4 +252,4 @@ const ChangePasswordDialog: React.FC<Props> = ({
     );
 };
 
-export default ChangePasswordDialog;
+export default ChangePasswordModal;

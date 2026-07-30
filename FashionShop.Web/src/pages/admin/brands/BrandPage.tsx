@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import BrandToolbar from "../../../features/admin/brands/components/BrandToolbar";
 import BrandTable from "../../../features/admin/brands/components/BrandTable";
-import BrandFormDialog from "../../../features/admin/brands/components/BrandFormDialog";
+import BrandFormModal from "../../../features/admin/brands/components/BrandFormModal";
 import type { Brand } from "../../../features/admin/brands/types/brand";
 import { useBrands } from "../../../features/admin/brands/hooks/useBrands";
 import { useDialog } from "../../../contexts";
@@ -14,7 +14,7 @@ import type { BrandFilters, BrandQueryParams } from "../../../features/admin/bra
 const BrandPage: React.FC = () => {
     const { showDialog } = useDialog();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedBrand, setSelectedBrand] = useState<Brand | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<BrandQueryParams>({
@@ -35,12 +35,12 @@ const BrandPage: React.FC = () => {
     } = useBrands(queryParams);
 
     const handleOpenCreate = () => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedBrand(undefined);
     };
 
     const handleOpenEdit = (brand: Brand) => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedBrand(brand);
     };
 
@@ -155,10 +155,10 @@ const BrandPage: React.FC = () => {
                 )}
             </div>
 
-            {/* DIALOG */}
-            <BrandFormDialog
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
+            {/* Modal */}
+            <BrandFormModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedBrand}
             />
         </div>

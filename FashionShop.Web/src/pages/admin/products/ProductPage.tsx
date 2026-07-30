@@ -5,14 +5,14 @@ import { IoAdd } from "react-icons/io5";
 import { useProductMutations, useProducts } from "../../../features/admin/products/hooks/useProducts";
 import { useCategories } from "../../../features/admin/categories/hooks/useCategories";
 import { useBrands } from "../../../features/admin/brands/hooks/useBrands";
-import ProductFormDialog from "../../../features/admin/products/components/ProductFormDialog";
+import ProductFormModal from "../../../features/admin/products/components/ProductFormModal";
 import ProductTable from "../../../features/admin/products/components/ProductTable";
 import Pagination from "../../../components/common/Pagination";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import { useDialog } from "../../../contexts";
 import ProductToolbar from "../../../features/admin/products/components/ProductToolbar";
 import type { ProductFilters, ProductQueryParams } from "../../../features/admin/products/types/requests";
-import ProductImageManagerDialog from "../../../features/admin/products/components/ProductImagesManagerDialog";
+import ProductImageManagerModal from "../../../features/admin/products/components/ProductImagesManagerModal";
 import { useProductImageMutations } from "../../../features/admin/products/hooks/useProductImages";
 
 const ProductPage: React.FC = () => {
@@ -172,7 +172,7 @@ const ProductPage: React.FC = () => {
                 )}
             </div>
 
-            <ProductFormDialog 
+            <ProductFormModal 
                 isOpen={modalConfig.isOpen === "FORM"}
                 onClose={handleClose}
                 productId={modalConfig.productId}
@@ -180,7 +180,7 @@ const ProductPage: React.FC = () => {
                 brands={brands}
             />
 
-            <ProductImageManagerDialog
+            <ProductImageManagerModal
                 isOpen={modalConfig.isOpen === "IMAGE"}
                 onClose={handleClose}
                 productId={modalConfig.productId}

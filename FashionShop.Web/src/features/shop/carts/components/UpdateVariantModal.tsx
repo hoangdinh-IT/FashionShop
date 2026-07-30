@@ -35,7 +35,7 @@ const modalVariants: Variants = {
     }
 };
 
-const UpdateVariantDialog: React.FC<Props> = ({
+const UpdateVariantModal: React.FC<Props> = ({
     isOpen,
     onClose,
     item,
@@ -47,7 +47,7 @@ const UpdateVariantDialog: React.FC<Props> = ({
     const [selectedColorId, setSelectedColorId] = useState<number | null>(null);
     const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
 
-    // Hiển thị đúng màu và size của cartItem khi mở dialog
+    // Hiển thị đúng màu và size của cartItem khi mở modal
     useEffect(() => {
         if (isOpen && item) {
             setSelectedColorId(item.colorId);
@@ -242,4 +242,4 @@ const UpdateVariantDialog: React.FC<Props> = ({
     );
 };
 
-export default UpdateVariantDialog;
+export default UpdateVariantModal;

@@ -14,7 +14,7 @@ interface Props {
     onSelect: (address: Address) => void;
 }
 
-const AddressDialog: React.FC<Props> = ({
+const AddressModal: React.FC<Props> = ({
     isOpen,
     onClose,
     addresses,
@@ -154,4 +154,4 @@ const AddressDialog: React.FC<Props> = ({
     );
 };
 
-export default AddressDialog;
+export default AddressModal;

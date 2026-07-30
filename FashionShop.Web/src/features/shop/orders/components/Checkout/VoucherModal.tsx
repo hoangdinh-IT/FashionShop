@@ -7,7 +7,7 @@ import { useSnackbar } from '../../../../../contexts';
 import { useLockBodyScroll } from '../../../../../hooks/useLockBodyScroll';
 import { BACKDROP_STYLES, backdropVariants, modalVariants } from '../../../../../utils/animation';
 
-interface VoucherDialogProps {
+interface Props {
     isOpen: boolean;
     onClose: () => void;
     vouchers: Voucher[];
@@ -16,7 +16,7 @@ interface VoucherDialogProps {
     subTotal: number;
 }
 
-export const VoucherDialog: React.FC<VoucherDialogProps> = ({
+export const VoucherModal: React.FC<Props> = ({
     isOpen,
     onClose,
     vouchers = [],
@@ -29,7 +29,7 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
     const { showSnackbar } = useSnackbar();
     const [manualCode, setManualCode] = useState('');
 
-    // State lưu voucher đang chọn tạm thời trong Dialog
+    // State lưu voucher đang chọn tạm thời trong Modal
     const [tempSelectedVoucher, setTempSelectedVoucher] = useState<Voucher | null>(selectedVoucher);
 
     // Đồng bộ lại tempSelectedVoucher mỗi khi Modal được mở ra

@@ -29,7 +29,7 @@ interface Props {
     isLoading?: boolean;
 }
 
-const AddressFormDialog: React.FC<Props> = ({ 
+const AddressFormModal: React.FC<Props> = ({ 
     isOpen,
     initialData,
     onClose,
@@ -375,4 +375,4 @@ const AddressFormDialog: React.FC<Props> = ({
     );
 };
 
-export default AddressFormDialog;
+export default AddressFormModal;

@@ -3,7 +3,7 @@ import { Trash2, ChevronDown, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { CartItem } from '../types/cart';
 import type { UpdateCartItem } from '../types/requests';
-import UpdateVariantDialog from './UpdateVariantDialog';
+import UpdateVariantModal from './UpdateVariantModal';
 import { useProductDetail } from '../../products/hooks/useProducts';
 
 interface Props {
@@ -44,7 +44,7 @@ const itemVariants: Variants = {
 };
 
 const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<CartItem | undefined>(undefined);
 
     const isAllSelected = cartItems.length > 0 && cartItems.every(i => i.isSelected);
@@ -59,13 +59,13 @@ const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
         });
     };
 
-    const handleOpenDialog = (item: CartItem) => {
-        setIsDialogOpen(true);
+    const handleOpenModal = (item: CartItem) => {
+        setIsModalOpen(true);
         setSelectedItem(item);
     };
 
-    const handleCloseDialog = () => {
-        setIsDialogOpen(false);
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
         setSelectedItem(undefined);
     };
 
@@ -204,7 +204,7 @@ const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
 
                                                         {/* VARIANT BUTTON */}
                                                         <button 
-                                                            onClick={() => handleOpenDialog(item)}
+                                                            onClick={() => handleOpenModal(item)}
                                                             className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200/70 text-[11px] font-medium text-neutral-700 transition-colors cursor-pointer"
                                                         >
                                                             <span>{item.colorName} / {item.sizeName}</span>
@@ -257,10 +257,10 @@ const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
                 </div>
             </div>
 
-            {/* DIALOG CẬP NHẬT VARIANT */}
-            <UpdateVariantDialog 
-                isOpen={isDialogOpen}
-                onClose={handleCloseDialog}
+            {/* Modal CẬP NHẬT VARIANT */}
+            <UpdateVariantModal 
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
                 item={selectedItem}
                 productDetail={productDetail}
                 onUpdate={(newVariantId) => {

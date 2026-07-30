@@ -39,13 +39,13 @@ const getDefaultValues = (initialData?: Color): Partial<ColorFormInputs> => {
     }
 }
 
-interface ColorFormDialogProps {
+interface Props {
     isOpen: boolean;
     onClose: () => void;
     initialData?: Color;
 }
 
-const ColorFormDialog: React.FC<ColorFormDialogProps> = ({
+const ColorFormModal: React.FC<Props> = ({
     isOpen,
     onClose,
     initialData
@@ -339,4 +339,4 @@ const ColorFormDialog: React.FC<ColorFormDialogProps> = ({
     );
 }
 
-export default ColorFormDialog;
+export default ColorFormModal;

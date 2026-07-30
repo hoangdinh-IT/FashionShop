@@ -4,11 +4,11 @@ import { useOrder, useOrderMutations, useOrders } from "../../../features/admin/
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import Pagination from "../../../components/common/Pagination";
 import OrderTable from "../../../features/admin/orders/components/OrderTable";
-import OrderDetailDialog from "../../../features/admin/orders/components/OrderDetailDialog";
+import OrderDetailModal from "../../../features/admin/orders/components/OrderDetailModal";
 import OrderToolbar from "../../../features/admin/orders/components/OrderToolbar";
 
 const OrderPage = () => {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeOrderId, setActiveOrderId] = useState<string | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<OrderQueryParams>({
@@ -86,12 +86,12 @@ const OrderPage = () => {
 
     const handleViewDetail = (orderId: string) => {
         setActiveOrderId(orderId);
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
     };
 
     const handleCloseDetail = () => {
         setActiveOrderId(undefined);
-        setIsDialogOpen(false);
+        setIsModalOpen(false);
     };
 
     const tableContainerStyle = useTableMinHeight(queryParams.pageSize);
@@ -147,8 +147,8 @@ const OrderPage = () => {
             </div>
 
             {/* DETAIL DIALOG */}
-            <OrderDetailDialog 
-                isOpen={isDialogOpen}
+            <OrderDetailModal 
+                isOpen={isModalOpen}
                 onClose={handleCloseDetail}
                 order={order}
                 isLoading={isLoadingDetail}

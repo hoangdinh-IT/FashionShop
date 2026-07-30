@@ -6,7 +6,7 @@ import type { Address } from '../../../addresses/types/address';
 
 interface Props {
     address?: Address;
-    onOpenAddressDialog: () => void;
+    onOpenAddressModal: () => void;
     note: string;
     onChangeNote: (value: string) => void;
 }
@@ -43,7 +43,7 @@ const fadeScaleVariants: Variants = {
 
 const CheckoutAddress: React.FC<Props> = ({
     address,
-    onOpenAddressDialog,
+    onOpenAddressModal,
     note,
     onChangeNote
 }) => {
@@ -68,7 +68,7 @@ const CheckoutAddress: React.FC<Props> = ({
 
                 <button
                     type="button"
-                    onClick={onOpenAddressDialog}
+                    onClick={onOpenAddressModal}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-700 hover:text-black underline underline-offset-4 cursor-pointer transition-colors"
                 >
                     {address ? (
@@ -115,7 +115,7 @@ const CheckoutAddress: React.FC<Props> = ({
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            onClick={onOpenAddressDialog}
+                            onClick={onOpenAddressModal}
                             className="rounded-xl border border-dashed border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 p-5 text-center cursor-pointer transition-all group"
                         >
                             <p className="text-xs font-medium text-zinc-500 group-hover:text-zinc-800">

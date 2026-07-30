@@ -58,14 +58,14 @@ const getDefaultValues = (initialData?: Category): Partial<CategoryFormInputs> =
     }
 }
 
-interface CategoryFormDialogProps {
+interface Props {
     isOpen: boolean;
     data: Category[];
     onClose: () => void;
     initialData?: Category;
 }
 
-const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
+const CategoryFormModal: React.FC<Props> = ({
     isOpen,
     data,
     onClose,
@@ -522,4 +522,4 @@ const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
     );
 };
 
-export default CategoryFormDialog;
+export default CategoryFormModal;

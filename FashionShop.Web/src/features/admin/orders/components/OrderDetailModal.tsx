@@ -28,7 +28,7 @@ interface RowProps {
     prefix?: string;
 }
 
-const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading }) => {
+const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }) => {
     useLockBodyScroll(isOpen);
     
     const formatCurrency = (amount: number) => {
@@ -259,4 +259,4 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
     );
 };
 
-export default OrderDetailDialog;
+export default OrderDetailModal;

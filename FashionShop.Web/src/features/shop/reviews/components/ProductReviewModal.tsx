@@ -22,7 +22,7 @@ interface Props {
     onSuccess?: () => void;
 }
 
-const ProductReviewDialog: React.FC<Props> = ({
+const ProductReviewModal: React.FC<Props> = ({
     isOpen,
     onClose,
     orderItem,
@@ -78,7 +78,7 @@ const ProductReviewDialog: React.FC<Props> = ({
         setImages((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const resetDialogState = () => {
+    const resetModalState = () => {
         reset();
         setImages([]);
         setRating(5);
@@ -87,12 +87,12 @@ const ProductReviewDialog: React.FC<Props> = ({
 
     useEffect(() => {
         if (!isOpen) {
-            resetDialogState();
+            resetModalState();
         }
     }, [isOpen]);
 
     const handleClose = () => {
-        resetDialogState();
+        resetModalState();
         onClose();
     };
 
@@ -381,4 +381,4 @@ const ProductReviewDialog: React.FC<Props> = ({
     );
 };
 
-export default ProductReviewDialog;
+export default ProductReviewModal;

@@ -14,8 +14,8 @@ import {
     IoKeyOutline,
 } from "react-icons/io5";
 
-import ProfileUpdateDialog from "./ProfileFormDialog";
-import ChangePasswordDialog from "./ChangePasswordDialog";
+import ProfileUpdateModal from "./ProfileFormModal";
+import ChangePasswordModal from "./ChangePasswordModal";
 
 interface Props {
     user?: User;
@@ -315,14 +315,14 @@ const AccountInformation: React.FC<Props> = ({ user, isLoading }) => {
                 </div>
             </motion.div>
 
-            <ProfileUpdateDialog
+            <ProfileUpdateModal
                 isOpen={isOpen === "PROFILE"}
                 onClose={handleClose}
                 initialData={user}
                 isLoading={isLoading}
             />
 
-            <ChangePasswordDialog
+            <ChangePasswordModal
                 isOpen={isOpen === "CHANGE-PASSWORD"}
                 onClose={handleClose}
                 email={user?.email || ""}

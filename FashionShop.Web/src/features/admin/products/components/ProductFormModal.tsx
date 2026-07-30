@@ -135,7 +135,7 @@ interface Props {
     brands: Brand[];
 }
 
-const ProductFormDialog: React.FC<Props> = ({
+const ProductFormModal: React.FC<Props> = ({
     isOpen,
     onClose,
     productId,
@@ -342,7 +342,7 @@ const ProductFormDialog: React.FC<Props> = ({
     );
 };
 
-export default ProductFormDialog;
+export default ProductFormModal;
 
 
 // ==========================================

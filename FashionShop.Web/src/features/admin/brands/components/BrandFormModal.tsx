@@ -53,13 +53,13 @@ const getDefaultValues = (initialData?: Brand): Partial<BrandFormInputs> => {
     }
 }
 
-interface BrandFormDialogProps {
+interface Props {
     isOpen: boolean;
     onClose: () => void;
     initialData?: Brand
 }
 
-const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
+const BrandFormModal: React.FC<Props> = ({
     isOpen,
     onClose,
     initialData
@@ -484,4 +484,4 @@ const BrandFormDialog: React.FC<BrandFormDialogProps> = ({
     );
 }
 
-export default BrandFormDialog;
+export default BrandFormModal;

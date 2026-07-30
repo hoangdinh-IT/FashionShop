@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { PaymentMethod } from '../../types/requests';
-import { VoucherDialog } from './VoucherDialog';
+import { VoucherModal } from './VoucherModal';
 import { BankTransferModal } from './BankTransferModal'; 
 import { DiscountType, type Voucher } from '../../../vouchers/types/voucher';
 import { useVoucher } from '../../../vouchers/hooks/useVoucher';
@@ -385,8 +385,8 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                 </div>
             </motion.div>
 
-            {/* VOUCHER DIALOG */}
-            <VoucherDialog
+            {/* VOUCHER MODAL */}
+            <VoucherModal
                 isOpen={isVoucherOpen}
                 onClose={() => setIsVoucherOpen(false)}
                 vouchers={vouchers}

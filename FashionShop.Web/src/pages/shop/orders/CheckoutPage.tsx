@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCarts } from '../../../features/shop/carts/hooks/useCarts';
 import { useAddresses } from '../../../features/shop/addresses/hooks/useAddresses';
-import AddressDialog from '../../../features/shop/orders/components/Checkout/AddressDialog';
+import AddressModal from '../../../features/shop/orders/components/Checkout/AddressModal';
 import CheckoutAddress from '../../../features/shop/orders/components/Checkout/CheckoutAddress';
 import CheckoutItems from '../../../features/shop/orders/components/Checkout/CheckoutItems';
 import CheckoutSummary from '../../../features/shop/orders/components/Checkout/CheckoutSummary';
@@ -117,7 +117,7 @@ const CheckoutPage = () => {
                         <section>
                             <CheckoutAddress 
                                 address={selectedAddress} 
-                                onOpenAddressDialog={() => setIsAddressModalOpen(true)}
+                                onOpenAddressModal={() => setIsAddressModalOpen(true)}
                                 note={note}
                                 onChangeNote={setNote}
                             />
@@ -143,8 +143,8 @@ const CheckoutPage = () => {
                 </div>
             </main>
 
-            {/* DIALOG CHỌN ĐỊA CHỈ */}
-            <AddressDialog
+            {/* MODAL CHỌN ĐỊA CHỈ */}
+            <AddressModal
                 isOpen={isAddressModalOpen}
                 onClose={() => setIsAddressModalOpen(false)}
                 addresses={addresses}

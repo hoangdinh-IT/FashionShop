@@ -6,14 +6,14 @@ import { useDialog } from "../../../contexts";
 import SizeTable from "../../../features/admin/sizes/components/SizeTable";
 import Pagination from "../../../components/common/Pagination";
 import SizeToolbar from "../../../features/admin/sizes/components/SizeToolbar";
-import SizeFormDialog from "../../../features/admin/sizes/components/SizeFormDialog";
+import SizeFormModal from "../../../features/admin/sizes/components/SizeFormModal";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import type { SizeFilters, SizeQueryParams } from "../../../features/admin/sizes/types/requests";
 
 const SizePage = () => {
     const { showDialog } = useDialog();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedSize, setSelectedSize] = useState<Size | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<SizeQueryParams>({
@@ -35,12 +35,12 @@ const SizePage = () => {
     } = useSizes(queryParams);
 
     const handleOpenCreate = () => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedSize(undefined);
     }
 
     const handleOpenEdit = (size: Size) => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedSize(size);
     }
 
@@ -149,9 +149,9 @@ const SizePage = () => {
                 )}
             </div>
 
-            <SizeFormDialog 
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
+            <SizeFormModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedSize}
             />
         </div>

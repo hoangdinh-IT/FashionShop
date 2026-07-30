@@ -26,7 +26,7 @@ interface DisplayImage extends Partial<ProductImage> {
     file?: File;
 }
 
-const ProductImagesManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId }) => {
+const ProductImagesManagerModal: React.FC<Props> = ({ isOpen, onClose, productId }) => {
     useLockBodyScroll(isOpen);
 
     const [selectedColorForUpload, setSelectedColorForUpload] = useState<number | null>(null);
@@ -494,4 +494,4 @@ const ImageCard: React.FC<ImageCardProps> = ({
     );
 }
 
-export default ProductImagesManagerDialog;
+export default ProductImagesManagerModal;

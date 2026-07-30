@@ -8,12 +8,12 @@ import { IoAdd } from "react-icons/io5";
 import VoucherTable from "../../../features/admin/vouchers/components/VoucherTable";
 import VoucherToolbar from "../../../features/admin/vouchers/components/VoucherToolbar";
 import Pagination from "../../../components/common/Pagination";
-import VoucherFormDialog from "../../../features/admin/vouchers/components/VoucherFormDialog";
+import VoucherFormModal from "../../../features/admin/vouchers/components/VoucherFormModal";
 
 const VoucherPage = () => {
     const { showDialog } = useDialog();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedVoucher, setSelectedVoucher] = useState<Voucher | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<VoucherQueryParam>({
@@ -41,12 +41,12 @@ const VoucherPage = () => {
     const { deleteVoucher } = useVoucherMutations();
 
     const handleOpenCreate = () => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedVoucher(undefined);
     };
 
     const handleOpenEdit = (voucher: Voucher) => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedVoucher(voucher);
     };
 
@@ -155,9 +155,9 @@ const VoucherPage = () => {
                 )}
             </div>
 
-            <VoucherFormDialog 
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
+            <VoucherFormModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedVoucher}
             />
         </div>

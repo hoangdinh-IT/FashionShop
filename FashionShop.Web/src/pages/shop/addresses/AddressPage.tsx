@@ -3,7 +3,7 @@ import AccountAddress from '../../../features/shop/addresses/components/AccountA
 import { useAddresses } from '../../../features/shop/addresses/hooks/useAddresses';
 import type { Address } from '../../../features/shop/addresses/types/address';
 import { useDialog } from '../../../contexts';
-import AddressFormDialog from '../../../features/shop/addresses/components/AddressFormDialog';
+import AddressFormModal from '../../../features/shop/addresses/components/AddressFormModal';
 import { motion } from "framer-motion";
 import { IoAdd } from 'react-icons/io5';
 
@@ -118,7 +118,7 @@ const AddressPage: React.FC = () => {
                 </div>
             </main>
 
-            <AddressFormDialog
+            <AddressFormModal
                 isOpen={modalConfig.isOpen}
                 initialData={modalConfig.address}
                 onClose={handleClose}

@@ -29,7 +29,7 @@ interface Props {
     initialData?: Size;
 }
 
-const SizeFormDialog: React.FC<Props> = ({
+const SizeFormModal: React.FC<Props> = ({
     isOpen,
     onClose,
     initialData,
@@ -325,4 +325,4 @@ const SizeFormDialog: React.FC<Props> = ({
     );
 }
 
-export default SizeFormDialog;
+export default SizeFormModal;

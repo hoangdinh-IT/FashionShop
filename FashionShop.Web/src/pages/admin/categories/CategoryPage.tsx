@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IoAdd } from "react-icons/io5";
 import CategoryToolbar from '../../../features/admin/categories/components/CategoryToolbar';
 import CategoryTable from '../../../features/admin/categories/components/CategoryTable';
-import CategoryFormDialog from '../../../features/admin/categories/components/CategoryFormDialog';
+import CategoryFormModal from '../../../features/admin/categories/components/CategoryFormModal';
 import { useCategories } from '../../../features/admin/categories/hooks/useCategories';
 import { useDialog } from '../../../contexts';
 import type { Category } from '../../../features/admin/categories/types/category';
@@ -13,7 +13,7 @@ import type { CategoryFilters, CategoryQueryParams } from '../../../features/adm
 const CategoryPage: React.FC = () => {
     const { showDialog } = useDialog();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
     
     const [queryParams, setQueryParams] = useState<CategoryQueryParams>({
@@ -36,12 +36,12 @@ const CategoryPage: React.FC = () => {
     } = useCategories(queryParams);
 
     const handleOpenCreate = () => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedCategory(undefined);
     };
 
     const handleOpenEdit = (category: Category) => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedCategory(category);
     };
 
@@ -148,10 +148,10 @@ const CategoryPage: React.FC = () => {
                 )}
             </div>
 
-            <CategoryFormDialog 
-                isOpen={isDialogOpen}
+            <CategoryFormModal 
+                isOpen={isModalOpen}
                 data={categories}
-                onClose={() => setIsDialogOpen(false)}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedCategory}
             />
         </div>

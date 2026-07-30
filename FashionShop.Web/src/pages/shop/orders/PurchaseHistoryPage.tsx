@@ -5,9 +5,9 @@ import { IoReceiptOutline } from "react-icons/io5";
 import type { OrderItemSummary, OrderSummary } from "../../../features/shop/orders/types/order";
 import { useOrder, useOrderMutations, useOrders } from "../../../features/shop/orders/hooks/useOrders";
 import PurchaseOrderItem from "../../../features/shop/orders/components/PurchaseHistory/PurchaseOrderItem";
-import OrderDetailDialog from "../../../features/shop/orders/components/PurchaseHistory/OrderDetailDialog";
+import OrderDetailModal from "../../../features/shop/orders/components/PurchaseHistory/OrderDetailModal";
 import { useDialog } from "../../../contexts";
-import ProductReviewDialog from "../../../features/shop/reviews/components/ProductReviewDialog";
+import ProductReviewModal from "../../../features/shop/reviews/components/ProductReviewModal";
 
 // Export để file con (PurchaseOrderItem) có thể sử dụng lại mà không cần khai báo lại
 export const STATUS_TABS = [
@@ -226,14 +226,14 @@ const PurchaseHistoryPage = () => {
                 }
             `}</style>
 
-            <OrderDetailDialog
+            <OrderDetailModal
                 order={order}
                 isOpen={modalConfig.isOpen === "DETAIL"}
                 onClose={handleClose}
                 isLoading={isLoadingOrder}
             />
 
-            <ProductReviewDialog 
+            <ProductReviewModal 
                 isOpen={modalConfig.isOpen === "REVIEW"}
                 onClose={handleClose}
                 orderItem={modalConfig.orderItem}

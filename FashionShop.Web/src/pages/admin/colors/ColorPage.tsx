@@ -7,14 +7,14 @@ import type { Color } from "../../../features/admin/colors/types/color";
 import { useDialog } from "../../../contexts";
 import ColorToolbar from "../../../features/admin/colors/components/ColorToolbar";
 import Pagination from "../../../components/common/Pagination";
-import ColorFormDialog from "../../../features/admin/colors/components/ColorFormDialog";
+import ColorFormModal from "../../../features/admin/colors/components/ColorFormModal";
 import { useTableMinHeight } from "../../../hooks/useTableMinHeight";
 import type { ColorFilters, ColorQueryParams } from "../../../features/admin/colors/types/requests";
 
 const ColorPage: React.FC = () => {
     const { showDialog } = useDialog();
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedColor, setSelectedColor] = useState<Color | undefined>(undefined);
 
     const [queryParams, setQueryParams] = useState<ColorQueryParams>({
@@ -35,12 +35,12 @@ const ColorPage: React.FC = () => {
     } = useColors(queryParams);
 
     const handleOpenCreate = () => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedColor(undefined);
     }
 
     const handleOpenEdit = (color: Color) => {
-        setIsDialogOpen(true);
+        setIsModalOpen(true);
         setSelectedColor(color);
     }
 
@@ -167,9 +167,9 @@ const ColorPage: React.FC = () => {
             </div>
 
             {/* DIALOG */}
-            <ColorFormDialog
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
+            <ColorFormModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedColor}
             />
         </div>

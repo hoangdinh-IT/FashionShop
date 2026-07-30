@@ -18,7 +18,7 @@ interface Props {
     initialData?: Voucher;
 }
 
-const VoucherFormDialog: React.FC<Props> = ({
+const VoucherFormModal: React.FC<Props> = ({
     isOpen,
     onClose,
     initialData,
@@ -416,4 +416,4 @@ const VoucherFormDialog: React.FC<Props> = ({
     );
 }
 
-export default VoucherFormDialog;
+export default VoucherFormModal;
