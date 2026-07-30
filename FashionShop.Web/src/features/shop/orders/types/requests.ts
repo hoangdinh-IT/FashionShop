@@ -1,6 +1,7 @@
 export interface OrderRequest {
     addressId: string;
     paymentMethod: PaymentMethod;
+    transferCode?: string;
     voucherId?: string;
     note?: string;
     orderItems: OrderItemRequest[];

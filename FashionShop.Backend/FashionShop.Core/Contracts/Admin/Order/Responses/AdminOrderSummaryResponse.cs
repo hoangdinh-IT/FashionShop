@@ -25,17 +25,9 @@ namespace FashionShop.Core.Contracts.Admin.Order.Responses
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
 
-        // Tài chính
-        //public decimal SubTotal { get; set; }
-        //public decimal ShippingFee { get; set; }
-        //public decimal DiscountAmount { get; set; }
+        public string TransferCode { get; set; }
         public decimal TotalAmount { get; set; }    
-
-        // Khác
-        //public string? Note { get; set; }
-        //public string? ShippingTrackingCode { get; set; }
-        //public DateTime? PaymentDate { get; set; }
-
+        
         // Danh sách chi tiết các sản phẩm trong đơn
         public int TotalItemCount { get; set; }
         public List<AdminOrderItemSummaryResponse> OrderItems { get; set; } = new List<AdminOrderItemSummaryResponse>();

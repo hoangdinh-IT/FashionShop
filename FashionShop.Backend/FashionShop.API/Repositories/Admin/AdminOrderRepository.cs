@@ -34,6 +34,7 @@ namespace FashionShop.API.Repositories.Admin
                 OrderStatus = order.OrderStatus.ToString(),
                 PaymentMethod = order.PaymentMethod.ToString(),
                 PaymentStatus = order.PaymentStatus.ToString(),
+                TransferCode = order.TransferCode ?? "",
                 TotalAmount = order.TotalAmount,
 
                 TotalItemCount = order.OrderItems.Count,
@@ -56,7 +57,7 @@ namespace FashionShop.API.Repositories.Admin
                 OrderStatus = order.OrderStatus.ToString(),
                 PaymentMethod = order.PaymentMethod.ToString(),
                 PaymentStatus = order.PaymentStatus.ToString(),
-                ShippingTrackingCode = order.ShippingTrackingCode,
+                TransferCode = order.TransferCode,
                 PaymentDate = order.PaymentDate,
 
                 FullName = order.Address.FullName,
@@ -107,7 +108,8 @@ namespace FashionShop.API.Repositories.Admin
 
             var totalRecord = await query.CountAsync();
 
-            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+            var data = await query.OrderByDescending(order => order.OrderDate)
+                                  .Skip((request.PageIndex - 1) * request.PageSize)
                                   .Take(request.PageSize)
                                   .Select(_orderSummarySelector)
                                   .ToListAsync();

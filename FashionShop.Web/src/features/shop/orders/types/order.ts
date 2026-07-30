@@ -13,7 +13,7 @@ export interface OrderSummary {
     discountAmount: number;
     totalAmount: number;
     note?: string;
-    shippingTrackingCode?: string;
+    transferCode?: string;
     paymentDate?: Date;
     orderItems: OrderItemSummary[];
 }
@@ -52,7 +52,7 @@ export interface OrderDetail {
     discountAmount: number;
     totalAmount: number;
     note?: string;
-    shippingTrackingCode?: string;
+    transferCode?: string;
     paymentDate?: Date;
     orderItems: OrderItemDetail[];
 }

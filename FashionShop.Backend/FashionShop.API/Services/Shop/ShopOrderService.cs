@@ -68,6 +68,7 @@ namespace FashionShop.API.Services.Shop
                 }
 
                 var orderId = Guid.NewGuid();
+                int shippingFee = subTotal >= 500000 ? 0 : 30000;
                 decimal discountAmount = 0;
                 VoucherUsage? voucherUsage = null;
 
@@ -114,9 +115,9 @@ namespace FashionShop.API.Services.Shop
                 newOrder.UserId = userId;
                 newOrder.OrderDate = DateTime.UtcNow;
                 newOrder.SubTotal = subTotal;
-                newOrder.ShippingFee = 30000;
+                newOrder.ShippingFee = shippingFee;
                 newOrder.DiscountAmount = discountAmount;
-                newOrder.TotalAmount = subTotal + 30000 - discountAmount;
+                newOrder.TotalAmount = subTotal + shippingFee - discountAmount;
                 newOrder.OrderItems = orderDetails;
 
                 _unitOfWork.ShopOrders.Create(newOrder);

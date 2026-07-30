@@ -10,7 +10,8 @@ import {
     IoCardOutline,
     IoCubeOutline,
     IoChevronDownOutline,
-    IoWalletOutline
+    IoWalletOutline,
+    IoQrCodeOutline
 } from "react-icons/io5";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -112,7 +113,7 @@ const OrderTable: React.FC<Props> = ({
                     <thead>
                         <tr className="bg-gray-50/50 border-b border-gray-100">
                             <th className="px-6 py-5 sticky top-0 z-20 bg-gray-50/50 backdrop-blur-xl w-[15%]">
-                                <SortableHeader label="Mã Đơn" colKey="id" />
+                                <SortableHeader label="Mã Đơn" colKey="orderId" />
                             </th>
                             <th className="px-5 py-5 sticky top-0 z-20 bg-gray-50/50 backdrop-blur-xl w-[25%]">
                                 <SortableHeader label="Thông tin Giao hàng" colKey="shippingCity" />
@@ -143,12 +144,20 @@ const OrderTable: React.FC<Props> = ({
                                 return (
                                     <tr key={item.orderId} className="group hover:bg-gray-50/80 transition-all duration-300">
                                         
-                                        {/* 1. MÃ ĐƠN & NGÀY */}
+                                        {/* 1. MÃ ĐƠN, MÃ CHUYỂN KHOẢN & NGÀY */}
                                         <td className="px-6 py-5">
-                                            <div className="flex flex-col gap-1">
+                                            <div className="flex flex-col gap-1.5">
                                                 <span className="font-black text-gray-900 text-[13px] tracking-tight uppercase">
-                                                    {/* #{item.id.slice(0, 8)} */}
+                                                    #{item.orderId.slice(0, 8)}
                                                 </span>
+
+                                                {/* Hiển thị Mã Chuyển Khoản nếu có */}
+                                                {item.transferCode && (
+                                                    <div className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-md text-[10px] font-bold tracking-tight w-fit border border-slate-200">
+                                                        <IoQrCodeOutline size={11} className="text-slate-500" />
+                                                        <span className="font-mono">{item.transferCode}</span>
+                                                    </div>
+                                                )}
 
                                                 <div className="flex items-center gap-1 text-[10px] text-gray-400 font-medium">
                                                     <IoCalendarOutline size={12} />
@@ -192,7 +201,7 @@ const OrderTable: React.FC<Props> = ({
                                         <td className="px-5 py-5">
                                             <div className="flex items-center gap-2.5">
                                                 <div className="flex -space-x-2.5 overflow-hidden">
-                                                    {item.orderItems.slice(0, 3).map((detail, i) => (
+                                                    {item.orderItems?.slice(0, 3).map((detail, i) => (
                                                         <div 
                                                             key={i} 
                                                             className="inline-block h-8 w-8 rounded-xl ring-2 ring-white bg-white overflow-hidden border border-gray-100 shadow-sm transition-transform group-hover:scale-105" 
@@ -207,7 +216,7 @@ const OrderTable: React.FC<Props> = ({
                                                     ))}
                                                 </div>
 
-                                                {item.orderItems.length > 3 && (
+                                                {item.orderItems?.length > 3 && (
                                                     <span className="text-[9px] font-black text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-md">
                                                         +{item.orderItems.length - 3}
                                                     </span>

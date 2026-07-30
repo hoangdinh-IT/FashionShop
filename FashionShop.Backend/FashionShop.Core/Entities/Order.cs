@@ -51,7 +51,7 @@ namespace FashionShop.Core.Entities
 
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
-        public string? ShippingTrackingCode { get; set; }
+        public string? TransferCode { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public DateTime? PaymentDate { get; set; }

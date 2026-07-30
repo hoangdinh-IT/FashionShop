@@ -10,6 +10,7 @@ export interface OrderSummary {
     orderStatus: string;
     paymentMethod: string;
     paymentStatus: string;
+    transferCode?: string;
     totalAmount: number;
     totalItemCount: number;
     orderItems: OrderItemSummary[];
@@ -31,6 +32,7 @@ export interface OrderDetail {
     orderStatus: string;
     paymentMethod: string;
     paymentStatus: string;
+    transferCode?: string;
     subTotal: number;
     shippingFee: number;
     discountAmount: number;

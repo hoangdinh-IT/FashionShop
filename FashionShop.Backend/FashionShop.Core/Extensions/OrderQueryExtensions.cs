@@ -20,7 +20,7 @@ namespace FashionShop.Core.Extensions
                                     x.User.FullName.ToLower().Contains(word) ||
                                     x.User.PhoneNumber.Contains(word) ||
                                     x.User.Email.ToLower().Contains(word) ||
-                                    (x.ShippingTrackingCode != null && x.ShippingTrackingCode.ToLower().Contains(word)));
+                                    (x.TransferCode != null && x.TransferCode.ToLower().Contains(word)));
         }
 
         public static IQueryable<Order> FilterByOrderStatus(this IQueryable<Order> query, OrderStatus? orderStatus)

@@ -34,7 +34,7 @@ namespace FashionShop.API.Repositories.Shop
                 DiscountAmount = order.DiscountAmount,
                 TotalAmount = order.TotalAmount,
                 Note = order.Note,
-                ShippingTrackingCode = order.ShippingTrackingCode,
+                TransferCode = order.TransferCode,
                 PaymentDate = order.PaymentDate,
                 OrderItems = order.OrderItems.Select(orderItem => new ShopOrderItemSummaryResponse
                 {
@@ -68,7 +68,7 @@ namespace FashionShop.API.Repositories.Shop
                 OrderStatus = order.OrderStatus.ToString(),
                 PaymentMethod = order.PaymentMethod.ToString(),
                 PaymentStatus = order.PaymentStatus.ToString(),
-                ShippingTrackingCode = order.ShippingTrackingCode,
+                TransferCode = order.TransferCode,
                 PaymentDate = order.PaymentDate,
 
                 FullName = order.Address.FullName,

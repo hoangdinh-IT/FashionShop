@@ -14,7 +14,7 @@ namespace FashionShop.Core.Contracts.Admin.Order.Responses
         public string OrderStatus { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
-        public string? ShippingTrackingCode { get; set; }
+        public string? TransferCode { get; set; }
         public DateTime? PaymentDate { get; set; }
 
         // --- Thông tin khách hàng & Giao hàng ---

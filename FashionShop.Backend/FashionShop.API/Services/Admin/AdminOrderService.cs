@@ -46,11 +46,6 @@ namespace FashionShop.API.Services.Admin
 
             switch (request.OrderStatus)
             {
-                case OrderStatus.Shipping:
-                    var shippingTrackingCode = GenerateTrackingCode(orderId);
-                    order.ShippingTrackingCode = shippingTrackingCode;
-                    break;
-
                 case OrderStatus.Success:
                     if (order.PaymentMethod == PaymentMethod.COD)
                     {

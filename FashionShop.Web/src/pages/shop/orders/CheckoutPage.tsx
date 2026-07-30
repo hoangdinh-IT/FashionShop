@@ -43,7 +43,12 @@ const CheckoutPage = () => {
         }
     }, [selectedItems, isCartLoading, navigate]);
 
-    const handlePlaceOrder = (paymentMethod: PaymentMethod, voucherId?: string) => {
+    // LẤY TRANSFER CODE TRỰC TIẾP TỪ THAM SỐ THỨ 3 CỦA ONORDER
+    const handlePlaceOrder = (
+        paymentMethod: PaymentMethod, 
+        voucherId?: string, 
+        transferCode?: string
+    ) => {
         if (!selectedAddress) {
             showSnackbar("Vui lòng chọn địa chỉ giao hàng", "warning");
             return;
@@ -57,6 +62,7 @@ const CheckoutPage = () => {
         const orderRequest: OrderRequest = {
             addressId: selectedAddress.id,
             paymentMethod: paymentMethod,
+            transferCode: transferCode || "", // Gán mã chuyển khoản được truyền từ CheckoutSummary
             note: note,
             voucherId: voucherId,
             orderItems: selectedItems.map(item => ({
@@ -79,7 +85,7 @@ const CheckoutPage = () => {
     return (
         <div className="min-h-screen bg-[#f6f6f4] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white antialiased pb-20">
             {/* HEADER CỐ ĐỊNH KHI SCROLL */}
-            <header className="sticky top-[80px] z-30 border-b border-black/5 bg-[#f6f6f4]/85 backdrop-blur-md">
+            <header className="sticky top-[80px] z-20 border-b border-black/5 bg-[#f6f6f4]/85 backdrop-blur-md">
                 <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
                     <button 
                         onClick={() => navigate('/shop/cart')}
@@ -122,7 +128,7 @@ const CheckoutPage = () => {
                         </section>
                     </div>
 
-                    {/* RIGHT COLUMN: Tóm tắt thanh toán (Cố định đứng yên) */}
+                    {/* RIGHT COLUMN: Tóm tắt thanh toán */}
                     <aside className="lg:col-span-5 xl:col-span-4 h-full">
                         <div className="sticky top-[160px] z-10 space-y-4">
                             <CheckoutSummary 

@@ -32,7 +32,7 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
 
         // Khác
         public string? Note { get; set; }
-        public string? ShippingTrackingCode { get; set; }
+        public string? TransferCode { get; set; }
         public DateTime? PaymentDate { get; set; }
 
         // Danh sách chi tiết các sản phẩm trong đơn

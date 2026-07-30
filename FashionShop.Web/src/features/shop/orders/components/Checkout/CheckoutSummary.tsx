@@ -13,17 +13,18 @@ import {
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { PaymentMethod } from '../../types/requests';
 import { VoucherDialog } from './VoucherDialog';
+import { BankTransferModal } from './BankTransferModal'; 
 import { DiscountType, type Voucher } from '../../../vouchers/types/voucher';
 import { useVoucher } from '../../../vouchers/hooks/useVoucher';
 
 interface Props {
     subTotal: number;
     shippingFee?: number;
-    onOrder: (paymentMethod: PaymentMethod, voucherId?: string) => void;
+    onOrder: (paymentMethod: PaymentMethod, voucherId?: string, transferContent?: string) => void;
     isLoading?: boolean;
 }
 
-const FREE_SHIPPING_THRESHOLD = 500000; // Ngưỡng miễn phí vận chuyển
+const FREE_SHIPPING_THRESHOLD = 500000;
 
 // Custom Easing (Editorial Design System)
 const customEase = [0.16, 1, 0.3, 1] as const;
@@ -89,8 +90,19 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
     const [isVoucherOpen, setIsVoucherOpen] = useState(false);
     const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
 
+    // STATE QUẢN LÝ MODAL CHUYỂN KHOẢN
+    const [isBankModalOpen, setIsBankModalOpen] = useState(false);
+    const [orderCode, setOrderCode] = useState('');
+
     // Gọi API lấy danh sách voucher
     const { vouchers, isLoading: isVouchersLoading } = useVoucher();
+
+    // THÔNG TIN TÀI KHOẢN NGÂN HÀNG
+    const myBankInfo = {
+        bankId: '970436', // Mã BIN Vietcombank
+        accountNo: '1031286526', // Số tài khoản VCB
+        accountName: 'NGUYEN DINH HOANG' // Tên chủ tài khoản
+    };
 
     // LOGIC TÍNH PHÍ VẬN CHUYỂN
     const isFreeShip = subTotal >= FREE_SHIPPING_THRESHOLD;
@@ -135,6 +147,37 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
 
     const formatCurrency = (amount: number) => amount.toLocaleString('vi-VN') + 'đ';
 
+    // HÀM TẠO MÃ NỘI DUNG CHUYỂN KHOẢN (8 KÝ TỰ UUID + NGÀY THÁNG)
+    const generateOrderCode = () => {
+        const rawUuid = crypto.randomUUID(); 
+        const shortUuid = rawUuid.split('-')[0].toUpperCase(); // Lấy 8 ký tự đầu
+        const now = new Date();
+        const dateStr = String(now.getUTCDate()).padStart(2, '0') +
+                        String(now.getUTCMonth() + 1).padStart(2, '0') +
+                        String(now.getUTCFullYear()).slice(-2); 
+        
+        return `RKA ${shortUuid} ${dateStr}`; 
+    };
+
+    // XỬ LÝ KHI BẤM NÚT ĐẶT HÀNG
+    const handleCheckoutClick = () => {
+        if (selectedPayment === 'Banking') {
+            const code = generateOrderCode();
+            setOrderCode(code);
+            setIsBankModalOpen(true); // Mở Modal QR Ngân hàng
+        } else {
+            // Thanh toán COD thì đặt hàng luôn (không cần transferCode)
+            onOrder(selectedPayment, selectedVoucher?.id);
+        }
+    };
+
+    // XỬ LÝ SAU KHI KHÁCH BẤM "ĐÃ CHUYỂN KHOẢN" TRONG MODAL
+    const handleConfirmBankTransfer = () => {
+        setIsBankModalOpen(false);
+        // TRUYỀN ORDERCODE VÀO THAM SỐ THỨ 3
+        onOrder('Banking', selectedVoucher?.id, orderCode);
+    };
+
     return (
         <motion.div 
             variants={containerVariants}
@@ -142,13 +185,11 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
             animate="visible"
             className="w-full space-y-4 select-none font-sans"
         >
-            
             {/* THẺ THANH TOÁN & VOUCHER */}
             <motion.div 
                 variants={cardVariants}
                 className="bg-white rounded-2xl border border-zinc-200/80 p-5 shadow-xs space-y-5"
             >
-                
                 {/* VOUCHER BUTTON */}
                 <div>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 block mb-2">
@@ -320,7 +361,7 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                     <motion.button 
                         type="button"
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => onOrder(selectedPayment, selectedVoucher?.id)}
+                        onClick={handleCheckoutClick}
                         disabled={isLoading}
                         className="w-full h-12 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
                     >
@@ -353,6 +394,18 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                 onSelectVoucher={(voucher) => setSelectedVoucher(voucher)}
                 subTotal={subTotal}
             />
+
+            {/* BANK TRANSFER MODAL */}
+            <BankTransferModal
+                isOpen={isBankModalOpen}
+                onClose={() => setIsBankModalOpen(false)}
+                onConfirm={handleConfirmBankTransfer}
+                bankInfo={myBankInfo}
+                amount={finalTotal}
+                orderCode={orderCode}
+                isLoading={isLoading}
+            />
+
         </motion.div>
     );
 };

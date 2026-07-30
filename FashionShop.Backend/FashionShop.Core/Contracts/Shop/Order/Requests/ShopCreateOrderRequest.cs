@@ -17,6 +17,8 @@ namespace FashionShop.Core.Contracts.Shop.Order.Requests
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
 
+        public string? TransferCode { get; set; }
+
         public Guid? VoucherId { get; set; }
 
         [MaxLength(500)]
