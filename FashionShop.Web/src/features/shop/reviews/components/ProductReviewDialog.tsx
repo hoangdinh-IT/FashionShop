@@ -12,8 +12,9 @@ import type { OrderItemSummary } from "../../orders/types/order";
 import type { ReviewFormInputs } from "../types/requests";
 
 import { useReviewMutations } from "../hooks/useReview";
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
 
-interface ProductReviewDialogProps {
+interface Props {
     isOpen: boolean;
     onClose: () => void;
     orderItem?: OrderItemSummary;
@@ -21,13 +22,15 @@ interface ProductReviewDialogProps {
     onSuccess?: () => void;
 }
 
-const ProductReviewDialog: React.FC<ProductReviewDialogProps> = ({
+const ProductReviewDialog: React.FC<Props> = ({
     isOpen,
     onClose,
     orderItem,
     isLoading,
     onSuccess,
 }) => {
+    useLockBodyScroll(isOpen);
+
     const [rating, setRating] = useState(5);
     const [hoveredStar, setHoveredStar] = useState<number | null>(null);
     const [images, setImages] = useState<File[]>([]);

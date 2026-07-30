@@ -4,28 +4,13 @@ import { useVoucherMutations } from "../hooks/useVouchers";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { VoucherFormInputs } from "../types/requests";
 import { useEffect } from "react";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { IoClose, IoTicketOutline, IoTimeOutline, IoWalletOutline } from "react-icons/io5";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller } from "react-hook-form";
-
-const backdropVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: { 
-        opacity: 1, y: 0, scale: 1, 
-        transition: { type: "spring", stiffness: 300, damping: 25 } 
-    },
-    exit: { 
-        opacity: 0, y: 20, scale: 0.95, 
-        transition: { duration: 0.2 } 
-    }
-};
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
 
 interface Props {
     isOpen: boolean;
@@ -38,6 +23,7 @@ const VoucherFormDialog: React.FC<Props> = ({
     onClose,
     initialData,
 }) => {
+    useLockBodyScroll(isOpen);
 
     const { createVoucher, isCreating, updateVoucher, isUpdating } = useVoucherMutations();
 
@@ -104,7 +90,7 @@ const VoucherFormDialog: React.FC<Props> = ({
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 font-sans">
                     {/* BACKDROP */}
                     <motion.div
-                        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"

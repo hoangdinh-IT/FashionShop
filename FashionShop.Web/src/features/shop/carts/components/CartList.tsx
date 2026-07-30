@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { Trash2, ChevronDown, Minus, Plus } from 'lucide-react';
+import { Trash2, ChevronDown, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { CartItem } from '../types/cart';
 import type { UpdateCartItem } from '../types/requests';
-import UpdateVariantDialog from './UpdateVariantDialog'; // Import component Dialog bạn đã code
+import UpdateVariantDialog from './UpdateVariantDialog';
 import { useProductDetail } from '../../products/hooks/useProducts';
 
 interface Props {
@@ -11,16 +12,42 @@ interface Props {
     onDelete: (cartItemId: number) => void;
 }
 
+// Cấu hình Easing cao cấp (Editorial/Luxury Feel)
+const customEase = [0.16, 1, 0.3, 1] as const;
+
+// Variants cho từng Item trong giỏ hàng
+const itemVariants: Variants = {
+    hidden: { 
+        opacity: 0, 
+        scale: 0.97,
+        filter: "blur(4px)",
+    },
+    visible: (index: number) => ({
+        opacity: 1,
+        scale: 1,
+        filter: "blur(0px)",
+        transition: {
+            duration: 0.45,
+            delay: index * 0.04,
+            ease: customEase,
+        },
+    }),
+    exit: {
+        opacity: 0,
+        scale: 0.96,
+        filter: "blur(4px)",
+        transition: {
+            duration: 0.25,
+            ease: customEase,
+        },
+    },
+};
+
 const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
-    // --- States cho Dialog ---
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<CartItem | undefined>(undefined);
 
-    // Logic kiểm tra chọn tất cả
     const isAllSelected = cartItems.length > 0 && cartItems.every(i => i.isSelected);
-
-    // Lấy chi tiết sản phẩm dựa trên slug của món hàng đang được chọn để sửa
-    // Lưu ý: selectedItem?.productSlug phải tồn tại trong DTO CartItem
     const { productDetail } = useProductDetail(selectedItem?.productSlug || '');
 
     const handleToggleAll = () => {
@@ -53,167 +80,197 @@ const CartList: React.FC<Props> = ({ cartItems, onUpdate, onDelete }) => {
         }, {} as Record<string, CartItem[]>);
     }, [cartItems]);
 
-    // CartList.tsx
+    const selectedCount = cartItems.filter(i => i.isSelected).length;
 
-return (
-    <>
-        <div className="rounded-[28px] border border-zinc-200/70 bg-white/90 backdrop-blur-xl p-6 shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
-            
-            {/* HEADER */}
-            <div className="flex items-center justify-between pb-5 border-b border-zinc-100">
-                <div className="flex items-center gap-3">
-                    
-                    <input 
-                        type="checkbox" 
-                        checked={isAllSelected}
-                        onChange={handleToggleAll}
-                        className="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-0 cursor-pointer"
-                    />
-
-                    <div>
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400 font-semibold">
-                            Shopping cart
-                        </p>
-
-                        <h2 className="text-sm font-semibold text-zinc-900 mt-1">
-                            Đã chọn {cartItems.length} sản phẩm
-                        </h2>
-                    </div>
-                </div>
-            </div>
-
-            {/* ITEMS */}
-            <div className="mt-8 space-y-10">
-                {Object.entries(groupedItems).map(([brandName, items]) => (
-                    <div key={brandName} className="space-y-4">
-                        
-                        <div className="flex items-center gap-3 px-1">
-    
-                        {/* BRAND LOGO */}
-                        <div className="w-8 h-8 rounded-lg overflow-hidden bg-white border border-zinc-100 flex items-center justify-center">
-                            <img
-                                src={items?.[0]?.brandLogoUrl}
-                                alt={brandName}
-                                className="w-full h-full object-contain p-1"
+    return (
+        <>
+            <div className="w-full bg-white rounded-3xl border border-neutral-200/80 p-6 md:p-8 space-y-8 font-sans shadow-sm">
+                
+                {/* HEADER - Tối giản & Sắc nét */}
+                <div className="flex items-center justify-between pb-6 border-b border-neutral-100">
+                    <div className="flex items-center gap-4">
+                        <label className="relative flex items-center cursor-pointer">
+                            <input 
+                                type="checkbox" 
+                                checked={isAllSelected}
+                                onChange={handleToggleAll}
+                                className="peer appearance-none w-5 h-5 rounded-md border border-neutral-300 checked:bg-neutral-900 checked:border-neutral-900 transition-all cursor-pointer"
                             />
-                        </div>
+                            <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity text-xs font-bold">
+                                ✓
+                            </span>
+                        </label>
 
-                        {/* BRAND INFO */}
-                        <div className="flex flex-col leading-tight">
-                            <h2 className="text-base font-semibold tracking-tight text-zinc-900">
-                                {brandName}
+                        <div>
+                            <span className="text-[10px] uppercase font-mono tracking-widest text-neutral-400 block">
+                                Shopping Cart
+                            </span>
+                            <h2 className="text-base font-medium text-neutral-900 mt-0.5">
+                                Tất cả sản phẩm <span className="text-neutral-400 font-normal">({cartItems.length})</span>
                             </h2>
                         </div>
                     </div>
 
-                        <div className="space-y-4">
-                            {items.map((item) => (
-                                <div 
-                                    key={item.id}
-                                    className="group rounded-[24px] border border-zinc-100 bg-[#fafafa]/80 hover:bg-white transition-all duration-300 p-5"
-                                >
-                                    <div className="flex gap-5">
-                                        
-                                        <div className="pt-1">
-                                            <input 
-                                                type="checkbox" 
-                                                checked={item.isSelected}
-                                                onChange={(e) => onUpdate(item.id, item, { isSelected: e.target.checked })}
-                                                className="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-0 cursor-pointer"
-                                            />
-                                        </div>
-
-                                        <div className="w-24 h-32 rounded-[20px] overflow-hidden bg-white border border-zinc-100 shrink-0">
-                                            <img 
-                                                src={item.imageUrl} 
-                                                alt={item.productName} 
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-
-                                        <div className="flex-1 flex flex-col justify-between min-w-0">
-                                            
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div className="min-w-0">
-                                                    <h3 className="text-[15px] font-semibold leading-6 tracking-tight text-zinc-900 line-clamp-2">
-                                                        {item.productName}
-                                                    </h3>
-
-                                                    <button 
-                                                        onClick={() => handleOpenDialog(item)}
-                                                        className="mt-3 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-[12px] font-medium text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 transition-all cursor-pointer"
-                                                    >
-                                                        <span>
-                                                            {item.colorName} · {item.sizeName}
-                                                        </span>
-
-                                                        <ChevronDown size={13} />
-                                                    </button>
-                                                </div>
-
-                                                <button 
-                                                    onClick={() => onDelete(item.id)}
-                                                    className="w-9 h-9 rounded-full flex items-center justify-center text-zinc-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer shrink-0"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-
-                                            <div className="flex items-end justify-between mt-6">
-                                                
-                                                <div className="flex items-center rounded-full border border-zinc-200 bg-white p-1">
-                                                    <button 
-                                                        onClick={() => item.quantity > 1 && onUpdate(item.id, item, { quantity: item.quantity - 1 })}
-                                                        className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-500 hover:bg-zinc-100"
-                                                    >
-                                                        <Minus size={13} />
-                                                    </button>
-
-                                                    <span className="w-10 text-center text-sm font-semibold text-zinc-900">
-                                                        {item.quantity}
-                                                    </span>
-
-                                                    <button 
-                                                        onClick={() => onUpdate(item.id, item, { quantity: item.quantity + 1 })}
-                                                        className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-500 hover:bg-zinc-100"
-                                                    >
-                                                        <Plus size={13} />
-                                                    </button>
-                                                </div>
-
-                                                <div className="text-right">
-                                                    <p className="text-[10px] uppercase tracking-[0.18em] text-zinc-400 font-semibold">
-                                                        Price
-                                                    </p>
-
-                                                    <div className="mt-1 text-xl font-bold tracking-tight text-zinc-900">
-                                                        {item.unitPrice.toLocaleString('vi-VN')}đ
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                    {selectedCount > 0 && (
+                        <div className="text-xs font-mono px-3 py-1 bg-neutral-100 rounded-full text-neutral-600 font-medium">
+                            Đã chọn {selectedCount}
                         </div>
-                    </div>
-                ))}
-            </div>
-        </div>
+                    )}
+                </div>
 
-        <UpdateVariantDialog 
-            isOpen={isDialogOpen}
-            onClose={handleCloseDialog}
-            item={selectedItem}
-            productDetail={productDetail}
-            onUpdate={(newVariantId) => {
-                if (selectedItem) {
-                    onUpdate(selectedItem.id, selectedItem, { productVariantId: newVariantId });
-                }
-            }}
-        />
-    </>
-);
+                {/* LIST SẢN PHẨM PHÂN NHÓM THƯƠNG HIỆU */}
+                <div className="space-y-8">
+                    {Object.entries(groupedItems).map(([brandName, items]) => (
+                        <div key={brandName} className="space-y-4">
+                            
+                            {/* BRAND HEADER */}
+                            <div className="flex items-center gap-2 px-1">
+                                {items?.[0]?.brandLogoUrl ? (
+                                    <img
+                                        src={items[0].brandLogoUrl}
+                                        alt={brandName}
+                                        className="w-5 h-5 object-contain grayscale opacity-80"
+                                    />
+                                ) : (
+                                    <ShoppingBag size={16} className="text-neutral-400" />
+                                )}
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+                                    {brandName}
+                                </h3>
+                            </div>
+
+                            {/* ITEMS LIST VỚI ANIMATION */}
+                            <div className="space-y-3">
+                                <AnimatePresence mode="popLayout">
+                                    {items.map((item, index) => (
+                                        <motion.div 
+                                            key={item.id}
+                                            custom={index}
+                                            variants={itemVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="exit"
+                                            layout
+                                            className={`group relative rounded-2xl border transition-all duration-200 p-4 md:p-5 ${
+                                                item.isSelected 
+                                                    ? 'border-neutral-900/20 bg-neutral-50/60' 
+                                                    : 'border-neutral-100 bg-white hover:border-neutral-200'
+                                            }`}
+                                        >
+                                            <div className="flex gap-4 md:gap-6 items-start">
+                                                
+                                                {/* CHECKBOX ITEM */}
+                                                <div className="pt-2">
+                                                    <label className="relative flex items-center cursor-pointer">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            checked={item.isSelected}
+                                                            onChange={(e) => onUpdate(item.id, item, { isSelected: e.target.checked })}
+                                                            className="peer appearance-none w-5 h-5 rounded-md border border-neutral-300 checked:bg-neutral-900 checked:border-neutral-900 transition-all cursor-pointer"
+                                                        />
+                                                        <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity text-xs font-bold">
+                                                            ✓
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                {/* PRODUCT IMAGE */}
+                                                <div className="w-20 h-24 md:w-24 md:h-28 rounded-xl overflow-hidden bg-neutral-100 shrink-0 border border-neutral-100">
+                                                    <img 
+                                                        src={item.imageUrl} 
+                                                        alt={item.productName} 
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                    />
+                                                </div>
+
+                                                {/* PRODUCT INFO & ACTIONS */}
+                                                <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+                                                    
+                                                    {/* TOP SECTION: NAME & DELETE */}
+                                                    <div>
+                                                        <div className="flex items-start justify-between gap-3">
+                                                            <h4 className="text-sm font-medium leading-snug text-neutral-900 line-clamp-2">
+                                                                {item.productName}
+                                                            </h4>
+
+                                                            <button 
+                                                                onClick={() => onDelete(item.id)}
+                                                                className="text-neutral-300 hover:text-rose-600 transition-colors p-1 -mr-1 rounded-lg hover:bg-rose-50 cursor-pointer shrink-0"
+                                                                title="Xóa sản phẩm"
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
+                                                        </div>
+
+                                                        {/* VARIANT BUTTON */}
+                                                        <button 
+                                                            onClick={() => handleOpenDialog(item)}
+                                                            className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200/70 text-[11px] font-medium text-neutral-700 transition-colors cursor-pointer"
+                                                        >
+                                                            <span>{item.colorName} / {item.sizeName}</span>
+                                                            <ChevronDown size={12} className="text-neutral-400" />
+                                                        </button>
+                                                    </div>
+
+                                                    {/* BOTTOM SECTION: QUANTITY & PRICE */}
+                                                    <div className="flex items-end justify-between mt-4 pt-2">
+                                                        
+                                                        {/* QUANTITY CONTROL */}
+                                                        <div className="flex items-center border border-neutral-200 rounded-full p-0.5 bg-white">
+                                                            <button 
+                                                                onClick={() => item.quantity > 1 && onUpdate(item.id, item, { quantity: item.quantity - 1 })}
+                                                                disabled={item.quantity <= 1}
+                                                                className="w-7 h-7 rounded-full flex items-center justify-center text-neutral-600 hover:bg-neutral-100 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                                                            >
+                                                                <Minus size={12} />
+                                                            </button>
+
+                                                            <span className="w-8 text-center text-xs font-mono font-medium text-neutral-900">
+                                                                {item.quantity}
+                                                            </span>
+
+                                                            <button 
+                                                                onClick={() => onUpdate(item.id, item, { quantity: item.quantity + 1 })}
+                                                                className="w-7 h-7 rounded-full flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer"
+                                                            >
+                                                                <Plus size={12} />
+                                                            </button>
+                                                        </div>
+
+                                                        {/* PRICE */}
+                                                        <div className="text-right">
+                                                            <span className="text-base md:text-lg font-semibold tracking-tight text-neutral-900 font-mono">
+                                                                {item.unitPrice.toLocaleString('vi-VN')}
+                                                                <span className="text-xs font-normal text-neutral-500 ml-0.5">đ</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* DIALOG CẬP NHẬT VARIANT */}
+            <UpdateVariantDialog 
+                isOpen={isDialogOpen}
+                onClose={handleCloseDialog}
+                item={selectedItem}
+                productDetail={productDetail}
+                onUpdate={(newVariantId) => {
+                    if (selectedItem) {
+                        onUpdate(selectedItem.id, selectedItem, { productVariantId: newVariantId });
+                    }
+                }}
+            />
+        </>
+    );
 };
 
 export default CartList;

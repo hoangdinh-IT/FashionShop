@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { ProductDetail } from '../../products/types/product';
 import type { CartItem } from '../types/cart';
+import { useLockBodyScroll } from '../../../../hooks/useLockBodyScroll';
 
 interface Props {
     isOpen: boolean;
@@ -19,18 +20,18 @@ const backdropVariants: Variants = {
 };
 
 const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    hidden: { opacity: 0, scale: 0.96, y: 12 },
     visible: {
         opacity: 1,
-        y: 0,
         scale: 1,
-        transition: { type: "spring", stiffness: 300, damping: 25 }
+        y: 0,
+        transition: { type: "spring", stiffness: 350, damping: 28 }
     },
     exit: {
         opacity: 0,
-        y: 20,
-        scale: 0.95,
-        transition: { duration: 0.2 }
+        scale: 0.96,
+        y: 12,
+        transition: { duration: 0.15 }
     }
 };
 
@@ -41,10 +42,12 @@ const UpdateVariantDialog: React.FC<Props> = ({
     productDetail,
     onUpdate
 }) => {
+    useLockBodyScroll(isOpen);
+
     const [selectedColorId, setSelectedColorId] = useState<number | null>(null);
     const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
 
-    // 1. Hiển thị đúng màu và size của cartItem khi mở dialog
+    // Hiển thị đúng màu và size của cartItem khi mở dialog
     useEffect(() => {
         if (isOpen && item) {
             setSelectedColorId(item.colorId);
@@ -68,7 +71,7 @@ const UpdateVariantDialog: React.FC<Props> = ({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 font-sans">
                     
                     {/* BACKDROP */}
                     <motion.div
@@ -77,7 +80,7 @@ const UpdateVariantDialog: React.FC<Props> = ({
                         animate="visible"
                         exit="exit"
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/30 backdrop-blur-[6px]"
+                        className="absolute inset-0 bg-black/40"
                     />
 
                     {/* MODAL */}
@@ -86,33 +89,31 @@ const UpdateVariantDialog: React.FC<Props> = ({
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="relative z-10 w-full max-w-[460px] overflow-hidden rounded-[28px] border border-zinc-200/80 bg-white shadow-[0_25px_80px_-25px_rgba(0,0,0,0.18)]"
+                        className="relative z-10 w-full max-w-[420px] overflow-hidden rounded-3xl border border-neutral-200/80 bg-white"
                     >
                         
-                        {/* TOP BAR */}
-                        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
+                        {/* HEADER */}
+                        <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-400">
+                                <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 block">
                                     Update Variant
-                                </p>
-
-                                <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-zinc-900">
-                                    Cập nhật sản phẩm
+                                </span>
+                                <h2 className="text-base font-semibold text-neutral-900 mt-0.5">
+                                    Cập nhật phân loại
                                 </h2>
                             </div>
 
                             <button
                                 onClick={onClose}
-                                className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 transition-all hover:bg-zinc-900 hover:text-white"
+                                className="w-8 h-8 rounded-full border border-neutral-200/80 flex items-center justify-center text-neutral-400 hover:text-neutral-900 hover:border-neutral-900 transition-colors cursor-pointer"
                             >
-                                <X size={18} />
+                                <X size={15} />
                             </button>
                         </div>
 
-                        {/* PRODUCT */}
-                        <div className="flex gap-4 px-6 py-6">
-                            
-                            <div className="h-[118px] w-[92px] shrink-0 overflow-hidden rounded-2xl bg-zinc-100">
+                        {/* SẢN PHẨM HIỆN TẠI */}
+                        <div className="flex gap-4 p-6 bg-neutral-50/50 border-b border-neutral-100">
+                            <div className="h-20 w-16 shrink-0 overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/60">
                                 <img
                                     src={item?.imageUrl}
                                     alt={item?.productName}
@@ -120,36 +121,30 @@ const UpdateVariantDialog: React.FC<Props> = ({
                                 />
                             </div>
 
-                            <div className="flex flex-1 flex-col justify-between">
-                                
-                                <div>
-                                    <h4 className="line-clamp-2 text-[15px] font-semibold leading-6 tracking-[-0.02em] text-zinc-900">
-                                        {item?.productName}
-                                    </h4>
+                            <div className="flex flex-1 flex-col justify-center">
+                                <h4 className="line-clamp-2 text-xs font-medium leading-relaxed text-neutral-900">
+                                    {item?.productName}
+                                </h4>
 
-                                    <div className="mt-3 inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-[11px] font-medium text-zinc-500">
-                                        {item?.colorName} · {item?.sizeName}
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 text-[11px] uppercase tracking-[0.18em] text-zinc-400">
-                                    Select new variant
+                                <div className="mt-2 inline-flex items-center gap-1.5 self-start px-2.5 py-0.5 rounded-md bg-white border border-neutral-200/80 text-[11px] font-mono text-neutral-600">
+                                    <span>{item?.colorName}</span>
+                                    <span>/</span>
+                                    <span>{item?.sizeName}</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* CONTENT */}
-                        <div className="space-y-7 border-t border-zinc-100 px-6 py-6">
+                        {/* LỰA CHỌN MỚI */}
+                        <div className="space-y-6 p-6">
                             
-                            {/* COLOR */}
+                            {/* BỘ CHỌN MÀU SẮC */}
                             <div>
-                                <div className="mb-4 flex items-center justify-between">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                                <div className="mb-3 flex items-center justify-between">
+                                    <span className="text-[10px] uppercase font-mono tracking-wider text-neutral-400">
                                         Màu sắc
-                                    </p>
-
+                                    </span>
                                     {selectedColorId && (
-                                        <span className="text-[12px] font-medium text-zinc-500">
+                                        <span className="text-xs font-medium text-neutral-700">
                                             {
                                                 productDetail?.productColors?.find(
                                                     c => c.colorId === selectedColorId
@@ -159,74 +154,67 @@ const UpdateVariantDialog: React.FC<Props> = ({
                                     )}
                                 </div>
 
-                                <div className="flex flex-wrap gap-3">
-                                    {productDetail?.productColors?.map((color) => (
-                                        <button
-                                            key={color.colorId}
-                                            onClick={() => {
-                                                setSelectedColorId(color.colorId);
-                                                setSelectedSizeId(null);
-                                            }}
-                                            className={`relative flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 ${
-                                                selectedColorId === color.colorId
-                                                    ? 'scale-105 border border-zinc-900 bg-white shadow-md'
-                                                    : 'border border-zinc-200 bg-white hover:scale-105 hover:border-zinc-400'
-                                            }`}
-                                        >
-                                            <span
-                                                className="h-8 w-8 rounded-full border border-black/5"
-                                                style={{ backgroundColor: color.colorHexCode }}
-                                            />
-
-                                            {selectedColorId === color.colorId && (
-                                                <motion.div
-                                                    layoutId="activeColorRing"
-                                                    className="absolute inset-0 rounded-full border border-zinc-900"
+                                <div className="flex flex-wrap gap-2.5">
+                                    {productDetail?.productColors?.map((color) => {
+                                        const isSelected = selectedColorId === color.colorId;
+                                        return (
+                                            <button
+                                                key={color.colorId}
+                                                onClick={() => {
+                                                    setSelectedColorId(color.colorId);
+                                                    setSelectedSizeId(null);
+                                                }}
+                                                className={`relative p-0.5 rounded-full border transition-all duration-200 cursor-pointer ${
+                                                    isSelected 
+                                                        ? 'border-neutral-900 scale-105' 
+                                                        : 'border-transparent hover:border-neutral-300'
+                                                }`}
+                                            >
+                                                <span
+                                                    className="block w-7 h-7 rounded-full border border-black/10"
+                                                    style={{ backgroundColor: color.colorHexCode }}
                                                 />
-                                            )}
-                                        </button>
-                                    ))}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
-                            {/* SIZE */}
+                            {/* BỘ CHỌN KÍCH THƯỚC */}
                             <div>
-                                <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                                <span className="text-[10px] uppercase font-mono tracking-wider text-neutral-400 block mb-3">
                                     Kích thước
-                                </p>
+                                </span>
 
-                                <div className="flex flex-wrap gap-2.5">
+                                <div className="flex flex-wrap gap-2">
                                     {productDetail?.productSizes?.map((size) => {
-
                                         const variant = productDetail.productVariants?.find(
-                                            (v) =>
-                                                v.colorId === selectedColorId &&
-                                                v.sizeId === size.sizeId
+                                            (v) => v.colorId === selectedColorId && v.sizeId === size.sizeId
                                         );
 
-                                        const isOutOfStock =
-                                            !variant || variant.quantity <= 0;
+                                        const isOutOfStock = !variant || variant.quantity <= 0;
+                                        const isSelected = selectedSizeId === size.sizeId;
 
                                         return (
                                             <button
                                                 key={size.sizeId}
                                                 disabled={isOutOfStock}
                                                 onClick={() => setSelectedSizeId(size.sizeId)}
-                                                className={`relative flex h-11 min-w-[58px] items-center justify-center overflow-hidden rounded-2xl border px-4 text-[13px] font-semibold transition-all duration-300 ${
+                                                className={`relative h-10 min-w-[48px] px-3.5 rounded-xl text-xs font-medium border transition-all duration-200 flex items-center justify-center cursor-pointer ${
                                                     isOutOfStock
-                                                        ? 'cursor-not-allowed border-zinc-100 bg-zinc-50 text-zinc-300'
-                                                        : selectedSizeId === size.sizeId
-                                                        ? 'border-zinc-900 bg-zinc-900 text-white shadow-lg shadow-zinc-200'
-                                                        : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-900 hover:bg-zinc-50'
+                                                        ? 'cursor-not-allowed border-neutral-100 bg-neutral-50 text-neutral-300'
+                                                        : isSelected
+                                                        ? 'border-neutral-900 bg-neutral-900 text-white'
+                                                        : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-900'
                                                 }`}
                                             >
-                                                <span className={isOutOfStock ? 'opacity-40' : ''}>
+                                                <span className={isOutOfStock ? 'opacity-30' : ''}>
                                                     {size.sizeName}
                                                 </span>
 
                                                 {isOutOfStock && (
-                                                    <div className="absolute inset-0 flex items-center justify-center">
-                                                        <div className="h-[1px] w-[140%] rotate-[28deg] bg-zinc-300" />
+                                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                        <div className="h-[1px] w-full rotate-[-25deg] bg-neutral-300" />
                                                     </div>
                                                 )}
                                             </button>
@@ -237,16 +225,16 @@ const UpdateVariantDialog: React.FC<Props> = ({
                         </div>
 
                         {/* FOOTER */}
-                        <div className="border-t border-zinc-100 px-6 py-5">
-                            <motion.button
-                                whileHover={{ scale: 1.01 }}
-                                whileTap={{ scale: 0.985 }}
+                        <div className="p-6 pt-2">
+                            <button
                                 onClick={handleConfirm}
-                                className="flex h-14 w-full items-center justify-center rounded-2xl bg-zinc-900 text-[13px] font-semibold uppercase tracking-[0.16em] text-white transition-all hover:bg-black"
+                                disabled={!selectedColorId || !selectedSizeId}
+                                className="w-full h-12 rounded-full bg-neutral-900 text-white text-xs font-semibold uppercase tracking-wider transition-all duration-200 hover:bg-neutral-800 disabled:bg-neutral-100 disabled:text-neutral-400 disabled:cursor-not-allowed active:scale-[0.99] cursor-pointer"
                             >
                                 Xác nhận thay đổi
-                            </motion.button>
+                            </button>
                         </div>
+
                     </motion.div>
                 </div>
             )}

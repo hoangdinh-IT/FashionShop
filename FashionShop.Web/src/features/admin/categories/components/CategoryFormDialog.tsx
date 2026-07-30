@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { IoChevronDownOutline, IoClose, IoCloudUploadOutline, IoImageOutline } from "react-icons/io5";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Category } from '../types/category';
 import { useSnackbar } from '../../../../contexts';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { CategoryFormInputs } from '../types/requests';
 import { useCategories } from '../hooks/useCategories';
+import { useLockBodyScroll } from '../../../../hooks/useLockBodyScroll';
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from '../../../../utils/animation';
 
 // --- 1. Hàm tiện ích tạo Slug ---
 const generateSlug = (str: string) => {
@@ -69,6 +71,7 @@ const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
     onClose,
     initialData
 }) => {
+    useLockBodyScroll(isOpen);
 
     const { showSnackbar } = useSnackbar();
 
@@ -175,37 +178,12 @@ const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
         }
     }
 
-    const backdropVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-    };
-
-    const modalVariants: Variants = {
-        hidden: {
-            opacity: 0,
-            y: 16,
-            scale: 0.96
-        },
-        visible: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { type: "spring", stiffness: 300, damping: 25 }
-        },
-        exit: {
-            opacity: 0,
-            y: 16,
-            scale: 0.96,
-            transition: { duration: 0.18 }
-        }
-    };
-
     return (
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 font-sans">
                     <motion.div
-                        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"

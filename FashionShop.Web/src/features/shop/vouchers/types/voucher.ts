@@ -9,7 +9,7 @@ export interface Voucher {
     minOrderValue: number;
     quantity: number;
     usedCount: number;
-    maxUsagePerUser: number;
+    remainingUsagePerUser: number;
     startDate: string;
     endDate: string;
 }

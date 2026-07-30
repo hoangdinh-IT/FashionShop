@@ -1,29 +1,13 @@
 import React from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import AddressString from "../../../shop/addresses/components/AddressString";
 import type { OrderDetail } from "../types/order";
 import Loading from "../../../../components/common/Loading";
 import { IoCallOutline, IoCloseOutline, IoLocationOutline, IoTimeOutline } from "react-icons/io5";
-
-// --- ANIMATION VARIANTS (Đồng bộ với Voucher) --- //
-const backdropVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 24, scale: 0.96 },
-    visible: { 
-        opacity: 1, y: 0, scale: 1, 
-        transition: { type: "spring", stiffness: 300, damping: 28 } 
-    },
-    exit: { 
-        opacity: 0, y: 16, scale: 0.96, 
-        transition: { duration: 0.2, ease: "easeIn" } 
-    }
-};
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
 
 interface Props {
     order?: OrderDetail;
@@ -39,6 +23,7 @@ interface RowProps {
 }
 
 const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading }) => {
+    useLockBodyScroll(isOpen);
     
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
@@ -60,7 +45,7 @@ const OrderDetailDialog: React.FC<Props> = ({ isOpen, onClose, order, isLoading 
 
                     {/* BACKDROP */}
                     <motion.div
-                        className="absolute inset-0 bg-black/40 backdrop-blur-md"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"

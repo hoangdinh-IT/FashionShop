@@ -36,147 +36,96 @@ interface SidebarAccountProps {
     onLogout: () => void;
 }
 
-const SidebarAccount: React.FC<SidebarAccountProps> = ({
-    onLogout,
-}) => {
+// Custom Easing cho hiệu ứng trượt cao cấp
+const customEase = [0.16, 1, 0.3, 1] as const;
+
+const SidebarAccount: React.FC<SidebarAccountProps> = ({ onLogout }) => {
     const location = useLocation();
 
     return (
-        <aside className="w-full lg:w-[310px] shrink-0">
+        <aside className="w-full lg:w-[280px] shrink-0 font-sans select-none">
+            {/* Sticky Container */}
+            <div className="sticky top-28 rounded-3xl bg-white/80 p-3 border border-zinc-200/60 shadow-xs backdrop-blur-md space-y-2">
+                
+                {/* Section Title */}
+                <div className="px-3 py-2">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                        Cài đặt tài khoản
+                    </span>
+                </div>
 
-            {/* Container */}
-            <div className="sticky top-28 overflow-hidden rounded-[34px] border border-black/5 bg-white/70 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.04)] backdrop-blur-xl">
-
-                {/* Menu */}
-                <nav className="flex flex-col gap-2">
-                    {MENU_ITEMS.map((item, index) => {
+                {/* Navigation Menu */}
+                <nav className="space-y-1 relative">
+                    {MENU_ITEMS.map((item) => {
                         const Icon = item.icon;
-
-                        const isActive =
-                            location.pathname.includes(item.path);
+                        const isActive = location.pathname.includes(item.path);
 
                         return (
-                            <motion.div
+                            <Link
                                 key={item.path}
-                                initial={{ opacity: 0, y: 12 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.35,
-                                    delay: index * 0.05,
-                                }}
+                                to={item.path}
+                                className="relative flex items-center justify-between px-3.5 py-3 rounded-2xl transition-colors duration-200 group cursor-pointer"
                             >
-                                <Link
-                                    to={item.path}
-                                    className={`
-                                        group relative flex items-center gap-4 overflow-hidden rounded-2xl px-4 py-4 transition-all duration-300
-                                        ${
+                                {/* Active Background Sliding Pill */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="activePill"
+                                        transition={{ duration: 0.35, ease: customEase }}
+                                        className="absolute inset-0 bg-zinc-900 rounded-2xl shadow-xs"
+                                    />
+                                )}
+
+                                {/* Content */}
+                                <div className="relative z-10 flex items-center gap-3">
+                                    <Icon
+                                        className={`text-lg transition-colors duration-200 ${
                                             isActive
-                                                ? "bg-black text-white"
-                                                : "bg-transparent text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
-                                        }
-                                    `}
-                                >
-                                    {/* Active glow */}
-                                    {isActive && (
-                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_55%)]" />
-                                    )}
-
-                                    {/* Icon */}
-                                    <div
-                                        className={`
-                                            relative flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-300
-                                            ${
-                                                isActive
-                                                    ? "bg-white/10 text-white"
-                                                    : "bg-zinc-100 text-zinc-600 group-hover:bg-white"
-                                            }
-                                        `}
+                                                ? "text-white"
+                                                : "text-zinc-400 group-hover:text-zinc-900"
+                                        }`}
+                                    />
+                                    <span
+                                        className={`text-xs font-semibold tracking-tight transition-colors duration-200 ${
+                                            isActive
+                                                ? "text-white"
+                                                : "text-zinc-600 group-hover:text-zinc-900"
+                                        }`}
                                     >
-                                        <Icon className="text-[19px]" />
-                                    </div>
+                                        {item.label}
+                                    </span>
+                                </div>
 
-                                    {/* Text */}
-                                    <div className="relative flex flex-1 items-center justify-between">
-                                        <div>
-                                            <p
-                                                className={`
-                                                    text-sm font-semibold
-                                                    ${
-                                                        isActive
-                                                            ? "tracking-[0.02em]"
-                                                            : ""
-                                                    }
-                                                `}
-                                            >
-                                                {item.label}
-                                            </p>
-                                        </div>
-
-                                        {/* Arrow */}
-                                        <svg
-                                            className={`
-                                                h-4 w-4 transition-all duration-300
-                                                ${
-                                                    isActive
-                                                        ? "translate-x-1 text-white"
-                                                        : "text-zinc-300 group-hover:translate-x-1 group-hover:text-zinc-500"
-                                                }
-                                            `}
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={1.8}
-                                                d="M9 5l7 7-7 7"
-                                            />
-                                        </svg>
-                                    </div>
-                                </Link>
-                            </motion.div>
+                                {/* Minimal Indicator Dot */}
+                                {isActive && (
+                                    <motion.div 
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="relative z-10 w-1.5 h-1.5 rounded-full bg-white"
+                                    />
+                                )}
+                            </Link>
                         );
                     })}
                 </nav>
 
                 {/* Divider */}
-                <div className="my-5 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
+                <div className="pt-2">
+                    <div className="h-px w-full bg-zinc-100" />
+                </div>
 
-                {/* Logout */}
+                {/* Logout Button */}
                 <motion.button
-                    whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={onLogout}
-                    className="group flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left transition-all duration-300 hover:bg-red-50"
+                    className="w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-left transition-colors duration-200 hover:bg-rose-50/80 group cursor-pointer"
                 >
-                    {/* Icon */}
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-500 transition-all duration-300 group-hover:bg-red-100 group-hover:text-red-500">
-                        <IoLogOutOutline className="text-[19px]" />
-                    </div>
-
-                    {/* Text */}
-                    <div className="flex-1">
-                        <p className="text-sm font-semibold text-zinc-700 transition-colors duration-300 group-hover:text-red-600">
-                            Đăng xuất
-                        </p>
-                    </div>
-
-                    {/* Arrow */}
-                    <svg
-                        className="h-4 w-4 text-zinc-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.8}
-                            d="M9 5l7 7-7 7"
-                        />
-                    </svg>
+                    <IoLogOutOutline className="text-lg text-zinc-400 group-hover:text-rose-600 transition-colors duration-200" />
+                    <span className="text-xs font-semibold tracking-tight text-zinc-600 group-hover:text-rose-600 transition-colors duration-200">
+                        Đăng xuất
+                    </span>
                 </motion.button>
+
             </div>
         </aside>
     );

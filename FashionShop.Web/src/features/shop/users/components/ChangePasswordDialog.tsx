@@ -1,39 +1,19 @@
 import React, { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { 
-    IoClose, 
-    IoLockClosed, 
-    IoKey, 
-    IoShieldCheckmark,
+import { AnimatePresence, motion } from "framer-motion";
+import {
+    IoClose,
+    IoLockClosedOutline,
+    IoKeyOutline,
+    IoShieldCheckmarkOutline,
     IoEyeOutline,
     IoEyeOffOutline,
-    IoColorWandOutline
 } from "react-icons/io5";
+
 import { useUser } from "../hooks/useUser";
 import type { ChangePasswordFormInputs } from "../types/requests";
-
-// --- HOẠT ẢNH (ANIMATIONS) SIÊU MƯỢT ---
-const backdropVariants: Variants = {
-    hidden: { opacity: 0, backdropFilter: "blur(0px)" },
-    visible: { opacity: 1, backdropFilter: "blur(12px)", transition: { duration: 0.4, ease: "easeOut" } },
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
-    visible: { 
-        opacity: 1, 
-        y: 0, 
-        scale: 1, 
-        transition: { type: "spring", stiffness: 400, damping: 30, mass: 0.8 } 
-    },
-    exit: { 
-        opacity: 0, 
-        y: 20, 
-        scale: 0.95, 
-        transition: { duration: 0.25, ease: "easeIn" } 
-    }
-};
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
 
 interface Props {
     isOpen: boolean;
@@ -48,6 +28,8 @@ const ChangePasswordDialog: React.FC<Props> = ({
     email,
     isLoading = false,
 }) => {
+    useLockBodyScroll(isOpen);
+
     const { changePassword } = useUser();
 
     const [showOldPassword, setShowOldPassword] = useState(false);
@@ -59,212 +41,215 @@ const ChangePasswordDialog: React.FC<Props> = ({
         handleSubmit,
         watch,
         reset,
-        formState: { errors }
+        formState: { errors },
     } = useForm<ChangePasswordFormInputs>();
 
     const newPasswordValue = watch("newPassword");
 
     const onSubmit: SubmitHandler<ChangePasswordFormInputs> = (data) => {
         const dataForm = { ...data, email };
-        changePassword(dataForm, { 
+        changePassword(dataForm, {
             onSuccess: (response) => {
                 if (response.succeeded) {
                     reset();
                     onClose();
                 }
-            }
+            },
         });
     };
 
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans antialiased">
-                    
-                    {/* BACKDROP - Nền mờ sâu (Deep Glassmorphism) */}
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    {/* Backdrop */}
                     <motion.div
-                        className="absolute inset-0 bg-zinc-950/30"
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
                         exit="hidden"
                         onClick={onClose}
+                        className={BACKDROP_STYLES}
                     />
 
-                    {/* MODAL CONTENT - Bo góc lớn, bóng đổ 3D mềm mại */}
+                    {/* Modal */}
                     <motion.div
-                        className="relative w-full max-w-[480px] bg-white rounded-[28px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] ring-1 ring-zinc-900/5 overflow-hidden flex flex-col"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         onClick={(e) => e.stopPropagation()}
+                        className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-2xl"
                     >
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
-                            
-                            {/* --- HEADER --- */}
-                            <div className="flex items-start justify-between border-b border-zinc-100 px-6 py-6 sm:px-8 bg-white shrink-0 relative z-10">
-                                <div>
-                                    {/* Icon Container nổi bật */}
-                                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-900 text-white shadow-lg shadow-zinc-900/20">
-                                        <IoColorWandOutline className="text-[22px]" />
+                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+                            {/* Header */}
+                            <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5 sm:px-8">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800">
+                                        <IoLockClosedOutline className="text-xl" />
                                     </div>
-
-                                    {/* Tiêu đề chính */}
-                                    <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
-                                        Đổi mật khẩu
-                                    </h2>
-
-                                    {/* Đoạn văn mô tả */}  
-                                    <p className="mt-2 text-sm leading-relaxed text-zinc-500">
-                                        Vui lòng nhập mật khẩu cũ và tạo mật khẩu mới an toàn hơn cho tài khoản của bạn.
-                                    </p>
+                                    <div>
+                                        <h2 className="text-lg font-bold tracking-tight text-zinc-900">
+                                            Đổi mật khẩu
+                                        </h2>
+                                        <p className="text-xs text-zinc-500">
+                                            Tăng cường bảo mật cho tài khoản của bạn
+                                        </p>
+                                    </div>
                                 </div>
 
-                                {/* Nút đóng (Dấu X) phong cách Minimalist */}
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 active:scale-95"
+                                    className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 cursor-pointer"
                                 >
                                     <IoClose className="text-xl" />
                                 </button>
                             </div>
 
-                            {/* --- BODY --- */}
-                            <div className="px-8 py-2 overflow-y-auto custom-scrollbar flex-1 space-y-6 relative z-0">
-                                
-                                {/* 1. Mật khẩu hiện tại */}
-                                <div className="relative">
-                                    <div className="relative group">
-                                        <IoLockClosed className={`absolute left-4 top-1/2 -translate-y-1/2 text-[19px] pointer-events-none transition-colors duration-300 z-10 ${errors.oldPassword ? 'text-red-500' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
-                                        
+                            {/* Body */}
+                            <div className="space-y-4 px-6 py-6 sm:px-8">
+                                {/* 1. Old Password */}
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-600">
+                                        Mật khẩu hiện tại
+                                    </label>
+                                    <div className="relative">
                                         <input
-                                            id="oldPassword"
-                                            {...register("oldPassword", { required: "Vui lòng nhập mật khẩu hiện tại" })}
+                                            {...register("oldPassword", {
+                                                required: "Vui lòng nhập mật khẩu hiện tại",
+                                            })}
                                             type={showOldPassword ? "text" : "password"}
-                                            placeholder=" " 
-                                            className={`peer w-full h-[56px] pl-12 pr-12 bg-zinc-50 border ${errors.oldPassword ? 'border-red-500 focus:ring-red-500/20' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'} rounded-xl focus:bg-white focus:ring-4 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                            placeholder="Nhập mật khẩu hiện tại"
+                                            className={`h-12 w-full rounded-xl border bg-zinc-50/50 pl-11 pr-11 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white focus:ring-2 ${
+                                                errors.oldPassword
+                                                    ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
+                                                    : "border-zinc-200/80 focus:border-zinc-900 focus:ring-zinc-900/10"
+                                            }`}
                                         />
-                                        
-                                        <label
-                                            htmlFor="oldPassword"
-                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
-                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-bold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-translate-y-1/2
-                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-translate-y-1/2"
-                                        >
-                                            Mật khẩu hiện tại
-                                        </label>
-
-                                        <button 
+                                        <IoLockClosedOutline className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-zinc-400" />
+                                        <button
                                             type="button"
                                             onClick={() => setShowOldPassword(!showOldPassword)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-800 transition-all"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors cursor-pointer"
                                         >
-                                            {showOldPassword ? <IoEyeOffOutline size={19} /> : <IoEyeOutline size={19} />}
+                                            {showOldPassword ? <IoEyeOffOutline className="text-lg" /> : <IoEyeOutline className="text-lg" />}
                                         </button>
                                     </div>
-                                    {errors.oldPassword && <p className="text-[13px] font-semibold text-red-500 mt-2 ml-1">{errors.oldPassword.message}</p>}
+                                    {errors.oldPassword && (
+                                        <p className="mt-1.5 text-xs font-medium text-rose-500">
+                                            {errors.oldPassword.message}
+                                        </p>
+                                    )}
                                 </div>
 
-                                {/* 2. Mật khẩu mới */}
-                                <div className="relative">
-                                    <div className="relative group">
-                                        <IoKey className={`absolute left-4 top-1/2 -translate-y-1/2 text-[19px] pointer-events-none transition-colors duration-300 z-10 ${errors.newPassword ? 'text-red-500' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
-                                        
+                                {/* 2. New Password */}
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-600">
+                                        Mật khẩu mới
+                                    </label>
+                                    <div className="relative">
                                         <input
-                                            id="newPassword"
-                                            {...register("newPassword", { 
+                                            {...register("newPassword", {
                                                 required: "Vui lòng nhập mật khẩu mới",
-                                                minLength: { value: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" }
+                                                minLength: {
+                                                    value: 6,
+                                                    message: "Mật khẩu phải có ít nhất 6 ký tự",
+                                                },
                                             })}
                                             type={showNewPassword ? "text" : "password"}
-                                            placeholder=" " 
-                                            className={`peer w-full h-[56px] pl-12 pr-12 bg-zinc-50 border ${errors.newPassword ? 'border-red-500 focus:ring-red-500/20' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'} rounded-xl focus:bg-white focus:ring-4 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                            placeholder="Tối thiểu 6 ký tự"
+                                            className={`h-12 w-full rounded-xl border bg-zinc-50/50 pl-11 pr-11 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white focus:ring-2 ${
+                                                errors.newPassword
+                                                    ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
+                                                    : "border-zinc-200/80 focus:border-zinc-900 focus:ring-zinc-900/10"
+                                            }`}
                                         />
-                                        
-                                        <label
-                                            htmlFor="newPassword"
-                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
-                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-bold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-translate-y-1/2
-                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-translate-y-1/2"
-                                        >
-                                            Mật khẩu mới
-                                        </label>
-
-                                        <button 
+                                        <IoKeyOutline className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-zinc-400" />
+                                        <button
                                             type="button"
                                             onClick={() => setShowNewPassword(!showNewPassword)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-800 transition-all"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors cursor-pointer"
                                         >
-                                            {showNewPassword ? <IoEyeOffOutline size={19} /> : <IoEyeOutline size={19} />}
+                                            {showNewPassword ? <IoEyeOffOutline className="text-lg" /> : <IoEyeOutline className="text-lg" />}
                                         </button>
                                     </div>
-                                    {errors.newPassword && <p className="text-[13px] font-semibold text-red-500 mt-2 ml-1">{errors.newPassword.message}</p>}
+                                    {errors.newPassword && (
+                                        <p className="mt-1.5 text-xs font-medium text-rose-500">
+                                            {errors.newPassword.message}
+                                        </p>
+                                    )}
                                 </div>
 
-                                {/* 3. Xác nhận mật khẩu mới */}
-                                <div className="relative">
-                                    <div className="relative group">
-                                        <IoShieldCheckmark className={`absolute left-4 top-1/2 -translate-y-1/2 text-[19px] pointer-events-none transition-colors duration-300 z-10 ${errors.confirmNewPassword ? 'text-red-500' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
-                                        
+                                {/* 3. Confirm New Password */}
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-600">
+                                        Xác nhận mật khẩu mới
+                                    </label>
+                                    <div className="relative">
                                         <input
-                                            id="confirmNewPassword"
-                                            {...register("confirmNewPassword", { 
+                                            {...register("confirmNewPassword", {
                                                 required: "Vui lòng xác nhận mật khẩu",
-                                                validate: (value) => value === newPasswordValue || "Mật khẩu xác nhận không khớp"
+                                                validate: (value) =>
+                                                    value === newPasswordValue ||
+                                                    "Mật khẩu xác nhận không khớp",
                                             })}
                                             type={showConfirmPassword ? "text" : "password"}
-                                            placeholder=" " 
-                                            className={`peer w-full h-[56px] pl-12 pr-12 bg-zinc-50 border ${errors.confirmNewPassword ? 'border-red-500 focus:ring-red-500/20' : 'border-zinc-200 focus:border-zinc-900 focus:ring-zinc-900/10'} rounded-xl focus:bg-white focus:ring-4 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                            placeholder="Nhập lại mật khẩu mới"
+                                            className={`h-12 w-full rounded-xl border bg-zinc-50/50 pl-11 pr-11 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white focus:ring-2 ${
+                                                errors.confirmNewPassword
+                                                    ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
+                                                    : "border-zinc-200/80 focus:border-zinc-900 focus:ring-zinc-900/10"
+                                            }`}
                                         />
-                                        
-                                        <label
-                                            htmlFor="confirmNewPassword"
-                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
-                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-bold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-translate-y-1/2
-                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-translate-y-1/2"
-                                        >
-                                            Xác nhận mật khẩu
-                                        </label>
-
-                                        <button 
+                                        <IoShieldCheckmarkOutline className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-zinc-400" />
+                                        <button
                                             type="button"
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-800 transition-all"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors cursor-pointer"
                                         >
-                                            {showConfirmPassword ? <IoEyeOffOutline size={19} /> : <IoEyeOutline size={19} />}
+                                            {showConfirmPassword ? <IoEyeOffOutline className="text-lg" /> : <IoEyeOutline className="text-lg" />}
                                         </button>
                                     </div>
-                                    {errors.confirmNewPassword && <p className="text-[13px] font-semibold text-red-500 mt-2 ml-1">{errors.confirmNewPassword.message}</p>}
+                                    {errors.confirmNewPassword && (
+                                        <p className="mt-1.5 text-xs font-medium text-rose-500">
+                                            {errors.confirmNewPassword.message}
+                                        </p>
+                                    )}
                                 </div>
-
                             </div>
 
-                            {/* --- FOOTER --- */}
-                            <div className="px-8 py-8 mt-2">
+                            {/* Footer */}
+                            <div className="flex items-center justify-end gap-3 border-t border-zinc-100 bg-zinc-50/50 px-6 py-4 sm:px-8">
+                                <button
+                                    type="button"
+                                    onClick={onClose}
+                                    className="h-11 rounded-xl border border-zinc-200 bg-white px-5 text-xs font-semibold text-zinc-700 transition-colors hover:bg-zinc-100 cursor-pointer"
+                                >
+                                    Huỷ
+                                </button>
+
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="relative w-full h-[54px] overflow-hidden text-[15px] tracking-wide font-bold text-white bg-zinc-900 rounded-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-wait flex items-center justify-center group hover:-translate-y-[2px] hover:shadow-[0_12px_24px_-8px_rgba(24,24,27,0.4)] active:translate-y-0 active:shadow-none"
+                                    className="flex h-11 min-w-[140px] items-center justify-center rounded-xl bg-zinc-900 px-5 text-xs font-semibold text-white transition-all hover:bg-black disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
                                 >
-                                    {/* Hiệu ứng tia sáng chạy ngang nút (Shine effect) */}
-                                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
-                                    
                                     {isLoading ? (
-                                        <div className="w-5 h-5 border-[2.5px] border-white/30 border-t-white rounded-full animate-spin" />
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                                            <span>Đang xử lý...</span>
+                                        </div>
                                     ) : (
-                                        'CẬP NHẬT MẬT KHẨU'
+                                        "Cập nhật mật khẩu"
                                     )}
                                 </button>
                             </div>
-
                         </form>
                     </motion.div>
                 </div>
             )}
         </AnimatePresence>
     );
-}
+};
 
 export default ChangePasswordDialog;

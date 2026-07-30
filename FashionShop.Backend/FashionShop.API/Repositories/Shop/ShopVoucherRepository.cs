@@ -17,23 +17,26 @@ namespace FashionShop.API.Repositories.Shop
             _context = context;
         }
 
-        private static readonly Expression<Func<Voucher, ShopVoucherResponse>> _voucherSelector =
-            x => new ShopVoucherResponse
+        private static Expression<Func<Voucher, ShopVoucherResponse>> _voucherSelector(Guid userId)
+        {
+            return voucher => new ShopVoucherResponse
             {
-                Id = x.Id,
-                Name = x.Name,
-                Code = x.Code,
-                Description = x.Description,
-                DiscountType = x.DiscountType,
-                DiscountAmount = x.DiscountAmount,
-                MaxDiscountAmount = x.MaxDiscountAmount,
-                MinOrderValue = x.MinOrderValue,
-                Quantity = x.Quantity,
-                UsedCount = x.UsedCount,
-                MaxUsagePerUser = x.MaxUsagePerUser,
-                StartDate = x.StartDate,
-                EndDate = x.EndDate,
+                Id = voucher.Id,
+                Name = voucher.Name,
+                Code = voucher.Code,
+                Description = voucher.Description,
+                DiscountType = voucher.DiscountType,
+                DiscountAmount = voucher.DiscountAmount,
+                MaxDiscountAmount = voucher.MaxDiscountAmount,
+                MinOrderValue = voucher.MinOrderValue,
+                Quantity = voucher.Quantity,
+                UsedCount = voucher.UsedCount,
+                RemainingUsagePerUser = voucher.MaxUsagePerUser - voucher.Orders.Count(order => order.UserId == userId),
+                StartDate = voucher.StartDate,
+                EndDate = voucher.EndDate,
             };
+        }
+            
 
         private static readonly Expression<Func<VoucherUsage, ShopVoucherUsageResponse>> _voucherUsageSelector =
             x => new ShopVoucherUsageResponse
@@ -60,7 +63,7 @@ namespace FashionShop.API.Repositories.Shop
                     voucher.UsedCount < voucher.Quantity &&
                     voucher.VoucherUsages.Count(vu => vu.UserId == userId && !vu.IsDeleted) < voucher.MaxUsagePerUser
                 )
-                .Select(_voucherSelector)
+                .Select(_voucherSelector(userId))
                 .ToListAsync();
         }
 

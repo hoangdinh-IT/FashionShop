@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { AnimatePresence, motion, type Variants } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { 
     IoClose, 
     IoChevronDown,
@@ -14,30 +14,9 @@ import {
 import type { AddressFormInputs } from '../types/requests';
 import { useAddresses } from '../hooks/useAddresses';
 import type { Address } from '../types/address';
+import { useLockBodyScroll } from '../../../../hooks/useLockBodyScroll';
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from '../../../../utils/animation';
 
-// --- HOẠT ẢNH (ANIMATIONS) TỪ PROFILE ---
-const backdropVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 40, scale: 0.96 },
-    visible: { 
-        opacity: 1, 
-        y: 0, 
-        scale: 1, 
-        transition: { type: "spring", stiffness: 400, damping: 30 } 
-    },
-    exit: { 
-        opacity: 0, 
-        y: 20, 
-        scale: 0.96, 
-        transition: { duration: 0.2, ease: "easeOut" } 
-    }
-};
-
-// 1. Khai báo kiểu dữ liệu cho API
 interface Location {
     code: number;
     name: string;
@@ -56,6 +35,7 @@ const AddressFormDialog: React.FC<Props> = ({
     onClose,
     isLoading = false
 }) => {
+    useLockBodyScroll(isOpen);
 
     const { createAddress, updateAddress } = useAddresses();
     
@@ -87,7 +67,6 @@ const AddressFormDialog: React.FC<Props> = ({
                 .then(response => setProvinces(response.data))
                 .catch(err => console.error("Lỗi tải Tỉnh:", err));
         } else {
-            // Dọn dẹp form khi đóng
             setProvinces([]);
             setDistricts([]);
             setWards([]);
@@ -96,16 +75,16 @@ const AddressFormDialog: React.FC<Props> = ({
         }
     }, [isOpen, reset]);
 
-    // 2. Mở form Edit: Chỉ gán Chi tiết (Khoan gán Tỉnh/Huyện/Xã)
+    // 2. Mở form Edit
     useEffect(() => {
         if (isOpen && initialData) {
             reset({
                 fullName: initialData.fullName,
                 phoneNumber: initialData.phoneNumber,
                 addressDetail: initialData.addressDetail || "",
-                city: "",     // BẮT BUỘC ĐỂ TRỐNG: chờ mảng provinces tải xong mới gán
-                district: "", // BẮT BUỘC ĐỂ TRỐNG: chờ mảng districts tải xong mới gán
-                commune: "",  // BẮT BUỘC ĐỂ TRỐNG: chờ mảng wards tải xong mới gán
+                city: "", 
+                district: "", 
+                commune: "",
             });
             setIsDefault(initialData.isDefault || false);
         } else if (isOpen && !initialData) {
@@ -114,7 +93,7 @@ const AddressFormDialog: React.FC<Props> = ({
         }
     }, [isOpen, initialData, reset]);
 
-    // 3. [CHÌA KHÓA] Gán Tỉnh Cũ ngay khi mảng provinces vừa có data
+    // 3. Gán Tỉnh Cũ khi provinces vừa có data
     useEffect(() => {
         if (initialData && provinces.length > 0) {
             setValue("city", String(initialData.city));
@@ -132,7 +111,7 @@ const AddressFormDialog: React.FC<Props> = ({
         }
     }, [selectedProvince]);
 
-    // 5. [CHÌA KHÓA] Gán Huyện Cũ ngay khi mảng districts vừa có data
+    // 5. Gán Huyện Cũ khi districts vừa có data
     useEffect(() => {
         if (initialData && districts.length > 0 && String(selectedProvince) === String(initialData.city)) {
             setValue("district", String(initialData.district));
@@ -150,7 +129,7 @@ const AddressFormDialog: React.FC<Props> = ({
         }
     }, [selectedDistrict]);
 
-    // 7. [CHÌA KHÓA] Gán Xã Cũ ngay khi mảng wards vừa có data
+    // 7. Gán Xã Cũ khi wards vừa có data
     useEffect(() => {
         if (initialData && wards.length > 0 && String(selectedDistrict) === String(initialData.district)) {
             setValue("commune", String(initialData.commune));
@@ -178,11 +157,11 @@ const AddressFormDialog: React.FC<Props> = ({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans antialiased">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans">
                     
                     {/* BACKDROP */}
                     <motion.div
-                        className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
@@ -190,66 +169,58 @@ const AddressFormDialog: React.FC<Props> = ({
                         onClick={onClose}
                     />
 
-                    {/* MODAL CONTENT */}
+                    {/* MODAL CONTAINER */}
                     <motion.div
-                        className="relative w-full max-w-lg bg-white rounded-[1.5rem] shadow-2xl border border-zinc-100 overflow-hidden flex flex-col"
+                        className="relative w-full max-w-lg bg-white rounded-3xl border border-zinc-200/80 shadow-xl overflow-hidden flex flex-col z-10"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full max-h-[85vh]">
+                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[85vh]">
                             
-                            {/* --- HEADER SÁNG TẠO & TỐI GIẢN --- */}
-                            <div className="px-8 py-6 flex items-center justify-between bg-white shrink-0 border-b border-zinc-50">
-                                <h3 className="text-2xl sm:text-[26px] font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-500">
-                                    {initialData ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ'}
+                            {/* --- HEADER --- */}
+                            <div className="px-6 py-5 flex items-center justify-between border-b border-zinc-100 bg-white shrink-0">
+                                <h3 className="text-lg font-semibold text-zinc-900 tracking-tight">
+                                    {initialData ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ mới'}
                                 </h3>
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-zinc-50 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-all duration-200 cursor-pointer"
+                                    className="w-8 h-8 flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors duration-200 cursor-pointer"
                                 >
                                     <IoClose className="text-xl" />
                                 </button>
                             </div>
 
                             {/* --- BODY --- */}
-                            <div className="px-8 pb-4 pt-4 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+                            <div className="p-6 overflow-y-auto space-y-4 custom-scrollbar flex-1">
                                 
-                                {/* Họ và tên (Floating Label) */}
-                                <div className="relative pt-2">
-                                    <div className="relative">
-                                        {/* Nhớ import IoPersonOutline từ react-icons/io5 */}
-                                        <IoPersonOutline className={`absolute left-4 top-1/2 -translate-y-1/2 text-[20px] pointer-events-none transition-colors duration-300 z-10 ${errors.fullName ? 'text-red-400' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
-                                        
+                                {/* Họ tên & SĐT (2 Cột trên màn hình ngang) */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {/* Họ và tên */}
+                                    <div className="space-y-1.5">
+                                        <label htmlFor="fullName" className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                                            <IoPersonOutline className="text-zinc-400" />
+                                            Họ và tên
+                                        </label>
                                         <input
                                             id="fullName"
                                             {...register("fullName", { required: "Vui lòng nhập họ và tên" })}
                                             type="text"
-                                            placeholder=" "
-                                            className={`peer w-full h-[56px] pl-12 pr-4 bg-zinc-50/80 border ${errors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                            placeholder="Nguyễn Văn A"
+                                            className={`w-full h-11 px-3.5 text-sm bg-zinc-50 border ${errors.fullName ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
                                         />
-                                        
-                                        <label
-                                            htmlFor="fullName"
-                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
-                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-semibold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-mt-[2px]
-                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-mt-[2px]"
-                                        >
-                                            Họ và tên
-                                        </label>
+                                        {errors.fullName && <p className="text-xs text-red-500 font-medium">{errors.fullName.message}</p>}
                                     </div>
-                                    {errors.fullName && <p className="text-[13px] text-red-500 mt-1.5 font-medium pl-1">{errors.fullName.message}</p>}
-                                </div>
 
-                                {/* Số điện thoại (Floating Label) */}
-                                <div className="relative pt-2">
-                                    <div className="relative">
-                                        {/* Nhớ import IoCallOutline từ react-icons/io5 */}
-                                        <IoCallOutline className={`absolute left-4 top-1/2 -translate-y-1/2 text-[20px] pointer-events-none transition-colors duration-300 z-10 ${errors.phoneNumber ? 'text-red-400' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
-                                        
+                                    {/* Số điện thoại */}
+                                    <div className="space-y-1.5">
+                                        <label htmlFor="phoneNumber" className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                                            <IoCallOutline className="text-zinc-400" />
+                                            Số điện thoại
+                                        </label>
                                         <input
                                             id="phoneNumber"
                                             {...register("phoneNumber", { 
@@ -257,26 +228,17 @@ const AddressFormDialog: React.FC<Props> = ({
                                                 pattern: { value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g, message: "Số điện thoại không hợp lệ" }
                                             })}
                                             type="tel"
-                                            placeholder=" "
-                                            className={`peer w-full h-[56px] pl-12 pr-4 bg-zinc-50/80 border ${errors.phoneNumber ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
+                                            placeholder="0912345678"
+                                            className={`w-full h-11 px-3.5 text-sm bg-zinc-50 border ${errors.phoneNumber ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
                                         />
-                                        
-                                        <label
-                                            htmlFor="phoneNumber"
-                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
-                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-semibold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-mt-[2px]
-                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-mt-[2px]"
-                                        >
-                                            Số điện thoại
-                                        </label>
+                                        {errors.phoneNumber && <p className="text-xs text-red-500 font-medium">{errors.phoneNumber.message}</p>}
                                     </div>
-                                    {errors.phoneNumber && <p className="text-[13px] text-red-500 mt-1.5 font-medium pl-1">{errors.phoneNumber.message}</p>}
                                 </div>
 
                                 {/* Tỉnh / Thành phố */}
                                 <div className="space-y-1.5">
-                                    <label className="text-[13px] font-semibold text-zinc-900 flex items-center gap-2 pl-1">
-                                        <IoBusinessOutline className={`text-[16px] ${errors.city ? 'text-red-400' : 'text-zinc-500'}`} />
+                                    <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                                        <IoBusinessOutline className="text-zinc-400" />
                                         Tỉnh / Thành phố
                                     </label>
                                     <div className="relative">
@@ -286,110 +248,101 @@ const AddressFormDialog: React.FC<Props> = ({
                                                 onChange: () => {
                                                     setValue("district", "");
                                                     setValue("commune", "");
-                                                    // Nếu đang lưu Huyện Xã bằng state thì dùng setWards([]), setDistricts([]) ở file cha nhé
                                                 }
                                             })}
-                                            className={`w-full h-[52px] pl-4 pr-10 bg-zinc-50/80 border ${errors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed`}
+                                            className={`w-full h-11 pl-3.5 pr-10 text-sm bg-zinc-50 border ${errors.city ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50`}
                                         >
-                                            <option value="" disabled hidden>Chọn Tỉnh/Thành</option>
+                                            <option value="" disabled hidden>Chọn Tỉnh / Thành phố</option>
                                             {provinces.map((prov) => (
                                                 <option key={prov.code} value={prov.code}>{prov.name}</option>
                                             ))}
                                         </select>
-                                        <IoChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${errors.city ? 'text-red-400' : 'text-zinc-400'}`} />
+                                        <IoChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
                                     </div>
-                                    {errors.city && <p className="text-[13px] text-red-500 font-medium pl-1">{errors.city.message}</p>}
+                                    {errors.city && <p className="text-xs text-red-500 font-medium">{errors.city.message}</p>}
                                 </div>
 
-                                {/* Quận / Huyện */}
-                                <div className="space-y-1.5">
-                                    <label className="text-[13px] font-semibold text-zinc-900 flex items-center gap-2 pl-1">
-                                        <IoLocationOutline className={`text-[16px] ${errors.district ? 'text-red-400' : 'text-zinc-500'}`} />
-                                        Quận / Huyện
-                                    </label>
-                                    <div className="relative">
-                                        <select 
-                                            {...register("district", { 
-                                                required: "Vui lòng chọn Quận/Huyện",
-                                                onChange: () => {
-                                                    setValue("commune", "");
-                                                }
-                                            })}
-                                            disabled={!selectedProvince}
-                                            className={`w-full h-[52px] pl-4 pr-10 bg-zinc-50/80 border ${errors.district ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed`}
-                                        >
-                                            <option value="" disabled hidden>Chọn Quận/Huyện</option>
-                                            {districts.map((dist) => (
-                                                <option key={dist.code} value={dist.code}>{dist.name}</option>
-                                            ))}
-                                        </select>
-                                        <IoChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${errors.district ? 'text-red-400' : 'text-zinc-400'}`} />
-                                    </div>
-                                    {errors.district && <p className="text-[13px] text-red-500 font-medium pl-1">{errors.district.message}</p>}
-                                </div>
-
-                                {/* Phường / Xã */}
-                                <div className="space-y-1.5">
-                                    <label className="text-[13px] font-semibold text-zinc-900 flex items-center gap-2 pl-1">
-                                        <IoHomeOutline className={`text-[16px] ${errors.commune ? 'text-red-400' : 'text-zinc-500'}`} />
-                                        Phường / Xã
-                                    </label>
-                                    <div className="relative">
-                                        <select 
-                                            {...register("commune", { required: "Vui lòng chọn Phường/Xã" })}
-                                            disabled={!selectedDistrict}
-                                            className={`w-full h-[52px] pl-4 pr-10 bg-zinc-50/80 border ${errors.commune ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed`}
-                                        >
-                                            <option value="" disabled hidden>Chọn Phường/Xã</option>
-                                            {wards.map((ward) => (
-                                                <option key={ward.code} value={ward.code}>{ward.name}</option>
-                                            ))}
-                                        </select>
-                                        <IoChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${errors.commune ? 'text-red-400' : 'text-zinc-400'}`} />
-                                    </div>
-                                    {errors.commune && <p className="text-[13px] text-red-500 font-medium pl-1">{errors.commune.message}</p>}
-                                </div>
-
-                                {/* Địa chỉ chi tiết (Floating Label) */}
-                                <div className="relative pt-2">
-                                    <div className="relative">
-                                        <IoLocationOutline className={`absolute left-4 top-1/2 -translate-y-1/2 text-[20px] pointer-events-none transition-colors duration-300 z-10 ${errors.addressDetail ? 'text-red-400' : 'text-zinc-400 peer-focus:text-zinc-900'}`} />
-                                        
-                                        <input
-                                            id="addressDetail"
-                                            {...register("addressDetail", { required: "Vui lòng nhập địa chỉ cụ thể" })}
-                                            type="text"
-                                            placeholder=" "
-                                            className={`peer w-full h-[56px] pl-12 pr-4 bg-zinc-50/80 border ${errors.addressDetail ? 'border-red-400 ring-1 ring-red-400' : 'border-zinc-200/80'} rounded-2xl focus:bg-white focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 outline-none transition-all duration-300 text-[15px] font-medium text-zinc-900`}
-                                        />
-                                        
-                                        <label
-                                            htmlFor="addressDetail"
-                                            className="absolute cursor-text left-12 top-1/2 -translate-y-1/2 text-[15px] text-zinc-500 transition-all duration-300 pointer-events-none
-                                            peer-focus:top-0 peer-focus:left-4 peer-focus:text-[13px] peer-focus:font-semibold peer-focus:text-zinc-900 peer-focus:bg-white peer-focus:px-2 peer-focus:-mt-[2px]
-                                            peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-4 peer-[:not(:placeholder-shown)]:text-[13px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:text-zinc-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2 peer-[:not(:placeholder-shown)]:-mt-[2px]"
-                                        >
-                                            Số nhà, tên đường, tòa nhà...
+                                {/* Quận Huyện & Phường Xã (2 Cột) */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {/* Quận / Huyện */}
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                                            <IoLocationOutline className="text-zinc-400" />
+                                            Quận / Huyện
                                         </label>
+                                        <div className="relative">
+                                            <select 
+                                                {...register("district", { 
+                                                    required: "Vui lòng chọn Quận/Huyện",
+                                                    onChange: () => setValue("commune", "")
+                                                })}
+                                                disabled={!selectedProvince}
+                                                className={`w-full h-11 pl-3.5 pr-10 text-sm bg-zinc-50 border ${errors.district ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                                            >
+                                                <option value="" disabled hidden>Chọn Quận/Huyện</option>
+                                                {districts.map((dist) => (
+                                                    <option key={dist.code} value={dist.code}>{dist.name}</option>
+                                                ))}
+                                            </select>
+                                            <IoChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                                        </div>
+                                        {errors.district && <p className="text-xs text-red-500 font-medium">{errors.district.message}</p>}
                                     </div>
-                                    {errors.addressDetail && <p className="text-[13px] text-red-500 mt-1.5 font-medium pl-1">{errors.addressDetail.message}</p>}
+
+                                    {/* Phường / Xã */}
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                                            <IoHomeOutline className="text-zinc-400" />
+                                            Phường / Xã
+                                        </label>
+                                        <div className="relative">
+                                            <select 
+                                                {...register("commune", { required: "Vui lòng chọn Phường/Xã" })}
+                                                disabled={!selectedDistrict}
+                                                className={`w-full h-11 pl-3.5 pr-10 text-sm bg-zinc-50 border ${errors.commune ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                                            >
+                                                <option value="" disabled hidden>Chọn Phường/Xã</option>
+                                                {wards.map((ward) => (
+                                                    <option key={ward.code} value={ward.code}>{ward.name}</option>
+                                                ))}
+                                            </select>
+                                            <IoChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                                        </div>
+                                        {errors.commune && <p className="text-xs text-red-500 font-medium">{errors.commune.message}</p>}
+                                    </div>
                                 </div>
 
-                                {/* Custom Toggle: Đặt làm mặc định */}
-                                <div className="pt-2 pb-2">
-                                    <label className="flex items-center justify-between cursor-pointer group">
-                                        <span className="text-[14px] font-semibold text-zinc-900 pl-1">
+                                {/* Địa chỉ chi tiết */}
+                                <div className="space-y-1.5">
+                                    <label htmlFor="addressDetail" className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
+                                        <IoLocationOutline className="text-zinc-400" />
+                                        Địa chỉ cụ thể
+                                    </label>
+                                    <input
+                                        id="addressDetail"
+                                        {...register("addressDetail", { required: "Vui lòng nhập địa chỉ cụ thể" })}
+                                        type="text"
+                                        placeholder="Số nhà, tên đường, tòa nhà..."
+                                        className={`w-full h-11 px-3.5 text-sm bg-zinc-50 border ${errors.addressDetail ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
+                                    />
+                                    {errors.addressDetail && <p className="text-xs text-red-500 font-medium">{errors.addressDetail.message}</p>}
+                                </div>
+
+                                {/* Toggle Mặc Định */}
+                                <div className="pt-2">
+                                    <label className="flex items-center justify-between cursor-pointer py-1">
+                                        <span className="text-sm font-semibold text-zinc-800">
                                             Đặt làm địa chỉ mặc định
                                         </span>
-                                        <div className="relative">
+                                        <div className="relative inline-flex items-center">
                                             <input 
                                                 type="checkbox" 
                                                 className="sr-only" 
                                                 checked={isDefault}
                                                 onChange={() => setIsDefault(!isDefault)}
                                             />
-                                            <div className={`block w-[46px] h-6 rounded-full transition-colors duration-300 ease-in-out ${isDefault ? 'bg-zinc-900' : 'bg-zinc-200'}`}></div>
-                                            <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out shadow-sm ${isDefault ? 'translate-x-[22px]' : 'translate-x-0'}`}></div>
+                                            <div className={`w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${isDefault ? 'bg-zinc-900' : 'bg-zinc-200'}`} />
+                                            <div className={`absolute left-0.5 bg-white w-5 h-5 rounded-full transition-transform duration-200 ease-in-out shadow-sm ${isDefault ? 'translate-x-5' : 'translate-x-0'}`} />
                                         </div>
                                     </label>
                                 </div>
@@ -397,19 +350,19 @@ const AddressFormDialog: React.FC<Props> = ({
                             </div>
 
                             {/* --- FOOTER --- */}
-                            <div className="px-8 py-6 mt-2 bg-white rounded-b-[1.5rem] shrink-0 border-t border-zinc-50">
+                            <div className="p-6 bg-zinc-50/50 border-t border-zinc-100 shrink-0">
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="relative w-full h-[56px] text-[14px] font-bold tracking-widest text-white bg-zinc-900 hover:bg-zinc-800 rounded-2xl transition-all duration-300 disabled:opacity-70 disabled:cursor-wait flex items-center justify-center overflow-hidden shadow-[0_4px_14px_0_rgb(24,24,27,0.3)] hover:shadow-[0_6px_20px_rgba(24,24,27,0.23)] hover:-translate-y-[1px] active:translate-y-[0px] active:scale-[0.98] cursor-pointer"
+                                    className="w-full h-11 text-xs font-bold uppercase tracking-wider text-white bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-wait flex items-center justify-center cursor-pointer shadow-sm"
                                 >
                                     {isLoading ? (
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                             <span>ĐANG LƯU...</span>
                                         </div>
                                     ) : (
-                                        initialData ? 'CẬP NHẬT' : 'THÊM ĐỊA CHỈ'
+                                        initialData ? 'Cập nhật địa chỉ' : 'Lưu địa chỉ'
                                     )}
                                 </button>
                             </div>

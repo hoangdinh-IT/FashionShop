@@ -19,7 +19,7 @@ namespace FashionShop.Core.Contracts.Shop.Voucher.Responses
         public decimal MinOrderValue { get; set; }
         public int Quantity { get; set; }
         public int UsedCount { get; set; } = 0;
-        public int MaxUsagePerUser { get; set; } = 1;
+        public int RemainingUsagePerUser { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }

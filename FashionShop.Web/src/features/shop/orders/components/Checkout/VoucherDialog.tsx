@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { X, Calendar, AlertCircle, Check, Tag } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Calendar, AlertCircle, Check, Tag, Users } from 'lucide-react';
 import { DiscountType, type Voucher } from '../../../vouchers/types/voucher';
 import { useSnackbar } from '../../../../../contexts';
+import { useLockBodyScroll } from '../../../../../hooks/useLockBodyScroll';
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from '../../../../../utils/animation';
 
 interface VoucherDialogProps {
     isOpen: boolean;
@@ -14,23 +16,6 @@ interface VoucherDialogProps {
     subTotal: number;
 }
 
-const backdropVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0, transition: { duration: 0.25, ease: "easeInOut" } },
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.96, y: 16 },
-    visible: { 
-        opacity: 1, 
-        scale: 1, 
-        y: 0, 
-        transition: { type: 'spring', damping: 28, stiffness: 320 } 
-    },
-    exit: { opacity: 0, scale: 0.96, y: 16, transition: { duration: 0.2, ease: "easeInOut" } },
-};
-
 export const VoucherDialog: React.FC<VoucherDialogProps> = ({
     isOpen,
     onClose,
@@ -39,22 +24,46 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
     onSelectVoucher,
     subTotal,
 }) => {
+    useLockBodyScroll(isOpen);
+
     const { showSnackbar } = useSnackbar();
     const [manualCode, setManualCode] = useState('');
+
+    // State lưu voucher đang chọn tạm thời trong Dialog
+    const [tempSelectedVoucher, setTempSelectedVoucher] = useState<Voucher | null>(selectedVoucher);
+
+    // Đồng bộ lại tempSelectedVoucher mỗi khi Modal được mở ra
+    useEffect(() => {
+        if (isOpen) {
+            setTempSelectedVoucher(selectedVoucher);
+            setManualCode('');
+        }
+    }, [isOpen, selectedVoucher]);
 
     const formatCurrency = (amount: number) => amount.toLocaleString('vi-VN') + 'đ';
 
     const formatDate = (dateString: string) => {
         const d = new Date(dateString);
-        return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+
+        return `${day}/${month}/${year}`;
     };
 
     const handleApplyManualCode = () => {
         if (!manualCode.trim()) return;
         const found = vouchers.find(v => v.code.toUpperCase() === manualCode.trim().toUpperCase());
         if (found) {
+            const isOutOfStock = found.quantity > 0 && found.usedCount >= found.quantity;
+            if (isOutOfStock) {
+                showSnackbar("Mã giảm giá đã hết lượt sử dụng!", "error");
+                return;
+            }
+
             if (subTotal >= found.minOrderValue) {
-                onSelectVoucher(found);
+                // Chỉ chọn tạm thời
+                setTempSelectedVoucher(found);
                 setManualCode('');
             } else {
                 showSnackbar(`Đơn hàng chưa đủ giá trị tối thiểu ${formatCurrency(found.minOrderValue)}`, "warning");
@@ -62,6 +71,12 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
         } else {
             showSnackbar("Mã giảm giá không tồn tại hoặc đã hết hạn!", "error");
         }
+    };
+
+    // Hàm xử lý khi bấm nút "Xác nhận"
+    const handleConfirm = () => {
+        onSelectVoucher(tempSelectedVoucher);
+        onClose();
     };
 
     const modalContent = (
@@ -74,7 +89,7 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="absolute inset-0 bg-neutral-950/40 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         onClick={onClose}
                     />
 
@@ -135,39 +150,49 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
                                 </div>
                             ) : (
                                 vouchers.map((voucher) => {
-                                    const isEligible = subTotal >= voucher.minOrderValue;
-                                    const isSelected = selectedVoucher?.id === voucher.id;
+                                    const isOutOfStock = voucher.quantity > 0 && voucher.usedCount >= voucher.quantity;
+                                    const isEligible = subTotal >= voucher.minOrderValue && !isOutOfStock;
+                                    
+                                    // Kiểm tra voucher theo trạng thái tạm thời (tempSelectedVoucher)
+                                    const isSelected = tempSelectedVoucher?.id === voucher.id;
 
                                     return (
-                                        <div 
+                                        <motion.div 
                                             key={voucher.id}
+                                            whileTap={isEligible ? { scale: 0.985 } : undefined}
                                             onClick={() => {
                                                 if (isEligible) {
-                                                    onSelectVoucher(isSelected ? null : voucher);
+                                                    // Chọn / Bỏ chọn tạm thời
+                                                    setTempSelectedVoucher(isSelected ? null : voucher);
                                                 }
                                             }}
-                                            className={`relative flex rounded-2xl border transition-all duration-200 overflow-hidden ${
+                                            className={`relative flex rounded-2xl border bg-white transition-all duration-300 overflow-hidden ${
                                                 !isEligible 
-                                                    ? 'border-neutral-200 bg-neutral-50/50 opacity-55 cursor-not-allowed' 
+                                                    ? 'border-neutral-200 bg-neutral-50/50 opacity-60 cursor-not-allowed' 
                                                     : isSelected 
-                                                        ? 'border-neutral-900 bg-neutral-900 text-white shadow-md cursor-pointer' 
-                                                        : 'border-neutral-200 bg-white hover:border-neutral-300 cursor-pointer'
+                                                        ? 'border-neutral-900 shadow-md ring-1 ring-neutral-900 cursor-pointer' 
+                                                        : 'border-neutral-200 hover:border-neutral-300 hover:shadow-sm cursor-pointer'
                                             }`}
                                         >
-                                            {/* LEFT TICKET BADGE */}
-                                            <div className={`w-24 shrink-0 flex flex-col items-center justify-center p-3 border-r border-dashed ${
-                                                isSelected 
-                                                    ? 'border-neutral-700 bg-neutral-800/60' 
-                                                    : 'border-neutral-200 bg-neutral-50'
-                                            }`}>
-                                                <span className={`text-[11px] font-black uppercase tracking-wider ${
-                                                    isSelected ? 'text-white' : 'text-neutral-800'
+                                            {/* TAG GIỚI HẠN LƯỢT DÙNG MỖI NGƯỜI (GÓC TRÊN BÊN TRÁI) */}
+                                            {voucher.remainingUsagePerUser > 0 && (
+                                                <div className={`absolute top-0 left-0 z-10 px-2 py-0.5 text-[11px] font-black rounded-br-xl transition-colors ${
+                                                    !isEligible 
+                                                        ? 'bg-neutral-200 text-neutral-500' 
+                                                        : isSelected 
+                                                            ? 'bg-neutral-900 text-white' 
+                                                            : 'bg-neutral-200/80 text-neutral-700'
                                                 }`}>
+                                                    x{voucher.remainingUsagePerUser}
+                                                </div>
+                                            )}
+
+                                            {/* LEFT TICKET BADGE */}
+                                            <div className="w-24 shrink-0 flex flex-col items-center justify-center p-3 border-r border-dashed border-neutral-200 bg-neutral-50 relative pt-5">
+                                                <span className="text-[11px] font-black uppercase tracking-wider text-neutral-800 text-center leading-tight">
                                                     {voucher.code}
                                                 </span>
-                                                <span className={`text-xs font-extrabold mt-1 ${
-                                                    isSelected ? 'text-emerald-400' : 'text-emerald-600'
-                                                }`}>
+                                                <span className="text-xs font-extrabold mt-1 text-emerald-600">
                                                     {voucher.discountType === DiscountType.Percentage 
                                                         ? `-${voucher.discountAmount}%` 
                                                         : `-${formatCurrency(voucher.discountAmount)}`}
@@ -178,42 +203,53 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
                                             <div className="flex-1 p-3.5 flex flex-col justify-between min-w-0">
                                                 <div>
                                                     <div className="flex items-start justify-between gap-2">
-                                                        <h3 className="text-xs font-bold leading-snug line-clamp-1">{voucher.name}</h3>
+                                                        <h3 className="text-xs font-bold text-neutral-900 leading-snug line-clamp-1">{voucher.name}</h3>
                                                         
-                                                        {/* CHECKBOX INDICATOR */}
-                                                        <button
+                                                        {/* NÚT TRÒN ĐEN / TICK CHECKMARK */}
+                                                        <motion.button
                                                             type="button"
                                                             disabled={!isEligible}
+                                                            animate={{ scale: isSelected ? [0.85, 1.15, 1] : 1 }}
+                                                            transition={{ duration: 0.2 }}
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 if (isEligible) {
-                                                                    onSelectVoucher(isSelected ? null : voucher);
+                                                                    setTempSelectedVoucher(isSelected ? null : voucher);
                                                                 }
                                                             }}
-                                                            className={`shrink-0 flex h-5 w-5 items-center justify-center rounded-full border transition-all ${
+                                                            className={`shrink-0 flex h-5 w-5 items-center justify-center rounded-full border transition-all duration-300 ${
                                                                 !isEligible
                                                                     ? 'border-neutral-300 bg-neutral-100 text-transparent cursor-not-allowed'
                                                                     : isSelected
-                                                                        ? 'border-white bg-white text-neutral-900'
-                                                                        : 'border-neutral-300 bg-white text-transparent'
+                                                                        ? 'border-neutral-900 bg-neutral-900 text-white shadow-sm'
+                                                                        : 'border-neutral-300 bg-white text-transparent hover:border-neutral-400'
                                                             }`}
                                                         >
-                                                            {isSelected && <Check size={12} strokeWidth={3} />}
-                                                        </button>
+                                                            {isSelected && <Check size={11} strokeWidth={3} />}
+                                                        </motion.button>
                                                     </div>
 
-                                                    <p className={`text-[11px] font-medium leading-relaxed mt-1 line-clamp-2 ${
-                                                        isSelected ? 'text-neutral-300' : 'text-neutral-500'
-                                                    }`}>
+                                                    <p className="text-[11px] font-medium text-neutral-500 leading-relaxed mt-1 line-clamp-2">
                                                         {voucher.description}
                                                     </p>
+
+                                                    {/* THÔNG TIN THÊM */}
+                                                    <div className="mt-2 flex items-center gap-3 text-[10px] font-medium text-neutral-500 flex-wrap">
+                                                        {/* Lượt dùng tổng */}
+                                                        <span className={`flex items-center gap-1 ${
+                                                            isOutOfStock ? 'text-rose-500 font-bold' : ''
+                                                        }`}>
+                                                            <Users size={11} />
+                                                            {isOutOfStock 
+                                                                ? 'Đã hết lượt' 
+                                                                : `Đã dùng: ${voucher.usedCount}/${voucher.quantity || '∞'}`}
+                                                        </span>
+                                                    </div>
                                                 </div>
 
-                                                {/* FOOTER INFO OF ITEM */}
-                                                <div className="mt-3 flex items-center justify-between text-[10px] font-medium">
-                                                    <div className={`flex items-center gap-1 ${
-                                                        isSelected ? 'text-neutral-400' : 'text-neutral-400'
-                                                    }`}>
+                                                {/* FOOTER INFO */}
+                                                <div className="mt-2.5 flex items-center justify-between text-[10px] font-medium">
+                                                    <div className="flex items-center gap-1 text-neutral-400">
                                                         <Calendar size={11} />
                                                         <span>HSD: {formatDate(voucher.endDate)}</span>
                                                     </div>
@@ -221,12 +257,16 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
                                                     {!isEligible && (
                                                         <div className="flex items-center gap-1 text-amber-600 font-semibold">
                                                             <AlertCircle size={11} />
-                                                            <span>Thiếu {formatCurrency(voucher.minOrderValue - subTotal)}</span>
+                                                            <span>
+                                                                {isOutOfStock 
+                                                                    ? 'Hết lượt dùng' 
+                                                                    : `Thiếu ${formatCurrency(voucher.minOrderValue - subTotal)}`}
+                                                            </span>
                                                         </div>
                                                     )}
                                                 </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     );
                                 })
                             )}
@@ -234,16 +274,30 @@ export const VoucherDialog: React.FC<VoucherDialogProps> = ({
 
                         {/* FOOTER */}
                         <div className="px-6 py-4 border-t border-neutral-100 bg-white flex items-center justify-between shrink-0">
-                            <div className="text-xs">
-                                <span className="text-neutral-400">Đã chọn: </span>
-                                <span className="font-bold text-neutral-900">
-                                    {selectedVoucher ? selectedVoucher.code : 'Chưa có'}
-                                </span>
+                            <div className="flex flex-col text-xs gap-0.5">
+                                <div>
+                                    <span className="text-neutral-400">Đã chọn: </span>
+                                    <span className="font-bold text-neutral-900">
+                                        {tempSelectedVoucher ? tempSelectedVoucher.code : 'Chưa có'}
+                                    </span>
+                                </div>
+
+                                {/* Hiển thị số tiền tiết kiệm tạm thời khi chọn voucher */}
+                                {tempSelectedVoucher && (
+                                    <div className="text-[11px] font-semibold text-rose-600">
+                                        <span>Tiết kiệm: </span>
+                                        <span>
+                                            -{tempSelectedVoucher.discountType === DiscountType.Percentage
+                                                ? formatCurrency(Math.min((subTotal * tempSelectedVoucher.discountAmount) / 100, tempSelectedVoucher.maxDiscountAmount || Infinity))
+                                                : formatCurrency(tempSelectedVoucher.discountAmount)}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             <button
                                 type="button"
-                                onClick={onClose}
+                                onClick={handleConfirm}
                                 className="h-10 px-6 bg-neutral-900 text-white font-medium text-xs rounded-xl hover:bg-neutral-800 transition-colors active:scale-95 cursor-pointer"
                             >
                                 Xác nhận

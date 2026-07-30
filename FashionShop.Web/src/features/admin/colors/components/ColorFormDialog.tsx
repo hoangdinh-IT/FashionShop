@@ -2,10 +2,12 @@ import type React from "react";
 import type { Color } from "../types/color";
 import { useColors } from "../hooks/useColors";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import type { ColorFormInputs } from "../types/requests";
 import { IoClose, IoColorPaletteOutline } from "react-icons/io5";
 import { useEffect } from "react";
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
 
 const generateSlug = (str: string) => {
     if (!str) return "";
@@ -48,6 +50,7 @@ const ColorFormDialog: React.FC<ColorFormDialogProps> = ({
     onClose,
     initialData
 }) => {
+    useLockBodyScroll(isOpen);
     
     const {
         createColor,
@@ -96,37 +99,12 @@ const ColorFormDialog: React.FC<ColorFormDialogProps> = ({
             updateColor({ colorId: initialData.id, request: data }, { onSuccess: handleSuccess });
     }
 
-    const backdropVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-    };
-
-    const modalVariants: Variants = {
-        hidden: {
-            opacity: 0,
-            y: 16,
-            scale: 0.96
-        },
-        visible: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { type: "spring", stiffness: 300, damping: 25 }
-        },
-        exit: {
-            opacity: 0,
-            y: 16,
-            scale: 0.96,
-            transition: { duration: 0.2 }
-        }
-    };
-
     return (
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 font-sans">
                     <motion.div
-                        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"

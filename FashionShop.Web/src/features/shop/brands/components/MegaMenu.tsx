@@ -9,7 +9,7 @@ interface Props {
 }
 
 // =======================================================================
-// COMPONENT PHỤ: LEVEL 2 ITEM
+// COMPONENT PHỤ: LEVEL 2 ITEM (Minimalist Accordion Style)
 // =======================================================================
 interface Level2Props {
     category: any;
@@ -22,65 +22,79 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
     const hasChildren = category.children && category.children.length > 0;
 
     return (
-        <div className="mb-1">
-            <button
-                onClick={() => hasChildren && onToggle()}
-                className={`flex items-center justify-between w-full py-3 text-left group cursor-pointer ${hasChildren ? 'cursor-pointer' : 'cursor-default'}`}
-            >
-                <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-md bg-zinc-50 overflow-hidden flex-shrink-0 border border-zinc-100 shadow-sm transition-transform duration-500 group-hover:scale-105">
-                        {category.imageUrl ? (
+        <div className="group/item">
+            <div className="flex items-center justify-between py-2.5">
+                {/* Tên Category Level 2 */}
+                <button
+                    onClick={() => {
+                        if (hasChildren) {
+                            onToggle();
+                        } else {
+                            onFilter(category.slug);
+                        }
+                    }}
+                    className="flex items-center gap-3 text-left group/btn cursor-pointer"
+                >
+                    {category.imageUrl && (
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0 opacity-80 group-hover/btn:opacity-100 transition-opacity">
                             <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="w-full h-full bg-zinc-100 flex items-center justify-center text-[11px] font-bold uppercase tracking-widest text-zinc-400">Img</div>
-                        )}
-                    </div>
-                    
-                    <span className={`text-[16px] transition-all duration-300 transform group-hover:translate-x-1 ${isExpanded ? 'text-black font-bold' : 'text-zinc-700 font-semibold group-hover:text-black'}`}>
+                        </div>
+                    )}
+                    <span className={`text-[15px] tracking-tight transition-colors duration-200 ${
+                        isExpanded ? 'text-black font-semibold' : 'text-zinc-600 font-normal hover:text-black'
+                    }`}>
                         {category.name}
                     </span>
-                </div>
+                </button>
 
+                {/* Nút Toggle mở rộng nếu có con */}
                 {hasChildren && (
-                    <motion.svg
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`w-5 h-5 text-zinc-400 group-hover:text-black transition-colors`}
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    <button
+                        onClick={onToggle}
+                        className="p-1 text-zinc-400 hover:text-black transition-colors cursor-pointer"
+                        aria-label="Toggle Subcategories"
                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </motion.svg>
+                        <motion.svg
+                            animate={{ rotate: isExpanded ? 45 : 0 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                            className="w-4 h-4"
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                        </motion.svg>
+                    </button>
                 )}
-            </button>
+            </div>
 
+            {/* Level 3 Animated Collapse */}
             <AnimatePresence initial={false}>
                 {isExpanded && hasChildren && (
                     <motion.ul
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                        className="overflow-hidden ml-[4.5rem] flex flex-col gap-3.5 pb-4 pt-1" 
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden pl-4 border-l border-zinc-200 ml-2 my-1 flex flex-col gap-2 py-1" 
                     >
-                        {/* Nút Tất cả (Level 2) - Dùng Slug của chính nó */}
+                        {/* Nút Tất cả Level 2 */}
                         <li>
                             <button
                                 onClick={() => onFilter(category.slug)} 
-                                className="text-[14px] font-semibold text-black hover:text-black transition-all duration-300 flex items-center gap-2 group/link cursor-pointer" 
+                                className="text-[13px] font-medium text-black hover:underline underline-offset-4 cursor-pointer py-0.5 block" 
                             >
-                                <span className="w-1.5 h-1.5 rounded-full bg-black opacity-0 -ml-3.5 transition-all duration-300 group-hover/link:opacity-100 group-hover/link:ml-0" />
-                                Tất cả {category.name.toLowerCase()}
+                                Tất cả {category.name}
                             </button>
                         </li>
 
-                        {/* Danh sách Level 3 - Dùng Slug của con */}
+                        {/* Danh sách Level 3 */}
                         {category.children.map((child: any) => (
                             <li key={child.id}>
                                 <button
                                     onClick={() => onFilter(child.slug)} 
-                                    className="text-[14px] font-medium text-zinc-500 hover:text-black hover:font-semibold transition-all duration-300 flex items-center gap-2 group/link cursor-pointer"
+                                    className="text-[13px] text-zinc-500 hover:text-black transition-colors cursor-pointer py-0.5 block text-left"
                                 >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-black opacity-0 -ml-3.5 transition-all duration-300 group-hover/link:opacity-100 group-hover/link:ml-0" />
                                     {child.name}
                                 </button>
                             </li>
@@ -93,7 +107,7 @@ const CategoryLevel2Item: React.FC<Level2Props> = ({ category, isExpanded, onTog
 };
 
 // =======================================================================
-// COMPONENT CHÍNH: MEGA MENU
+// COMPONENT CHÍNH: MEGA MENU (Expressive Minimalism)
 // =======================================================================
 const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
@@ -108,12 +122,10 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
         isLoadingCategories
     } = useBrands(activeBrandId);
 
-    // Lấy thông tin Brand đang chọn để lấy Slug và Name
     const activeBrand = useMemo(() => 
         brands?.find((b: any) => b.id === activeBrandId), 
     [brands, activeBrandId]);
 
-    // Hàm điều hướng theo format: /shop/collection/brand-slug/category-slug
     const handleFilter = (brandSlug?: string, categorySlug?: string) => {
         if (!brandSlug) return;
 
@@ -142,93 +154,95 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Backdrop */}
+                    {/* Backdrop mờ nhẹ nhàng */}
                     <motion.div
-                        className="fixed inset-0 top-[80px] z-100 bg-black/50 backdrop-blur-sm"
+                        className="fixed inset-0 top-[80px] z-40 bg-black/20 backdrop-blur-md"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4 }}
+                        transition={{ duration: 0.3 }}
                         onClick={onClose}
                     />
 
-                    {/* Menu Content */}
+                    {/* Content Menu Panel */}
                     <motion.div
-                        className="absolute left-0 right-0 top-[80px] z-100 bg-white shadow-2xl border-t border-zinc-200 origin-top"
-                        initial={{ opacity: 0, y: -20 }}
+                        className="absolute left-0 right-0 top-[80px] z-50 bg-white border-b border-zinc-200 shadow-2xl overflow-hidden"
+                        initial={{ opacity: 0, y: -12 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        exit={{ opacity: 0, y: -12 }}
+                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <div className="max-w-[1300px] mx-auto px-6 lg:px-12 flex flex-col">
+                        <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-6 pb-8 flex flex-col">
                             
-                            {/* Tabs Thương Hiệu */}
-                            <div className="flex items-center justify-center gap-16 py-8 border-b border-zinc-200">
-                                {brands?.map((brand: any) => {
-                                    const isActive = activeBrandId === brand.id;
-                                    return (
-                                        <button
-                                            key={brand.id}
-                                            onMouseEnter={() => setActiveBrandId(brand.id)}
-                                            className={`relative pb-3 text-[15px] uppercase tracking-wider transition-all duration-300 cursor-pointer ${
-                                                isActive ? 'text-black font-extrabold' : 'text-zinc-400 font-bold hover:text-black'
-                                            }`}
-                                        >
-                                            {brand.name}
-                                            {isActive && (
-                                                <motion.div
-                                                    layoutId="activeBrandIndicator"
-                                                    className="absolute left-0 right-0 bottom-0 h-[2px] bg-black"
-                                                    transition={{ duration: 0.3 }}
-                                                />
-                                            )}
-                                        </button>
-                                    );
-                                })}
+                            {/* Header Bar: Brand Navigation Tabs */}
+                            <div className="flex items-center justify-center border-b border-zinc-100 pb-4 mb-8">
+                                <div className="flex items-center gap-12 overflow-x-auto no-scrollbar">
+                                    {brands?.map((brand: any) => {
+                                        const isActive = activeBrandId === brand.id;
+                                        return (
+                                            <button
+                                                key={brand.id}
+                                                onMouseEnter={() => setActiveBrandId(brand.id)}
+                                                onClick={() => setActiveBrandId(brand.id)}
+                                                className={`relative pb-2 text-[13px] uppercase tracking-[0.2em] transition-colors cursor-pointer whitespace-nowrap ${
+                                                    isActive ? 'text-black font-semibold' : 'text-zinc-400 font-normal hover:text-black'
+                                                }`}
+                                            >
+                                                {brand.name}
+                                                {isActive && (
+                                                    <motion.div
+                                                        layoutId="activeBrandLine"
+                                                        className="absolute left-0 right-0 bottom-0 h-[1.5px] bg-black"
+                                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                                    />
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
-                            <div className="py-12 flex gap-16 min-h-[550px]">
+                            {/* Main Grid Section */}
+                            <div className="grid grid-cols-12 gap-12 min-h-[420px] mb-8">
                                 
-                                <div className="flex-1">
+                                {/* Categories Columns (8 cols) */}
+                                <div className="col-span-12 lg:col-span-8">
                                     {isLoadingBrands || isLoadingCategories ? (
-                                        <div className="h-full flex items-center justify-center">
-                                            <div className="w-6 h-6 border-2 border-zinc-300 border-t-black rounded-full animate-spin" />
+                                        <div className="h-full min-h-[300px] flex items-center justify-center">
+                                            <div className="w-5 h-5 border border-zinc-300 border-t-black rounded-full animate-spin" />
                                         </div>
                                     ) : categories?.length > 0 ? (
-                                        <div className="flex flex-wrap gap-12 lg:gap-16">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
                                             {categories.map((level1: any, index: number) => (
                                                 <motion.div 
                                                     key={level1.id} 
-                                                    className="flex-1 min-w-[260px]"
-                                                    initial={{ opacity: 0, y: 10 }}
+                                                    initial={{ opacity: 0, y: 8 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: index * 0.1, duration: 0.4 }}
+                                                    transition={{ delay: index * 0.05, duration: 0.3 }}
+                                                    className="flex flex-col"
                                                 >
+                                                    {/* Title Level 1 */}
                                                     <button 
                                                         type="button"
                                                         onClick={() => handleFilter(activeBrand?.slug, level1.slug)}
-                                                        className="w-full text-[18px] font-extrabold tracking-wide text-black mb-6 uppercase flex items-center justify-between pb-4 border-b-2 border-black/5 cursor-pointer hover:text-zinc-500 hover:border-zinc-300 transition-all duration-300 group/title select-none"
+                                                        className="group flex items-center justify-between text-left mb-4 cursor-pointer"
                                                     >
-                                                        <span>{level1.name}</span>
-                                                        
-                                                        <svg 
-                                                            className="w-5 h-5 opacity-0 -translate-x-3 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all duration-300 text-zinc-400" 
-                                                            fill="none" 
-                                                            viewBox="0 0 24 24" 
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                                        </svg>
+                                                        <h4 className="text-[14px] font-bold tracking-[0.15em] text-black uppercase transition-opacity group-hover:opacity-60">
+                                                            {level1.name}
+                                                        </h4>
+                                                        <span className="text-xs text-zinc-300 group-hover:text-black group-hover:translate-x-0.5 transition-all">
+                                                            →
+                                                        </span>
                                                     </button>
                                                     
-                                                    <div className="flex flex-col gap-2">
+                                                    {/* List Level 2 */}
+                                                    <div className="flex flex-col divide-y divide-zinc-50">
                                                         {level1.children?.map((level2: any) => (
                                                             <CategoryLevel2Item 
                                                                 key={level2.id} 
                                                                 category={level2} 
                                                                 isExpanded={expandedCategoryId === level2.id}
                                                                 onToggle={() => setExpandedCategoryId(prev => prev === level2.id ? null : level2.id)}
-                                                                // Truyền slug của Brand hiện tại và slug của Category con
                                                                 onFilter={(categorySlug) => handleFilter(activeBrand?.slug, categorySlug)}
                                                             />
                                                         ))}
@@ -237,16 +251,16 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="text-base text-zinc-400 flex items-center justify-center h-full font-medium">
-                                            Bộ sưu tập đang được cập nhật.
+                                        <div className="h-full flex items-center justify-center text-xs tracking-widest text-zinc-400 uppercase">
+                                            Bộ sưu tập đang được cập nhật
                                         </div>
                                     )}
                                 </div>
 
-                                {/* Banner bên phải */}
-                                <div className="w-[380px] flex-shrink-0">
+                                {/* Banner bên phải (4 cols) - Tối giản tinh tế */}
+                                <div className="col-span-12 lg:col-span-4 flex flex-col justify-end">
                                     <div 
-                                        className="relative w-full h-[420px] bg-zinc-100 overflow-hidden group cursor-pointer rounded-lg shadow-xl"
+                                        className="relative w-full h-[380px] bg-zinc-100 overflow-hidden group cursor-pointer"
                                         onClick={() => handleFilter(activeBrand?.slug)}
                                     >
                                         <AnimatePresence mode="wait">
@@ -254,45 +268,43 @@ const MegaMenu: React.FC<Props> = ({ isOpen, onClose }) => {
                                                 key={activeBrandId}
                                                 src={defaultBanner}
                                                 alt="Collection Banner"
-                                                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-[2s] group-hover:scale-105"
+                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}
-                                                transition={{ duration: 0.6 }}
+                                                transition={{ duration: 0.4 }}
                                             />
                                         </AnimatePresence>
                                         
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
+                                        {/* Light Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 transition-opacity group-hover:opacity-95" />
                                         
-                                        <div className="absolute bottom-10 left-10 right-10 flex flex-col items-start transform transition-transform duration-500 group-hover:-translate-y-2">
-                                            <span className="px-4 py-1.5 bg-white text-black text-[11px] font-bold tracking-widest uppercase rounded-sm mb-4">
-                                                Bộ Sưu Tập Mới
+                                        {/* Typography Content */}
+                                        <div className="absolute bottom-8 left-8 right-8 flex flex-col items-start text-white">
+                                            <span className="text-[10px] tracking-[0.3em] uppercase text-zinc-300 mb-2 font-medium">
+                                                Collection Spotlight
                                             </span>
-                                            <h5 className="text-white text-4xl font-extrabold tracking-tight leading-tight mb-4">
-                                                {activeBrand?.name || ''}
+                                            <h5 className="text-2xl font-light tracking-tight mb-4 capitalize">
+                                                {activeBrand?.name || 'New Season'}
                                             </h5>
-                                            <p className="text-white/80 text-[14px] font-medium flex items-center gap-2 group/btn">
-                                                Khám phá ngay 
-                                                <svg className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                                </svg>
-                                            </p>
+                                            <span className="text-[11px] uppercase tracking-[0.2em] text-white border-b border-white/40 pb-1 group-hover:border-white transition-colors">
+                                                Khám phá ngay
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
 
-                            {/* Nút Đóng */}
-                            <div className="flex justify-center pb-8 border-t border-zinc-200 pt-6">
+                            {/* Nút Đóng ở bên dưới - Phong cách Minimalist pill button */}
+                            <div className="flex justify-center pt-6 border-t border-zinc-100">
                                 <button
                                     onClick={onClose}
-                                    className="group flex items-center gap-3 px-8 py-3 bg-zinc-50 rounded-full border border-zinc-200 text-[13px] font-bold tracking-wider text-zinc-600 uppercase hover:text-black hover:bg-zinc-100 transition-all shadow-sm cursor-pointer"
+                                    className="group flex items-center gap-2.5 px-6 py-2.5 rounded-full border border-zinc-200 text-[11px] font-medium tracking-[0.2em] text-zinc-500 uppercase hover:text-black hover:border-black hover:bg-zinc-50 transition-all cursor-pointer"
                                 >
-                                    Đóng Menu
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:rotate-90">
-                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    <span>Đóng Menu</span>
+                                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>

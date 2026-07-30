@@ -1,11 +1,10 @@
-import { Clock3, Heart, Star } from "lucide-react";
+import { Clock3, Heart, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useReview, useReviewLikeMutations } from "../../../reviews/hooks/useReview";
 import type { Review, ReviewLike } from "../../../reviews/types/review";
 import { useAuth } from "../../../../../contexts";
 
-
-// Mở rộng Type Review tại chỗ để khớp 100% với ShopReviewResponse từ BE trả về
 interface ReviewWithLike extends Review {
     isLiked?: boolean;
     totalLikes?: number;
@@ -20,7 +19,7 @@ const formatReviewDate = (date?: string | Date) => {
     const parsed = new Date(date);
     return parsed.toLocaleDateString("vi-VN", {
         day: "2-digit",
-        month: "short",
+        month: "2-digit",
         year: "numeric",
     });
 };
@@ -37,14 +36,17 @@ const formatReviewTime = (date?: string | Date) => {
 const ProductReviews = ({ productSlug }: Props) => {
     const { reviews, isLoading } = useReview(productSlug);
     const { updateReviewLike, isUpdating } = useReviewLikeMutations();
-
-    // Lấy thông tin user đang đăng nhập
     const { user: currentUser } = useAuth();
 
-    // Local State cho Optimistic Update UI
     const [optimisticLikes, setOptimisticLikes] = useState<
         Record<string, { isLiked: boolean; totalLikes: number }>
     >({});
+
+    // State quản lý Lightbox
+    const [lightboxImage, setLightboxImage] = useState<{
+        reviewId: string;
+        index: number;
+    } | null>(null);
 
     const reviewList = (reviews as ReviewWithLike[]) || [];
     const reviewCount = reviewList.length;
@@ -58,23 +60,44 @@ const ProductReviews = ({ productSlug }: Props) => {
             new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
     );
 
+    // Lấy thông tin review & ảnh đang active trong lightbox
+    const activeReview = lightboxImage
+        ? sortedReviews.find((r) => r.reviewId === lightboxImage.reviewId)
+        : null;
+    const activeImages = activeReview?.reviewImages || [];
+    const currentLightboxImage = activeImages[lightboxImage?.index ?? 0];
+
+    const handlePrevImage = () => {
+        if (!lightboxImage || activeImages.length <= 1) return;
+        setLightboxImage((prev) => {
+            if (!prev) return null;
+            const newIndex = (prev.index - 1 + activeImages.length) % activeImages.length;
+            return { ...prev, index: newIndex };
+        });
+    };
+
+    const handleNextImage = () => {
+        if (!lightboxImage || activeImages.length <= 1) return;
+        setLightboxImage((prev) => {
+            if (!prev) return null;
+            const newIndex = (prev.index + 1) % activeImages.length;
+            return { ...prev, index: newIndex };
+        });
+    };
+
     const handleToggleLike = (review: ReviewWithLike) => {
-        // 1. Chặn nếu là tác giả hoặc đang trong quá trình gọi API
         const isOwner = currentUser?.id && currentUser.id === review.userId;
         if (isOwner || isUpdating) return;
 
-        // 2. Lấy thông tin like hiện tại (Ưu tiên từ Local State -> rồi mới đến Response từ BE)
         const currentOpt = optimisticLikes[review.reviewId];
         const currentIsLiked = currentOpt ? currentOpt.isLiked : Boolean(review.isLiked);
         const currentTotalLikes = currentOpt ? currentOpt.totalLikes : (review.totalLikes ?? 0);
 
-        // 3. Tính toán trạng thái mới
         const nextIsLiked = !currentIsLiked;
         const nextTotalLikes = nextIsLiked
             ? currentTotalLikes + 1
             : Math.max(0, currentTotalLikes - 1);
 
-        // 4. Optimistic Update: Cập nhật UI lập tức
         setOptimisticLikes((prev) => ({
             ...prev,
             [review.reviewId]: {
@@ -83,13 +106,11 @@ const ProductReviews = ({ productSlug }: Props) => {
             },
         }));
 
-        // 5. Gửi Request lên Backend
         updateReviewLike(
             { reviewId: review.reviewId },
             {
                 onSuccess: (data: ReviewLike) => {
                     if (data && data.reviewId) {
-                        // Đồng bộ dữ liệu chính xác trả về từ BE
                         setOptimisticLikes((prev) => ({
                             ...prev,
                             [data.reviewId]: {
@@ -100,7 +121,6 @@ const ProductReviews = ({ productSlug }: Props) => {
                     }
                 },
                 onError: () => {
-                    // Revert lại trạng thái cũ nếu API báo lỗi
                     setOptimisticLikes((prev) => ({
                         ...prev,
                         [review.reviewId]: {
@@ -114,75 +134,71 @@ const ProductReviews = ({ productSlug }: Props) => {
     };
 
     return (
-        <section className="mt-16">
-            {/* Header Overview */}
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <section className="mt-16 border-t border-zinc-200/80 pt-12">
+            {/* HEADER OVERVIEW */}
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.32em] text-zinc-400">
-                        Customer Feedback
-                    </span>
-                    <h2 className="mt-4 text-[34px] font-black leading-none tracking-[-0.06em] text-zinc-950">
-                        ĐÁNH GIÁ SẢN PHẨM
+                    <div className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-zinc-900" />
+                        <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+                            Khách hàng đánh giá
+                        </span>
+                    </div>
+                    <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-900 md:text-3xl">
+                        Đánh giá sản phẩm
                     </h2>
-                    <p className="mt-4 max-w-xl text-sm leading-7 text-zinc-500">
-                        Những chia sẻ thực tế từ khách hàng đã trải nghiệm sản phẩm.
-                    </p>
                 </div>
 
-                {/* Rating Card */}
-                <div className="flex items-center gap-5 rounded-[32px] border border-zinc-200 bg-white px-6 py-5 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
-                    <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-zinc-400">
-                            Average Rating
-                        </p>
-                        <div className="mt-3 flex items-end gap-3">
-                            <span className="text-[44px] font-black leading-none tracking-[-0.08em] text-zinc-950">
-                                {averageRating ? averageRating.toFixed(1) : "0.0"}
-                            </span>
-                            <div className="pb-1">
-                                <div className="flex items-center gap-1">
-                                    {Array.from({ length: 5 }).map((_, index) => (
-                                        <Star
-                                            key={index}
-                                            size={14}
-                                            className={
-                                                index < Math.round(averageRating)
-                                                    ? "fill-zinc-900 text-zinc-900"
-                                                    : "text-zinc-300"
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                                <p className="mt-1 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
-                                    {reviewCount} reviews
-                                </p>
-                            </div>
+                {/* RATING SUMMARY CARD */}
+                <div className="flex items-center gap-4 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-4 shadow-2xs">
+                    <div className="flex flex-col items-center border-r border-zinc-200/80 pr-4">
+                        <span className="text-3xl font-black text-zinc-900">
+                            {averageRating ? averageRating.toFixed(1) : "0.0"}
+                        </span>
+                        <div className="mt-1 flex items-center gap-0.5">
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <Star
+                                    key={index}
+                                    size={12}
+                                    className={
+                                        index < Math.round(averageRating)
+                                            ? "fill-zinc-900 text-zinc-900"
+                                            : "text-zinc-300"
+                                    }
+                                />
+                            ))}
                         </div>
+                    </div>
+                    <div>
+                        <p className="text-xs font-bold text-zinc-900">
+                            {reviewCount} nhận xét
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-zinc-500">
+                            Từ khách hàng đã mua hàng
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Reviews List */}
-            <div className="mt-10">
+            {/* REVIEWS LIST */}
+            <div className="mt-8">
                 {isLoading ? (
-                    <div className="rounded-[32px] border border-zinc-200 bg-zinc-50 px-6 py-12 text-center text-sm text-zinc-500">
+                    <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 py-12 text-center text-xs font-medium text-zinc-500">
                         Đang tải đánh giá...
                     </div>
                 ) : reviewCount === 0 ? (
-                    <div className="rounded-[32px] border border-dashed border-zinc-200 bg-zinc-50 px-6 py-14 text-center">
-                        <p className="text-sm font-medium text-zinc-500">
-                            Chưa có đánh giá cho sản phẩm này.
+                    <div className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 py-12 text-center">
+                        <p className="text-xs font-medium text-zinc-500">
+                            Chưa có đánh giá nào cho sản phẩm này.
                         </p>
                     </div>
                 ) : (
-                    <div className="space-y-5">
+                    <div className="space-y-4">
                         {sortedReviews.map((review: ReviewWithLike) => {
-                            // Check người dùng hiện tại có phải tác giả review không
                             const isOwner = Boolean(
                                 currentUser?.id && currentUser.id === review.userId
                             );
 
-                            // Tách thông tin Like từ Optimistic state hoặc từ Response Backend
                             const opt = optimisticLikes[review.reviewId];
                             const isLiked = opt ? opt.isLiked : Boolean(review.isLiked);
                             const totalLikes = opt ? opt.totalLikes : (review.totalLikes ?? 0);
@@ -190,109 +206,110 @@ const ProductReviews = ({ productSlug }: Props) => {
                             return (
                                 <article
                                     key={review.reviewId}
-                                    className="group rounded-[32px] border border-zinc-200 bg-white p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.05)]"
+                                    className="group rounded-2xl border border-zinc-200/80 bg-white p-5 transition-all hover:border-zinc-300 hover:shadow-xs"
                                 >
-                                    {/* Top Header Card */}
-                                    <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-                                        <div className="flex items-center gap-4">
-                                            <div className="h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-100">
-                                                <img
-                                                    src={
-                                                        review.avatar ||
-                                                        "https://ui-avatars.com/api/?name=User&background=18181b&color=fff"
-                                                    }
-                                                    alt={review.fullname}
-                                                    className="h-full w-full object-cover"
-                                                />
-                                            </div>
+                                    {/* CARD HEADER */}
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <img
+                                                src={
+                                                    review.avatar ||
+                                                    "https://ui-avatars.com/api/?name=User&background=18181b&color=fff"
+                                                }
+                                                alt={review.fullname}
+                                                className="h-10 w-10 rounded-full border border-zinc-200/80 object-cover"
+                                            />
                                             <div>
-                                                <h3 className="text-sm font-bold text-zinc-950">
-                                                    {review.fullname}
-                                                </h3>
-                                                <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-zinc-400">
+                                                <div className="flex items-center gap-2">
+                                                    <h3 className="text-xs font-bold text-zinc-900">
+                                                        {review.fullname}
+                                                    </h3>
+                                                    {isOwner && (
+                                                        <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500">
+                                                            Bạn
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="mt-1 flex items-center gap-2 text-[11px] text-zinc-400">
                                                     <span>{formatReviewDate(review.createdDate)}</span>
+                                                    <span>•</span>
                                                     <div className="flex items-center gap-1">
-                                                        <Clock3 size={11} />
+                                                        <Clock3 size={10} />
                                                         <span>{formatReviewTime(review.createdDate)}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        {/* Badge Rating */}
-                                        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2">
-                                            <Star size={14} className="fill-zinc-900 text-zinc-900" />
-                                            <span className="text-xs font-bold tracking-[0.15em] text-zinc-900">
+                                        {/* RATING BADGE */}
+                                        <div className="flex items-center gap-1 rounded-lg bg-zinc-100 px-2 py-1">
+                                            <Star size={12} className="fill-zinc-900 text-zinc-900" />
+                                            <span className="text-xs font-bold text-zinc-900">
                                                 {review.rating.toFixed(1)}
                                             </span>
                                         </div>
                                     </div>
 
-                                    {/* Body Content */}
-                                    <div className="mt-5">
-                                        <p className="text-[15px] leading-8 text-zinc-600">
+                                    {/* REVIEW CONTENT */}
+                                    <div className="mt-3">
+                                        <p className="text-xs leading-relaxed text-zinc-600">
                                             {review.content || "Người dùng chưa để lại nhận xét."}
                                         </p>
                                     </div>
 
-                                    {/* Images Attachment */}
+                                    {/* REVIEW IMAGES */}
                                     {review.reviewImages && review.reviewImages.length > 0 && (
-                                        <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-5">
-                                            {review.reviewImages.map((image) => (
+                                        <div className="mt-4 flex flex-wrap gap-2">
+                                            {review.reviewImages.map((image, imgIdx) => (
                                                 <div
                                                     key={image.reviewImageId}
-                                                    className="aspect-square overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-100"
+                                                    onClick={() =>
+                                                        setLightboxImage({
+                                                            reviewId: review.reviewId,
+                                                            index: imgIdx,
+                                                        })
+                                                    }
+                                                    className="h-16 w-16 cursor-pointer overflow-hidden rounded-xl border border-zinc-200/80 bg-zinc-50 transition-transform active:scale-95"
                                                 >
                                                     <img
                                                         src={image.imageUrl}
-                                                        alt="Review detail"
-                                                        className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                                                        alt="Review attachment"
+                                                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                                                     />
                                                 </div>
                                             ))}
                                         </div>
                                     )}
 
-                                    {/* Footer - Nút Thích / Bỏ thích */}
-                                    <div className="mt-6 flex items-center gap-3">
+                                    {/* FOOTER ACTIONS */}
+                                    <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3">
                                         <button
                                             type="button"
                                             disabled={isUpdating || isOwner}
                                             onClick={() => handleToggleLike(review)}
-                                            className={`group/btn flex items-center gap-2 rounded-full px-3 py-1.5 transition-all focus:outline-none ${isOwner
-                                                    ? "cursor-not-allowed opacity-75 bg-zinc-50"
-                                                    : "hover:bg-zinc-100 active:scale-95 disabled:opacity-50"
-                                                }`}
+                                            className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium transition-all ${
+                                                isLiked
+                                                    ? 'border-red-200 bg-red-50 text-red-600'
+                                                    : 'border-zinc-200/80 text-zinc-600 hover:bg-zinc-50'
+                                            } ${isOwner ? 'cursor-not-allowed opacity-60' : 'active:scale-95'}`}
                                             title={
                                                 isOwner
-                                                    ? "Bạn không thể tự thích đánh giá của chính mình"
+                                                    ? "Không thể thích bài viết của chính mình"
                                                     : isLiked
-                                                        ? "Bỏ thích"
-                                                        : "Thích"
+                                                    ? "Bỏ thích"
+                                                    : "Thích"
                                             }
                                         >
                                             <Heart
-                                                size={18}
-                                                className={`transition-all duration-300 ${isLiked
-                                                        ? "fill-red-500 text-red-500 scale-110"
-                                                        : "fill-none text-zinc-400 group-hover/btn:text-red-500"
-                                                    }`}
+                                                size={13}
+                                                className={
+                                                    isLiked
+                                                        ? "fill-red-500 text-red-500"
+                                                        : "text-zinc-400"
+                                                }
                                             />
-
-                                            <span
-                                                className={`text-xs font-semibold tracking-wide ${isLiked ? "text-red-500" : "text-zinc-600"
-                                                    }`}
-                                            >
-                                                {totalLikes} lượt thích
-                                            </span>
+                                            <span>{totalLikes} Lượt thích</span>
                                         </button>
-
-                                        {/* Tag hiển thị khi là bài review của chính người dùng này */}
-                                        {isOwner && (
-                                            <span className="text-[10px] font-medium text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-md">
-                                                Đánh giá của bạn
-                                            </span>
-                                        )}
                                     </div>
                                 </article>
                             );
@@ -300,6 +317,79 @@ const ProductReviews = ({ productSlug }: Props) => {
                     </div>
                 )}
             </div>
+
+            {/* LIGHTBOX MODAL BẰNG FRAMER MOTION */}
+            <AnimatePresence>
+                {lightboxImage && currentLightboxImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+                        onClick={() => setLightboxImage(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeOut" }}
+                            className="relative max-w-5xl max-h-[90vh] flex flex-col items-center justify-center"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close Button */}
+                            <button
+                                type="button"
+                                onClick={() => setLightboxImage(null)}
+                                className="absolute -top-12 right-0 rounded-full bg-white/10 p-2 text-white hover:bg-white/25 transition-all active:scale-90 cursor-pointer"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            {/* Main Image with Smooth Fade/Scale Transition when Next/Prev */}
+                            <div className="overflow-hidden rounded-2xl bg-black/40 shadow-2xl">
+                                <AnimatePresence mode="wait">
+                                    <motion.img
+                                        key={currentLightboxImage.reviewImageId}
+                                        src={currentLightboxImage.imageUrl}
+                                        alt="Zoomed review attachment"
+                                        initial={{ opacity: 0, scale: 0.96 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.96 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="max-h-[80vh] max-w-full object-contain select-none"
+                                    />
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Navigation Buttons (Next / Prev) */}
+                            {activeImages.length > 1 && (
+                                <>
+                                    <button
+                                        type="button"
+                                        onClick={handlePrevImage}
+                                        className="absolute left-2 sm:-left-14 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/25 transition-all active:scale-90 backdrop-blur-md cursor-pointer"
+                                    >
+                                        <ChevronLeft size={22} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleNextImage}
+                                        className="absolute right-2 sm:-right-14 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/25 transition-all active:scale-90 backdrop-blur-md cursor-pointer"
+                                    >
+                                        <ChevronRight size={22} />
+                                    </button>
+
+                                    {/* Image Counter Indicator */}
+                                    <div className="absolute -bottom-8 text-xs font-medium tracking-wider text-zinc-300">
+                                        {lightboxImage.index + 1} / {activeImages.length}
+                                    </div>
+                                </>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 };

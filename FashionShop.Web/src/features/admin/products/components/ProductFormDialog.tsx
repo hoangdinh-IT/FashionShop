@@ -1,7 +1,7 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     IoClose,
     IoImageOutline,
@@ -25,6 +25,8 @@ import { useSnackbar } from "../../../../contexts";
 import RenderToggle from "../../../../components/common/RenderToggle";
 import ProductVariantsManager from "./ProductVariantsManager";
 import Loading from "../../../../components/common/Loading";
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
 
 
 // ==========================================
@@ -140,6 +142,7 @@ const ProductFormDialog: React.FC<Props> = ({
     leafCategories,
     brands,
 }) => {
+    useLockBodyScroll(isOpen);
     // Hooks & State
     const { showSnackbar } = useSnackbar();
     const { createDetail, isCreatingDetail, updateDetail, isUpdatingDetail } = useProductMutations();
@@ -242,30 +245,13 @@ const ProductFormDialog: React.FC<Props> = ({
         }
     };
 
-    // --- ANIMATION VARIANTS ---
-    const backdropVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-    };
-
-    const modalVariants: Variants = {
-        hidden: { opacity: 0, y: 20, scale: 0.95 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { type: "spring", stiffness: 300, damping: 25 },
-        },
-        exit: { opacity: 0, y: 20, scale: 0.95, transition: { duration: 0.2 } },
-    };
-
     return (
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 font-sans">
                     {/* Backdrop */}
                     <motion.div
-                        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"

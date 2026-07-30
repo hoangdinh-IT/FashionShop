@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
-import { ShoppingBag } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 
 import { useProductDetail } from "../../../features/shop/products/hooks/useProducts";
 import { useCartMutations } from "../../../features/shop/carts/hooks/useCarts";
@@ -17,7 +17,6 @@ import ProductReviews from "../../../features/shop/products/components/ProductDe
 
 const ProductDetailPage = () => {
     const { showSnackbar } = useSnackbar();
-
     const { productSlug } = useParams<{ productSlug: string }>();
 
     useEffect(() => {
@@ -29,7 +28,6 @@ const ProductDetailPage = () => {
     }, [productSlug]);
 
     const { productDetail, isLoading } = useProductDetail(productSlug);
-
     const { createCartItem, isCreating } = useCartMutations();
 
     const [activeColorId, setActiveColorId] = useState<number | null>(null);
@@ -73,23 +71,18 @@ const ProductDetailPage = () => {
     }, [productDetail, activeColorId]);
 
     const selectedColorName =
-        productDetail?.productColors?.find(
-            (c) => c.colorId === activeColorId
-        )?.colorName || "";
+        productDetail?.productColors?.find((c) => c.colorId === activeColorId)
+            ?.colorName || "";
 
     const selectedSizeName =
-        productDetail?.productSizes?.find(
-            (s) => s.sizeId === activeSizeId
-        )?.sizeName || "";
+        productDetail?.productSizes?.find((s) => s.sizeId === activeSizeId)
+            ?.sizeName || "";
 
     const currentVariant = productDetail?.productVariants?.find(
-        (v) =>
-            v.colorId === activeColorId &&
-            v.sizeId === activeSizeId
+        (v) => v.colorId === activeColorId && v.sizeId === activeSizeId
     );
 
     const stockQuantity = currentVariant?.quantity || 0;
-
     const isOutOfStock = stockQuantity === 0;
 
     useEffect(() => {
@@ -99,17 +92,11 @@ const ProductDetailPage = () => {
 
     const handleAddToCart = () => {
         const currentVariant = productDetail?.productVariants?.find(
-            (v) =>
-                v.colorId === activeColorId &&
-                v.sizeId === activeSizeId
+            (v) => v.colorId === activeColorId && v.sizeId === activeSizeId
         );
 
         if (!currentVariant) {
-            showSnackbar(
-                "Không tìm thấy biến thể sản phẩm!",
-                "error"
-            );
-
+            showSnackbar("Không tìm thấy biến thể sản phẩm!", "error");
             return;
         }
 
@@ -125,42 +112,35 @@ const ProductDetailPage = () => {
         return <Loading />;
     }
 
+    /* EMPTY STATE (NOT FOUND) */
     if (!productDetail) {
         return (
-            <div className="min-h-screen bg-[#fcfcfc] flex items-center justify-center px-6 py-16 overflow-hidden">
-                <div className="relative w-full max-w-2xl">
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-[420px] h-[420px] rounded-full bg-zinc-100 blur-3xl opacity-70" />
+            <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">
+                <div className="w-full max-w-md text-center rounded-2xl border border-zinc-200/80 bg-white p-8 shadow-2xs">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900">
+                        <ShoppingBag size={20} />
                     </div>
 
-                    <div className="relative bg-white border border-zinc-200 rounded-[40px] px-10 md:px-16 py-20 text-center shadow-[0_30px_80px_rgba(0,0,0,0.04)] overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
+                    <div className="mt-4">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                            Không khả dụng
+                        </span>
+                        <h1 className="mt-1 text-xl font-black tracking-tight text-zinc-900">
+                            Không tìm thấy sản phẩm
+                        </h1>
+                        <p className="mt-2 text-xs leading-relaxed text-zinc-500 font-medium">
+                            Sản phẩm bạn tìm kiếm có thể đã bị gỡ khỏi cửa hàng hoặc đường dẫn không khả dụng.
+                        </p>
+                    </div>
 
-                        <div className="relative mx-auto w-28 h-28 rounded-full border border-zinc-200 bg-white flex items-center justify-center">
-                            <div className="absolute inset-2 rounded-full border border-zinc-100" />
-
-                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-900/10">
-                                <ShoppingBag
-                                    size={28}
-                                    className="text-white"
-                                    strokeWidth={2}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mt-10">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-zinc-400">
-                                Product unavailable
-                            </span>
-
-                            <h1 className="mt-5 text-[36px] md:text-[48px] leading-none font-black tracking-[-0.06em] text-zinc-900">
-                                Không tìm thấy sản phẩm
-                            </h1>
-
-                            <p className="mt-6 max-w-xl mx-auto text-[15px] leading-8 text-zinc-500 font-medium">
-                                Sản phẩm bạn đang tìm kiếm có thể đã được gỡ khỏi cửa hàng hoặc hiện không còn khả dụng.
-                            </p>
-                        </div>
+                    <div className="mt-6">
+                        <Link
+                            to="/products"
+                            className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-bold text-white transition-all hover:bg-zinc-800 active:scale-98"
+                        >
+                            <ArrowLeft size={14} />
+                            <span>Quay lại cửa hàng</span>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -168,35 +148,43 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <div className="w-full max-w-[1500px] mx-auto px-4 md:px-6 py-6 text-zinc-900">
-            <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_0.8fr] gap-8">
-                <ProductImages
-                    productDetail={productDetail}
-                    currentImages={currentImages}
-                    selectedImageIndex={selectedImageIndex}
-                    setSelectedImageIndex={setSelectedImageIndex}
-                    direction={direction}
-                    setDirection={setDirection}
-                />
+        <div className="mx-auto max-w-7xl px-4 py-8 md:px-8 text-zinc-900">
+            {/* MAIN LAYOUT GRID */}
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+                {/* PRODUCT IMAGES GALLERY */}
+                <div className="lg:col-span-7">
+                    <ProductImages
+                        productDetail={productDetail}
+                        currentImages={currentImages}
+                        selectedImageIndex={selectedImageIndex}
+                        setSelectedImageIndex={setSelectedImageIndex}
+                        direction={direction}
+                        setDirection={setDirection}
+                    />
+                </div>
 
-                <ProductInfo
-                    productDetail={productDetail}
-                    activeColorId={activeColorId}
-                    setActiveColorId={setActiveColorId}
-                    activeSizeId={activeSizeId}
-                    setActiveSizeId={setActiveSizeId}
-                    selectedColorName={selectedColorName}
-                    selectedSizeName={selectedSizeName}
-                    stockQuantity={stockQuantity}
-                    isOutOfStock={isOutOfStock}
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    handleAddToCart={handleAddToCart}
-                    isCreating={isCreating}
-                />
+                {/* PRODUCT PURCHASING INFORMATION */}
+                <div className="lg:col-span-5">
+                    <ProductInfo
+                        productDetail={productDetail}
+                        activeColorId={activeColorId}
+                        setActiveColorId={setActiveColorId}
+                        activeSizeId={activeSizeId}
+                        setActiveSizeId={setActiveSizeId}
+                        selectedColorName={selectedColorName}
+                        selectedSizeName={selectedSizeName}
+                        stockQuantity={stockQuantity}
+                        isOutOfStock={isOutOfStock}
+                        quantity={quantity}
+                        setQuantity={setQuantity}
+                        handleAddToCart={handleAddToCart}
+                        isCreating={isCreating}
+                    />
+                </div>
             </div>
 
-            <div className="space-y-8">
+            {/* DESCRIPTION & REVIEWS SECTION */}
+            <div className="mt-12 space-y-4">
                 <ProductDescription productDetail={productDetail} />
                 <ProductReviews productSlug={productSlug || ""} />
             </div>

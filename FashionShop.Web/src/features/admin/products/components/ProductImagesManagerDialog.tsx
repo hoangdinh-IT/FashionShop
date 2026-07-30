@@ -7,6 +7,7 @@ import { useProductColors, useProductDetail } from '../hooks/useProducts';
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useProductImageMutations, useProductImages } from '../hooks/useProductImages';
 import type { ProductImage } from '../types/product';
+import { useLockBodyScroll } from '../../../../hooks/useLockBodyScroll';
 
 interface Props {
     isOpen: boolean;
@@ -26,6 +27,8 @@ interface DisplayImage extends Partial<ProductImage> {
 }
 
 const ProductImagesManagerDialog: React.FC<Props> = ({ isOpen, onClose, productId }) => {
+    useLockBodyScroll(isOpen);
+
     const [selectedColorForUpload, setSelectedColorForUpload] = useState<number | null>(null);
     const [activeTab, setActiveTab] = useState<'ALL' | number | null>('ALL');
 

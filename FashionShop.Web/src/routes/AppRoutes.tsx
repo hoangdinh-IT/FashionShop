@@ -22,7 +22,7 @@ import ShopMainLayout from "../layouts/ShopMainLayout";
 import ShopAccountLayout from "../layouts/ShopAccountLayout";
 import InformationPage from "../pages/shop/users/InformationPage";
 import AddressPage from "../pages/shop/addresses/AddressPage";
-import ShopProductPage from "../pages/shop/products/ProductPage";
+import ShopProductPage from "../pages/shop/products/ProductSummaryPage";
 import ShopProductDetailPage from "../pages/shop/products/ProductDetailPage";
 import CartPage from "../pages/shop/carts/CartPage";
 import CheckoutPage from "../pages/shop/orders/CheckoutPage";

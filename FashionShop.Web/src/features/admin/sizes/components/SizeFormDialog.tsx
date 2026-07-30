@@ -1,30 +1,14 @@
 import type React from "react";
 import { useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 
 import { SizeType, type Size } from "../types/size";
 import type { SizeFormInputs } from "../types/requests";
 import { useSizes } from "../hooks/useSizes";
-
-// 1. Định nghĩa Animation ra ngoài để tối ưu hiệu năng
-const backdropVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-};
-
-const modalVariants: Variants = {
-    hidden: { opacity: 0, y: 16, scale: 0.96 },
-    visible: { 
-        opacity: 1, y: 0, scale: 1, 
-        transition: { type: "spring", stiffness: 300, damping: 25 } 
-    },
-    exit: { 
-        opacity: 0, y: 16, scale: 0.96, 
-        transition: { duration: 0.2 } 
-    }
-};
+import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
+import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
 
 const generateSlug = (str: string) => {
     if (!str) return "";
@@ -50,6 +34,8 @@ const SizeFormDialog: React.FC<Props> = ({
     onClose,
     initialData,
 }) => {
+    useLockBodyScroll(isOpen);
+
     const { createSize, isCreating, updateSize, isUpdating } = useSizes();
 
     const {
@@ -103,7 +89,7 @@ const SizeFormDialog: React.FC<Props> = ({
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 font-sans">
                     {/* Backdrop */}
                     <motion.div
-                        className="absolute inset-0 bg-gray-900/55 backdrop-blur-sm"
+                        className={BACKDROP_STYLES}
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"

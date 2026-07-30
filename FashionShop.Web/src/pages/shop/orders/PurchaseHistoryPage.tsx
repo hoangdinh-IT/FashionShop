@@ -84,165 +84,105 @@ const PurchaseHistoryPage = () => {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="w-full"
+            transition={{ duration: 0.3 }}
+            className="w-full max-w-5xl mx-auto"
         >
-            <main className="flex-1 bg-white rounded-[2rem] shadow-sm border border-zinc-100 min-h-[600px] overflow-visible relative">
+            <main className="bg-white rounded-3xl border border-zinc-200/80 min-h-[600px] relative overflow-hidden shadow-sm">
 
-                {/* BACKGROUND */}
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-50/40 rounded-full blur-[120px] -z-10" />
-                <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-rose-50/40 rounded-full blur-[100px] -z-10" />
-
-                {/* ===================================================== */}
                 {/* STICKY HEADER */}
-                {/* ===================================================== */}
-                <div className="sticky top-20 z-40 bg-white/88 backdrop-blur-2xl border-b border-zinc-100 rounded-t-[2rem]">
+                <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-100 px-6 md:px-8 py-6">
+                    
+                    {/* ORIGINAL TITLE STYLE */}
+                    <header className="relative flex flex-col items-center mb-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="inline-block"
+                        >
+                            <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-2 italic text-center">
+                                LỊCH SỬ MUA HÀNG
+                            </h1>
+                        </motion.div>
+                        <div className="h-[3px] w-10 bg-slate-900 rounded-full" />
+                    </header>
 
-                    <div className="px-6 md:px-10 pt-5 pb-5">
+                    {/* STATUS TABS */}
+                    <div className="flex justify-center">
+                        <nav className="bg-zinc-100/80 p-1 rounded-2xl flex gap-1 overflow-x-auto hide-scrollbar max-w-full border border-zinc-200/50">
+                            {STATUS_TABS.map((tab) => {
+                                const isActive = activeTab === tab.id;
 
-                        {/* TITLE */}
-                        <header className="relative flex flex-col items-center">
+                                return (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`
+                                            relative px-4 py-2 rounded-xl text-xs font-semibold
+                                            whitespace-nowrap transition-colors duration-200 cursor-pointer
+                                            ${isActive ? "text-white" : "text-zinc-800 hover:text-black"}
+                                        `}
+                                    >
+                                        <span className="relative z-10">{tab.label}</span>
 
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="inline-block"
-                            >
-                                <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight mb-2 italic text-center">
-                                    LỊCH SỬ MUA HÀNG
-                                </h1>
-                            </motion.div>
-
-                            <div className="h-[3px] w-10 bg-slate-900 rounded-full" />
-                        </header>
-
-                        {/* STATUS TAB */}
-                        <div className="mt-5 flex justify-center">
-
-                            <nav className="bg-white/80 backdrop-blur-xl p-1.5 rounded-[24px] border border-white/40 shadow-[0_10px_24px_rgba(0,0,0,0.04)] flex gap-1 overflow-x-auto hide-scrollbar max-w-full">
-
-                                {STATUS_TABS.map((tab) => {
-
-                                    const isActive = activeTab === tab.id;
-
-                                    return (
-                                        <button
-                                            key={tab.id}
-                                            onClick={() => setActiveTab(tab.id)}
-                                            className={`
-                                                relative px-5 py-2.5 rounded-[18px]
-                                                text-[10px] font-black uppercase tracking-[0.22em]
-                                                whitespace-nowrap transition-all duration-500
-                                                cursor-pointer
-                                                ${
-                                                    isActive
-                                                        ? "text-white"
-                                                        : "text-slate-400 hover:text-slate-700"
-                                                }
-                                            `}
-                                        >
-                                            <span className="relative z-10">
-                                                {tab.label}
-                                            </span>
-
-                                            {isActive && (
-                                                <motion.div
-                                                    layoutId="modern_tab_pill"
-                                                    className="absolute inset-0 bg-slate-900 shadow-lg shadow-slate-200"
-                                                    style={{ borderRadius: 18 }}
-                                                    transition={{
-                                                        type: "spring",
-                                                        stiffness: 300,
-                                                        damping: 30
-                                                    }}
-                                                />
-                                            )}
-                                        </button>
-                                    );
-                                })}
-                            </nav>
-                        </div>
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="active_tab_pill"
+                                                className="absolute inset-0 bg-zinc-900 rounded-xl shadow-sm"
+                                                transition={{
+                                                    type: "spring",
+                                                    stiffness: 350,
+                                                    damping: 30
+                                                }}
+                                            />
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </nav>
                     </div>
                 </div>
 
-                {/* ===================================================== */}
-                {/* CONTENT */}
-                {/* ===================================================== */}
-                <div className="px-6 md:px-10 py-8">
-
+                {/* MAIN CONTENT */}
+                <div className="p-6 md:p-8">
                     <AnimatePresence mode="popLayout">
-
                         {isLoadingOrders ? (
-
-                            <div className="grid grid-cols-1 gap-5">
-
-                                {[...Array(5)].map((_, index) => (
-
-                                    <motion.div
+                            /* SKELETON LOADING */
+                            <div className="space-y-4">
+                                {[...Array(3)].map((_, index) => (
+                                    <div
                                         key={index}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: index * 0.05 }}
-                                        className="overflow-hidden rounded-[28px] border border-zinc-100 bg-white"
+                                        className="rounded-2xl border border-zinc-100 p-6 space-y-4 bg-white animate-pulse"
                                     >
-
-                                        {/* TOP */}
-                                        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
-
-                                            <div className="space-y-3">
-                                                <div className="h-3 w-28 animate-pulse rounded-full bg-zinc-200" />
-                                                <div className="h-4 w-44 animate-pulse rounded-full bg-zinc-200" />
-                                            </div>
-
-                                            <div className="h-9 w-28 animate-pulse rounded-full bg-zinc-200" />
+                                        <div className="flex justify-between items-center">
+                                            <div className="h-4 w-32 bg-zinc-100 rounded-md" />
+                                            <div className="h-6 w-20 bg-zinc-100 rounded-full" />
                                         </div>
-
-                                        {/* PRODUCT */}
-                                        <div className="px-6 py-5">
-
-                                            <div className="flex gap-4">
-
-                                                <div className="h-24 w-24 shrink-0 animate-pulse rounded-2xl bg-zinc-200" />
-
-                                                <div className="flex-1 space-y-3">
-                                                    <div className="h-4 w-2/3 animate-pulse rounded-full bg-zinc-200" />
-                                                    <div className="h-3 w-1/3 animate-pulse rounded-full bg-zinc-100" />
-                                                    <div className="h-3 w-1/4 animate-pulse rounded-full bg-zinc-100" />
-                                                </div>
+                                        <div className="flex gap-4 items-center">
+                                            <div className="w-16 h-16 bg-zinc-100 rounded-xl shrink-0" />
+                                            <div className="flex-1 space-y-2">
+                                                <div className="h-4 w-1/2 bg-zinc-100 rounded-md" />
+                                                <div className="h-3 w-1/4 bg-zinc-100 rounded-md" />
                                             </div>
                                         </div>
-
-                                        {/* FOOTER */}
-                                        <div className="flex items-center justify-between border-t border-zinc-100 px-6 py-5">
-
-                                            <div className="space-y-2">
-                                                <div className="h-3 w-24 animate-pulse rounded-full bg-zinc-100" />
-                                                <div className="h-5 w-32 animate-pulse rounded-full bg-zinc-200" />
-                                            </div>
-
-                                            <div className="flex gap-3">
-                                                <div className="h-10 w-28 animate-pulse rounded-2xl bg-zinc-200" />
-                                                <div className="h-10 w-32 animate-pulse rounded-2xl bg-zinc-300" />
-                                            </div>
+                                        <div className="pt-4 border-t border-zinc-100 flex justify-between items-center">
+                                            <div className="h-5 w-28 bg-zinc-100 rounded-md" />
+                                            <div className="h-9 w-24 bg-zinc-100 rounded-xl" />
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 ))}
                             </div>
-
                         ) : filteredOrders.length > 0 ? (
-
-                            <div className="grid grid-cols-1 gap-5">
-
+                            /* ORDER LIST */
+                            <div className="space-y-4">
                                 {filteredOrders.map((order: OrderSummary, index: number) => (
-
                                     <motion.div
                                         key={order.orderId}
-                                        initial={{ opacity: 0, scale: 0.98 }}
-                                        animate={{ opacity: 1, scale: 1 }}
+                                        initial={{ opacity: 0, y: 8 }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.98 }}
-                                        transition={{ delay: index * 0.05 }}
+                                        transition={{ delay: index * 0.04 }}
                                     >
                                         <PurchaseOrderItem
                                             order={order}
@@ -254,38 +194,24 @@ const PurchaseHistoryPage = () => {
                                     </motion.div>
                                 ))}
                             </div>
-
                         ) : (
-
+                            /* EMPTY STATE */
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
+                                initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-28 px-6 group"
+                                className="flex flex-col items-center justify-center py-20 px-4 text-center"
                             >
-
-                                <div className="relative mb-10">
-
-                                    <div className="absolute inset-0 bg-indigo-500/10 blur-[40px] rounded-full scale-150" />
-
-                                    <div className="relative w-20 h-20 bg-white border border-slate-50 rounded-[32px] flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.02)] overflow-hidden">
-
-                                        <IoReceiptOutline className="text-3xl text-slate-300" />
-                                    </div>
+                                <div className="w-14 h-14 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center mb-3">
+                                    <IoReceiptOutline className="text-2xl text-zinc-400" />
                                 </div>
-
-                                <div className="text-center space-y-2">
-
-                                    <h3 className="text-[15px] font-black text-slate-800 uppercase tracking-[0.3em]">
-                                        Danh sách trống
-                                    </h3>
-
-                                    <p className="text-[11px] text-slate-400 italic tracking-wide">
-                                        Chưa có dữ liệu cho mục này
-                                    </p>
-                                </div>
+                                <h3 className="text-sm font-semibold text-zinc-900 mb-1">
+                                    Chưa có đơn hàng
+                                </h3>
+                                <p className="text-xs text-zinc-500 max-w-xs">
+                                    Bạn hiện không có đơn hàng nào trong trạng thái này.
+                                </p>
                             </motion.div>
                         )}
-
                     </AnimatePresence>
                 </div>
             </main>
@@ -294,7 +220,6 @@ const PurchaseHistoryPage = () => {
                 .hide-scrollbar::-webkit-scrollbar {
                     display: none;
                 }
-
                 .hide-scrollbar {
                     -ms-overflow-style: none;
                     scrollbar-width: none;

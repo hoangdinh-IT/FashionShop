@@ -1,4 +1,6 @@
-import { MapPin } from 'lucide-react';
+import React from 'react';
+import { MapPin, Plus, NotebookPen } from 'lucide-react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import AddressString from '../../../addresses/components/AddressString';
 import type { Address } from '../../../addresses/types/address';
 
@@ -9,106 +11,145 @@ interface Props {
     onChangeNote: (value: string) => void;
 }
 
-const CheckoutAddress = ({ address, onOpenAddressDialog, note, onChangeNote }: Props) => {
-    // CheckoutAddress.tsx
+// Cấu hình Easing cao cấp (Editorial Design System)
+const customEase = [0.16, 1, 0.3, 1] as const;
 
-return (
-    <div className="rounded-[30px] border border-zinc-200/70 bg-white/90 backdrop-blur-xl p-6 shadow-[0_10px_35px_rgba(0,0,0,0.03)]">
-        
-        {/* HEADER */}
-        <div className="flex items-start justify-between gap-4 pb-5 border-b border-zinc-100">
+// Variants cho phần chuyển đổi nội dung Địa chỉ
+const fadeScaleVariants: Variants = {
+    hidden: { 
+        opacity: 0, 
+        scale: 0.98,
+        filter: "blur(4px)",
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        filter: "blur(0px)",
+        transition: {
+            duration: 0.45,
+            ease: customEase,
+        },
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.98,
+        filter: "blur(4px)",
+        transition: {
+            duration: 0.2,
+            ease: customEase,
+        },
+    },
+};
+
+const CheckoutAddress: React.FC<Props> = ({
+    address,
+    onOpenAddressDialog,
+    note,
+    onChangeNote
+}) => {
+    return (
+        <motion.section 
+            initial={{ opacity: 0, scale: 0.98, filter: "blur(4px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.5, ease: customEase }}
+            className="bg-white rounded-2xl border border-zinc-200/80 p-5 sm:p-6 shadow-xs font-sans space-y-5"
+        >
             
-            <div className="flex items-start gap-4">
-                
-                <div className="w-11 h-11 rounded-2xl bg-zinc-900 text-white flex items-center justify-center shrink-0">
-                    <MapPin size={18} />
-                </div>
-
-                <div>
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400 font-bold">
-                        Shipping Address
-                    </p>
-
-                    <h2 className="mt-1 text-[20px] font-bold tracking-tight text-zinc-900">
-                        Địa chỉ giao hàng
+            {/* HEADER */}
+            <div className="flex items-center justify-between gap-4 pb-4 border-b border-zinc-100">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-zinc-100 text-zinc-900 flex items-center justify-center shrink-0">
+                        <MapPin size={16} strokeWidth={2} />
+                    </div>
+                    <h2 className="text-base font-bold tracking-tight text-zinc-900">
+                        Địa chỉ nhận hàng
                     </h2>
                 </div>
+
+                <button
+                    type="button"
+                    onClick={onOpenAddressDialog}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-700 hover:text-black underline underline-offset-4 cursor-pointer transition-colors"
+                >
+                    {address ? (
+                        'Thay đổi'
+                    ) : (
+                        <>
+                            <Plus size={14} /> Thêm địa chỉ
+                        </>
+                    )}
+                </button>
             </div>
 
-            <button 
-                onClick={onOpenAddressDialog}
-                className="h-11 px-5 rounded-2xl border border-zinc-200 bg-white text-[12px] font-semibold text-zinc-700 hover:border-zinc-900 hover:text-zinc-900 transition-all cursor-pointer"
-            >
-                Thay đổi
-            </button>
-        </div>
+            {/* ADDRESS CONTENT WITH ANIMATION */}
+            <div>
+                <AnimatePresence mode="wait">
+                    {address ? (
+                        <motion.div 
+                            key={address.id || 'selected-address'}
+                            variants={fadeScaleVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="rounded-xl bg-zinc-50/70 border border-zinc-100 p-4 space-y-2"
+                        >
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="font-bold text-zinc-900">{address.fullName}</span>
+                                <span className="text-zinc-300">•</span>
+                                <span className="font-mono text-zinc-600 font-medium">{address.phoneNumber}</span>
+                            </div>
 
-        {/* ADDRESS */}
-        <div className="pt-6">
-            
-            {address ? (
-                <div className="rounded-[24px] border border-zinc-100 bg-[#fafafa] p-5">
-                    
-                    <div className="flex items-center gap-3 flex-wrap">
-                        
-                        <h3 className="text-[17px] font-bold tracking-tight text-zinc-900">
-                            {address.fullName}
-                        </h3>
+                            <div className="text-xs leading-relaxed text-zinc-600">
+                                <AddressString
+                                    addressDetail={address.addressDetail}
+                                    communeCode={address.commune}
+                                    districtCode={address.district}
+                                    cityCode={address.city}
+                                />
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div 
+                            key="empty-address-btn"
+                            variants={fadeScaleVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            onClick={onOpenAddressDialog}
+                            className="rounded-xl border border-dashed border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 p-5 text-center cursor-pointer transition-all group"
+                        >
+                            <p className="text-xs font-medium text-zinc-500 group-hover:text-zinc-800">
+                                Chưa có địa chỉ giao hàng. Nhấn vào đây để thêm mới.
+                            </p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
 
-                        <div className="w-1 h-1 rounded-full bg-zinc-300" />
-
-                        <span className="text-sm font-medium text-zinc-500">
-                            {address.phoneNumber}
-                        </span>
-                    </div>
-
-                    <p className="mt-4 text-[15px] leading-7 text-zinc-600">
-                        <AddressString 
-                            addressDetail={address.addressDetail}
-                            communeCode={address.commune}
-                            districtCode={address.district}
-                            cityCode={address.city}
-                        />
-                    </p>
-                </div>
-            ) : (
-                <div className="rounded-[24px] border border-dashed border-zinc-200 bg-zinc-50 px-5 py-6 text-sm text-zinc-400 italic">
-                    Chưa có địa chỉ giao hàng
-                </div>
-            )}
-
-            {/* NOTE */}
-            <div className="mt-6">
-                
-                <div className="mb-3 flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">
-                        Delivery Note
-                    </span>
-                </div>
+            {/* DELIVERY NOTE */}
+            <div className="space-y-2 pt-1">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-zinc-500">
+                    <NotebookPen size={13} className="text-zinc-400" />
+                    <span>Ghi chú đơn hàng</span>
+                </label>
 
                 <textarea
-                    rows={3}
+                    rows={2}
                     value={note}
                     onChange={(e) => onChangeNote(e.target.value)}
                     placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..."
                     className="
-                        w-full resize-none rounded-[24px]
-                        border border-zinc-200
-                        bg-[#fafafa]
-                        px-5 py-4
-                        text-[14px] text-zinc-700
+                        w-full rounded-xl border border-zinc-200 bg-white
+                        px-3.5 py-2.5 text-xs text-zinc-800
                         placeholder:text-zinc-400
-                        focus:outline-none
-                        focus:border-zinc-900
-                        transition-all
+                        focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900
+                        transition-all resize-none
                     "
                 />
             </div>
-        </div>
-    </div>
-);
+
+        </motion.section>
+    );
 };
 
 export default CheckoutAddress;

@@ -40,58 +40,68 @@ const ProductHeader: React.FC<Props> = ({
     const currentSortLabel = sortOptions.find(opt => opt.value === urlSort)?.label || "Mặc định";
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-8 border-b border-zinc-100">
-            <div className="flex-1">
-                {/* Main Title: Hiển thị Brand Name (Ưu tiên) hoặc Custom Title */}
-                <h1 className="text-4xl md:text-5xl font-black text-zinc-900 uppercase italic tracking-tighter leading-none">
-                    {brandName || customTitle || "Tất cả sản phẩm"}
-                    <span className="text-blue-600 not-italic ml-1">.</span>
-                </h1>
-
-                {/* Sub Title: Hiển thị Category Name nhỏ phía trên */}
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-[2px] bg-blue-600"></div>
-                    <span className="text-[11px] font-black uppercase tracking-[0.3em] text-blue-600">
+        <div className="flex flex-col gap-6 border-b border-zinc-200/80 pb-6 md:flex-row md:items-end md:justify-between">
+            {/* LEFT: TITLE & CATEGORY */}
+            <div className="flex flex-col gap-1.5">
+                {/* Category Subtitle */}
+                <div className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-900" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">
                         {categoryName || "Bộ sưu tập"}
                     </span>
                 </div>
+
+                {/* Main Title */}
+                <h1 className="text-3xl font-black uppercase tracking-tight text-zinc-900 md:text-4xl">
+                    {brandName || customTitle || "Tất cả sản phẩm"}
+                </h1>
             </div>
 
-            {/* Sort Dropdown */}
+            {/* RIGHT: SORT DROPDOWN */}
             <div className="relative shrink-0" ref={sortDropdownRef}>
                 <button
+                    type="button"
                     onClick={() => setIsSortOpen(!isSortOpen)}
-                    className="group flex items-center gap-4 px-6 py-3 bg-white border border-zinc-200 rounded-full hover:border-zinc-900 transition-all duration-300"
+                    className="group flex h-10 items-center justify-between gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 text-xs font-semibold text-zinc-800 transition-all hover:border-zinc-900 hover:bg-zinc-50 shadow-2xs"
                 >
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-900">
-                        Sắp xếp: <span className="text-zinc-900 ml-1">{currentSortLabel}</span>
+                    <span className="text-zinc-500">
+                        Sắp xếp: <span className="font-bold text-zinc-900">{currentSortLabel}</span>
                     </span>
-                    <ChevronDown size={14} className={`transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown
+                        size={14}
+                        className={`text-zinc-400 transition-transform duration-200 group-hover:text-zinc-900 ${
+                            isSortOpen ? 'rotate-180' : ''
+                        }`}
+                    />
                 </button>
 
                 <AnimatePresence>
                     {isSortOpen && (
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            className="absolute right-0 mt-2 w-56 bg-white border border-zinc-100 rounded-2xl shadow-xl z-[100] py-2 overflow-hidden"
+                            initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                            transition={{ duration: 0.15, ease: "easeOut" }}
+                            className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-zinc-200/80 bg-white/95 p-1.5 shadow-xl backdrop-blur-md"
                         >
                             {sortOptions.map((option) => {
                                 const isSelected = urlSort === option.value;
                                 return (
                                     <button
                                         key={option.value}
+                                        type="button"
                                         onClick={() => {
                                             onSortSelect(option.value);
                                             setIsSortOpen(false);
                                         }}
-                                        className={`w-full text-left flex items-center justify-between px-5 py-3 text-[13px] transition-colors ${
-                                            isSelected ? 'bg-zinc-50 text-zinc-900 font-bold' : 'text-zinc-600 font-medium hover:bg-zinc-50'
+                                        className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-xs transition-colors ${
+                                            isSelected
+                                                ? 'bg-zinc-900 font-semibold text-white'
+                                                : 'font-medium text-zinc-600 hover:bg-zinc-100/80 hover:text-zinc-900'
                                         }`}
                                     >
-                                        {option.label}
-                                        {isSelected && <Check size={14} strokeWidth={2.5} className="text-blue-600" />}
+                                        <span>{option.label}</span>
+                                        {isSelected && <Check size={14} strokeWidth={2.5} className="text-white" />}
                                     </button>
                                 );
                             })}
