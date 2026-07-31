@@ -70,6 +70,8 @@ const ProductReviewModal: React.FC<Props> = ({
         const files = Array.from(e.target.files || []);
         if (!files.length) return;
         setImages((prev) => [...prev, ...files].slice(0, 5));
+        // Reset input value to allow selecting the same file again if removed
+        e.target.value = "";
     };
 
     const handleRemoveImage = (index: number) => {
@@ -125,7 +127,7 @@ const ProductReviewModal: React.FC<Props> = ({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6">
+                <div className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -141,15 +143,15 @@ const ProductReviewModal: React.FC<Props> = ({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.96, y: 12 }}
                         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative z-10 w-full max-w-[560px] overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-zinc-900/5"
+                        className="relative z-10 my-auto flex flex-col max-h-[90vh] w-full max-w-[560px] overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-2xl ring-1 ring-zinc-900/5"
                     >
-                        {/* Header */}
-                        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
+                        {/* Header - Fixed Top */}
+                        <div className="flex shrink-0 items-center justify-between border-b border-zinc-100 px-4 py-3.5 sm:px-6 sm:py-5">
                             <div>
-                                <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+                                <h2 className="text-base sm:text-lg font-semibold tracking-tight text-zinc-900">
                                     Đánh giá sản phẩm
                                 </h2>
-                                <p className="text-xs text-zinc-400">
+                                <p className="text-[11px] sm:text-xs text-zinc-400">
                                     Chia sẻ cảm nhận thực tế của bạn
                                 </p>
                             </div>
@@ -157,32 +159,35 @@ const ProductReviewModal: React.FC<Props> = ({
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+                                className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 active:scale-95"
                             >
                                 <IoClose size={20} />
                             </button>
                         </div>
 
-                        {/* Form Form Body */}
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="max-h-[75vh] overflow-y-auto px-6 py-6 space-y-6">
+                        {/* Form Body - Scrollable Area */}
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="flex flex-col overflow-hidden min-h-0 flex-1"
+                        >
+                            <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 space-y-5 sm:space-y-6">
                                 
                                 {/* Product Summary Card */}
-                                <div className="flex items-center gap-4 rounded-2xl bg-zinc-50/80 p-3.5 ring-1 ring-inset ring-zinc-100">
+                                <div className="flex items-center gap-3 sm:gap-4 rounded-xl sm:rounded-2xl bg-zinc-50/80 p-3 sm:p-3.5 ring-1 ring-inset ring-zinc-100">
                                     <img
                                         src={
                                             orderItem?.productThumbnailUrl ||
                                             "/placeholder.png"
                                         }
                                         alt={orderItem?.productName}
-                                        className="h-16 w-16 shrink-0 rounded-xl object-cover bg-white ring-1 ring-zinc-200/60"
+                                        className="h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-lg sm:rounded-xl object-cover bg-white ring-1 ring-zinc-200/60"
                                     />
                                     <div className="min-w-0 flex-1">
-                                        <h3 className="line-clamp-1 text-sm font-medium text-zinc-900">
+                                        <h3 className="line-clamp-2 text-xs sm:text-sm font-medium text-zinc-900">
                                             {orderItem?.productName}
                                         </h3>
                                         {orderItem?.variantName && (
-                                            <p className="mt-0.5 text-xs text-zinc-400">
+                                            <p className="mt-0.5 text-[11px] sm:text-xs text-zinc-400 line-clamp-1">
                                                 Phân loại: {orderItem.variantName}
                                             </p>
                                         )}
@@ -190,17 +195,17 @@ const ProductReviewModal: React.FC<Props> = ({
                                 </div>
 
                                 {/* Star Rating Section */}
-                                <div className="space-y-2.5">
+                                <div className="space-y-2">
                                     <div className="flex items-center justify-between text-xs">
                                         <span className="font-medium text-zinc-700">
                                             Mức độ hài lòng
                                         </span>
-                                        <span className="font-medium text-amber-600">
+                                        <span className="font-medium text-amber-600 text-[11px] sm:text-xs">
                                             {ratingLabels[hoveredStar || rating]}
                                         </span>
                                     </div>
 
-                                    <div className="flex items-center justify-between rounded-2xl bg-zinc-50 p-2 ring-1 ring-inset ring-zinc-100">
+                                    <div className="flex items-center justify-between gap-1 rounded-xl sm:rounded-2xl bg-zinc-50 p-1.5 sm:p-2 ring-1 ring-inset ring-zinc-100">
                                         {[1, 2, 3, 4, 5].map((star) => {
                                             const isActive = (hoveredStar || rating) >= star;
                                             return (
@@ -210,13 +215,13 @@ const ProductReviewModal: React.FC<Props> = ({
                                                     onMouseEnter={() => setHoveredStar(star)}
                                                     onMouseLeave={() => setHoveredStar(null)}
                                                     onClick={() => setRating(star)}
-                                                    className={`group relative flex h-11 flex-1 items-center justify-center rounded-xl transition-all ${
+                                                    className={`group relative flex h-10 sm:h-11 flex-1 items-center justify-center rounded-lg sm:rounded-xl transition-all ${
                                                         isActive
                                                             ? "text-amber-400"
                                                             : "text-zinc-300 hover:text-zinc-400"
                                                     }`}
                                                 >
-                                                    <IoStar className="h-6 w-6 transition-transform duration-150 active:scale-125" />
+                                                    <IoStar className="h-5 w-5 sm:h-6 sm:w-6 transition-transform duration-150 active:scale-125" />
                                                 </button>
                                             );
                                         })}
@@ -224,7 +229,7 @@ const ProductReviewModal: React.FC<Props> = ({
                                 </div>
 
                                 {/* Review Content Section */}
-                                <div className="space-y-2">
+                                <div className="space-y-1.5 sm:space-y-2">
                                     <label className="block text-xs font-medium text-zinc-700">
                                         Nội dung đánh giá
                                     </label>
@@ -238,7 +243,7 @@ const ProductReviewModal: React.FC<Props> = ({
                                             })}
                                             rows={4}
                                             placeholder="Chất lượng sản phẩm thế nào? Bạn có hài lòng với dịch vụ không?"
-                                            className={`w-full rounded-2xl border bg-transparent px-4 py-3 text-sm placeholder:text-zinc-400 focus:outline-none transition-all ${
+                                            className={`w-full rounded-xl sm:rounded-2xl border bg-transparent px-3.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none transition-all ${
                                                 errors.content
                                                     ? "border-red-300 ring-2 ring-red-100"
                                                     : "border-zinc-200 focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
@@ -247,7 +252,7 @@ const ProductReviewModal: React.FC<Props> = ({
                                     </div>
 
                                     <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                                        <span className="text-red-500">
+                                        <span className="text-red-500 font-medium">
                                             {errors.content?.message}
                                         </span>
                                         <span className={watchedContent.length > 2000 ? "text-red-500 font-medium" : ""}>
@@ -257,7 +262,7 @@ const ProductReviewModal: React.FC<Props> = ({
                                 </div>
 
                                 {/* Images Upload Section */}
-                                <div className="space-y-2.5">
+                                <div className="space-y-2">
                                     <div className="flex items-center justify-between text-xs">
                                         <span className="font-medium text-zinc-700">
                                             Hình ảnh đính kèm
@@ -267,10 +272,11 @@ const ProductReviewModal: React.FC<Props> = ({
                                         </span>
                                     </div>
 
-                                    <div className="grid grid-cols-5 gap-2.5">
+                                    {/* Responsive Grid: 3 cột trên mobile, 5 cột trên tablet/desktop */}
+                                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-2.5">
                                         {/* Upload Button */}
                                         {images.length < 5 && (
-                                            <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/50 text-zinc-400 transition-all hover:border-zinc-900 hover:bg-zinc-50 hover:text-zinc-700">
+                                            <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl sm:rounded-2xl border border-dashed border-zinc-300 bg-zinc-50/50 text-zinc-400 transition-all hover:border-zinc-900 hover:bg-zinc-50 hover:text-zinc-700 active:scale-95">
                                                 <input
                                                     type="file"
                                                     multiple
@@ -278,7 +284,7 @@ const ProductReviewModal: React.FC<Props> = ({
                                                     className="hidden"
                                                     onChange={handleUpload}
                                                 />
-                                                <IoCloudUploadOutline size={20} />
+                                                <IoCloudUploadOutline className="text-lg sm:text-xl" />
                                                 <span className="mt-1 text-[10px] font-medium">Tải lên</span>
                                             </label>
                                         )}
@@ -287,7 +293,7 @@ const ProductReviewModal: React.FC<Props> = ({
                                         {previewImages.map((image, index) => (
                                             <div
                                                 key={index}
-                                                className="group relative aspect-square overflow-hidden rounded-2xl bg-zinc-100 ring-1 ring-black/5"
+                                                className="group relative aspect-square overflow-hidden rounded-xl sm:rounded-2xl bg-zinc-100 ring-1 ring-black/5"
                                             >
                                                 <img
                                                     src={image.preview}
@@ -297,9 +303,11 @@ const ProductReviewModal: React.FC<Props> = ({
                                                 <button
                                                     type="button"
                                                     onClick={() => handleRemoveImage(index)}
-                                                    className="absolute inset-0 flex items-center justify-center bg-zinc-950/40 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                                                    className="absolute inset-0 flex items-center justify-center bg-zinc-950/40 text-white opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100"
                                                 >
-                                                    <IoTrashOutline size={16} />
+                                                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-600/80 sm:bg-transparent">
+                                                        <IoTrashOutline size={16} />
+                                                    </div>
                                                 </button>
                                             </div>
                                         ))}
@@ -307,19 +315,19 @@ const ProductReviewModal: React.FC<Props> = ({
                                 </div>
                             </div>
 
-                            {/* Footer Actions */}
-                            <div className="flex items-center justify-end gap-2.5 border-t border-zinc-100 bg-zinc-50/50 px-6 py-4">
+                            {/* Footer Actions - Fixed Bottom */}
+                            <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-2.5 border-t border-zinc-100 bg-zinc-50/50 px-4 py-3 sm:px-6 sm:py-4">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="rounded-full px-5 py-2.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60"
+                                    className="rounded-full px-4 py-2 sm:px-5 sm:py-2.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60 active:scale-95"
                                 >
                                     Hủy bỏ
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isLoading || isCreating}
-                                    className="rounded-full bg-zinc-900 px-6 py-2.5 text-xs font-medium text-white shadow-sm transition-all hover:bg-zinc-800 disabled:opacity-50"
+                                    className="rounded-full bg-zinc-900 px-5 py-2 sm:px-6 sm:py-2.5 text-xs font-medium text-white shadow-sm transition-all hover:bg-zinc-800 active:scale-95 disabled:opacity-50"
                                 >
                                     {isLoading || isCreating ? "Đang gửi..." : "Gửi đánh giá"}
                                 </button>

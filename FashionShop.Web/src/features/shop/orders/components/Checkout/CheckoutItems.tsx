@@ -62,16 +62,16 @@ const CheckoutItems: React.FC<Props> = ({ items }) => {
             variants={sectionVariants}
             initial="hidden"
             animate="visible"
-            className="bg-white rounded-2xl border border-zinc-200/80 p-5 sm:p-6 shadow-xs font-sans space-y-5"
+            className="bg-white rounded-2xl border border-zinc-200/80 p-4 sm:p-5 md:p-6 shadow-xs font-sans space-y-4 sm:space-y-5"
         >
             
             {/* HEADER */}
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
-                <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-zinc-100 text-zinc-900 flex items-center justify-center shrink-0">
-                        <ShoppingBag size={16} strokeWidth={2} />
+            <div className="flex items-center justify-between pb-3.5 sm:pb-4 border-b border-zinc-100">
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-100 text-zinc-900 flex items-center justify-center shrink-0">
+                        <ShoppingBag size={15} className="sm:w-[16px] sm:h-[16px]" strokeWidth={2} />
                     </div>
-                    <h2 className="text-base font-bold tracking-tight text-zinc-900">
+                    <h2 className="text-sm sm:text-base font-bold tracking-tight text-zinc-900 truncate">
                         Sản phẩm đã chọn
                     </h2>
                 </div>
@@ -81,7 +81,7 @@ const CheckoutItems: React.FC<Props> = ({ items }) => {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.3, ease: customEase }}
-                    className="text-xs font-medium text-zinc-500 bg-zinc-100 px-2.5 py-1 rounded-full"
+                    className="text-[11px] sm:text-xs font-medium text-zinc-500 bg-zinc-100 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full shrink-0"
                 >
                     {items.length} sản phẩm
                 </motion.span>
@@ -99,10 +99,10 @@ const CheckoutItems: React.FC<Props> = ({ items }) => {
                             animate="visible"
                             exit="exit"
                             layout
-                            className="py-4 first:pt-0 last:pb-0 flex gap-4 items-center group"
+                            className="py-3.5 sm:py-4 first:pt-0 last:pb-0 flex gap-3 sm:gap-4 items-center group"
                         >
                             {/* IMAGE */}
-                            <div className="w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden bg-zinc-50 border border-zinc-200/60 shrink-0 relative">
+                            <div className="w-14 h-[72px] sm:w-20 sm:h-24 rounded-lg sm:rounded-xl overflow-hidden bg-zinc-50 border border-zinc-200/60 shrink-0 relative">
                                 <img
                                     src={item.imageUrl}
                                     alt={item.productName}
@@ -117,23 +117,23 @@ const CheckoutItems: React.FC<Props> = ({ items }) => {
                                         {item.productName}
                                     </h3>
 
-                                    <div className="mt-1.5 flex items-center gap-2 text-[11px] text-zinc-500 font-medium">
-                                        <span className="bg-zinc-100 px-2 py-0.5 rounded-md text-zinc-600">
+                                    <div className="mt-1 sm:mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px] text-zinc-500 font-medium">
+                                        <span className="bg-zinc-100 px-1.5 sm:px-2 py-0.5 rounded-md text-zinc-600 truncate max-w-full">
                                             {item.colorName} / {item.sizeName}
                                         </span>
                                     </div>
                                 </div>
 
                                 {/* PRICE & QUANTITY */}
-                                <div className="flex items-baseline justify-between mt-2">
-                                    <span className="text-xs text-zinc-400 font-mono">
+                                <div className="flex items-baseline justify-between gap-2 mt-2 pt-0.5">
+                                    <span className="text-[11px] sm:text-xs text-zinc-400 font-mono">
                                         Số lượng: <strong className="text-zinc-800 font-bold">x{item.quantity}</strong>
                                     </span>
 
-                                    <div className="text-right">
-                                        <span className="text-sm sm:text-base font-bold font-mono text-zinc-900">
+                                    <div className="text-right shrink-0">
+                                        <span className="text-xs sm:text-sm md:text-base font-bold font-mono text-zinc-900">
                                             {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}
-                                            <span className="text-xs font-normal text-zinc-500 ml-0.5">đ</span>
+                                            <span className="text-[10px] sm:text-xs font-normal text-zinc-500 ml-0.5">đ</span>
                                         </span>
                                     </div>
                                 </div>

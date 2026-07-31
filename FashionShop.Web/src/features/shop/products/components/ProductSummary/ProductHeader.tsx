@@ -40,36 +40,36 @@ const ProductHeader: React.FC<Props> = ({
     const currentSortLabel = sortOptions.find(opt => opt.value === urlSort)?.label || "Mặc định";
 
     return (
-        <div className="flex flex-col gap-6 border-b border-zinc-200/80 pb-6 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-4 border-b border-zinc-200/80 pb-4 sm:gap-6 sm:pb-6 md:flex-row md:items-end md:justify-between">
             {/* LEFT: TITLE & CATEGORY */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1 sm:gap-1.5 min-w-0">
                 {/* Category Subtitle */}
-                <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-900" />
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-900" />
+                    <span className="truncate text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-zinc-500">
                         {categoryName || "Bộ sưu tập"}
                     </span>
                 </div>
 
                 {/* Main Title */}
-                <h1 className="text-3xl font-black uppercase tracking-tight text-zinc-900 md:text-4xl">
+                <h1 className="text-2xl font-black uppercase tracking-tight text-zinc-900 sm:text-3xl md:text-4xl line-clamp-2 break-words">
                     {brandName || customTitle || "Tất cả sản phẩm"}
                 </h1>
             </div>
 
             {/* RIGHT: SORT DROPDOWN */}
-            <div className="relative shrink-0" ref={sortDropdownRef}>
+            <div className="relative w-full sm:w-auto shrink-0" ref={sortDropdownRef}>
                 <button
                     type="button"
                     onClick={() => setIsSortOpen(!isSortOpen)}
-                    className="group flex h-10 items-center justify-between gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 text-xs font-semibold text-zinc-800 transition-all hover:border-zinc-900 hover:bg-zinc-50 shadow-2xs"
+                    className="group flex h-10 w-full sm:w-auto items-center justify-between gap-3 rounded-xl border border-zinc-200/80 bg-white px-3.5 sm:px-4 text-xs font-semibold text-zinc-800 transition-all hover:border-zinc-900 hover:bg-zinc-50 active:scale-95 shadow-2xs"
                 >
-                    <span className="text-zinc-500">
+                    <span className="text-zinc-500 truncate">
                         Sắp xếp: <span className="font-bold text-zinc-900">{currentSortLabel}</span>
                     </span>
                     <ChevronDown
                         size={14}
-                        className={`text-zinc-400 transition-transform duration-200 group-hover:text-zinc-900 ${
+                        className={`shrink-0 text-zinc-400 transition-transform duration-200 group-hover:text-zinc-900 ${
                             isSortOpen ? 'rotate-180' : ''
                         }`}
                     />
@@ -82,7 +82,7 @@ const ProductHeader: React.FC<Props> = ({
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 6, scale: 0.98 }}
                             transition={{ duration: 0.15, ease: "easeOut" }}
-                            className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-zinc-200/80 bg-white/95 p-1.5 shadow-xl backdrop-blur-md"
+                            className="absolute right-0 z-50 mt-2 w-full sm:w-56 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-zinc-200/80 bg-white/95 p-1.5 shadow-xl backdrop-blur-md"
                         >
                             {sortOptions.map((option) => {
                                 const isSelected = urlSort === option.value;
@@ -94,14 +94,14 @@ const ProductHeader: React.FC<Props> = ({
                                             onSortSelect(option.value);
                                             setIsSortOpen(false);
                                         }}
-                                        className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-xs transition-colors ${
+                                        className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 sm:py-2 text-xs transition-colors active:scale-98 ${
                                             isSelected
                                                 ? 'bg-zinc-900 font-semibold text-white'
                                                 : 'font-medium text-zinc-600 hover:bg-zinc-100/80 hover:text-zinc-900'
                                         }`}
                                     >
-                                        <span>{option.label}</span>
-                                        {isSelected && <Check size={14} strokeWidth={2.5} className="text-white" />}
+                                        <span className="truncate pr-2">{option.label}</span>
+                                        {isSelected && <Check size={14} strokeWidth={2.5} className="shrink-0 text-white" />}
                                     </button>
                                 );
                             })}

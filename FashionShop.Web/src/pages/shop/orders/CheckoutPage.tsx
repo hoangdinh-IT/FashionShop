@@ -11,7 +11,7 @@ import { useOrderMutations } from '../../../features/shop/orders/hooks/useOrders
 import { PaymentMethod, type OrderRequest } from '../../../features/shop/orders/types/requests';
 import { useSnackbar } from '../../../contexts';
 import Loading from '../../../components/common/Loading';
-import { ShieldCheck, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, ShoppingBag } from 'lucide-react';
 
 const SHIPPING_FEE = 30000;
 
@@ -62,7 +62,7 @@ const CheckoutPage = () => {
         const orderRequest: OrderRequest = {
             addressId: selectedAddress.id,
             paymentMethod: paymentMethod,
-            transferCode: transferCode || "", // Gán mã chuyển khoản được truyền từ CheckoutSummary
+            transferCode: transferCode || "",
             note: note,
             voucherId: voucherId,
             orderItems: selectedItems.map(item => ({
@@ -83,38 +83,47 @@ const CheckoutPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f6f6f4] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white antialiased pb-20">
+        <div className="min-h-screen bg-[#f6f6f4] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white antialiased pb-24 lg:pb-20">
+            
             {/* HEADER CỐ ĐỊNH KHI SCROLL */}
-            <header className="sticky top-[80px] z-20 border-b border-black/5 bg-[#f6f6f4]/85 backdrop-blur-md">
-                <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <header className="sticky top-0 sm:top-[80px] z-30 border-b border-black/5 bg-[#f6f6f4]/90 backdrop-blur-md transition-all">
+                <div className="max-w-[1200px] mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
+                    
+                    {/* NÚT QUAY LẠI GIỎ HÀNG */}
                     <button 
                         onClick={() => navigate('/shop/cart')}
-                        className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-500 hover:text-zinc-900 transition-colors group cursor-pointer"
+                        className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-zinc-500 hover:text-zinc-900 transition-colors group cursor-pointer shrink-0"
                     >
                         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                        <span>Giỏ hàng</span>
+                        <span className="hidden sm:inline">Giỏ hàng</span>
+                        <span className="sm:hidden">Trở về</span>
                     </button>
 
-                    <div className="text-center">
-                        <h1 className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-900">
+                    {/* TIÊU ĐỀ TRANG */}
+                    <div className="text-center truncate">
+                        <h1 className="text-xs sm:text-sm font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-900 truncate">
                             Thanh toán
                         </h1>
                     </div>
 
-                    <div className="hidden sm:flex items-center gap-2 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-                        <ShieldCheck size={14} className="text-emerald-600" />
-                        <span>Thanh toán an toàn</span>
+                    {/* BẢO MẬT & ĐẮC TÍNH */}
+                    <div className="flex items-center justify-end gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold tracking-wider text-zinc-500 uppercase shrink-0">
+                        <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+                        <span className="hidden md:inline">Thanh toán an toàn</span>
+                        <span className="md:hidden text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Bảo mật</span>
                     </div>
                 </div>
             </header>
 
             {/* MAIN CONTENT AREA */}
-            <main className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 md:py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative">
+            <main className="max-w-[1200px] mx-auto px-3 sm:px-6 py-4 sm:py-6 md:py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 items-start relative">
                     
-                    {/* LEFT COLUMN: Địa chỉ & Sản phẩm */}
-                    <div className="lg:col-span-7 xl:col-span-8 space-y-6">
-                        <section>
+                    {/* LEFT COLUMN: Địa chỉ & Danh sách Sản phẩm */}
+                    <div className="lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-6 order-1">
+                        
+                        {/* THÔNG TIN VẬN CHUYỂN & ĐỊA CHỈ */}
+                        <section className="bg-white rounded-2xl p-4 sm:p-6 shadow-xs border border-black/5">
                             <CheckoutAddress 
                                 address={selectedAddress} 
                                 onOpenAddressModal={() => setIsAddressModalOpen(true)}
@@ -123,20 +132,31 @@ const CheckoutPage = () => {
                             />
                         </section>
 
-                        <section>
+                        {/* DANH SÁCH SẢN PHẨM */}
+                        <section className="bg-white rounded-2xl p-4 sm:p-6 shadow-xs border border-black/5">
+                            <div className="flex items-center justify-between pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-zinc-100">
+                                <div className="flex items-center gap-2">
+                                    <ShoppingBag size={18} className="text-zinc-700" />
+                                    <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-zinc-900">
+                                        Sản phẩm chọn mua ({selectedItems.length})
+                                    </h2>
+                                </div>
+                            </div>
                             <CheckoutItems items={selectedItems} />
                         </section>
                     </div>
 
-                    {/* RIGHT COLUMN: Tóm tắt thanh toán */}
-                    <aside className="lg:col-span-5 xl:col-span-4 h-full">
-                        <div className="sticky top-[160px] z-10 space-y-4">
-                            <CheckoutSummary 
-                                subTotal={subTotal}
-                                shippingFee={SHIPPING_FEE}
-                                onOrder={handlePlaceOrder}
-                                isLoading={isOrderCreating}
-                            />
+                    {/* RIGHT COLUMN: Tóm tắt thanh toán & Phương thức thanh toán */}
+                    <aside className="lg:col-span-5 xl:col-span-4 h-full order-2">
+                        <div className="lg:sticky lg:top-[160px] z-10 space-y-4">
+                            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-xs border border-black/5">
+                                <CheckoutSummary 
+                                    subTotal={subTotal}
+                                    shippingFee={SHIPPING_FEE}
+                                    onOrder={handlePlaceOrder}
+                                    isLoading={isOrderCreating}
+                                />
+                            </div>
                         </div>
                     </aside>
 

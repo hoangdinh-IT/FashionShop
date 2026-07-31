@@ -6,7 +6,6 @@ import AuthLayout from "../layouts/AuthLayout";
 import LoginPage from "../pages/auth/LoginPage"
 import RegisterPage from "../pages/auth/RegisterPage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
-import ResetPasswordForm from "../features/auth/components/ResetPasswordForm";
 
 import AdminMainLayout from "../layouts/AdminMainLayout";
 import DashboardPage from "../pages/admin/dashboard/DashboardPage";
@@ -56,10 +55,6 @@ export const AppRoutes = () => {
                         {
                             path: "forgot-password",
                             element: <ForgotPasswordPage />
-                        },
-                        {
-                            path: "reset-password",
-                            element: <ResetPasswordForm />
                         }
                     ]
                 }

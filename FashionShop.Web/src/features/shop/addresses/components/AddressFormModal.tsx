@@ -157,7 +157,7 @@ const AddressFormModal: React.FC<Props> = ({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 font-sans">
                     
                     {/* BACKDROP */}
                     <motion.div
@@ -171,38 +171,38 @@ const AddressFormModal: React.FC<Props> = ({
 
                     {/* MODAL CONTAINER */}
                     <motion.div
-                        className="relative w-full max-w-lg bg-white rounded-3xl border border-zinc-200/80 shadow-xl overflow-hidden flex flex-col z-10"
+                        className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xl overflow-hidden flex flex-col z-10 my-auto"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[85vh]">
+                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[88vh] sm:max-h-[85vh]">
                             
                             {/* --- HEADER --- */}
-                            <div className="px-6 py-5 flex items-center justify-between border-b border-zinc-100 bg-white shrink-0">
-                                <h3 className="text-lg font-semibold text-zinc-900 tracking-tight">
+                            <div className="px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between border-b border-zinc-100 bg-white shrink-0">
+                                <h3 className="text-base sm:text-lg font-bold text-zinc-900 tracking-tight">
                                     {initialData ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ mới'}
                                 </h3>
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="w-8 h-8 flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors duration-200 cursor-pointer"
+                                    className="w-8 h-8 flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors duration-200 cursor-pointer active:scale-95"
                                 >
                                     <IoClose className="text-xl" />
                                 </button>
                             </div>
 
                             {/* --- BODY --- */}
-                            <div className="p-6 overflow-y-auto space-y-4 custom-scrollbar flex-1">
+                            <div className="p-4 sm:p-6 overflow-y-auto space-y-3.5 sm:space-y-4 custom-scrollbar flex-1">
                                 
-                                {/* Họ tên & SĐT (2 Cột trên màn hình ngang) */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* Họ tên & SĐT (Responsive Grid 1 cột di động, 2 cột máy tính) */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                                     {/* Họ và tên */}
                                     <div className="space-y-1.5">
                                         <label htmlFor="fullName" className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                                            <IoPersonOutline className="text-zinc-400" />
+                                            <IoPersonOutline className="text-zinc-400 text-sm" />
                                             Họ và tên
                                         </label>
                                         <input
@@ -210,15 +210,15 @@ const AddressFormModal: React.FC<Props> = ({
                                             {...register("fullName", { required: "Vui lòng nhập họ và tên" })}
                                             type="text"
                                             placeholder="Nguyễn Văn A"
-                                            className={`w-full h-11 px-3.5 text-sm bg-zinc-50 border ${errors.fullName ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
+                                            className={`w-full h-10 sm:h-11 px-3.5 text-xs sm:text-sm bg-zinc-50 border ${errors.fullName ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
                                         />
-                                        {errors.fullName && <p className="text-xs text-red-500 font-medium">{errors.fullName.message}</p>}
+                                        {errors.fullName && <p className="text-[11px] sm:text-xs text-red-500 font-medium">{errors.fullName.message}</p>}
                                     </div>
 
                                     {/* Số điện thoại */}
                                     <div className="space-y-1.5">
                                         <label htmlFor="phoneNumber" className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                                            <IoCallOutline className="text-zinc-400" />
+                                            <IoCallOutline className="text-zinc-400 text-sm" />
                                             Số điện thoại
                                         </label>
                                         <input
@@ -229,16 +229,16 @@ const AddressFormModal: React.FC<Props> = ({
                                             })}
                                             type="tel"
                                             placeholder="0912345678"
-                                            className={`w-full h-11 px-3.5 text-sm bg-zinc-50 border ${errors.phoneNumber ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
+                                            className={`w-full h-10 sm:h-11 px-3.5 text-xs sm:text-sm bg-zinc-50 border ${errors.phoneNumber ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
                                         />
-                                        {errors.phoneNumber && <p className="text-xs text-red-500 font-medium">{errors.phoneNumber.message}</p>}
+                                        {errors.phoneNumber && <p className="text-[11px] sm:text-xs text-red-500 font-medium">{errors.phoneNumber.message}</p>}
                                     </div>
                                 </div>
 
                                 {/* Tỉnh / Thành phố */}
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                                        <IoBusinessOutline className="text-zinc-400" />
+                                        <IoBusinessOutline className="text-zinc-400 text-sm" />
                                         Tỉnh / Thành phố
                                     </label>
                                     <div className="relative">
@@ -250,24 +250,24 @@ const AddressFormModal: React.FC<Props> = ({
                                                     setValue("commune", "");
                                                 }
                                             })}
-                                            className={`w-full h-11 pl-3.5 pr-10 text-sm bg-zinc-50 border ${errors.city ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50`}
+                                            className={`w-full h-10 sm:h-11 pl-3.5 pr-9 text-xs sm:text-sm bg-zinc-50 border ${errors.city ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 truncate`}
                                         >
                                             <option value="" disabled hidden>Chọn Tỉnh / Thành phố</option>
                                             {provinces.map((prov) => (
                                                 <option key={prov.code} value={prov.code}>{prov.name}</option>
                                             ))}
                                         </select>
-                                        <IoChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                                        <IoChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-sm" />
                                     </div>
-                                    {errors.city && <p className="text-xs text-red-500 font-medium">{errors.city.message}</p>}
+                                    {errors.city && <p className="text-[11px] sm:text-xs text-red-500 font-medium">{errors.city.message}</p>}
                                 </div>
 
-                                {/* Quận Huyện & Phường Xã (2 Cột) */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* Quận Huyện & Phường Xã */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                                     {/* Quận / Huyện */}
                                     <div className="space-y-1.5">
                                         <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                                            <IoLocationOutline className="text-zinc-400" />
+                                            <IoLocationOutline className="text-zinc-400 text-sm" />
                                             Quận / Huyện
                                         </label>
                                         <div className="relative">
@@ -277,45 +277,45 @@ const AddressFormModal: React.FC<Props> = ({
                                                     onChange: () => setValue("commune", "")
                                                 })}
                                                 disabled={!selectedProvince}
-                                                className={`w-full h-11 pl-3.5 pr-10 text-sm bg-zinc-50 border ${errors.district ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                className={`w-full h-10 sm:h-11 pl-3.5 pr-9 text-xs sm:text-sm bg-zinc-50 border ${errors.district ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed truncate`}
                                             >
                                                 <option value="" disabled hidden>Chọn Quận/Huyện</option>
                                                 {districts.map((dist) => (
                                                     <option key={dist.code} value={dist.code}>{dist.name}</option>
                                                 ))}
                                             </select>
-                                            <IoChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                                            <IoChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-sm" />
                                         </div>
-                                        {errors.district && <p className="text-xs text-red-500 font-medium">{errors.district.message}</p>}
+                                        {errors.district && <p className="text-[11px] sm:text-xs text-red-500 font-medium">{errors.district.message}</p>}
                                     </div>
 
                                     {/* Phường / Xã */}
                                     <div className="space-y-1.5">
                                         <label className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                                            <IoHomeOutline className="text-zinc-400" />
+                                            <IoHomeOutline className="text-zinc-400 text-sm" />
                                             Phường / Xã
                                         </label>
                                         <div className="relative">
                                             <select 
                                                 {...register("commune", { required: "Vui lòng chọn Phường/Xã" })}
                                                 disabled={!selectedDistrict}
-                                                className={`w-full h-11 pl-3.5 pr-10 text-sm bg-zinc-50 border ${errors.commune ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                className={`w-full h-10 sm:h-11 pl-3.5 pr-9 text-xs sm:text-sm bg-zinc-50 border ${errors.commune ? 'border-red-400' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed truncate`}
                                             >
                                                 <option value="" disabled hidden>Chọn Phường/Xã</option>
                                                 {wards.map((ward) => (
                                                     <option key={ward.code} value={ward.code}>{ward.name}</option>
                                                 ))}
                                             </select>
-                                            <IoChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                                            <IoChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-sm" />
                                         </div>
-                                        {errors.commune && <p className="text-xs text-red-500 font-medium">{errors.commune.message}</p>}
+                                        {errors.commune && <p className="text-[11px] sm:text-xs text-red-500 font-medium">{errors.commune.message}</p>}
                                     </div>
                                 </div>
 
                                 {/* Địa chỉ chi tiết */}
                                 <div className="space-y-1.5">
                                     <label htmlFor="addressDetail" className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5">
-                                        <IoLocationOutline className="text-zinc-400" />
+                                        <IoLocationOutline className="text-zinc-400 text-sm" />
                                         Địa chỉ cụ thể
                                     </label>
                                     <input
@@ -323,15 +323,15 @@ const AddressFormModal: React.FC<Props> = ({
                                         {...register("addressDetail", { required: "Vui lòng nhập địa chỉ cụ thể" })}
                                         type="text"
                                         placeholder="Số nhà, tên đường, tòa nhà..."
-                                        className={`w-full h-11 px-3.5 text-sm bg-zinc-50 border ${errors.addressDetail ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
+                                        className={`w-full h-10 sm:h-11 px-3.5 text-xs sm:text-sm bg-zinc-50 border ${errors.addressDetail ? 'border-red-400 focus:border-red-500' : 'border-zinc-200 focus:border-zinc-900'} rounded-xl focus:bg-white outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400`}
                                     />
-                                    {errors.addressDetail && <p className="text-xs text-red-500 font-medium">{errors.addressDetail.message}</p>}
+                                    {errors.addressDetail && <p className="text-[11px] sm:text-xs text-red-500 font-medium">{errors.addressDetail.message}</p>}
                                 </div>
 
                                 {/* Toggle Mặc Định */}
-                                <div className="pt-2">
-                                    <label className="flex items-center justify-between cursor-pointer py-1">
-                                        <span className="text-sm font-semibold text-zinc-800">
+                                <div className="pt-1 sm:pt-2">
+                                    <label className="flex items-center justify-between cursor-pointer py-1 group">
+                                        <span className="text-xs sm:text-sm font-semibold text-zinc-800 group-hover:text-zinc-900 transition-colors">
                                             Đặt làm địa chỉ mặc định
                                         </span>
                                         <div className="relative inline-flex items-center">
@@ -341,8 +341,8 @@ const AddressFormModal: React.FC<Props> = ({
                                                 checked={isDefault}
                                                 onChange={() => setIsDefault(!isDefault)}
                                             />
-                                            <div className={`w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${isDefault ? 'bg-zinc-900' : 'bg-zinc-200'}`} />
-                                            <div className={`absolute left-0.5 bg-white w-5 h-5 rounded-full transition-transform duration-200 ease-in-out shadow-sm ${isDefault ? 'translate-x-5' : 'translate-x-0'}`} />
+                                            <div className={`w-10 sm:w-11 h-5 sm:h-6 rounded-full transition-colors duration-200 ease-in-out ${isDefault ? 'bg-zinc-900' : 'bg-zinc-200'}`} />
+                                            <div className={`absolute left-0.5 bg-white w-4 sm:w-5 h-4 sm:h-5 rounded-full transition-transform duration-200 ease-in-out shadow-sm ${isDefault ? 'translate-x-5 sm:translate-x-5' : 'translate-x-0'}`} />
                                         </div>
                                     </label>
                                 </div>
@@ -350,11 +350,11 @@ const AddressFormModal: React.FC<Props> = ({
                             </div>
 
                             {/* --- FOOTER --- */}
-                            <div className="p-6 bg-zinc-50/50 border-t border-zinc-100 shrink-0">
+                            <div className="p-4 sm:p-6 bg-zinc-50/50 border-t border-zinc-100 shrink-0">
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full h-11 text-xs font-bold uppercase tracking-wider text-white bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-wait flex items-center justify-center cursor-pointer shadow-sm"
+                                    className="w-full h-10 sm:h-11 text-xs font-bold uppercase tracking-wider text-white bg-zinc-900 hover:bg-zinc-800 active:scale-[0.99] rounded-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-wait flex items-center justify-center cursor-pointer shadow-sm"
                                 >
                                     {isLoading ? (
                                         <div className="flex items-center gap-2">

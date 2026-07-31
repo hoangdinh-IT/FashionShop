@@ -1,25 +1,25 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 
 interface Props {
     addressDetail?: string;
     communeCode?: string | number;
     districtCode?: string | number;
     cityCode?: string | number;
+    className?: string; // Cho phép truyền class CSS tùy chỉnh từ bên ngoài
 }
 
 const AddressString: React.FC<Props> = ({
     addressDetail,
     communeCode,
     districtCode,
-    cityCode
+    cityCode,
+    className = ""
 }) => {
-
     const [locationName, setLocationName] = useState<string>("");
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-
         if (!cityCode || !districtCode || !communeCode) {
             setLocationName("");
             setIsLoading(false);
@@ -33,37 +33,41 @@ const AddressString: React.FC<Props> = ({
             axios.get(`https://provinces.open-api.vn/api/d/${districtCode}`),
             axios.get(`https://provinces.open-api.vn/api/p/${cityCode}`)
         ])
-        .then(([wardRes, districtRes, cityRes]) => {
-
-            setLocationName(
-                `${wardRes.data.name}, ${districtRes.data.name}, ${cityRes.data.name}`
-            );
-        })
-        .catch((err) => {
-
-            console.error("Lỗi dịch địa chỉ:", err);
-            setLocationName("Lỗi hiển thị khu vực");
-        })
-        .finally(() => {
-            setIsLoading(false);
-        });
-
+            .then(([wardRes, districtRes, cityRes]) => {
+                setLocationName(
+                    `${wardRes.data.name}, ${districtRes.data.name}, ${cityRes.data.name}`
+                );
+            })
+            .catch((err) => {
+                console.error("Lỗi dịch địa chỉ:", err);
+                setLocationName("Lỗi hiển thị khu vực");
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }, [communeCode, districtCode, cityCode]);
 
+    // Skeleton thu nhỏ gọn chuẩn với text-[10px]
+    if (isLoading) {
+        return (
+            <span className={`inline-flex items-center gap-1 align-middle max-w-full ${className}`}>
+                <span className="h-2.5 w-16 animate-pulse rounded bg-zinc-200 shrink-0" />
+                <span className="h-2.5 w-24 animate-pulse rounded bg-zinc-100" />
+            </span>
+        );
+    }
+
+    if (!locationName) return null;
+
+    const fullAddress = addressDetail?.trim()
+        ? `${addressDetail.trim()}, ${locationName}`
+        : locationName;
+
     return (
-        <span className="leading-relaxed whitespace-pre-line">
-            {isLoading ? (
-
-                <span className="inline-flex items-center ml-2 gap-2 align-middle">
-                    <span className="h-4 w-28 animate-pulse rounded-full bg-zinc-200" />
-                    <span className="h-4 w-64 animate-pulse rounded-full bg-zinc-100" />
-                </span>
-
-            ) : locationName ? (
-
-                `${addressDetail}, ${locationName}`
-
-            ) : null}
+        <span 
+            className={`inline break-words whitespace-normal text-inherit ${className}`}
+        >
+            {fullAddress}
         </span>
     );
 };

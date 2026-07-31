@@ -52,16 +52,16 @@ const CheckoutAddress: React.FC<Props> = ({
             initial={{ opacity: 0, scale: 0.98, filter: "blur(4px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.5, ease: customEase }}
-            className="bg-white rounded-2xl border border-zinc-200/80 p-5 sm:p-6 shadow-xs font-sans space-y-5"
+            className="bg-white rounded-2xl border border-zinc-200/80 p-4 sm:p-5 md:p-6 shadow-xs font-sans space-y-4 sm:space-y-5"
         >
             
             {/* HEADER */}
-            <div className="flex items-center justify-between gap-4 pb-4 border-b border-zinc-100">
-                <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-zinc-100 text-zinc-900 flex items-center justify-center shrink-0">
-                        <MapPin size={16} strokeWidth={2} />
+            <div className="flex items-center justify-between gap-3 pb-3.5 sm:pb-4 border-b border-zinc-100">
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-100 text-zinc-900 flex items-center justify-center shrink-0">
+                        <MapPin size={15} className="sm:w-[16px] sm:h-[16px]" strokeWidth={2} />
                     </div>
-                    <h2 className="text-base font-bold tracking-tight text-zinc-900">
+                    <h2 className="text-sm sm:text-base font-bold tracking-tight text-zinc-900 truncate">
                         Địa chỉ nhận hàng
                     </h2>
                 </div>
@@ -69,13 +69,14 @@ const CheckoutAddress: React.FC<Props> = ({
                 <button
                     type="button"
                     onClick={onOpenAddressModal}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-700 hover:text-black underline underline-offset-4 cursor-pointer transition-colors"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-semibold text-zinc-700 hover:text-black underline underline-offset-4 cursor-pointer transition-colors shrink-0 py-1 px-1.5 sm:p-0 rounded-md active:bg-zinc-100 sm:active:bg-transparent"
                 >
                     {address ? (
                         'Thay đổi'
                     ) : (
                         <>
-                            <Plus size={14} /> Thêm địa chỉ
+                            <Plus size={14} /> 
+                            <span>Thêm địa chỉ</span>
                         </>
                     )}
                 </button>
@@ -91,15 +92,15 @@ const CheckoutAddress: React.FC<Props> = ({
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className="rounded-xl bg-zinc-50/70 border border-zinc-100 p-4 space-y-2"
+                            className="rounded-xl bg-zinc-50/70 border border-zinc-100 p-3.5 sm:p-4 space-y-1.5 sm:space-y-2"
                         >
-                            <div className="flex items-center gap-2 text-sm">
-                                <span className="font-bold text-zinc-900">{address.fullName}</span>
-                                <span className="text-zinc-300">•</span>
-                                <span className="font-mono text-zinc-600 font-medium">{address.phoneNumber}</span>
+                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                                <span className="font-bold text-zinc-900 break-words">{address.fullName}</span>
+                                <span className="text-zinc-300 hidden sm:inline">•</span>
+                                <span className="font-mono text-zinc-600 font-medium text-xs sm:text-sm">{address.phoneNumber}</span>
                             </div>
 
-                            <div className="text-xs leading-relaxed text-zinc-600">
+                            <div className="text-xs leading-relaxed text-zinc-600 break-words">
                                 <AddressString
                                     addressDetail={address.addressDetail}
                                     communeCode={address.commune}
@@ -116,7 +117,7 @@ const CheckoutAddress: React.FC<Props> = ({
                             animate="visible"
                             exit="exit"
                             onClick={onOpenAddressModal}
-                            className="rounded-xl border border-dashed border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 p-5 text-center cursor-pointer transition-all group"
+                            className="rounded-xl border border-dashed border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 p-4 sm:p-5 text-center cursor-pointer transition-all group"
                         >
                             <p className="text-xs font-medium text-zinc-500 group-hover:text-zinc-800">
                                 Chưa có địa chỉ giao hàng. Nhấn vào đây để thêm mới.
@@ -127,9 +128,9 @@ const CheckoutAddress: React.FC<Props> = ({
             </div>
 
             {/* DELIVERY NOTE */}
-            <div className="space-y-2 pt-1">
+            <div className="space-y-1.5 sm:space-y-2 pt-1">
                 <label className="flex items-center gap-1.5 text-xs font-medium text-zinc-500">
-                    <NotebookPen size={13} className="text-zinc-400" />
+                    <NotebookPen size={13} className="text-zinc-400 shrink-0" />
                     <span>Ghi chú đơn hàng</span>
                 </label>
 
@@ -140,7 +141,7 @@ const CheckoutAddress: React.FC<Props> = ({
                     placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..."
                     className="
                         w-full rounded-xl border border-zinc-200 bg-white
-                        px-3.5 py-2.5 text-xs text-zinc-800
+                        px-3 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-xs text-zinc-800
                         placeholder:text-zinc-400
                         focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900
                         transition-all resize-none

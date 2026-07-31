@@ -35,42 +35,42 @@ export const RegisterForm: React.FC = () => {
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-[520px]"
+            className="w-full max-w-[520px] mx-auto"
         >
-            <div className="rounded-[36px] border border-zinc-200 bg-white/80 p-10 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.06)]">
+            <div className="rounded-3xl sm:rounded-[36px] border border-zinc-200 bg-white/80 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.06)]">
 
                 {/* TITLE */}
-                <div className="mb-10 flex items-start justify-between">
+                <div className="mb-6 sm:mb-8 lg:mb-10 flex items-start justify-between">
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-400">
+                        <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-400">
                             Create Account
                         </p>
 
-                        <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-zinc-900">
+                        <h2 className="mt-2 sm:mt-3 text-2xl sm:text-3xl font-black tracking-[-0.04em] text-zinc-900">
                             Join us today
                         </h2>
                     </div>
 
                     <Link
                         to="/"
-                        className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-zinc-900 transition-all hover:border-black hover:bg-black hover:text-white"
+                        className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-black/10 bg-white text-zinc-900 transition-all hover:border-black hover:bg-black hover:text-white shrink-0"
+                        title="Về trang chủ"
                     >
-                        <IoHome size={18} />
+                        <IoHome className="text-base sm:text-lg" />
                     </Link>
                 </div>
-                
 
                 {/* FORM */}
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
 
                     {/* EMAIL */}
                     <div>
-                        <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                        <label className="mb-1.5 sm:mb-2 block text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
                             Email
                         </label>
 
                         <div className="relative">
-                            <HiOutlineMail className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                            <HiOutlineMail className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-zinc-400 text-lg sm:text-xl" />
 
                             <input
                                 type="email"
@@ -83,13 +83,13 @@ export const RegisterForm: React.FC = () => {
                                 })}
                                 placeholder="Enter your email"
                                 tabIndex={1}
-                                className={`h-14 w-full rounded-2xl border bg-zinc-50 pl-14 pr-5 text-sm outline-none transition
-                                ${errors.email ? "border-red-400" : "border-transparent focus:border-zinc-900 focus:bg-white"}`}
+                                className={`h-12 sm:h-14 w-full rounded-2xl border bg-zinc-50 pl-11 sm:pl-14 pr-4 sm:pr-5 text-xs sm:text-sm text-zinc-900 outline-none transition-all focus:bg-white
+                                ${errors.email ? "border-red-400" : "border-transparent focus:border-zinc-900"}`}
                             />
                         </div>
 
                         {errors.email && (
-                            <p className="mt-2 text-xs text-red-500">
+                            <p className="mt-1.5 text-[11px] sm:text-xs text-red-500">
                                 {errors.email.message}
                             </p>
                         )}
@@ -97,12 +97,12 @@ export const RegisterForm: React.FC = () => {
 
                     {/* PASSWORD */}
                     <div>
-                        <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                        <label className="mb-1.5 sm:mb-2 block text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
                             Password
                         </label>
 
                         <div className="relative">
-                            <HiOutlineLockClosed className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                            <HiOutlineLockClosed className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-zinc-400 text-lg sm:text-xl" />
 
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -115,21 +115,25 @@ export const RegisterForm: React.FC = () => {
                                 })}
                                 placeholder="Create password"
                                 tabIndex={2}
-                                className={`h-14 w-full rounded-2xl border bg-zinc-50 pl-14 pr-14 text-sm outline-none transition
-                                ${errors.password ? "border-red-400" : "border-transparent focus:border-zinc-900 focus:bg-white"}`}
+                                className={`h-12 sm:h-14 w-full rounded-2xl border bg-zinc-50 pl-11 sm:pl-14 pr-11 sm:pr-14 text-xs sm:text-sm text-zinc-900 outline-none transition-all focus:bg-white
+                                ${errors.password ? "border-red-400" : "border-transparent focus:border-zinc-900"}`}
                             />
 
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400"
+                                className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 p-1"
                             >
-                                {showPassword ? <IoEyeOff /> : <IoEye />}
+                                {showPassword ? (
+                                    <IoEyeOff className="text-lg sm:text-xl" />
+                                ) : (
+                                    <IoEye className="text-lg sm:text-xl" />
+                                )}
                             </button>
                         </div>
 
                         {errors.password && (
-                            <p className="mt-2 text-xs text-red-500">
+                            <p className="mt-1.5 text-[11px] sm:text-xs text-red-500">
                                 {errors.password.message}
                             </p>
                         )}
@@ -137,12 +141,12 @@ export const RegisterForm: React.FC = () => {
 
                     {/* CONFIRM PASSWORD */}
                     <div>
-                        <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                        <label className="mb-1.5 sm:mb-2 block text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
                             Confirm
                         </label>
 
                         <div className="relative">
-                            <HiOutlineLockClosed className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                            <HiOutlineLockClosed className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-zinc-400 text-lg sm:text-xl" />
 
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
@@ -153,8 +157,8 @@ export const RegisterForm: React.FC = () => {
                                 })}
                                 placeholder="Confirm password"
                                 tabIndex={3}
-                                className={`h-14 w-full rounded-2xl border bg-zinc-50 pl-14 pr-14 text-sm outline-none transition
-                                ${errors.confirmPassword ? "border-red-400" : "border-transparent focus:border-zinc-900 focus:bg-white"}`}
+                                className={`h-12 sm:h-14 w-full rounded-2xl border bg-zinc-50 pl-11 sm:pl-14 pr-11 sm:pr-14 text-xs sm:text-sm text-zinc-900 outline-none transition-all focus:bg-white
+                                ${errors.confirmPassword ? "border-red-400" : "border-transparent focus:border-zinc-900"}`}
                             />
 
                             <button
@@ -162,14 +166,18 @@ export const RegisterForm: React.FC = () => {
                                 onClick={() =>
                                     setShowConfirmPassword(!showConfirmPassword)
                                 }
-                                className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400"
+                                className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 p-1"
                             >
-                                {showConfirmPassword ? <IoEyeOff /> : <IoEye />}
+                                {showConfirmPassword ? (
+                                    <IoEyeOff className="text-lg sm:text-xl" />
+                                ) : (
+                                    <IoEye className="text-lg sm:text-xl" />
+                                )}
                             </button>
                         </div>
 
                         {errors.confirmPassword && (
-                            <p className="mt-2 text-xs text-red-500">
+                            <p className="mt-1.5 text-[11px] sm:text-xs text-red-500">
                                 {errors.confirmPassword.message}
                             </p>
                         )}
@@ -180,17 +188,22 @@ export const RegisterForm: React.FC = () => {
                         type="submit"
                         disabled={isLoading}
                         tabIndex={4}
-                        className="h-14 w-full rounded-2xl bg-black text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:scale-[1.01] disabled:bg-zinc-300"
+                        className={`h-12 sm:h-14 w-full rounded-2xl text-xs sm:text-sm font-bold uppercase tracking-[0.2em] transition-all
+                        ${
+                            isLoading
+                                ? "cursor-not-allowed bg-zinc-300 text-zinc-500"
+                                : "bg-black text-white hover:scale-[1.01] active:scale-[0.99]"
+                        }`}
                     >
                         {isLoading ? "Đang xử lý..." : "Đăng ký"}
                     </button>
 
                     {/* FOOTER */}
-                    <div className="mt-4 text-center text-sm text-zinc-500">
+                    <div className="mt-4 sm:mt-6 text-center text-xs sm:text-sm text-zinc-500">
                         Bạn đã có tài khoản?
                         <Link
                             to="/auth/login"
-                            className="ml-2 font-bold text-zinc-900 hover:underline"
+                            className="ml-2 font-bold text-zinc-900 hover:underline inline-block"
                         >
                             Đăng nhập
                         </Link>

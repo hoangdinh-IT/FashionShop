@@ -1,5 +1,5 @@
 import { Clock3, Heart, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useReview, useReviewLikeMutations } from "../../../reviews/hooks/useReview";
 import type { Review, ReviewLike } from "../../../reviews/types/review";
@@ -17,6 +17,7 @@ interface Props {
 const formatReviewDate = (date?: string | Date) => {
     if (!date) return "";
     const parsed = new Date(date);
+    if (isNaN(parsed.getTime())) return "";
     return parsed.toLocaleDateString("vi-VN", {
         day: "2-digit",
         month: "2-digit",
@@ -27,6 +28,7 @@ const formatReviewDate = (date?: string | Date) => {
 const formatReviewTime = (date?: string | Date) => {
     if (!date) return "";
     const parsed = new Date(date);
+    if (isNaN(parsed.getTime())) return "";
     return parsed.toLocaleTimeString("vi-VN", {
         hour: "2-digit",
         minute: "2-digit",
@@ -48,45 +50,69 @@ const ProductReviews = ({ productSlug }: Props) => {
         index: number;
     } | null>(null);
 
-    const reviewList = (reviews as ReviewWithLike[]) || [];
+    const reviewList = useMemo(() => (reviews as ReviewWithLike[]) || [], [reviews]);
     const reviewCount = reviewList.length;
 
-    const averageRating = reviewCount
-        ? reviewList.reduce((sum, review) => sum + review.rating, 0) / reviewCount
-        : 0;
+    const averageRating = useMemo(() => {
+        if (!reviewCount) return 0;
+        return reviewList.reduce((sum, review) => sum + (review.rating || 0), 0) / reviewCount;
+    }, [reviewList, reviewCount]);
 
-    const sortedReviews = [...reviewList].sort(
-        (a, b) =>
-            new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
-    );
+    const sortedReviews = useMemo(() => {
+        return [...reviewList].sort((a, b) => {
+            const dateA = a.createdDate ? new Date(a.createdDate).getTime() : 0;
+            const dateB = b.createdDate ? new Date(b.createdDate).getTime() : 0;
+            return dateB - dateA;
+        });
+    }, [reviewList]);
 
     // Lấy thông tin review & ảnh đang active trong lightbox
-    const activeReview = lightboxImage
-        ? sortedReviews.find((r) => r.reviewId === lightboxImage.reviewId)
-        : null;
-    const activeImages = activeReview?.reviewImages || [];
+    const activeReview = useMemo(() => {
+        if (!lightboxImage) return null;
+        return sortedReviews.find((r) => r.reviewId === lightboxImage.reviewId);
+    }, [lightboxImage, sortedReviews]);
+
+    const activeImages = useMemo(() => activeReview?.reviewImages || [], [activeReview]);
     const currentLightboxImage = activeImages[lightboxImage?.index ?? 0];
 
-    const handlePrevImage = () => {
+    const handlePrevImage = useCallback(() => {
         if (!lightboxImage || activeImages.length <= 1) return;
         setLightboxImage((prev) => {
             if (!prev) return null;
             const newIndex = (prev.index - 1 + activeImages.length) % activeImages.length;
             return { ...prev, index: newIndex };
         });
-    };
+    }, [lightboxImage, activeImages.length]);
 
-    const handleNextImage = () => {
+    const handleNextImage = useCallback(() => {
         if (!lightboxImage || activeImages.length <= 1) return;
         setLightboxImage((prev) => {
             if (!prev) return null;
             const newIndex = (prev.index + 1) % activeImages.length;
             return { ...prev, index: newIndex };
         });
-    };
+    }, [lightboxImage, activeImages.length]);
+
+    // Bắt sự kiện phím Escape & phím mũi tên khi Lightbox mở
+    useEffect(() => {
+        if (!lightboxImage) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setLightboxImage(null);
+            } else if (e.key === "ArrowLeft") {
+                handlePrevImage();
+            } else if (e.key === "ArrowRight") {
+                handleNextImage();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [lightboxImage, handlePrevImage, handleNextImage]);
 
     const handleToggleLike = (review: ReviewWithLike) => {
-        const isOwner = currentUser?.id && currentUser.id === review.userId;
+        const isOwner = Boolean(currentUser?.id && currentUser.id === review.userId);
         if (isOwner || isUpdating) return;
 
         const currentOpt = optimisticLikes[review.reviewId];
@@ -121,6 +147,7 @@ const ProductReviews = ({ productSlug }: Props) => {
                     }
                 },
                 onError: () => {
+                    // Rollback nếu API thất bại
                     setOptimisticLikes((prev) => ({
                         ...prev,
                         [review.reviewId]: {
@@ -216,13 +243,13 @@ const ProductReviews = ({ productSlug }: Props) => {
                                                     review.avatar ||
                                                     "https://ui-avatars.com/api/?name=User&background=18181b&color=fff"
                                                 }
-                                                alt={review.fullname}
+                                                alt={review.fullname || "User"}
                                                 className="h-10 w-10 rounded-full border border-zinc-200/80 object-cover"
                                             />
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <h3 className="text-xs font-bold text-zinc-900">
-                                                        {review.fullname}
+                                                        {review.fullname || "Khách hàng"}
                                                     </h3>
                                                     {isOwner && (
                                                         <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500">
@@ -245,7 +272,7 @@ const ProductReviews = ({ productSlug }: Props) => {
                                         <div className="flex items-center gap-1 rounded-lg bg-zinc-100 px-2 py-1">
                                             <Star size={12} className="fill-zinc-900 text-zinc-900" />
                                             <span className="text-xs font-bold text-zinc-900">
-                                                {review.rating.toFixed(1)}
+                                                {(review.rating || 0).toFixed(1)}
                                             </span>
                                         </div>
                                     </div>
@@ -262,7 +289,7 @@ const ProductReviews = ({ productSlug }: Props) => {
                                         <div className="mt-4 flex flex-wrap gap-2">
                                             {review.reviewImages.map((image, imgIdx) => (
                                                 <div
-                                                    key={image.reviewImageId}
+                                                    key={image.reviewImageId || imgIdx}
                                                     onClick={() =>
                                                         setLightboxImage({
                                                             reviewId: review.reviewId,
@@ -326,7 +353,7 @@ const ProductReviews = ({ productSlug }: Props) => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
                         onClick={() => setLightboxImage(null)}
                     >
                         <motion.div
@@ -334,53 +361,53 @@ const ProductReviews = ({ productSlug }: Props) => {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             transition={{ duration: 0.25, ease: "easeOut" }}
-                            className="relative max-w-5xl max-h-[90vh] flex flex-col items-center justify-center"
+                            className="relative flex max-h-[90vh] max-w-5xl flex-col items-center justify-center"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* Close Button */}
+                            {/* Nút đóng Lightbox */}
                             <button
                                 type="button"
                                 onClick={() => setLightboxImage(null)}
-                                className="absolute -top-12 right-0 rounded-full bg-white/10 p-2 text-white hover:bg-white/25 transition-all active:scale-90 cursor-pointer"
+                                className="absolute -top-12 right-0 cursor-pointer rounded-full bg-white/10 p-2 text-white transition-all hover:bg-white/25 active:scale-90"
                             >
                                 <X size={20} />
                             </button>
 
-                            {/* Main Image with Smooth Fade/Scale Transition when Next/Prev */}
+                            {/* Ảnh hiển thị */}
                             <div className="overflow-hidden rounded-2xl bg-black/40 shadow-2xl">
                                 <AnimatePresence mode="wait">
                                     <motion.img
-                                        key={currentLightboxImage.reviewImageId}
+                                        key={currentLightboxImage.reviewImageId || lightboxImage.index}
                                         src={currentLightboxImage.imageUrl}
                                         alt="Zoomed review attachment"
                                         initial={{ opacity: 0, scale: 0.96 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.96 }}
                                         transition={{ duration: 0.2 }}
-                                        className="max-h-[80vh] max-w-full object-contain select-none"
+                                        className="max-h-[80vh] max-w-full select-none object-contain"
                                     />
                                 </AnimatePresence>
                             </div>
 
-                            {/* Navigation Buttons (Next / Prev) */}
+                            {/* Nút chuyển ảnh Next/Prev */}
                             {activeImages.length > 1 && (
                                 <>
                                     <button
                                         type="button"
                                         onClick={handlePrevImage}
-                                        className="absolute left-2 sm:-left-14 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/25 transition-all active:scale-90 backdrop-blur-md cursor-pointer"
+                                        className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/10 p-3 text-white backdrop-blur-md transition-all hover:bg-white/25 active:scale-90 sm:-left-14"
                                     >
                                         <ChevronLeft size={22} />
                                     </button>
                                     <button
                                         type="button"
                                         onClick={handleNextImage}
-                                        className="absolute right-2 sm:-right-14 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/25 transition-all active:scale-90 backdrop-blur-md cursor-pointer"
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/10 p-3 text-white backdrop-blur-md transition-all hover:bg-white/25 active:scale-90 sm:-right-14"
                                     >
                                         <ChevronRight size={22} />
                                     </button>
 
-                                    {/* Image Counter Indicator */}
+                                    {/* Chỉ số ảnh (Ví dụ: 1 / 3) */}
                                     <div className="absolute -bottom-8 text-xs font-medium tracking-wider text-zinc-300">
                                         {lightboxImage.index + 1} / {activeImages.length}
                                     </div>
