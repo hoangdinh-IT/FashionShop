@@ -1,12 +1,7 @@
 ﻿using FashionShop.Core.Common;
 using FashionShop.Core.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FashionShop.Core.Entities
 {
@@ -16,7 +11,7 @@ namespace FashionShop.Core.Entities
         [Required]
         public Guid UserId { get; set; }
 
-        public Guid? VoucherId { get; set; }
+        public Guid? CouponId { get; set; }
 
         [Required]
         public Guid AddressId { get; set; }
@@ -59,14 +54,14 @@ namespace FashionShop.Core.Entities
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
 
-        [ForeignKey("VoucherId")]
-        public virtual Voucher Voucher { get; set; }
+        [ForeignKey("CouponId")]
+        public virtual Coupon Coupon { get; set; }
 
         [ForeignKey("AddressId")]
         public virtual Address Address { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
-        public virtual ICollection<VoucherUsage> VoucherUsages { get; set; } = new List<VoucherUsage>();
+        public virtual ICollection<CouponUsage> CouponUsages { get; set; } = new List<CouponUsage>();
     }
 }

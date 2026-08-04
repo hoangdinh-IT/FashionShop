@@ -1,5 +1,5 @@
 import React from 'react';
-import { IoTrashBinOutline, IoImageOutline, IoCalendarOutline, IoInformationCircleOutline, IoArrowUp, IoArrowDown, IoSwapVertical, IoPencilOutline } from "react-icons/io5";
+import { IoTrashBinOutline, IoImageOutline, IoCalendarOutline, IoInformationCircleOutline, IoArrowUp, IoArrowDown, IoSwapVertical, IoPencilOutline, IoPricetags } from "react-icons/io5";
 import type { Brand } from '../types/brand';
 import Tooltip from '../../../../components/common/Tooltip';
 import CopyableId from '../../../../components/common/CopyableId';
@@ -316,20 +316,16 @@ const BrandTable: React.FC<BrandTableProps> = ({ data, isLoading, sortBy, isAsce
                         ) : (
                             <tr>
                                 <td colSpan={6} className="px-6 py-20 text-center">
-
                                     <div className="flex flex-col items-center justify-center gap-3">
-
                                         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
-                                            <span className="text-3xl opacity-20 grayscale">🏷️</span>
+                                            <IoPricetags className="text-3xl text-gray-300" />
                                         </div>
-
                                         <div>
                                             <h3 className="text-gray-800 font-bold text-base">
                                                 Chưa có thương hiệu nào
                                             </h3>
-
                                             <p className="text-gray-400 text-[13px] mt-1 max-w-xs mx-auto">
-                                                Hệ thống chưa ghi nhận dữ liệu. Hãy thử thay đổi bộ lọc hoặc thêm mới.
+                                                Hệ thống chưa ghi nhận thương hiệu. Hãy thử thay đổi bộ lọc hoặc thêm mới.
                                             </p>
                                         </div>
                                     </div>

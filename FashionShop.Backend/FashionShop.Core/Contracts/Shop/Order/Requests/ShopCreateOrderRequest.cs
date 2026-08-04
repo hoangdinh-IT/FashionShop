@@ -1,10 +1,5 @@
 ﻿using FashionShop.Core.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FashionShop.Core.Contracts.Shop.Order.Requests
 {
@@ -19,7 +14,7 @@ namespace FashionShop.Core.Contracts.Shop.Order.Requests
 
         public string? TransferCode { get; set; }
 
-        public Guid? VoucherId { get; set; }
+        public Guid? CouponId { get; set; }
 
         [MaxLength(500)]
         public string? Note { get; set; }

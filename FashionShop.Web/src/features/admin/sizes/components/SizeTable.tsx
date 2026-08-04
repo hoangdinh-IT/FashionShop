@@ -1,7 +1,7 @@
 import type React from "react";
 import type { Size } from "../types/size";
 import { SizeType } from "../types/size";
-import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoLayersOutline, IoPencilOutline, IoResizeOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
+import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoLayersOutline, IoPencilOutline, IoScan, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
 import { format } from "date-fns";
 import Tooltip from "../../../../components/common/Tooltip";
 
@@ -234,12 +234,12 @@ const SizeTable: React.FC<Props> = ({
                                 <td colSpan={7} className="px-6 py-20 text-center">
                                     <div className="flex flex-col items-center justify-center gap-3">
                                         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
-                                            <IoResizeOutline className="text-3xl text-gray-300" />
+                                            <IoScan className="text-3xl text-gray-300" />
                                         </div>
                                         <div>
                                             <h3 className="text-gray-800 font-bold text-base">Chưa có kích thước nào</h3>
                                             <p className="text-gray-400 text-xs mt-1 max-w-xs mx-auto">
-                                                Hệ thống chưa ghi nhận dữ liệu kích thước. Hãy thử tạo mới ngay bây giờ.
+                                                Hệ thống chưa ghi nhận kích thước nào. Hãy thử tạo mới ngay bây giờ.
                                             </p>
                                         </div>
                                     </div>

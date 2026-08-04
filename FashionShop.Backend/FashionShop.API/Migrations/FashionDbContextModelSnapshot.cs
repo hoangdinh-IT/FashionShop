@@ -283,6 +283,115 @@ namespace FashionShop.API.Migrations
                     b.ToTable("Colors");
                 });
 
+            modelBuilder.Entity("FashionShop.Core.Entities.Coupon", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte>("DiscountType")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal?>("MaxDiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MaxUsagePerUser")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("MinOrderValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UsedCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasFilter("\"IsDeleted\" = false");
+
+                    b.ToTable("Coupons");
+                });
+
+            modelBuilder.Entity("FashionShop.Core.Entities.CouponUsage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("CouponId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UsedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CouponId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CouponUsages");
+                });
+
             modelBuilder.Entity("FashionShop.Core.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -290,6 +399,9 @@ namespace FashionShop.API.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CouponId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -339,16 +451,13 @@ namespace FashionShop.API.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("VoucherId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CouponId");
 
-                    b.HasIndex("VoucherId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -770,115 +879,6 @@ namespace FashionShop.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FashionShop.Core.Entities.Voucher", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("DiscountType")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<decimal?>("MaxDiscountAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("MaxUsagePerUser")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("MinOrderValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UsedCount")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasFilter("\"IsDeleted\" = false");
-
-                    b.ToTable("Vouchers");
-                });
-
-            modelBuilder.Entity("FashionShop.Core.Entities.VoucherUsage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("UsedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("VoucherId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("VoucherId");
-
-                    b.ToTable("VoucherUsages");
-                });
-
             modelBuilder.Entity("FashionShop.Core.Entities.Wishlist", b =>
                 {
                     b.Property<Guid>("Id")
@@ -960,6 +960,33 @@ namespace FashionShop.API.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("FashionShop.Core.Entities.CouponUsage", b =>
+                {
+                    b.HasOne("FashionShop.Core.Entities.Coupon", "Coupon")
+                        .WithMany("CouponUsages")
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FashionShop.Core.Entities.Order", "Order")
+                        .WithMany("CouponUsages")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FashionShop.Core.Entities.User", "User")
+                        .WithMany("CouponUsages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Coupon");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FashionShop.Core.Entities.Order", b =>
                 {
                     b.HasOne("FashionShop.Core.Entities.Address", "Address")
@@ -968,22 +995,22 @@ namespace FashionShop.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FashionShop.Core.Entities.Coupon", "Coupon")
+                        .WithMany("Orders")
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("FashionShop.Core.Entities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FashionShop.Core.Entities.Voucher", "Voucher")
-                        .WithMany("Orders")
-                        .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.Navigation("Address");
 
-                    b.Navigation("User");
+                    b.Navigation("Coupon");
 
-                    b.Navigation("Voucher");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FashionShop.Core.Entities.OrderItem", b =>
@@ -1126,33 +1153,6 @@ namespace FashionShop.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FashionShop.Core.Entities.VoucherUsage", b =>
-                {
-                    b.HasOne("FashionShop.Core.Entities.Order", "Order")
-                        .WithMany("VoucherUsages")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FashionShop.Core.Entities.User", "User")
-                        .WithMany("VoucherUsages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FashionShop.Core.Entities.Voucher", "Voucher")
-                        .WithMany("VoucherUsages")
-                        .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("User");
-
-                    b.Navigation("Voucher");
-                });
-
             modelBuilder.Entity("FashionShop.Core.Entities.Wishlist", b =>
                 {
                     b.HasOne("FashionShop.Core.Entities.ProductVariant", "ProductVariant")
@@ -1196,11 +1196,18 @@ namespace FashionShop.API.Migrations
                     b.Navigation("ProductVariants");
                 });
 
+            modelBuilder.Entity("FashionShop.Core.Entities.Coupon", b =>
+                {
+                    b.Navigation("CouponUsages");
+
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("FashionShop.Core.Entities.Order", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("CouponUsages");
 
-                    b.Navigation("VoucherUsages");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("FashionShop.Core.Entities.OrderItem", b =>
@@ -1244,22 +1251,15 @@ namespace FashionShop.API.Migrations
 
                     b.Navigation("Carts");
 
+                    b.Navigation("CouponUsages");
+
                     b.Navigation("Orders");
 
                     b.Navigation("ReviewLikes");
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("VoucherUsages");
-
                     b.Navigation("Wishlists");
-                });
-
-            modelBuilder.Entity("FashionShop.Core.Entities.Voucher", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("VoucherUsages");
                 });
 #pragma warning restore 612, 618
         }

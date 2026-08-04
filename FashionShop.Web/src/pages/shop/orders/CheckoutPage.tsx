@@ -46,7 +46,7 @@ const CheckoutPage = () => {
     // LẤY TRANSFER CODE TRỰC TIẾP TỪ THAM SỐ THỨ 3 CỦA ONORDER
     const handlePlaceOrder = (
         paymentMethod: PaymentMethod, 
-        voucherId?: string, 
+        couponId?: string, 
         transferCode?: string
     ) => {
         if (!selectedAddress) {
@@ -64,7 +64,7 @@ const CheckoutPage = () => {
             paymentMethod: paymentMethod,
             transferCode: transferCode || "",
             note: note,
-            voucherId: voucherId,
+            couponId: couponId,
             orderItems: selectedItems.map(item => ({
                 productVariantId: item.productVariantId,
                 quantity: item.quantity,

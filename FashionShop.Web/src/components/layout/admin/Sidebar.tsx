@@ -26,7 +26,7 @@ const MENU_ITEMS = [
     { path: '/admin/colors', label: 'Màu sắc', icon: IoColorPaletteOutline },
     { path: '/admin/sizes', label: 'Kích thước', icon: IoScanOutline },
     { path: '/admin/products', label: 'Sản phẩm', icon: IoCubeOutline },
-    { path: '/admin/vouchers', label: 'Phiếu giảm giá', icon: IoTicketOutline },
+    { path: '/admin/coupons', label: 'Phiếu giảm giá', icon: IoTicketOutline },
     { path: '/admin/orders', label: 'Đơn hàng', icon: IoReceiptOutline },
 ];
 

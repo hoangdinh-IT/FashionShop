@@ -143,7 +143,7 @@ const CartPage: React.FC = () => {
 
                                 <div className="mt-6 sm:mt-8">
                                     <Link
-                                        to="/products"
+                                        to="/shop/collection"
                                         className="inline-flex items-center justify-center px-6 sm:px-8 h-10 sm:h-11 rounded-full bg-black text-white text-xs font-bold uppercase tracking-wider transition-transform active:scale-95 hover:bg-zinc-800 shadow-xs"
                                     >
                                         Khám phá ngay

@@ -80,16 +80,5 @@ namespace FashionShop.API.Services.Admin
 
             return await _unitOfWork.AdminOrders.GetOrderByIdAsync(orderId);
         }
-
-        private string GenerateTrackingCode(Guid orderId)
-        {
-            // 1. Lấy thời gian hiện tại (Format: YYMMDD)
-            string datePart = DateTime.Now.ToString("yyMMdd");
-
-            // 2. Lấy một phần của Guid để đảm bảo tính duy nhất (tránh trùng nếu tạo nhiều đơn cùng 1 giây)
-            string uniquePart = orderId.ToString().Substring(0, 4).ToUpper();
-
-            return $"RKA{datePart}{uniquePart}";
-        }
     }
 }

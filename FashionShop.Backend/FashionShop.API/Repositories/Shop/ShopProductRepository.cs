@@ -5,7 +5,6 @@ using FashionShop.Core.Contracts.Shop.Color.Responses;
 using FashionShop.Core.Contracts.Shop.Product.Requests;
 using FashionShop.Core.Contracts.Shop.Product.Responses;
 using FashionShop.Core.Contracts.Shop.ProductImage.Responses;
-using FashionShop.Core.Contracts.Shop.ProductVariant.Responses;
 using FashionShop.Core.Contracts.Shop.Size.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
@@ -166,15 +165,15 @@ namespace FashionShop.API.Repositories.Shop
                 query = query.FilterByBrandSlug(request.BrandSlug);
             }
 
-            query = query.FilterByKeyword(request.Keyword)
-                         .FilterByCategorySlug(request.CategorySlug)
-                         .FilterByBrandSlug(request.BrandSlug)
-                         .FilterBySize(request.SizeSlugs)
-                         .FilterByColor(request.ColorSlug)
-                         .FilterByBestSeller(request.IsBestSeller)
-                         .FilterByNew(request.IsNew)
-                         .FilterByPriceRange(request.PriceRange)
-                         .ShopSort(request.SortBy);
+            //query = query.FilterByKeyword(request.Keyword)
+            //             .FilterByCategorySlug(request.CategorySlug)
+            //             .FilterByBrandSlug(request.BrandSlug)
+            //             .FilterBySize(request.SizeSlugs)
+            //             .FilterByColor(request.ColorSlug)
+            //             .FilterByBestSeller(request.IsBestSeller)
+            //             .FilterByNew(request.IsNew)
+            //             .FilterByPriceRange(request.PriceRange)
+            //             .ShopSort(request.SortBy);
 
             var totalRecord = await query.CountAsync();
 

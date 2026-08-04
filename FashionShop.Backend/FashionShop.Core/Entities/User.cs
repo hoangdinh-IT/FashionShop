@@ -52,7 +52,7 @@ namespace FashionShop.Core.Entities
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        public virtual ICollection<VoucherUsage> VoucherUsages { get; set; } = new List<VoucherUsage>();
+        public virtual ICollection<CouponUsage> CouponUsages { get; set; } = new List<CouponUsage>();
 
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 

@@ -20,8 +20,8 @@ namespace FashionShop.API.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Voucher> Vouchers { get; set; }
-        public DbSet<VoucherUsage> VoucherUsages{ get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<CouponUsage> CouponUsages { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewImage> ReviewImages { get; set; }
         public DbSet<ReviewLike> ReviewLikes { get; set; }
@@ -57,9 +57,9 @@ namespace FashionShop.API.Data
             
             modelBuilder.Entity<OrderItem>().HasQueryFilter(od => !od.IsDeleted);
             
-            modelBuilder.Entity<Voucher>().HasQueryFilter(v => !v.IsDeleted);
+            modelBuilder.Entity<Coupon>().HasQueryFilter(v => !v.IsDeleted);
             
-            modelBuilder.Entity<VoucherUsage>().HasQueryFilter(vu => !vu.IsDeleted);
+            modelBuilder.Entity<CouponUsage>().HasQueryFilter(vu => !vu.IsDeleted);
             
             modelBuilder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
             
@@ -194,9 +194,9 @@ namespace FashionShop.API.Data
                       .HasForeignKey(o => o.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(o => o.Voucher)
+                entity.HasOne(o => o.Coupon)
                       .WithMany(v => v.Orders)
-                      .HasForeignKey(o => o.VoucherId)
+                      .HasForeignKey(o => o.CouponId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -213,28 +213,28 @@ namespace FashionShop.API.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<Voucher>(entity =>
+            modelBuilder.Entity<Coupon>(entity =>
             {
                 entity.HasIndex(v => v.Code)
                       .IsUnique()
                       .HasFilter("\"IsDeleted\" = false");
             });
 
-            modelBuilder.Entity<VoucherUsage>(entity =>
+            modelBuilder.Entity<CouponUsage>(entity =>
             {
                 entity.HasOne(vu => vu.User)
-                      .WithMany(u => u.VoucherUsages)
+                      .WithMany(u => u.CouponUsages)
                       .HasForeignKey(vu => vu.UserId)
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(vu => vu.Order)
-                      .WithMany(o => o.VoucherUsages)
+                      .WithMany(o => o.CouponUsages)
                       .HasForeignKey(vu => vu.OrderId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(vu => vu.Voucher)
-                      .WithMany(v => v.VoucherUsages)
-                      .HasForeignKey(vu => vu.VoucherId)
+                entity.HasOne(vu => vu.Coupon)
+                      .WithMany(v => v.CouponUsages)
+                      .HasForeignKey(vu => vu.CouponId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
 

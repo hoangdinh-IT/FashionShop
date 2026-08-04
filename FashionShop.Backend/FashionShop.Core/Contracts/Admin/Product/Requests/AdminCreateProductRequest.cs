@@ -27,7 +27,7 @@ namespace FashionShop.Core.Contracts.Admin.Product.Requests
         public string Material { get; set; }
 
         [Required]
-        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
 
         [Required]
         public IFormFile Thumbnail { get; set; }

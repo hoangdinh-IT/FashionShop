@@ -6,6 +6,7 @@ import {
     IoCalendarOutline,
     IoImageOutline,
     IoInformationCircleOutline,
+    IoList,
     IoPencilOutline,
     IoSwapVertical,
     IoTrashBinOutline
@@ -241,7 +242,7 @@ const CategoryTable: React.FC<Props> = ({ data, isLoading, sortBy, isAscending, 
                             <td colSpan={6} className="px-6 py-20 text-center">
                                 <div className="flex flex-col items-center justify-center gap-4">
                                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
-                                        <IoImageOutline className="text-3xl text-gray-300" />
+                                        <IoList className="text-3xl text-gray-300" />
                                     </div>
 
                                     <div>

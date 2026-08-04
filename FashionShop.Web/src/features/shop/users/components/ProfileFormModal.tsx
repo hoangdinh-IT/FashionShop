@@ -10,7 +10,7 @@ import {
     IoMaleFemaleOutline,
 } from "react-icons/io5";
 
-import type { User } from "../types/user";
+import { Gender, type User } from "../types/user";
 import { useUser } from "../hooks/useUser";
 import type { UserFormInputs } from "../types/requests";
 import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
@@ -41,15 +41,15 @@ const ProfileFormModal: React.FC<Props> = ({
     } = useForm<UserFormInputs>();
 
     useEffect(() => {
-        if (initialData) {
+        if (isOpen) {
             reset({
-                fullName: initialData.fullName || "",
-                phoneNumber: initialData.phoneNumber || "",
-                gender: initialData.gender || "",
-                dateOfBirth: initialData.dateOfBirth || "",
+                fullName: initialData?.fullName || "",
+                phoneNumber: initialData?.phoneNumber || "",
+                gender: initialData?.gender || Gender.Other,
+                dateOfBirth: initialData?.dateOfBirth,
             });
         }
-    }, [initialData, reset]);
+    }, [isOpen, initialData, reset]);
 
     const onSubmit: SubmitHandler<UserFormInputs> = (data) => {
         updateUser(data, {

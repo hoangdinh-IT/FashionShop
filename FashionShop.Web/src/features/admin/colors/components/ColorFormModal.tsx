@@ -325,10 +325,15 @@ const ColorFormModal: React.FC<Props> = ({
                                     disabled={isCreating || isUpdating}
                                     className="px-5 py-2 text-[13px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md shadow-indigo-200 transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
                                 >
-                                    {(isCreating || isUpdating)
-                                        ? 'Đang xử lý...'
-                                        : (initialData ? 'Lưu thay đổi' : 'Tạo mới')
-                                    }
+                                    {isCreating || isUpdating ? (
+                                        <div className="inline-flex items-center gap-2 opacity-85 transition-all duration-200">
+                                            <span className="text-xs font-medium tracking-wide animate-pulse">
+                                                {initialData ? 'Đang lưu...' : 'Đang tạo...'}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <span>{initialData ? 'Lưu thay đổi' : 'Tạo mới'}</span>
+                                    )}
                                 </button>
                             </div>
                         </form>

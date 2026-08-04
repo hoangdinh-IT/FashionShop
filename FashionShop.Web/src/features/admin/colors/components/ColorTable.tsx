@@ -1,5 +1,5 @@
 import type React from "react";
-import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoColorPaletteOutline, IoPencilOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
+import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoColorPalette, IoPencilOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
 import type { Color } from "../types/color";
 import { format } from "date-fns";
 import Tooltip from "../../../../components/common/Tooltip";
@@ -216,12 +216,12 @@ const ColorTable: React.FC<ColorTableProps> = ({
                                 <td colSpan={6} className="px-6 py-20 text-center">
                                     <div className="flex flex-col items-center justify-center gap-4">
                                         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
-                                            <IoColorPaletteOutline className="text-3xl text-gray-300" />
+                                            <IoColorPalette className="text-3xl text-gray-300" />
                                         </div>
                                         <div>
                                             <h3 className="text-gray-800 font-bold text-base">Chưa có màu sắc nào</h3>
                                             <p className="text-gray-400 text-sm mt-1 max-w-xs mx-auto">
-                                                Hệ thống chưa ghi nhận dữ liệu màu sắc. Hãy thử tạo mới ngay bây giờ.
+                                                Hệ thống chưa ghi nhận màu sắc nào. Hãy thử tạo mới ngay bây giờ.
                                             </p>
                                         </div>
                                     </div>

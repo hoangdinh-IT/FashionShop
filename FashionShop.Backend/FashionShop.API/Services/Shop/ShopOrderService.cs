@@ -70,38 +70,38 @@ namespace FashionShop.API.Services.Shop
                 var orderId = Guid.NewGuid();
                 int shippingFee = subTotal >= 500000 ? 0 : 30000;
                 decimal discountAmount = 0;
-                VoucherUsage? voucherUsage = null;
+                CouponUsage? couponUsage = null;
 
-                if (request.VoucherId.HasValue)
+                if (request.CouponId.HasValue)
                 {
-                    var voucher = await _unitOfWork.AdminVouchers.FindVoucherByIdAsync(request.VoucherId.Value);
-                    if (voucher != null &&
-                        voucher.StartDate <= DateTime.UtcNow &&
-                        voucher.EndDate >= DateTime.UtcNow &&
-                        subTotal >= voucher.MinOrderValue &&
-                        voucher.UsedCount < voucher.Quantity &&
-                        voucher.IsActive)
+                    var coupon = await _unitOfWork.AdminCoupons.FindCouponByIdAsync(request.CouponId.Value);
+                    if (coupon != null &&
+                        coupon.StartDate <= DateTime.UtcNow &&
+                        coupon.EndDate >= DateTime.UtcNow &&
+                        subTotal >= coupon.MinOrderValue &&
+                        coupon.UsedCount < coupon.Quantity &&
+                        coupon.IsActive)
                     {
-                        if (voucher.DiscountType == DiscountType.Percentage)
+                        if (coupon.DiscountType == DiscountType.Percentage)
                         {
-                            discountAmount = subTotal * voucher.DiscountAmount / 100;
+                            discountAmount = subTotal * coupon.DiscountAmount / 100;
 
-                            if (voucher.MaxDiscountAmount.HasValue)
+                            if (coupon.MaxDiscountAmount.HasValue)
                             {
-                                discountAmount = Math.Min(discountAmount, voucher.MaxDiscountAmount.Value);
+                                discountAmount = Math.Min(discountAmount, coupon.MaxDiscountAmount.Value);
                             }
                         }
                         else
                         {
-                            discountAmount = voucher.DiscountAmount;
+                            discountAmount = coupon.DiscountAmount;
                         }
 
-                        voucher.UsedCount += 1;
+                        coupon.UsedCount += 1;
 
-                        voucherUsage = new VoucherUsage
+                        couponUsage = new CouponUsage
                         {
                             UserId = userId,
-                            VoucherId = voucher.Id,
+                            CouponId = coupon.Id,
                             OrderId = orderId,
                             UsedDate = DateTime.UtcNow,
                         };
@@ -122,9 +122,9 @@ namespace FashionShop.API.Services.Shop
 
                 _unitOfWork.ShopOrders.Create(newOrder);
 
-                if (voucherUsage != null)
+                if (couponUsage != null)
                 {
-                    _unitOfWork.ShopVouchers.CreateVoucherUsage(voucherUsage);
+                    _unitOfWork.ShopCoupons.CreateCouponUsage(couponUsage);
                 }
 
                 await _unitOfWork.SaveChangesAsync();

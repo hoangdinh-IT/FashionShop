@@ -12,15 +12,15 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { PaymentMethod } from '../../types/requests';
-import { VoucherModal } from './VoucherModal';
 import { BankTransferModal } from './BankTransferModal'; 
-import { DiscountType, type Voucher } from '../../../vouchers/types/voucher';
-import { useVoucher } from '../../../vouchers/hooks/useVoucher';
+import { DiscountType, type Coupon } from '../../../coupons/types/coupon';
+import { useCoupon } from '../../../coupons/hooks/useCoupon';
+import { CouponModal } from './CouponModal';
 
 interface Props {
     subTotal: number;
     shippingFee?: number;
-    onOrder: (paymentMethod: PaymentMethod, voucherId?: string, transferContent?: string) => void;
+    onOrder: (paymentMethod: PaymentMethod, couponId?: string, transferContent?: string) => void;
     isLoading?: boolean;
 }
 
@@ -87,15 +87,15 @@ const elementVariants: Variants = {
 
 const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: Props) => {
     const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>("COD" as PaymentMethod);
-    const [isVoucherOpen, setIsVoucherOpen] = useState(false);
-    const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+    const [isCouponOpen, setIsCouponOpen] = useState(false);
+    const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
     // STATE QUẢN LÝ MODAL CHUYỂN KHOẢN
     const [isBankModalOpen, setIsBankModalOpen] = useState(false);
     const [orderCode, setOrderCode] = useState('');
 
-    // Gọi API lấy danh sách voucher
-    const { vouchers, isLoading: isVouchersLoading } = useVoucher();
+    // Gọi API lấy danh sách Coupon
+    const { Coupons, isLoading: isCouponsLoading } = useCoupon();
 
     // THÔNG TIN TÀI KHOẢN NGÂN HÀNG
     const myBankInfo = {
@@ -111,14 +111,14 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
 
     // TÍNH TOÁN GIÁ TRỊ GIẢM GIÁ
     const calculateDiscount = (): number => {
-        if (!selectedVoucher || subTotal < selectedVoucher.minOrderValue) return 0;
+        if (!selectedCoupon || subTotal < selectedCoupon.minOrderValue) return 0;
 
-        if (selectedVoucher.discountType === DiscountType.FixedAmount) {
-            return selectedVoucher.discountAmount;
-        } else if (selectedVoucher.discountType === DiscountType.Percentage) {
-            const calculated = (subTotal * selectedVoucher.discountAmount) / 100;
-            if (selectedVoucher.maxDiscountAmount && calculated > selectedVoucher.maxDiscountAmount) {
-                return selectedVoucher.maxDiscountAmount;
+        if (selectedCoupon.discountType === DiscountType.FixedAmount) {
+            return selectedCoupon.discountAmount;
+        } else if (selectedCoupon.discountType === DiscountType.Percentage) {
+            const calculated = (subTotal * selectedCoupon.discountAmount) / 100;
+            if (selectedCoupon.maxDiscountAmount && calculated > selectedCoupon.maxDiscountAmount) {
+                return selectedCoupon.maxDiscountAmount;
             }
             return calculated;
         }
@@ -167,7 +167,7 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
             setIsBankModalOpen(true); // Mở Modal QR Ngân hàng
         } else {
             // Thanh toán COD thì đặt hàng luôn (không cần transferCode)
-            onOrder(selectedPayment, selectedVoucher?.id);
+            onOrder(selectedPayment, selectedCoupon?.id);
         }
     };
 
@@ -175,7 +175,7 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
     const handleConfirmBankTransfer = () => {
         setIsBankModalOpen(false);
         // TRUYỀN ORDERCODE VÀO THAM SỐ THỨ 3
-        onOrder('Banking', selectedVoucher?.id, orderCode);
+        onOrder('Banking', selectedCoupon?.id, orderCode);
     };
 
     return (
@@ -185,12 +185,12 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
             animate="visible"
             className="w-full space-y-3 sm:space-y-4 select-none font-sans max-w-full overflow-hidden"
         >
-            {/* THẺ THANH TOÁN & VOUCHER */}
+            {/* THẺ THANH TOÁN & Coupon */}
             <motion.div 
                 variants={cardVariants}
                 className="bg-white rounded-xl sm:rounded-2xl border border-zinc-200/80 p-3.5 sm:p-5 shadow-xs space-y-4 sm:space-y-5"
             >
-                {/* VOUCHER BUTTON */}
+                {/* Coupon BUTTON */}
                 <div>
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-zinc-400 block mb-1.5 sm:mb-2">
                         Ưu đãi
@@ -198,20 +198,20 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                     <motion.button 
                         type="button"
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => setIsVoucherOpen(true)}
-                        disabled={isVouchersLoading}
+                        onClick={() => setIsCouponOpen(true)}
+                        disabled={isCouponsLoading}
                         className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 hover:bg-white hover:border-zinc-900 p-2.5 sm:p-3.5 transition-colors flex items-center justify-between group cursor-pointer disabled:opacity-70"
                     >
                         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
                             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white border border-zinc-200 flex items-center justify-center text-zinc-700 group-hover:border-zinc-900 transition-colors shadow-2xs shrink-0">
-                                {isVouchersLoading ? <Loader2 className="animate-spin w-4 h-4" /> : <Ticket className="w-4 h-4" />}
+                                {isCouponsLoading ? <Loader2 className="animate-spin w-4 h-4" /> : <Ticket className="w-4 h-4" />}
                             </div>
 
                             <div className="text-left min-w-0">
                                 <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                                     <p className="text-xs font-bold text-zinc-900 truncate">Mã giảm giá</p>
                                     <AnimatePresence>
-                                        {selectedVoucher && (
+                                        {selectedCoupon && (
                                             <motion.span 
                                                 variants={elementVariants}
                                                 initial="hidden"
@@ -225,7 +225,7 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                                     </AnimatePresence>
                                 </div>
                                 <p className="text-[10px] sm:text-[11px] text-zinc-500 font-medium truncate max-w-[160px] xs:max-w-[200px] sm:max-w-none">
-                                    {selectedVoucher ? selectedVoucher.code : (isVouchersLoading ? "Đang tải..." : "Chọn hoặc nhập mã ưu đãi")}
+                                    {selectedCoupon ? selectedCoupon.code : (isCouponsLoading ? "Đang tải..." : "Chọn hoặc nhập mã ưu đãi")}
                                 </p>
                             </div>
                         </div>
@@ -346,7 +346,7 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                                 exit="exit"
                                 className="flex justify-between text-emerald-700 overflow-hidden gap-2"
                             >
-                                <span className="truncate">Giảm giá ({selectedVoucher?.code})</span>
+                                <span className="truncate">Giảm giá ({selectedCoupon?.code})</span>
                                 <span className="font-mono font-bold shrink-0">-{formatCurrency(calculatedDiscount)}</span>
                             </motion.div>
                         )}
@@ -400,13 +400,13 @@ const CheckoutSummary = ({ subTotal, shippingFee = 30000, onOrder, isLoading }: 
                 </div>
             </motion.div>
 
-            {/* VOUCHER MODAL */}
-            <VoucherModal
-                isOpen={isVoucherOpen}
-                onClose={() => setIsVoucherOpen(false)}
-                vouchers={vouchers}
-                selectedVoucher={selectedVoucher}
-                onSelectVoucher={(voucher) => setSelectedVoucher(voucher)}
+            {/* Coupon MODAL */}
+            <CouponModal
+                isOpen={isCouponOpen}
+                onClose={() => setIsCouponOpen(false)}
+                Coupons={Coupons}
+                selectedCoupon={selectedCoupon}
+                onSelectCoupon={(Coupon) => setSelectedCoupon(Coupon)}
                 subTotal={subTotal}
             />
 

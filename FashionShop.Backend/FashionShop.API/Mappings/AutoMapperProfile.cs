@@ -13,8 +13,8 @@ using FashionShop.Core.Contracts.Admin.ProductVariant.Requests;
 using FashionShop.Core.Contracts.Admin.ProductVariant.Responses;
 using FashionShop.Core.Contracts.Admin.Size.Requests;
 using FashionShop.Core.Contracts.Admin.Size.Responses;
-using FashionShop.Core.Contracts.Admin.Voucher.Requests;
-using FashionShop.Core.Contracts.Admin.Voucher.Responses;
+using FashionShop.Core.Contracts.Admin.Coupon.Requests;
+using FashionShop.Core.Contracts.Admin.Coupon.Responses;
 using FashionShop.Core.Contracts.Shared.Auth.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Requests;
 using FashionShop.Core.Contracts.Shop.Address.Responses;
@@ -107,12 +107,12 @@ namespace FashionShop.API.Mappings
 
             CreateMap<ProductImage, AdminProductImageResponse>();
 
-            // Voucher
-            CreateMap<AdminCreateVoucherRequest, Voucher>();
+            // Coupon
+            CreateMap<AdminCreateCouponRequest, Coupon>();
 
-            CreateMap<AdminUpdateVoucherRequest, Voucher>();
+            CreateMap<AdminUpdateCouponRequest, Coupon>();
 
-            CreateMap<Voucher, AdminVoucherResponse>();
+            CreateMap<Coupon, AdminCouponResponse>();
 
             // Cart
             CreateMap<Cart, ShopCartResponse>();

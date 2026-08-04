@@ -188,6 +188,7 @@ namespace FashionShop.API.Services.Admin
             }
 
             await _unitOfWork.AdminCategories.DeleteCategoryAsync(categoryId);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

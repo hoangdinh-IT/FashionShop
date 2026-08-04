@@ -66,7 +66,7 @@ const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailF
             slug: "",
             description: "",
             material: "",
-            price: 0,
+            originalPrice: 0,
             categoryId: "",
             brandId: "",
             isActive: true,
@@ -112,7 +112,7 @@ const preparePayload = (data: ProductDetailFormInputs, file: File | null, isUpda
         formData.append(`productVariants[${index}].SizeId`, String(variant.sizeId));
         formData.append(`productVariants[${index}].SKU`, String(variant.sku));
         formData.append(`productVariants[${index}].StockQuantity`, String(variant.stockQuantity));
-        formData.append(`productVariants[${index}].Price`, String(variant.price || data.price));
+        formData.append(`productVariants[${index}].Price`, String(variant.price || data.originalPrice));
 
         if (isUpdate && variant.id) {
             formData.append(`productVariants[${index}].Id`, String(variant.id));
@@ -516,7 +516,7 @@ const AttributesSection = ({ register, errors, categories, brands }: any) => (
                     <input
                         type="number"
                         className="w-full pl-3.5 pr-11 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[13px] font-medium outline-none focus:border-blue-500"
-                        {...register("price")}
+                        {...register("originalPrice")}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[11px] font-bold">
                         VNĐ

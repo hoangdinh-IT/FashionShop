@@ -14,7 +14,7 @@ import BrandPage from "../pages/admin/brands/BrandPage";
 import ColorPage from "../pages/admin/colors/ColorPage";
 import SizePage from "../pages/admin/sizes/SizePage";
 import AdminProductPage from "../pages/admin/products/ProductPage";
-import VoucherPage from "../pages/admin/vouchers/VoucherPage";
+import CouponPage from "../pages/admin/coupons/CouponPage";
 import OrderPage from "../pages/admin/orders/OrderPage";
 
 import ShopMainLayout from "../layouts/ShopMainLayout";
@@ -92,8 +92,8 @@ export const AppRoutes = () => {
                             element: <AdminProductPage />
                         },
                         {
-                            path: "vouchers",
-                            element: <VoucherPage />
+                            path: "coupons",
+                            element: <CouponPage />
                         },
                         {
                             path: "orders",

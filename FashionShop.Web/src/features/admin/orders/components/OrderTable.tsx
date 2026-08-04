@@ -7,10 +7,10 @@ import {
     IoCalendarOutline,
     IoLocationOutline,
     IoCardOutline,
-    IoCubeOutline,
     IoChevronDownOutline,
     IoWalletOutline,
-    IoQrCodeOutline
+    IoQrCodeOutline,
+    IoReceipt
 } from "react-icons/io5";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -302,13 +302,20 @@ const OrderTable: React.FC<Props> = ({
                         ) : (
                             <tr>
                                 <td colSpan={6} className="px-6 py-20 text-center">
-                                    <div className="flex flex-col items-center justify-center gap-3">
-                                        <div className="w-12 h-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-400">
-                                            <IoCubeOutline size={24} />
+                                    <div className="flex flex-col items-center justify-center gap-4">
+                                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
+                                            <IoReceipt className="text-3xl text-gray-300" />
                                         </div>
-                                        <p className="text-zinc-500 font-medium text-sm">
-                                            Không có đơn hàng nào
-                                        </p>
+    
+                                        <div>
+                                            <h3 className="text-gray-800 font-bold text-base">
+                                                Chưa có đơn hàng nào
+                                            </h3>
+    
+                                            <p className="text-gray-400 text-sm mt-1 max-w-xs mx-auto">
+                                                Hệ thống chưa ghi nhận đơn hàng nào. Hãy thử tạo mới hoặc thay đổi bộ lọc.
+                                            </p>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

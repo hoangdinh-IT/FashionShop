@@ -1,6 +1,6 @@
 import type React from "react";
 import type { Product } from "../types/product";
-import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoEyeOutline, IoImageOutline, IoImagesOutline, IoInformationCircleOutline, IoPencilOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
+import { IoArrowDown, IoArrowUp, IoCalendarOutline, IoCube, IoEyeOutline, IoImageOutline, IoImagesOutline, IoInformationCircleOutline, IoPencilOutline, IoSwapVertical, IoTrashBinOutline } from "react-icons/io5";
 import Tooltip from "../../../../components/common/Tooltip";
 import CopyableId from "../../../../components/common/CopyableId";
 import { format } from "date-fns";
@@ -276,14 +276,14 @@ const ProductTable: React.FC<ProductTableProps> = ({
                                 <td colSpan={6} className="px-6 py-20 text-center">
                                     <div className="flex flex-col items-center justify-center gap-4">
                                         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center shadow-sm border border-gray-100">
-                                            <span className="text-3xl opacity-20 grayscale">📦</span>
+                                            <IoCube className="text-3xl text-gray-300" />
                                         </div>
 
                                         <div>
                                             <h3 className="text-gray-800 font-bold text-base">Chưa có sản phẩm nào</h3>
 
                                             <p className="text-gray-400 text-sm mt-1 max-w-xs mx-auto">
-                                                Hệ thống chưa tìm thấy sản phẩm nào phù hợp với bộ lọc hiện tại.
+                                                Hệ thống chưa ghi nhận sản phẩm nào. Hãy thử tạo mới hoặc thay đổi bộ lọc.
                                             </p>
                                         </div>
                                     </div>

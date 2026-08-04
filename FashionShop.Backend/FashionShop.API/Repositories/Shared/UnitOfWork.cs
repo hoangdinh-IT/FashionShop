@@ -18,7 +18,7 @@ namespace FashionShop.API.Repositories.Shared
         private IAdminColorRepository _adminColors;
         private IAdminProductRepository _adminProducts;
         private IAdminSizeRepository _adminSizes;
-        private IAdminVoucherRepository _adminVouchers;
+        private IAdminCouponRepository _adminCoupons;
         private IAdminOrderRepository _adminOrders;
         
         private IShopUserRepository _shopUsers;
@@ -30,7 +30,7 @@ namespace FashionShop.API.Repositories.Shared
         private IShopOrderRepository _shopOrders;
         private IShopReviewRepository _shopReviews;
         private IShopReviewLikeRepository _shopReviewLikes;
-        private IShopVoucherRepository _shopVouchers;
+        private IShopCouponRepository _shopCoupons;
 
         public UnitOfWork(FashionDbContext context)
         {
@@ -42,7 +42,7 @@ namespace FashionShop.API.Repositories.Shared
         public IAdminColorRepository AdminColors => _adminColors ??= new AdminColorRepository(_context);
         public IAdminProductRepository AdminProducts => _adminProducts ??= new AdminProductRepository(_context);
         public IAdminSizeRepository AdminSizes => _adminSizes ??= new AdminSizeRepository(_context);
-        public IAdminVoucherRepository AdminVouchers => _adminVouchers ??= new AdminVoucherRepository(_context);
+        public IAdminCouponRepository AdminCoupons => _adminCoupons ??= new AdminCouponRepository(_context);
         public IAdminOrderRepository AdminOrders => _adminOrders ??= new AdminOrderRepository(_context);
 
         public IShopUserRepository ShopUsers => _shopUsers ??= new ShopUserRepository(_context);
@@ -54,7 +54,7 @@ namespace FashionShop.API.Repositories.Shared
         public IShopOrderRepository ShopOrders => _shopOrders ??= new ShopOrderRepository(_context);
         public IShopReviewRepository ShopReviews => _shopReviews ??= new ShopReviewRepository(_context);
         public IShopReviewLikeRepository ShopReviewLikes => _shopReviewLikes ??= new ShopReviewLikeRepository(_context);
-        public IShopVoucherRepository ShopVouchers => _shopVouchers ??= new ShopVoucherRepository(_context);
+        public IShopCouponRepository ShopCoupons => _shopCoupons ??= new ShopCouponRepository(_context);
 
         public async Task<int> SaveChangesAsync()
         {

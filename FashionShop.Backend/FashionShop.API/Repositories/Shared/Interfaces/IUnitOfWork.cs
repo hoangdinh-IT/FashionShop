@@ -10,7 +10,7 @@ namespace FashionShop.API.Repositories.Shared.Interfaces
         IAdminColorRepository AdminColors { get; }
         IAdminProductRepository AdminProducts { get; }
         IAdminSizeRepository AdminSizes { get; }
-        IAdminVoucherRepository AdminVouchers { get; }
+        IAdminCouponRepository AdminCoupons { get; }
         IAdminOrderRepository AdminOrders { get; }
 
         IShopUserRepository ShopUsers { get; }
@@ -22,7 +22,7 @@ namespace FashionShop.API.Repositories.Shared.Interfaces
         IShopOrderRepository ShopOrders { get; }
         IShopReviewRepository ShopReviews { get; }
         IShopReviewLikeRepository ShopReviewLikes { get; }
-        IShopVoucherRepository ShopVouchers { get; }
+        IShopCouponRepository ShopCoupons { get; }
 
         Task<int> SaveChangesAsync();
 

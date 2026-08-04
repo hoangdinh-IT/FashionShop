@@ -39,7 +39,7 @@ export interface ProductDetailFormInputs {
     slug: string;
     description: string;
     material: string;
-    price: number;
+    originalPrice: number;
     thumbnail: File;
 
     categoryId: string;
