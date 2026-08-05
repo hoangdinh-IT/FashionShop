@@ -22,10 +22,6 @@ namespace FashionShop.Core.Entities
         public int StockQuantity { get; set; } = 0;
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-
-        [Required]
         public Guid ProductId { get; set; }
 
         [Required]

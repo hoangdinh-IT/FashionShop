@@ -30,6 +30,8 @@ namespace FashionShop.API.Repositories.Shop
                 Name = p.Name,
                 Slug = p.Slug,
                 OriginalPrice = p.OriginalPrice,
+                DiscountPercent = p.DiscountPercent,
+                FinalPrice = Math.Ceiling((p.OriginalPrice * (1m - p.DiscountPercent / 100m)) / 1000m) * 1000m,
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsBestSeller = p.IsBestSeller,
                 IsNew = p.IsNew,
@@ -88,6 +90,8 @@ namespace FashionShop.API.Repositories.Shop
                 Slug = p.Slug,
                 Description = p.Description,
                 OriginalPrice = p.OriginalPrice,
+                DiscountPercent = p.DiscountPercent,
+                FinalPrice = Math.Ceiling((p.OriginalPrice * (1m - p.DiscountPercent / 100m)) / 1000m) * 1000m,
                 ThumbnailUrl = p.ThumbnailUrl,
                 IsNew = p.IsNew,
                 IsBestSeller = p.IsBestSeller,
@@ -132,7 +136,6 @@ namespace FashionShop.API.Repositories.Shop
                             ColorId = v.ColorId,
                             SizeId = v.SizeId,
                             Quantity = v.StockQuantity,
-                            Price = v.Price,
                         })
                         .ToList()
                     : new List<ShopProductVariantDto>(),
@@ -160,20 +163,15 @@ namespace FashionShop.API.Repositories.Shop
                 .AsNoTracking()
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.BrandSlug))
-            {
-                query = query.FilterByBrandSlug(request.BrandSlug);
-            }
-
-            //query = query.FilterByKeyword(request.Keyword)
-            //             .FilterByCategorySlug(request.CategorySlug)
-            //             .FilterByBrandSlug(request.BrandSlug)
-            //             .FilterBySize(request.SizeSlugs)
-            //             .FilterByColor(request.ColorSlug)
-            //             .FilterByBestSeller(request.IsBestSeller)
-            //             .FilterByNew(request.IsNew)
-            //             .FilterByPriceRange(request.PriceRange)
-            //             .ShopSort(request.SortBy);
+            query = query.FilterByKeyword(request.Keyword)
+                         .FilterByCategorySlug(request.CategorySlug)
+                         .FilterByBrandSlug(request.BrandSlug)
+                         .FilterBySize(request.SizeSlugs)
+                         .FilterByColor(request.ColorSlug)
+                         .FilterByBestSeller(request.IsBestSeller)
+                         .FilterByNew(request.IsNew)
+                         .FilterByPriceRange(request.PriceRange)
+                         .ShopSort(request.SortBy);
 
             var totalRecord = await query.CountAsync();
 
@@ -231,7 +229,9 @@ namespace FashionShop.API.Repositories.Shop
 
         public async Task<ProductVariant?> FindProductVariantByIdAsync(Guid productVariantId)
         {
-            return await _context.ProductVariants.FindAsync(productVariantId);
+            return await _context.ProductVariants
+                .Include(pv => pv.Product)
+                .FirstOrDefaultAsync(pv => pv.Id == productVariantId);
         }
 
         public async Task<ShopFilterOptionsResponse?> GetFilterOptionsAsync(ShopFilterOptionsRequest request)

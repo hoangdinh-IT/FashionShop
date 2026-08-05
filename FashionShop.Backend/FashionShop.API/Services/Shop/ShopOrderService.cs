@@ -5,6 +5,7 @@ using FashionShop.Core.Contracts.Shop.Order.Requests;
 using FashionShop.Core.Contracts.Shop.Order.Responses;
 using FashionShop.Core.Entities;
 using FashionShop.Core.Enums;
+using FashionShop.Core.Extensions;
 
 namespace FashionShop.API.Services.Shop
 {
@@ -53,13 +54,14 @@ namespace FashionShop.API.Services.Shop
                     if (item.Quantity > variant.StockQuantity) 
                         throw new ArgumentException($"Số lượng yêu cầu ({item.Quantity}) vượt quá số lượng còn lại trong kho ({variant.StockQuantity})!");
 
-                    decimal totalLine = variant.Price * item.Quantity;
+                    decimal unitPrice = variant.Product.FinalPrice;
+                    decimal totalLine = unitPrice * item.Quantity;
                     subTotal += totalLine;
 
                     orderDetails.Add(new OrderItem
                     {
                         ProductVariantId = item.ProductVariantId,
-                        UnitPrice = variant.Price,
+                        UnitPrice = unitPrice,
                         Quantity = item.Quantity,
                         TotalLine = totalLine,
                     });

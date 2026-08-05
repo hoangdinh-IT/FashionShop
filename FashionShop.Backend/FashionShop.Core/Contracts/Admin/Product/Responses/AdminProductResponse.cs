@@ -20,6 +20,8 @@ namespace FashionShop.Core.Contracts.Admin.Product.Responses
         public string Description { get; set; }
         public string Material { get; set; }
         public decimal OriginalPrice { get; set; }
+        public decimal DiscountPercent { get; set; }
+        public decimal FinalPrice { get; set; }
         public string ThumbnailUrl { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsBestSeller { get; set; } = false;

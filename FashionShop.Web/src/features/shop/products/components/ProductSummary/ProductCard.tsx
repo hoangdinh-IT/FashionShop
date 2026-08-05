@@ -21,6 +21,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     const productUrl = `/shop/product/${product.slug}`;
 
+    const hasDiscount = product.discountPercent > 0;
+
     return (
         <article className="flex flex-col h-full group/card">
             {/* IMAGE SECTION - DUY NHẤT bấm vào hình ảnh mới chuyển trang */}
@@ -33,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover/image:scale-105"
                     />
 
-                    {/* BADGES */}
+                    {/* LEFT BADGES (Mới, Bán chạy) */}
                     <div className="absolute left-2 top-2 sm:left-3 sm:top-3 z-10 flex flex-col gap-1 sm:gap-1.5">
                         {product.isNew && (
                             <span className="rounded-md border border-zinc-200/80 bg-white/90 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-zinc-900 shadow-2xs backdrop-blur-md">
@@ -47,6 +49,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             </span>
                         )}
                     </div>
+
+                    {/* RIGHT BADGE - GIẢM GIÁ */}
+                    {hasDiscount && (
+                        <div className="absolute right-2 top-2 sm:right-3 sm:top-3 z-10">
+                            <span className="rounded-md bg-gradient-to-r from-red-600 to-rose-500 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-extrabold text-white shadow-md">
+                                -{product.discountPercent}%
+                            </span>
+                        </div>
+                    )}
 
                     {/* QUICK SIZE PANEL */}
                     {product.productSizes && product.productSizes.length > 0 && (
@@ -100,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </div>
             </Link>
 
-            {/* PRODUCT INFO - Hoàn toàn không chứa Link */}
+            {/* PRODUCT INFO */}
             <div className="mt-2.5 sm:mt-4 flex flex-col gap-1.5 sm:gap-2.5 px-0.5">
                 {/* COLOR SELECTOR */}
                 {product.productColors &&
@@ -139,7 +150,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         </div>
                     )}
 
-                {/* PRODUCT DETAILS - Text thuần túy */}
+                {/* PRODUCT DETAILS */}
                 <div className="space-y-0.5 sm:space-y-1">
                     <h3
                         title={product.name}
@@ -148,12 +159,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         {product.name}
                     </h3>
 
-                    <p className="text-xs sm:text-sm font-bold text-zinc-900">
-                        {new Intl.NumberFormat("vi-VN").format(
-                            product.originalPrice
+                    {/* PRICE DISPLAY */}
+                    <div className="flex items-baseline gap-2">
+                        <p
+                            className={`text-xs sm:text-sm font-bold ${
+                                hasDiscount ? "text-red-600" : "text-zinc-900"
+                            }`}
+                        >
+                            {new Intl.NumberFormat("vi-VN").format(
+                                product.finalPrice
+                            )}
+                            ₫
+                        </p>
+                        {hasDiscount && (
+                            <p className="text-[11px] sm:text-xs text-zinc-600 line-through font-medium">
+                                {new Intl.NumberFormat("vi-VN").format(
+                                    product.originalPrice
+                                )}
+                                ₫
+                            </p>
                         )}
-                        ₫
-                    </p>
+                    </div>
                 </div>
             </div>
         </article>

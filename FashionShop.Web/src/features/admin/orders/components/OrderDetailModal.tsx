@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,7 +10,10 @@ import {
     IoCloseOutline, 
     IoLocationOutline, 
     IoTimeOutline, 
-    IoQrCodeOutline 
+    IoQrCodeOutline,
+    IoStorefrontOutline,
+    IoCheckmarkCircleOutline,
+    IoChatbubbleEllipsesOutline
 } from "react-icons/io5";
 import { useLockBodyScroll } from "../../../../hooks/useLockBodyScroll";
 import { BACKDROP_STYLES, backdropVariants, modalVariants } from "../../../../utils/animation";
@@ -32,8 +35,37 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
     useLockBodyScroll(isOpen);
     
     const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
     };
+
+    // Lấy ID an toàn (fallback giữa orderId, id, _id)
+    const displayOrderId = (order?.orderId || (order as any)?.id || (order as any)?._id || "").toString();
+
+    // Nhóm sản phẩm theo brandName / brandLogoUrl (Nếu cùng Thương hiệu sẽ gộp chung 1 nhóm)
+    const groupedItems = useMemo(() => {
+        if (!order?.orderItems) return [];
+
+        const groups: { brandName?: string; brandLogoUrl?: string; items: typeof order.orderItems }[] = [];
+
+        order.orderItems.forEach((item) => {
+            const existingGroup = groups.find((g) => 
+                (item.brandName && g.brandName === item.brandName) || 
+                (item.brandLogoUrl && g.brandLogoUrl === item.brandLogoUrl)
+            );
+
+            if (existingGroup) {
+                existingGroup.items.push(item);
+            } else {
+                groups.push({
+                    brandName: item.brandName,
+                    brandLogoUrl: item.brandLogoUrl,
+                    items: [item],
+                });
+            }
+        });
+
+        return groups;
+    }, [order?.orderItems]);
 
     const Row: React.FC<RowProps> = ({ label, value, prefix = "" }) => (
         <div className="flex justify-between text-zinc-500">
@@ -86,11 +118,11 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
                                                     Chi tiết đơn hàng
                                                 </span>
 
-                                                <span className="text-[11px] text-zinc-400 font-medium">
-                                                    #{order.orderId.slice(0, 8).toUpperCase()}
+                                                <span className="text-[11px] text-zinc-400 font-medium uppercase">
+                                                    #{displayOrderId ? displayOrderId.slice(0, 8) : "N/A"}
                                                 </span>
 
-                                                {/* Hiển thị Mã chuyển khoản ở Header nếu có */}
+                                                {/* Mã chuyển khoản ở Header */}
                                                 {order.transferCode && (
                                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-[11px] font-bold tracking-tight">
                                                         <IoQrCodeOutline className="text-indigo-500" size={13} />
@@ -124,7 +156,9 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
 
                                         <span className="flex items-center gap-2">
                                             <IoTimeOutline className="text-[15px] text-zinc-400" />
-                                            {format(new Date(order.orderDate), "HH:mm, dd/MM/yyyy", { locale: vi })}
+                                            {order.orderDate
+                                                ? format(new Date(order.orderDate), "HH:mm, dd/MM/yyyy", { locale: vi })
+                                                : "N/A"}
                                         </span>
 
                                         <span className="flex items-center gap-2 italic min-w-0">
@@ -144,55 +178,103 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
                                 </div>
 
                                 {/* BODY */}
-                                <div className="flex-1 overflow-y-auto bg-zinc-50 px-6 py-6 space-y-4">
+                                <div className="flex-1 overflow-y-auto bg-zinc-50 px-6 py-6 space-y-6">
 
-                                    {order.orderItems.map((item, index) => (
-                                        <motion.div
-                                            key={item.orderItemId}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.03 }}
-                                            className="group relative flex items-center gap-5 rounded-2xl bg-white p-4 shadow-sm border border-zinc-100 hover:shadow-md transition"
+                                    {groupedItems.map((group, groupIdx) => (
+                                        <div 
+                                            key={group.brandName || group.brandLogoUrl || groupIdx} 
+                                            className="bg-white rounded-2xl p-4 border border-zinc-100 shadow-sm space-y-3"
                                         >
-
-                                            {/* IMAGE */}
-                                            <div className="relative">
-                                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-100">
-                                                    <img
-                                                        src={item.imageUrl || "/placeholder.png"}
-                                                        alt={item.productName}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition"
+                                            {/* BRAND HEADER */}
+                                            <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-100">
+                                                {group.brandLogoUrl ? (
+                                                    <img 
+                                                        src={group.brandLogoUrl} 
+                                                        alt={group.brandName || "Brand Logo"} 
+                                                        className="h-6 max-w-[100px] object-contain"
                                                     />
-                                                </div>
+                                                ) : (
+                                                    <IoStorefrontOutline className="text-zinc-400" size={16} />
+                                                )}
 
-                                                <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-black text-white text-[10px] flex items-center justify-center border-2 border-white">
-                                                    {item.quantity}
-                                                </div>
+                                                {group.brandName ? (
+                                                    <span className="text-xs font-bold text-zinc-800 uppercase tracking-wide">
+                                                        {group.brandName}
+                                                    </span>
+                                                ) : !group.brandLogoUrl && (
+                                                    <span className="text-xs font-medium text-zinc-500">
+                                                        Sản phẩm
+                                                    </span>
+                                                )}
                                             </div>
 
-                                            {/* INFO */}
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-medium text-zinc-900 truncate">
-                                                    {item.productName}
-                                                </h4>
+                                            {/* LIST ITEMS IN BRAND */}
+                                            <div className="space-y-3">
+                                                {group.items.map((item, index) => (
+                                                    <motion.div
+                                                        key={item.orderItemId || index}
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ delay: (groupIdx * 2 + index) * 0.03 }}
+                                                        className="group relative flex items-center gap-5 p-2 rounded-xl hover:bg-zinc-50 transition"
+                                                    >
 
-                                                <p className="text-[11px] text-zinc-400 mt-1">
-                                                    {item.variantName}
-                                                </p>
+                                                        {/* IMAGE */}
+                                                        <div className="relative">
+                                                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-100 border border-zinc-100">
+                                                                <img
+                                                                    src={item.imageUrl || "/placeholder.png"}
+                                                                    alt={item.productName}
+                                                                    className="w-full h-full object-cover group-hover:scale-105 transition"
+                                                                />
+                                                            </div>
+
+                                                            <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-black text-white text-[10px] flex items-center justify-center border-2 border-white">
+                                                                {item.quantity}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* INFO */}
+                                                        <div className="flex-1 min-w-0 space-y-1">
+                                                            <h4 className="text-sm font-medium text-zinc-900 truncate">
+                                                                {item.productName}
+                                                            </h4>
+
+                                                            <p className="text-[11px] text-zinc-400">
+                                                                {item.variantName}
+                                                            </p>
+
+                                                            {/* REVIEW STATUS BADGE */}
+                                                            <div>
+                                                                {item.isReviewed ? (
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-medium">
+                                                                        <IoCheckmarkCircleOutline size={12} />
+                                                                        Đã đánh giá
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100 text-[10px] font-medium">
+                                                                        <IoChatbubbleEllipsesOutline size={12} />
+                                                                        Chưa đánh giá
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* PRICE */}
+                                                        <div className="text-right">
+                                                            <div className="text-sm font-semibold text-zinc-900">
+                                                                {formatCurrency(item.totalLine)}
+                                                            </div>
+
+                                                            <div className="text-[10px] text-zinc-400">
+                                                                {formatCurrency(item.unitPrice)}
+                                                            </div>
+                                                        </div>
+
+                                                    </motion.div>
+                                                ))}
                                             </div>
-
-                                            {/* PRICE */}
-                                            <div className="text-right">
-                                                <div className="text-sm font-semibold text-zinc-900">
-                                                    {formatCurrency(item.totalLine)}
-                                                </div>
-
-                                                <div className="text-[10px] text-zinc-400">
-                                                    {formatCurrency(item.unitPrice)}
-                                                </div>
-                                            </div>
-
-                                        </motion.div>
+                                        </div>
                                     ))}
 
                                 </div>
@@ -204,7 +286,7 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
 
                                         {/* INFORMATION & NOTE */}
                                         <div className="space-y-3">
-                                            {/* MÃ CHUYỂN KHOẢN (Hiển thị chi tiết ở Footer) */}
+                                            {/* MÃ CHUYỂN KHOẢN */}
                                             {order.transferCode && (
                                                 <div className="rounded-2xl bg-indigo-50/60 border border-indigo-100 p-4 text-sm text-indigo-950">
                                                     <div className="text-[10px] uppercase tracking-[0.15em] text-indigo-500 mb-1 font-bold flex items-center gap-1.5">

@@ -241,9 +241,23 @@ const ProductReviews = ({ productSlug }: Props) => {
                                             <img
                                                 src={
                                                     review.avatar ||
-                                                    "https://ui-avatars.com/api/?name=User&background=18181b&color=fff"
+                                                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                                        review.fullname || "User"
+                                                    )}&background=18181b&color=fff`
                                                 }
                                                 alt={review.fullname || "User"}
+                                                referrerPolicy="no-referrer"
+                                                onError={(e) => {
+                                                    // Fallback nếu link avatar của user bị hỏng/lỗi tải
+                                                    const target = e.currentTarget;
+                                                    const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                                        review.fullname || "User"
+                                                    )}&background=18181b&color=fff`;
+
+                                                    if (target.src !== fallbackUrl) {
+                                                        target.src = fallbackUrl;
+                                                    }
+                                                }}
                                                 className="h-10 w-10 rounded-full border border-zinc-200/80 object-cover"
                                             />
                                             <div>

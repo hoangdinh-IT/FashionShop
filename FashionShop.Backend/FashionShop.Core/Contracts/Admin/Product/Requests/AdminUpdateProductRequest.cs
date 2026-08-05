@@ -34,6 +34,9 @@ namespace FashionShop.Core.Contracts.Admin.Product.Requests
         [Required]
         public decimal OriginalPrice { get; set; }
 
+        [Required]
+        public decimal DiscountPercent { get; set; }
+
         public IFormFile? Thumbnail { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsBestSeller { get; set; } = false;

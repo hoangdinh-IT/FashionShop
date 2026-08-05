@@ -18,7 +18,6 @@ interface ProductVariant {
     colorId: number;
     sizeId: number;
     quantity: number;
-    price: number;
 }
 
 interface ProductImage {
@@ -34,6 +33,8 @@ export interface ProductGridItem {
     name: string;
     slug: string;
     originalPrice: number;
+    discountPercent: number;
+    finalPrice: number;
     thumbnailUrl: string;
     isNew: boolean;
     isBestSeller: boolean;
@@ -56,6 +57,8 @@ export interface ProductDetail {
     description: string;
     material: string;
     originalPrice: number;
+    discountPercent: number;
+    finalPrice: number;
     thumbnailUrl: string;
     isNew: boolean;
     isBestSeller: boolean;

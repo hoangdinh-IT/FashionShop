@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
     HiOutlineMenuAlt3,
     HiOutlineSearch,
     HiOutlineShoppingBag,
-    HiOutlineUser,
-    HiX
+    HiX,
 } from "react-icons/hi";
+import { IoPersonOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
 import MegaMenu from "../../../features/shop/brands/components/MegaMenu";
@@ -16,6 +16,14 @@ const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const { user, isLoading } = useUser();
+
+    // State quản lý lỗi khi load ảnh avatar (Giống AccountInformation)
+    const [imageError, setImageError] = useState(false);
+
+    // Reset lại trạng thái lỗi ảnh khi thông tin user.avatar thay đổi
+    useEffect(() => {
+        setImageError(false);
+    }, [user?.avatar]);
 
     return (
         <>
@@ -61,7 +69,7 @@ const Header: React.FC = () => {
                             />
                         </div>
 
-                        {/* NÚT TÌM KIẾM MOBILE (Bật/Tắt khung search mobile) */}
+                        {/* NÚT TÌM KIẾM MOBILE */}
                         <button
                             onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
                             className="flex md:hidden h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-black/10 bg-white/60 text-zinc-700 hover:border-black hover:text-black transition-all shrink-0 cursor-pointer"
@@ -83,35 +91,39 @@ const Header: React.FC = () => {
                             <HiOutlineShoppingBag className="text-base sm:text-lg" />
                         </Link>
 
-                        {/* TÀI KHOẢN / AVATAR */}
+                        {/* TÀI KHOẢN / AVATAR (Cập nhật chuẩn theo AccountInformation) */}
                         <Link
                             to="/shop/account/information"
-                            className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center overflow-hidden rounded-full border border-black/10 bg-white hover:border-black transition-all shrink-0"
+                            className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full shrink-0 group"
                             title="Tài khoản"
                         >
-                            {isLoading ? (
-                                <div className="h-3 w-3 sm:h-3.5 sm:w-3.5 animate-spin rounded-full border border-zinc-300 border-t-black" />
-                            ) : user?.avatar ? (
-                                <img
-                                    src={user.avatar}
-                                    alt={user.fullName || "User Avatar"}
-                                    className="h-full w-full object-cover"
-                                    onError={(e) => {
-                                        e.currentTarget.style.display = "none";
-                                    }}
-                                />
-                            ) : (
-                                <HiOutlineUser className="text-base sm:text-lg text-zinc-600" />
-                            )}
+                            <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-zinc-100/80 shadow-xs transition-colors group-hover:border-zinc-900">
+                                {isLoading ? (
+                                    <div className="h-full w-full animate-pulse bg-zinc-200" />
+                                ) : user?.avatar && !imageError ? (
+                                    <img
+                                        src={user.avatar}
+                                        alt={user.fullName || "User Avatar"}
+                                        referrerPolicy="no-referrer"
+                                        crossOrigin="anonymous"
+                                        onError={() => setImageError(true)}
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-zinc-100 text-zinc-400 transition-colors group-hover:text-zinc-700">
+                                        <IoPersonOutline className="text-sm sm:text-base" />
+                                    </div>
+                                )}
+                            </div>
 
-                            {/* DẤU CHẤM TRẠNG THÁI */}
+                            {/* DẤU CHẤM TRẠNG THÁI (Emerald Dot) */}
                             <AnimatePresence>
                                 {!isLoading && (
                                     <motion.span
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
                                         exit={{ scale: 0 }}
-                                        className="absolute bottom-0 right-0 h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-emerald-500 ring-2 ring-white"
+                                        className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-white bg-emerald-500 shadow-xs"
                                     />
                                 )}
                             </AnimatePresence>
@@ -121,7 +133,7 @@ const Header: React.FC = () => {
 
                 </div>
 
-                {/* KHUNG TÌM KIẾM TRÊN MOBILE (Thả xuống khi ấn icon kính lúp) */}
+                {/* KHUNG TÌM KIẾM TRÊN MOBILE */}
                 <AnimatePresence>
                     {isMobileSearchOpen && (
                         <motion.div

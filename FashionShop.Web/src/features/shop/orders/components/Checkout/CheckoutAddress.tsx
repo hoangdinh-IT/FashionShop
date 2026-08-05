@@ -6,7 +6,7 @@ import type { Address } from '../../../addresses/types/address';
 
 interface Props {
     address?: Address;
-    onOpenAddressModal: () => void;
+    onOpenAddressListModal: () => void;
     note: string;
     onChangeNote: (value: string) => void;
 }
@@ -43,7 +43,7 @@ const fadeScaleVariants: Variants = {
 
 const CheckoutAddress: React.FC<Props> = ({
     address,
-    onOpenAddressModal,
+    onOpenAddressListModal,
     note,
     onChangeNote
 }) => {
@@ -68,7 +68,7 @@ const CheckoutAddress: React.FC<Props> = ({
 
                 <button
                     type="button"
-                    onClick={onOpenAddressModal}
+                    onClick={onOpenAddressListModal}
                     className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-semibold text-zinc-700 hover:text-black underline underline-offset-4 cursor-pointer transition-colors shrink-0 py-1 px-1.5 sm:p-0 rounded-md active:bg-zinc-100 sm:active:bg-transparent"
                 >
                     {address ? (
@@ -111,16 +111,15 @@ const CheckoutAddress: React.FC<Props> = ({
                         </motion.div>
                     ) : (
                         <motion.div 
-                            key="empty-address-btn"
+                            key="empty-address-info"
                             variants={fadeScaleVariants}
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            onClick={onOpenAddressModal}
-                            className="rounded-xl border border-dashed border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 p-4 sm:p-5 text-center cursor-pointer transition-all group"
+                            className="rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 sm:p-4.5 text-center"
                         >
-                            <p className="text-xs font-medium text-zinc-500 group-hover:text-zinc-800">
-                                Chưa có địa chỉ giao hàng. Nhấn vào đây để thêm mới.
+                            <p className="text-xs sm:text-sm font-medium text-zinc-500">
+                                Chưa có địa chỉ giao hàng. Vui lòng thêm địa chỉ mới.
                             </p>
                         </motion.div>
                     )}

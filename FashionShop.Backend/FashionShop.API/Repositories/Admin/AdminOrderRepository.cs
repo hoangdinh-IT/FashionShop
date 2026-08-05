@@ -89,6 +89,9 @@ namespace FashionShop.API.Repositories.Admin
                     Quantity = orderItem.Quantity,
                     TotalLine = orderItem.TotalLine,
                     IsReviewed = orderItem.Reviews.Any(),
+
+                    BrandName = orderItem.ProductVariant.Product.Brand.Name,
+                    BrandLogoUrl = orderItem.ProductVariant.Product.Brand.LogoUrl,
                 }).ToList()
             };
 

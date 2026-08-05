@@ -1,3 +1,4 @@
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProductDetail } from "../../types/product";
@@ -11,20 +12,19 @@ interface Props {
     setDirection: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ProductImages = ({
+const ProductImages: React.FC<Props> = ({
     productDetail,
     currentImages,
     selectedImageIndex,
     setSelectedImageIndex,
-    direction,
     setDirection,
-}: Props) => {
+}) => {
     return (
-        /* Container chính linh hoạt: Mobile xếp dọc, Desktop xếp ngang */
-        <div className="flex flex-col-reverse gap-3 sm:flex-row w-full min-w-0">
+        /* Container chính linh hoạt: Mobile xếp dọc, Desktop khớp chiều cao với ProductInfo */
+        <div className="flex flex-col-reverse sm:flex-row gap-3 w-full h-full min-w-0">
             
-            {/* THUMBNAILS LIST - MOBILE: Cuộn ngang | LAPTOP/DESKTOP: Cuộn dọc */}
-            <div className="flex w-full shrink-0 flex-row sm:w-16 md:w-20 sm:flex-col gap-2 overflow-x-auto sm:overflow-y-auto max-h-[480px] scrollbar-none py-1 sm:py-0">
+            {/* THUMBNAILS LIST */}
+            <div className="flex w-full shrink-0 flex-row sm:w-16 md:w-20 sm:flex-col gap-2 overflow-x-auto sm:overflow-y-auto lg:max-h-full scrollbar-none p-1 -m-1">
                 {currentImages.map((imgUrl, index) => {
                     const isSelected = selectedImageIndex === index;
                     return (
@@ -35,10 +35,10 @@ const ProductImages = ({
                                 setDirection(index > selectedImageIndex ? 1 : -1);
                                 setSelectedImageIndex(index);
                             }}
-                            className={`group relative aspect-square w-12 sm:w-full shrink-0 overflow-hidden rounded-lg border transition-all cursor-pointer ${
+                            className={`group relative aspect-square w-12 sm:w-full shrink-0 overflow-hidden rounded-lg transition-all duration-200 cursor-pointer ${
                                 isSelected
-                                    ? "border-transparent ring-2 ring-zinc-900"
-                                    : "border-zinc-200/80 hover:border-zinc-400 opacity-70 hover:opacity-100"
+                                    ? "ring-2 ring-zinc-900 ring-offset-1 ring-offset-white scale-[0.98]"
+                                    : "border border-zinc-200/80 hover:border-zinc-400 opacity-60 hover:opacity-100"
                             }`}
                         >
                             <img
@@ -51,8 +51,8 @@ const ProductImages = ({
                 })}
             </div>
 
-            {/* MAIN IMAGE DISPLAY - Khung hiển thị chính linh hoạt tỷ lệ */}
-            <div className="relative flex-1 min-w-0 overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/80 bg-zinc-50/50">
+            {/* MAIN IMAGE DISPLAY - Kéo giãn 100% chiều cao trên Desktop */}
+            <div className="relative flex-1 min-w-0 min-h-[380px] sm:min-h-[450px] lg:min-h-0 h-full overflow-hidden rounded-xl sm:rounded-2xl border border-zinc-200/80 bg-zinc-50/50">
                 
                 {/* BADGES */}
                 <div className="absolute top-2.5 left-2.5 z-20 flex flex-col gap-1">
@@ -70,9 +70,8 @@ const ProductImages = ({
                 </div>
 
                 {/* ANIMATED IMAGE CAROUSEL */}
-                {/* Tỷ lệ ảnh linh hoạt: aspect-square trên mobile, tự động căn chỉnh trên desktop */}
-                <div className="relative w-full aspect-square sm:aspect-4/5 md:aspect-square lg:h-[480px]">
-                    <AnimatePresence mode="wait" custom={direction}>
+                <div className="absolute inset-0 w-full h-full">
+                    <AnimatePresence mode="wait">
                         <motion.img
                             key={selectedImageIndex}
                             src={
@@ -80,23 +79,12 @@ const ProductImages = ({
                                 "https://placehold.co/600x800/e2e8f0/64748b?text=No+Image"
                             }
                             alt={productDetail?.name || "Product"}
-                            className="absolute inset-0 h-full w-full object-contain p-2 sm:p-4"
-                            initial={{
-                                opacity: 0,
-                                x: direction > 0 ? 30 : -30,
-                            }}
-                            animate={{
-                                opacity: 1,
-                                x: 0,
-                            }}
-                            exit={{
-                                opacity: 0,
-                                x: direction > 0 ? -30 : 30,
-                            }}
-                            transition={{
-                                duration: 0.2,
-                                ease: "easeInOut",
-                            }}
+                            className="h-full w-full object-contain p-2 sm:p-4 select-none"
+                            
+                            initial={{ opacity: 0, scale: 0.96 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.96 }}
+                            transition={{ duration: 0.2 }}
                         />
                     </AnimatePresence>
                 </div>

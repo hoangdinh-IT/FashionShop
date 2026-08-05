@@ -33,6 +33,20 @@ namespace FashionShop.Core.Entities
         public decimal OriginalPrice { get; set; }
 
         [Required]
+        public decimal DiscountPercent { get; set; } = 0;
+
+        [NotMapped]
+        public decimal FinalPrice
+        {
+            get
+            {
+                if (DiscountPercent <= 0) return OriginalPrice;
+                var finalPrice = Math.Ceiling((OriginalPrice * (1m - DiscountPercent / 100m)) / 1000m) * 1000m;
+                return Math.Ceiling(finalPrice);
+            }
+        }
+
+        [Required]
         [MaxLength(500)]
         [Column(TypeName = "varchar(500)")]
         public string ThumbnailUrl { get; set; }

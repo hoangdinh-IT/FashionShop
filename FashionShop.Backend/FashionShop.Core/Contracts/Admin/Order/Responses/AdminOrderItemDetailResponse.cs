@@ -11,11 +11,15 @@ namespace FashionShop.Core.Contracts.Admin.Order.Responses
         public int OrderItemId { get; set; }
         public Guid ProductVariantId { get; set; }
         public string ProductName { get; set; }
-        public string VariantName { get; set; } // Ví dụ: "Đỏ - XL"
+        public string VariantName { get; set; }
         public string? ImageUrl { get; set; }
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public decimal TotalLine { get; set; }
         public bool IsReviewed { get; set; }
+
+        // Brand
+        public string BrandName { get; set; }
+        public string? BrandLogoUrl { get; set; }
     }
 }

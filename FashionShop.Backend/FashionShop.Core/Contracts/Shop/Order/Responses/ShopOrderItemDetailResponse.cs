@@ -17,5 +17,9 @@ namespace FashionShop.Core.Contracts.Shop.Order.Responses
         public int Quantity { get; set; }
         public decimal TotalLine { get; set; }
         public bool IsReviewed { get; set; }
+
+        // Brand
+        public string BrandName { get; set; }
+        public string? BrandLogoUrl { get; set; }
     }
 }

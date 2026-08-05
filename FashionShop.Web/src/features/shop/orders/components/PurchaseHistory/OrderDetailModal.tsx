@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
     IoCallOutline, 
     IoCloseOutline, 
     IoLocationOutline, 
     IoQrCodeOutline, 
-    IoTimeOutline 
+    IoTimeOutline,
+    IoStorefrontOutline,
+    IoCheckmarkCircleOutline,
+    IoChatbubbleEllipsesOutline
 } from "react-icons/io5";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -23,9 +26,9 @@ interface Props {
     isLoading: boolean;
 }
 
-// Đưa hàm format currency ra ngoài để tránh khởi tạo lại khi re-render
+// Hàm format currency bên ngoài component
 const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount || 0);
 };
 
 const Row = ({ label, value, prefix = "" }: { label: string; value: number; prefix?: string }) => (
@@ -43,6 +46,32 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
     const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.src = "/placeholder.png";
     };
+
+    // Nhóm các orderItems theo Brand Name hoặc Brand Logo
+    const groupedItems = useMemo(() => {
+        if (!order?.orderItems) return [];
+
+        const groups: { brandName?: string; brandLogoUrl?: string; items: typeof order.orderItems }[] = [];
+
+        order.orderItems.forEach((item) => {
+            const existingGroup = groups.find((g) => 
+                (item.brandName && g.brandName === item.brandName) || 
+                (item.brandLogoUrl && g.brandLogoUrl === item.brandLogoUrl)
+            );
+
+            if (existingGroup) {
+                existingGroup.items.push(item);
+            } else {
+                groups.push({
+                    brandName: item.brandName,
+                    brandLogoUrl: item.brandLogoUrl,
+                    items: [item],
+                });
+            }
+        });
+
+        return groups;
+    }, [order?.orderItems]);
 
     return (
         <AnimatePresence>
@@ -134,58 +163,108 @@ const OrderDetailModal: React.FC<Props> = ({ isOpen, onClose, order, isLoading }
                                 </div>
 
                                 {/* BODY */}
-                                <div className="flex-1 overflow-y-auto bg-zinc-50 p-4 sm:p-6 space-y-3 sm:space-y-4">
-                                    {order.orderItems.map((item, index) => (
-                                        <motion.div
-                                            key={item.orderItemId}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.03 }}
-                                            className="group relative flex items-center gap-3 sm:gap-5 rounded-xl sm:rounded-2xl bg-white p-3 sm:p-4 shadow-sm border border-zinc-100 hover:shadow-md transition"
+                                <div className="flex-1 overflow-y-auto bg-zinc-50 p-4 sm:p-6 space-y-4">
+                                    {groupedItems.map((group, groupIdx) => (
+                                        <div 
+                                            key={group.brandName || group.brandLogoUrl || groupIdx}
+                                            className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-zinc-100 shadow-sm space-y-3"
                                         >
-                                            {/* IMAGE */}
-                                            <div className="relative shrink-0">
-                                                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden bg-zinc-100">
-                                                    <img
-                                                        src={item.imageUrl || "/placeholder.png"}
-                                                        alt={item.productName}
+                                            {/* BRAND HEADER */}
+                                            <div className="flex items-center gap-2 pb-2.5 sm:pb-3 border-b border-zinc-100">
+                                                {group.brandLogoUrl ? (
+                                                    <img 
+                                                        src={group.brandLogoUrl} 
+                                                        alt={group.brandName || "Brand Logo"} 
                                                         onError={handleImageError}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition"
+                                                        className="h-5 sm:h-6 max-w-[90px] sm:max-w-[110px] object-contain"
                                                     />
-                                                </div>
+                                                ) : (
+                                                    <IoStorefrontOutline className="text-zinc-400 text-sm sm:text-base" />
+                                                )}
 
-                                                <div className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black text-white text-[9px] sm:text-[10px] flex items-center justify-center border-2 border-white font-semibold">
-                                                    {item.quantity}
-                                                </div>
+                                                {group.brandName ? (
+                                                    <span className="text-xs sm:text-sm font-bold text-zinc-800 uppercase tracking-wide">
+                                                        {group.brandName}
+                                                    </span>
+                                                ) : !group.brandLogoUrl && (
+                                                    <span className="text-xs font-medium text-zinc-500">
+                                                        Sản phẩm
+                                                    </span>
+                                                )}
                                             </div>
 
-                                            {/* INFO */}
-                                            <div className="flex-1 min-w-0 pr-1">
-                                                <h4 className="text-xs sm:text-sm font-medium text-zinc-900 line-clamp-2 sm:truncate">
-                                                    {item.productName}
-                                                </h4>
-                                                <p className="text-[10px] sm:text-[11px] text-zinc-400 mt-0.5 sm:mt-1 truncate">
-                                                    {item.variantName}
-                                                </p>
-                                            </div>
+                                            {/* BRAND ITEMS LIST */}
+                                            <div className="space-y-3">
+                                                {group.items.map((item, index) => (
+                                                    <motion.div
+                                                        key={item.orderItemId || index}
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ delay: (groupIdx * 2 + index) * 0.03 }}
+                                                        className="group relative flex items-center gap-3 sm:gap-5 rounded-lg sm:rounded-xl p-1.5 sm:p-2 hover:bg-zinc-50 transition"
+                                                    >
+                                                        {/* IMAGE */}
+                                                        <div className="relative shrink-0">
+                                                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden bg-zinc-100 border border-zinc-100">
+                                                                <img
+                                                                    src={item.imageUrl || "/placeholder.png"}
+                                                                    alt={item.productName}
+                                                                    onError={handleImageError}
+                                                                    className="w-full h-full object-cover group-hover:scale-105 transition"
+                                                                />
+                                                            </div>
 
-                                            {/* PRICE */}
-                                            <div className="text-right shrink-0">
-                                                <div className="text-xs sm:text-sm font-semibold text-zinc-900">
-                                                    {formatCurrency(item.totalLine)}
-                                                </div>
-                                                <div className="text-[9px] sm:text-[10px] text-zinc-400">
-                                                    {formatCurrency(item.unitPrice)}
-                                                </div>
+                                                            <div className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black text-white text-[9px] sm:text-[10px] flex items-center justify-center border-2 border-white font-semibold">
+                                                                {item.quantity}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* INFO & REVIEW STATUS */}
+                                                        <div className="flex-1 min-w-0 pr-1 space-y-1">
+                                                            <h4 className="text-xs sm:text-sm font-medium text-zinc-900 line-clamp-2 sm:truncate">
+                                                                {item.productName}
+                                                            </h4>
+
+                                                            <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate">
+                                                                {item.variantName}
+                                                            </p>
+
+                                                            {/* REVIEW BADGE */}
+                                                            <div>
+                                                                {item.isReviewed ? (
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[9px] sm:text-[10px] font-medium">
+                                                                        <IoCheckmarkCircleOutline size={12} />
+                                                                        Đã đánh giá
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100 text-[9px] sm:text-[10px] font-medium">
+                                                                        <IoChatbubbleEllipsesOutline size={12} />
+                                                                        Chưa đánh giá
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* PRICE */}
+                                                        <div className="text-right shrink-0">
+                                                            <div className="text-xs sm:text-sm font-semibold text-zinc-900">
+                                                                {formatCurrency(item.totalLine)}
+                                                            </div>
+                                                            <div className="text-[9px] sm:text-[10px] text-zinc-400">
+                                                                {formatCurrency(item.unitPrice)}
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                ))}
                                             </div>
-                                        </motion.div>
+                                        </div>
                                     ))}
                                 </div>
 
                                 {/* FOOTER */}
                                 <div className="border-t border-zinc-100 bg-white px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 shrink-0">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                                        {/* TOTAL SUMMARY (Đưa lên đầu trên Mobile để dễ nhìn) */}
+                                        {/* TOTAL SUMMARY */}
                                         <div className="space-y-2 text-xs sm:text-sm order-1 md:order-2">
                                             <Row label="Tiền hàng" value={order.subTotal} />
                                             <Row label="Phí vận chuyển" value={order.shippingFee} prefix="+" />

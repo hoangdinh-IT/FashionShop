@@ -30,6 +30,9 @@ namespace FashionShop.Core.Contracts.Admin.Product.Requests
         public decimal OriginalPrice { get; set; }
 
         [Required]
+        public decimal DiscountPercent { get; set; }
+
+        [Required]
         public IFormFile Thumbnail { get; set; }
     }
 }

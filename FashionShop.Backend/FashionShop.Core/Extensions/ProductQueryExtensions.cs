@@ -90,8 +90,12 @@ namespace FashionShop.Core.Extensions
 
         public static IQueryable<Product> FilterByPrice(this IQueryable<Product> query, decimal? minPrice, decimal? maxPrice)
         {
-            if (minPrice.HasValue) query = query.Where(p => p.OriginalPrice > minPrice);
-            if (maxPrice.HasValue) query = query.Where(p => p.OriginalPrice <= maxPrice);
+            if (minPrice.HasValue)
+                query = query.Where(p => (p.OriginalPrice * (100m - p.DiscountPercent) / 100m) >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                query = query.Where(p => (p.OriginalPrice * (100m - p.DiscountPercent) / 100m) <= maxPrice.Value);
+
             return query;
         }
 
@@ -225,11 +229,11 @@ namespace FashionShop.Core.Extensions
                                 .ThenByDescending(x => x.Id);
 
                 case "price-asc":
-                    return query.OrderBy(x => x.OriginalPrice)
+                    return query.OrderBy(p => p.DiscountPercent <= 0 ? p.OriginalPrice : Math.Ceiling(p.OriginalPrice * (1m - p.DiscountPercent / 100m)))
                                 .ThenByDescending(x => x.Id);
 
                 case "price-desc":
-                    return query.OrderByDescending(x => x.OriginalPrice)
+                    return query.OrderByDescending(p => p.DiscountPercent <= 0 ? p.OriginalPrice : Math.Ceiling(p.OriginalPrice * (1m - p.DiscountPercent / 100m)))
                                 .ThenByDescending(x => x.Id);
 
                 default:

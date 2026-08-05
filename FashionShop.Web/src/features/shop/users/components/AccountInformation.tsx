@@ -1,6 +1,6 @@
 import type React from "react";
 import type { User } from "../types/user";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
 import {
     IoMailOutline,
@@ -67,6 +67,14 @@ const AccountInformation: React.FC<Props> = ({ user, isLoading }) => {
     const [isOpen, setIsOpen] = useState<
         "PROFILE" | "CHANGE-PASSWORD" | null
     >();
+    
+    // State quản lý lỗi khi load ảnh avatar
+    const [imageError, setImageError] = useState(false);
+
+    // Reset lại trạng thái lỗi ảnh khi thông tin user.avatar thay đổi
+    useEffect(() => {
+        setImageError(false);
+    }, [user?.avatar]);
 
     const handleOpenProfile = () => setIsOpen("PROFILE");
     const handleOpenChangePassword = () => setIsOpen("CHANGE-PASSWORD");
@@ -151,17 +159,21 @@ const AccountInformation: React.FC<Props> = ({ user, isLoading }) => {
                             {/* Avatar */}
                             <div className="relative shrink-0">
                                 <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-100/80 shadow-xs">
-                                    {user?.avatar ? (
+                                    {isLoading ? (
+                                        <div className="h-full w-full animate-pulse bg-zinc-200" />
+                                    ) : user?.avatar && !imageError ? (
                                         <img
                                             src={user.avatar}
-                                            alt={
-                                                user.fullName ||
-                                                "User Avatar"
-                                            }
+                                            alt={user.fullName || "User Avatar"}
+                                            referrerPolicy="no-referrer"
+                                            crossOrigin="anonymous"
+                                            onError={() => setImageError(true)}
                                             className="h-full w-full object-cover"
                                         />
                                     ) : (
-                                        <IoPersonOutline className="text-2xl sm:text-3xl text-zinc-400" />
+                                        <div className="flex h-full w-full items-center justify-center bg-zinc-100 text-zinc-400">
+                                            <IoPersonOutline className="text-2xl sm:text-3xl" />
+                                        </div>
                                     )}
                                 </div>
 

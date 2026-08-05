@@ -19,7 +19,6 @@ namespace FashionShop.Core.Contracts.Admin.ProductVariant.Responses
         public string SizeName { get; set; }
         public string Sku { get; set; }
         public int StockQuantity { get; set; } = 0;
-        public decimal Price { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }

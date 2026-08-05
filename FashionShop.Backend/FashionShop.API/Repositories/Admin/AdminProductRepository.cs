@@ -9,7 +9,6 @@ using FashionShop.Core.Entities;
 using FashionShop.Core.Extensions;
 using FashionShop.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
 namespace FashionShop.API.Repositories.Admin
@@ -19,25 +18,27 @@ namespace FashionShop.API.Repositories.Admin
         private readonly FashionDbContext _context;
 
         private static readonly Expression<Func<Product, AdminProductResponse>> _productSelector =
-            x => new AdminProductResponse
+            p => new AdminProductResponse
             {
-                Id = x.Id,
-                CategoryId = x.CategoryId,
-                BrandId = x.BrandId,
-                Name = x.Name,
-                CategoryName = x.Category.Name,
-                BrandName = x.Brand.Name,
-                Slug = x.Slug,
-                Description = x.Description,
-                Material = x.Material,
-                OriginalPrice = x.OriginalPrice,
-                ThumbnailUrl = x.ThumbnailUrl,
-                IsActive = x.IsActive,
-                IsBestSeller = x.IsBestSeller,
-                IsNew = x.IsNew,
-                ViewCount = x.ViewCount,
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate,
+                Id = p.Id,
+                CategoryId = p.CategoryId,
+                BrandId = p.BrandId,
+                Name = p.Name,
+                CategoryName = p.Category.Name,
+                BrandName = p.Brand.Name,
+                Slug = p.Slug,
+                Description = p.Description,
+                Material = p.Material,
+                OriginalPrice = p.OriginalPrice,
+                DiscountPercent = p.DiscountPercent,
+                FinalPrice = Math.Ceiling((p.OriginalPrice * (1m - p.DiscountPercent / 100m)) / 1000m) * 1000m,
+                ThumbnailUrl = p.ThumbnailUrl,
+                IsActive = p.IsActive,
+                IsBestSeller = p.IsBestSeller,
+                IsNew = p.IsNew,
+                ViewCount = p.ViewCount,
+                CreatedDate = p.CreatedDate,
+                UpdatedDate = p.UpdatedDate,
             };
 
         private static readonly Expression<Func<ProductVariant, AdminProductVariantResponse>> _productVariantSelector =
@@ -52,7 +53,6 @@ namespace FashionShop.API.Repositories.Admin
                 SizeName = x.Size.Name,
                 Sku = x.Sku,
                 StockQuantity = x.StockQuantity,
-                Price = x.Price,
                 IsActive = x.IsActive,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
@@ -74,24 +74,26 @@ namespace FashionShop.API.Repositories.Admin
             };
 
         private static readonly Expression<Func<Product, AdminProductDetailResponse>> _productDetailSelector =
-            x => new AdminProductDetailResponse
+            pd => new AdminProductDetailResponse
             {
-                Id = x.Id,
-                CategoryId = x.CategoryId,
-                BrandId = x.BrandId,
-                Name = x.Name,
-                Slug = x.Slug,
-                Description = x.Description,
-                Material = x.Material,
-                OriginalPrice = x.OriginalPrice,
-                ThumbnailUrl = x.ThumbnailUrl,
-                IsActive = x.IsActive,
-                IsBestSeller = x.IsBestSeller,
-                IsNew = x.IsNew,
-                ViewCount = x.ViewCount,
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate,
-                ProductVariants = x.ProductVariants
+                Id = pd.Id,
+                CategoryId = pd.CategoryId,
+                BrandId = pd.BrandId,
+                Name = pd.Name,
+                Slug = pd.Slug,
+                Description = pd.Description,
+                Material = pd.Material,
+                OriginalPrice = pd.OriginalPrice,
+                DiscountPercent = pd.DiscountPercent,
+                FinalPrice = Math.Ceiling((pd.OriginalPrice * (1m - pd.DiscountPercent / 100m)) / 1000m) * 1000m,
+                ThumbnailUrl = pd.ThumbnailUrl,
+                IsActive = pd.IsActive,
+                IsBestSeller = pd.IsBestSeller,
+                IsNew = pd.IsNew,
+                ViewCount = pd.ViewCount,
+                CreatedDate = pd.CreatedDate,
+                UpdatedDate = pd.UpdatedDate,
+                ProductVariants = pd.ProductVariants
                     .OrderBy(v => v.ColorId)
                     .ThenBy(v => v.SizeId)
                     .Select(v => new AdminProductVariantResponse
@@ -102,7 +104,6 @@ namespace FashionShop.API.Repositories.Admin
                         SizeId = v.SizeId,
                         Sku = v.Sku,
                         StockQuantity = v.StockQuantity,
-                        Price = v.Price,
                         IsActive = v.IsActive,
                         CreatedDate = v.CreatedDate,
                         UpdatedDate = v.UpdatedDate,
@@ -124,7 +125,9 @@ namespace FashionShop.API.Repositories.Admin
 
         public async Task<PagedResult<AdminProductResponse>> GetPagedProductsAsync(AdminProductListRequest request)
         {
-            var query = _context.Products.AsNoTracking().AsQueryable();
+            var query = _context.Products
+                                .AsNoTracking()
+                                .AsQueryable();
 
             query = query.FilterByKeyword(request.Keyword)
                          .FilterByCategoryId(request.CategoryId)
@@ -221,32 +224,6 @@ namespace FashionShop.API.Repositories.Admin
 
 
         // --- READ METHODS --- //
-
-        //public async Task<PagedResult<ProductVariantResponse>> GetPagedProductVariantsAsync(ProductVariantListRequest request)
-        //{
-        //    var query = _context.ProductVariants.AsNoTracking().AsQueryable();
-
-        //    query = query.FilterByKeyword(request.Keyword)
-        //                 .FilterByProduct(request.ProductId)
-        //                 .FilterByColor(request.ColorId)
-        //                 .FilterBySize(request.SizeId)
-        //                 .FilterByPrice(request.MinPrice, request.MaxPrice);
-
-        //    var totalRecord = await query.CountAsync();
-
-        //    var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-        //                    .Take(request.PageSize)
-        //                    .Select(_productVariantSelector)
-        //                    .ToListAsync();
-
-        //    return new PagedResult<ProductVariantResponse>()
-        //    {
-        //        Items = data,
-        //        TotalRecord = totalRecord,
-        //        PageSize = request.PageSize,
-        //        PageIndex = request.PageIndex,
-        //    };
-        //}
 
         public async Task<AdminProductVariantResponse?> GetProductVariantByIdAsync(Guid productVariantId)
         {

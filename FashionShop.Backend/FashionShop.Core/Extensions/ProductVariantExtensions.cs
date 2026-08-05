@@ -38,12 +38,5 @@ namespace FashionShop.Core.Extensions
 
             return query.Where(x => x.SizeId == sizeId);
         }
-
-        public static IQueryable<ProductVariant> FilterByPrice(this IQueryable<ProductVariant> query, decimal? minPrice, decimal? maxPrice)
-        {
-            if (minPrice.HasValue) query = query.Where(x => x.Price >= minPrice.Value);
-            if (maxPrice.HasValue) query = query.Where(x => x.Price <= maxPrice.Value);
-            return query;
-        }
     }
 }

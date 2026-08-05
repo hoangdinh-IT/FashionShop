@@ -8,6 +8,7 @@ export interface ProductFormInputs {
     description: string;
     material: string;
     price: number;
+    discountPercent: number;
     thumbnail: File;
 
     categoryId: string;
@@ -40,6 +41,7 @@ export interface ProductDetailFormInputs {
     description: string;
     material: string;
     originalPrice: number;
+    discountPercent: number;
     thumbnail: File;
 
     categoryId: string;
@@ -55,7 +57,6 @@ export interface ProductDetailFormInputs {
         colorId: number;
         sizeId: number;
         stockQuantity: number;
-        price: number;
     }[];
 }
 
@@ -65,7 +66,6 @@ export interface ProductDetailFormInputs {
 export interface ProductVariantFormInputs {
     sku: string;
     stockQuantity: number;
-    price: number;
 
     productId: string;
     colorId: string;

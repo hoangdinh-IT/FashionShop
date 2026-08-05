@@ -56,8 +56,9 @@ const getInputClassName = (hasError?: boolean) => {
 };
 
 const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailFormInputs> => {
+    // Xóa field 'price' khỏi Variant
     const defaultVariants = [
-        { id: "", sku: "", colorId: 0 as any, sizeId: 0 as any, stockQuantity: 0, price: 0 }
+        { id: "", sku: "", colorId: 0 as any, sizeId: 0 as any, stockQuantity: 0 }
     ];
 
     if (!productDetail) {
@@ -67,17 +68,20 @@ const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailF
             description: "",
             material: "",
             originalPrice: 0,
+            discountPercent: 0, // Thêm discountPercent mặc định là 0%
             categoryId: "",
             brandId: "",
             isActive: true,
             isBestSeller: false,
             isNew: true,
             productVariants: defaultVariants,
-        }
+        };
     }
 
     return {
         ...productDetail,
+        originalPrice: productDetail.originalPrice || 0,
+        discountPercent: productDetail.discountPercent || 0,
         productVariants: productDetail.productVariants?.length
             ? productDetail.productVariants.map((v) => ({
                 id: v.id,
@@ -85,11 +89,10 @@ const getDefaultValues = (productDetail?: ProductDetail): Partial<ProductDetailF
                 colorId: v.colorId,
                 sizeId: v.sizeId,
                 stockQuantity: v.stockQuantity,
-                price: v.price,
             }))
             : defaultVariants
-    }
-}
+    };
+};
 
 const preparePayload = (data: ProductDetailFormInputs, file: File | null, isUpdate: boolean) => {
     const formData = new FormData();
@@ -112,7 +115,6 @@ const preparePayload = (data: ProductDetailFormInputs, file: File | null, isUpda
         formData.append(`productVariants[${index}].SizeId`, String(variant.sizeId));
         formData.append(`productVariants[${index}].SKU`, String(variant.sku));
         formData.append(`productVariants[${index}].StockQuantity`, String(variant.stockQuantity));
-        formData.append(`productVariants[${index}].Price`, String(variant.price || data.originalPrice));
 
         if (isUpdate && variant.id) {
             formData.append(`productVariants[${index}].Id`, String(variant.id));
@@ -447,7 +449,7 @@ const BasicInfoSection = ({ register, errors, onNameChange }: any) => (
                 Mô tả <span className="text-red-500">*</span>
             </label>
             <textarea
-                rows={18}
+                rows={12}
                 className={`resize-none ${getInputClassName(errors.description)}`}
                 {...register("description", { required: "Vui lòng nhập Mô tả" })}
             />
@@ -457,12 +459,14 @@ const BasicInfoSection = ({ register, errors, onNameChange }: any) => (
 
 const AttributesSection = ({ register, errors, categories, brands }: any) => (
     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-        <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+        <h4 className="text-[15px] font-bold text-slate-800 mb-5 flex items-center gap-2">
             <IoLayersOutline className="text-lg text-indigo-500" /> 
             Tổ chức & Thuộc tính
         </h4>
         
+        {/* Container chung chuẩn Grid 2 cột */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* HÀNG 1: Danh mục & Thương hiệu */}
             <div>
                 <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                     Danh mục <span className="text-red-500">*</span>
@@ -496,32 +500,64 @@ const AttributesSection = ({ register, errors, categories, brands }: any) => (
                     ))}
                 </select>
             </div>
-            
+
+            {/* HÀNG 2: Giá bán gốc & Giảm giá (%) */}
             <div>
+                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                    Giá bán gốc <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                    <input
+                        type="number"
+                        min={0}
+                        placeholder="0"
+                        className={`${getInputClassName(errors.originalPrice)} pr-12`}
+                        {...register("originalPrice", { 
+                            required: "Vui lòng nhập giá gốc",
+                            min: { value: 0, message: "Giá phải lớn hơn 0" } 
+                        })}
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[11px] font-bold pointer-events-none">
+                        VNĐ
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                    Giảm giá (%) <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                    <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        step="0.1"
+                        placeholder="0"
+                        className={`${getInputClassName(errors.discountPercent)} pr-8`}
+                        {...register("discountPercent", { 
+                            required: "Vui lòng nhập % giảm giá",
+                            min: { value: 0, message: "% Giảm giá từ 0-100" },
+                            max: { value: 100, message: "% Giảm giá không quá 100" }
+                        })}
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[12px] font-bold pointer-events-none">
+                        %
+                    </span>
+                </div>
+            </div>
+
+            {/* HÀNG 3: Chất liệu (Chiếm trọn 2 cột) */}
+            <div className="md:col-span-2">
                 <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
                     Chất liệu <span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
+                    placeholder="VD: 100% Cotton, Polyester..."
                     className={getInputClassName(errors.material)}
                     {...register("material", { required: "Vui lòng nhập Chất liệu", maxLength: 100 })}
                 />
-            </div>
-            
-            <div>
-                <label className="block text-[13px] font-semibold text-slate-700 mb-1.5">
-                    Giá bán mặc định <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                    <input
-                        type="number"
-                        className="w-full pl-3.5 pr-11 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[13px] font-medium outline-none focus:border-blue-500"
-                        {...register("originalPrice")}
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[11px] font-bold">
-                        VNĐ
-                    </span>
-                </div>
             </div>
         </div>
     </div>

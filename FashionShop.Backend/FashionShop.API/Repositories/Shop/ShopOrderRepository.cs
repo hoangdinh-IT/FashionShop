@@ -56,7 +56,7 @@ namespace FashionShop.API.Repositories.Shop
                     UnitPrice = orderItem.UnitPrice,
                     Quantity = orderItem.Quantity,
                     TotalLine = orderItem.TotalLine,
-                    IsReviewed = orderItem.Reviews.Any()
+                    IsReviewed = orderItem.Reviews.Any(),
                 }).ToList()
             };
 
@@ -100,6 +100,9 @@ namespace FashionShop.API.Repositories.Shop
                     Quantity = orderItem.Quantity,
                     TotalLine = orderItem.TotalLine,
                     IsReviewed = orderItem.Reviews.Any(),
+
+                    BrandName = orderItem.ProductVariant.Product.Brand.Name,
+                    BrandLogoUrl = orderItem.ProductVariant.Product.Brand.LogoUrl,
                 }).ToList()
             };
 

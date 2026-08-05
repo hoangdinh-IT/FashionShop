@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCarts } from '../../../features/shop/carts/hooks/useCarts';
 import { useAddresses } from '../../../features/shop/addresses/hooks/useAddresses';
-import AddressModal from '../../../features/shop/orders/components/Checkout/AddressModal';
+import AddressListModal from '../../../features/shop/orders/components/Checkout/AddressListModal';
 import CheckoutAddress from '../../../features/shop/orders/components/Checkout/CheckoutAddress';
 import CheckoutItems from '../../../features/shop/orders/components/Checkout/CheckoutItems';
 import CheckoutSummary from '../../../features/shop/orders/components/Checkout/CheckoutSummary';
@@ -24,7 +24,7 @@ const CheckoutPage = () => {
     const { createOrder, isCreating: isOrderCreating } = useOrderMutations();
     
     const [selectedAddress, setSelectedAddress] = useState<Address | undefined>(undefined);
-    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const [isAddressListModalOpen, setIsAddressListModalOpen] = useState(false);
     const [note, setNote] = useState("");
 
     useEffect(() => {
@@ -126,7 +126,7 @@ const CheckoutPage = () => {
                         <section className="bg-white rounded-2xl p-4 sm:p-6 shadow-xs border border-black/5">
                             <CheckoutAddress 
                                 address={selectedAddress} 
-                                onOpenAddressModal={() => setIsAddressModalOpen(true)}
+                                onOpenAddressListModal={() => setIsAddressListModalOpen(true)}
                                 note={note}
                                 onChangeNote={setNote}
                             />
@@ -164,14 +164,14 @@ const CheckoutPage = () => {
             </main>
 
             {/* MODAL CHỌN ĐỊA CHỈ */}
-            <AddressModal
-                isOpen={isAddressModalOpen}
-                onClose={() => setIsAddressModalOpen(false)}
+            <AddressListModal
+                isOpen={isAddressListModalOpen}
+                onClose={() => setIsAddressListModalOpen(false)}
                 addresses={addresses}
                 currentSelectedAddress={selectedAddress}
                 onSelect={(address) => {
                     setSelectedAddress(address); 
-                    setIsAddressModalOpen(false);
+                    setIsAddressListModalOpen(false);
                 }}
             />
         </div>

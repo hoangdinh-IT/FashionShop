@@ -53,4 +53,7 @@ interface OrderItemDetail {
     quantity: number;
     totalLine: number;
     isReviewed: boolean;
+    
+    brandName: string;
+    brandLogoUrl?: string;
 }

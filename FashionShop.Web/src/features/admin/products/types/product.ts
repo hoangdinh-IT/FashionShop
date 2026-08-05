@@ -9,6 +9,8 @@ export interface Product {
     description: string;
     material: string;
     originalPrice: number;
+    discountPercent: number;
+    finalPrice: number;
     thumbnailUrl: string;
     isActive: boolean;
     isBestSeller: boolean;
@@ -25,7 +27,6 @@ export interface ProductVariant {
     sizeId: string;
     sku: string;
     stockQuantity: number;
-    price: number;
     isActive: boolean;
     createdDate: Date;
     updatedDate: Date;

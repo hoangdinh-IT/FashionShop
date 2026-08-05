@@ -19,7 +19,6 @@ const ProductDetailPage = () => {
     const { showSnackbar } = useSnackbar();
     const { productSlug } = useParams<{ productSlug: string }>();
 
-    // Tự động cuộn lên đầu trang mỗi khi chuyển sản phẩm
     useEffect(() => {
         window.scrollTo({
             top: 0,
@@ -37,7 +36,6 @@ const ProductDetailPage = () => {
     const [quantity, setQuantity] = useState(1);
     const [direction, setDirection] = useState(0);
 
-    // Khởi tạo biến thể mặc định khi tải xong dữ liệu sản phẩm
     useEffect(() => {
         if (productDetail) {
             const defaultColor = productDetail.productColors?.[0]?.colorId ?? null;
@@ -50,7 +48,6 @@ const ProductDetailPage = () => {
         }
     }, [productDetail]);
 
-    // Danh sách hình ảnh ứng với màu sắc đang chọn
     const currentImages = useMemo(() => {
         if (!productDetail) return [];
 
@@ -70,7 +67,6 @@ const ProductDetailPage = () => {
         return [];
     }, [productDetail, activeColorId]);
 
-    // Tên màu sắc & kích thước hiện tại
     const selectedColorName = useMemo(() => {
         return (
             productDetail?.productColors?.find((c) => c.colorId === activeColorId)
@@ -85,7 +81,6 @@ const ProductDetailPage = () => {
         );
     }, [productDetail, activeSizeId]);
 
-    // Biến thể (Variant) hiện tại dựa trên màu và size
     const currentVariant = useMemo(() => {
         return productDetail?.productVariants?.find(
             (v) => v.colorId === activeColorId && v.sizeId === activeSizeId
@@ -95,7 +90,6 @@ const ProductDetailPage = () => {
     const stockQuantity = currentVariant?.quantity || 0;
     const isOutOfStock = stockQuantity === 0;
 
-    // Xử lý Thêm vào giỏ hàng với kiểm tra ràng buộc
     const handleAddToCart = () => {
         if (!currentVariant) {
             showSnackbar("Vui lòng chọn đầy đủ màu sắc và kích thước!", "error");
@@ -127,7 +121,6 @@ const ProductDetailPage = () => {
         return <Loading />;
     }
 
-    /* TRẠNG THÁI KHÔNG TÌM THẤY SẢN PHẨM (EMPTY STATE) */
     if (!productDetail) {
         return (
             <div className="flex min-h-[60vh] sm:min-h-[70vh] items-center justify-center px-4 py-8 sm:py-16">
@@ -164,10 +157,10 @@ const ProductDetailPage = () => {
 
     return (
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8 text-zinc-900">
-            {/* GRID CHÍNH (ẢNH + THÔNG TIN MUA HÀNG) */}
-            <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12 items-start">
-                {/* BỘ BỘ BỘ BỘ BỘ BỘ ẢNH SẢN PHẨM */}
-                <div className="w-full lg:col-span-7">
+            {/* GRID CHÍNH (Thêm items-stretch để tự cân bằng chiều cao 2 cột trên Desktop) */}
+            <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12 lg:items-stretch">
+                {/* BỘ ẢNH SẢN PHẨM (Mở rộng h-full để bằng ProductInfo) */}
+                <div className="w-full lg:col-span-7 h-full">
                     <ProductImages
                         productDetail={productDetail}
                         currentImages={currentImages}
@@ -178,7 +171,7 @@ const ProductDetailPage = () => {
                     />
                 </div>
 
-                {/* THÔNG TIN VÀ NÚT MUA HÀNG (Sticky khi cuộn trang trên màn hình lớn) */}
+                {/* THÔNG TIN VÀ NÚT MUA HÀNG */}
                 <div className="w-full lg:col-span-5 lg:sticky lg:top-24">
                     <ProductInfo
                         productDetail={productDetail}

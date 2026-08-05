@@ -43,7 +43,7 @@ namespace FashionShop.API.Repositories.Shop
                 SizeId = ci.ProductVariant.SizeId,
                 SizeName = ci.ProductVariant.Size.Name,
 
-                UnitPrice = ci.ProductVariant.Price,
+                UnitPrice = Math.Ceiling((ci.ProductVariant.Product.OriginalPrice * (1m - ci.ProductVariant.Product.DiscountPercent / 100m)) / 1000m) * 1000m,
                 CreatedDate = ci.CreatedDate,
                 UpdatedDate = ci.UpdatedDate,
             };
