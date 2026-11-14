@@ -30,7 +30,7 @@
 
   <p>
     <a href="https://fashion-shop-rkait.vercel.app/"><strong>🌍 Live Demo</strong></a> ·
-    <a href="https://fashionshop-c7s0.onrender.com/swagger/index.html"><strong>⚙️ API Swagger</strong></a> ·
+    <a href="https://fashionshop-0ny3.onrender.com/index.html"><strong>⚙️ API Swagger</strong></a> ·
   </p>
 </div>
 
@@ -90,32 +90,32 @@ The application is built using a modern, scalable, and highly performant technol
 - **Core:** React 19.2, TypeScript, Vite (for lightning-fast HMR and building).
 - **State Management & Data Fetching:** TanStack Query (React Query v5) for efficient server-state management, caching, and synchronization; Axios Interceptors for silent **Refresh Token** renewal on `401 Unauthorized` responses.
 - **Routing:** React Router DOM v7.
-- **Styling & UI Libraries:** Tailwind CSS v4 for utility-first styling, seamlessly integrated with Ant Design (AntD v6) and Material UI (MUI v7) components[cite: 1].
-- **Form Handling:** React Hook Form for performant, flexible, and extensible forms[cite: 1].
-- **Authentication:** `@react-oauth/google` for seamless Google Login integration[cite: 1].
-- **Animations:** Framer Motion for smooth and interactive UI transitions[cite: 1].
+- **Styling & UI Libraries:** Tailwind CSS v4 for utility-first styling, seamlessly integrated with Ant Design (AntD v6) and Material UI (MUI v7) components.
+- **Form Handling:** React Hook Form for performant, flexible, and extensible forms.
+- **Authentication:** `@react-oauth/google` for seamless Google Login integration.
+- **Animations:** Framer Motion for smooth and interactive UI transitions.
 
 ### Backend (Server-Side)
-- **Core Framework:** .NET 8 (C#) / ASP.NET Core Web API[cite: 1].
-- **Database:** PostgreSQL (Hosted on Neon) managed via Entity Framework Core 8 (Npgsql) as the ORM[cite: 1].
+- **Core Framework:** .NET 8 (C#) / ASP.NET Core Web API.
+- **Database:** PostgreSQL (Hosted on Neon) managed via Entity Framework Core 8 (Npgsql) as the ORM.
 - **Security:** Stateless **JWT Authentication with Refresh Token Rotation**, BCrypt.Net-Next for password hashing, and `Google.Apis.Auth` for OAuth verification.
-- **Object Mapping:** AutoMapper for converting between Domain Entities and Data Transfer Objects (DTOs)[cite: 1].
+- **Object Mapping:** AutoMapper for converting between Domain Entities and Data Transfer Objects (DTOs).
 - **External Integrations:**
-  - **Cloudinary API** for seamless media upload and image delivery optimization[cite: 1].
-  - **Brevo API (brevo_csharp) & MailKit** for automated email delivery[cite: 1].
+  - **Cloudinary API** for seamless media upload and image delivery optimization.
+  - **Brevo API (brevo_csharp) & MailKit** for automated email delivery.
 
 ---
 
 ## 🏗️ System Architecture & Design Patterns
 
-The backend is engineered with enterprise-level patterns to ensure **Maintainability, Testability, and Loose Coupling**[cite: 1].
+The backend is engineered with enterprise-level patterns to ensure **Maintainability, Testability, and Loose Coupling**.
 
-- **Clean / N-Tier Architecture:** The codebase is logically divided into distinct layers (API, Core, Repositories, Services) to enforce the Separation of Concerns (SoC)[cite: 1].
+- **Clean / N-Tier Architecture:** The codebase is logically divided into distinct layers (API, Core, Repositories, Services) to enforce the Separation of Concerns (SoC).
 - **Unit of Work, Repository & ACID Transactions:** Centralizes data access logic and coordinates **explicit Database Transactions** (`BeginTransactionAsync`, `CommitAsync`, `RollbackAsync`) across multiple repositories. This guarantees data consistency and prevents race conditions or partial writes during multi-step operations like order placement and stock deduction.
 - **Token Rotation & Session Management:** Implements short-lived JWT Access Tokens paired with secure Refresh Tokens to balance stateless API performance with revocable user sessions.
-- **Dependency Injection (DI):** Extensively utilized to inject Services (`IShopOrderService`, `IAdminProductService`, etc.) and Repositories, making the application highly modular[cite: 1].
-- **Global Exception Handling:** Implemented a custom `ExceptionMiddleware` to catch unhandled exceptions globally, prevent server crashes, and return standardized, client-friendly HTTP error responses[cite: 1].
-- **Auto Migration on Startup:** The application automatically verifies database connectivity and applies pending EF Core migrations (`context.Database.Migrate()`) upon booting[cite: 1].
+- **Dependency Injection (DI):** Extensively utilized to inject Services (`IShopOrderService`, `IAdminProductService`, etc.) and Repositories, making the application highly modular.
+- **Global Exception Handling:** Implemented a custom `ExceptionMiddleware` to catch unhandled exceptions globally, prevent server crashes, and return standardized, client-friendly HTTP error responses.
+- **Auto Migration on Startup:** The application automatically verifies database connectivity and applies pending EF Core migrations (`context.Database.Migrate()`) upon booting.
 
 ---
 
