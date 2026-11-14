@@ -2,7 +2,13 @@
 
 <div align="center">
   
-  <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="FashionShop Logo" width="100"/>
+  <div align="center">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.iconify.design/solar/bag-4-bold.svg?color=%23ffffff" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.iconify.design/solar/bag-4-bold.svg?color=%2318181b" />
+      <img src="https://api.iconify.design/solar/bag-4-bold.svg?color=%2318181b" alt="FashionShop Logo" width="90" />
+    </picture>
+  </div>
 
   <h1>🛍️ FashionShop Platform</h1>
 
@@ -25,7 +31,6 @@
   <p>
     <a href="https://fashion-shop-rkait.vercel.app/"><strong>🌍 Live Demo</strong></a> ·
     <a href="https://fashionshop-c7s0.onrender.com/swagger/index.html"><strong>⚙️ API Swagger</strong></a> ·
-    <a href="#-getting-started"><strong>🚀 Getting Started</strong></a>
   </p>
 </div>
 
@@ -33,7 +38,7 @@
 
 ## 📖 About The Project
 
-**FashionShop** is a comprehensive full-stack e-commerce solution designed to provide a seamless online shopping experience. The backend strictly follows **Clean Architecture** principles to ensure high maintainability, scalability, and testability, while the frontend leverages modern React features for a responsive, interactive, and lightning-fast user interface.
+**FashionShop** is a comprehensive full-stack e-commerce solution designed to provide a seamless online shopping experience. The backend strictly follows **Clean Architecture** principles to ensure high maintainability, scalability, and testability, while the frontend leverages modern React 19 features for a responsive, interactive, and lightning-fast user interface.
 
 Whether you are browsing for the latest trends, managing your shopping cart, or securely checking out, FashionShop ensures a robust and smooth journey from start to finish.
 
@@ -42,7 +47,7 @@ Whether you are browsing for the latest trends, managing your shopping cart, or 
 > **Live Experience:** [Visit FashionShop Live Demo](https://fashion-shop-rkait.vercel.app/)
 
 <div align="center">
-  <img width="1919" height="1055" alt="z7793063643741_494c5b3fdada90251580a280cc072b89" src="https://github.com/user-attachments/assets/82acc130-9934-46a1-a018-5e09f4172a30" />
+  <img width="1848" height="1093" alt="image" src="https://github.com/user-attachments/assets/6b193b29-606e-4427-8dfc-5a9e7694bb6d" />
   <br />
   <i>Intuitive interface and seamless shopping experience on FashionShop</i>
 </div>
@@ -54,17 +59,17 @@ Whether you are browsing for the latest trends, managing your shopping cart, or 
 The system is designed with a complete set of real-world E-commerce operations, clearly divided into two distinct modules:
 
 ### 👤 Customer Facing
-- **Authentication & Security:** Secure login, registration, and user session management utilizing **JWT (JSON Web Tokens)**.
+- **Authentication & Security:** Secure login, registration, and user session management utilizing **JWT (JSON Web Tokens)** and **Google OAuth** integration.
 - **Advanced Product Catalog:** Dynamic searching, filtering, and sorting of products by categories, price ranges, sizes, and colors.
-- **Stateful Shopping Cart:** Seamless and complex cart state management (add, remove, update quantities) powered by **Redux Toolkit**.
+- **Stateful Shopping Cart:** Seamless cart state management (add, remove, update quantities) powered by **TanStack React Query** and modern React hooks.
 - **Order Tracking:** Effortlessly manage shipping addresses, payment methods, and track historical order statuses.
-- **Automated Email Notifications:** Automatically trigger order confirmation and welcome emails upon successful actions via **Gmail SMTP**.
+- **Automated Email Notifications:** Automatically trigger order confirmation and welcome emails upon successful actions via **Brevo API & MailKit**.
 
 ### 🛡️ Admin Dashboard
 - **Role-Based Access Control (RBAC):** Strict access control protecting dedicated API endpoints and UI routes exclusively for `Admin` accounts.
 - **Product & Variant Management:** Full CRUD operations for products with deep support for product variants (multiple colors, sizes, and inventory tracking).
 - **Cloud Media Storage:** Upload, store, and automatically optimize product image delivery through seamless **Cloudinary API** integration.
-- **Order Fulfillment:** A comprehensive dashboard to monitor all customer orders, approve shipments, and update delivery statuses in real-time.
+- **Order Fulfillment:** A comprehensive dashboard to monitor all customer orders, approve shipments, update delivery statuses, and manage coupons.
 
 ## 🔐 Demo Accounts
 
@@ -72,8 +77,8 @@ You can use the following credentials to explore the system with different roles
 
 | Role  | Email | Password |
 | :--- | :--- | :--- |
-| **Admin** | `admin@fashionshop.com` | `000000` |
-| **Customer** | `hoangdinh20040104@gmail.com` | `000000` |
+| **Admin** | `admin@fashionshop.com` | `admin000` |
+| **Customer** | `hoangdinh20040104@gmail.com` | `customer000` |
 
 *Note: Please do not change the password or delete existing data to ensure a smooth experience for others.*
 
@@ -82,20 +87,22 @@ You can use the following credentials to explore the system with different roles
 The application is built using a modern, scalable, and highly performant technology stack, carefully chosen to handle the complexities of a real-world e-commerce platform.
 
 ### Frontend (Client-Side)
-- **Core:** React 19, TypeScript, Vite (for lightning-fast HMR and building).
-- **State Management & Data Fetching:** TanStack Query (React Query) for efficient server-state management, caching, and synchronization.
+- **Core:** React 19.2, TypeScript, Vite (for lightning-fast HMR and building).
+- **State Management & Data Fetching:** TanStack Query (React Query v5) for efficient server-state management, caching, and synchronization.
 - **Routing:** React Router DOM v7.
-- **Styling & UI Libraries:** Tailwind CSS for utility-first styling, seamlessly integrated with Ant Design (AntD) and Material UI (MUI) components.
-- **Form Handling:** React Hook Form for performant, flexible, and extensible forms with easy-to-use validation.
+- **Styling & UI Libraries:** Tailwind CSS v4 for utility-first styling, seamlessly integrated with Ant Design (AntD v6) and Material UI (MUI v7) components.
+- **Form Handling:** React Hook Form for performant, flexible, and extensible forms.
+- **Authentication:** `@react-oauth/google` for seamless Google Login integration.
 - **Animations:** Framer Motion for smooth and interactive UI transitions.
 
 ### Backend (Server-Side)
 - **Core Framework:** .NET 8 (C#) / ASP.NET Core Web API.
-- **Database:** PostgreSQL (Hosted on Neon) managed via Entity Framework Core (EF Core) as the ORM.
-- **Security:** JSON Web Tokens (JWT) for stateless authentication and Role-Based Authorization.
+- **Database:** PostgreSQL (Hosted on Neon) managed via Entity Framework Core 8 (Npgsql) as the ORM.
+- **Security:** JSON Web Tokens (JWT), BCrypt.Net-Next for password hashing, and Google.Apis.Auth for OAuth verification.
 - **Object Mapping:** AutoMapper for converting between Domain Entities and Data Transfer Objects (DTOs).
-- **External Integrations:** - **Cloudinary API** for seamless media upload and image delivery optimization.
-  - **SMTP Client** for automated email delivery.
+- **External Integrations:**
+  - **Cloudinary API** for seamless media upload and image delivery optimization.
+  - **Brevo API (brevo_csharp) & MailKit** for automated email delivery.
 
 ---
 
@@ -103,22 +110,31 @@ The application is built using a modern, scalable, and highly performant technol
 
 The backend is engineered with enterprise-level patterns to ensure **Maintainability, Testability, and Loose Coupling**.
 
-- **Clean / N-Tier Architecture:** The codebase is logically divided into distinct layers (API Controllers, Business Logic Services, and Data Access Repositories) to enforce the Separation of Concerns (SoC).
+- **Clean / N-Tier Architecture:** The codebase is logically divided into distinct layers (API, Core, Repositories, Services) to enforce the Separation of Concerns (SoC).
 - **Unit of Work & Repository Pattern:** Centralizes database transactions and abstracts data access logic. This ensures that multiple repository operations share a single database context (`FashionDbContext`) and are committed atomically.
-- **Dependency Injection (DI):** Extensively utilized to inject Services (`IOrderService`, `IProductService`, etc.) and Repositories, making the application highly modular and unit-test friendly.
+- **Dependency Injection (DI):** Extensively utilized to inject Services (`IShopOrderService`, `IAdminProductService`, etc.) and Repositories, making the application highly modular.
 - **Global Exception Handling:** Implemented a custom `ExceptionMiddleware` to catch unhandled exceptions globally, prevent server crashes, and return standardized, client-friendly HTTP error responses.
-- **Auto Migration on Startup:** The application automatically verifies database connectivity and applies pending EF Core migrations upon booting, ensuring the schema is always up-to-date in production environments.
+- **Auto Migration on Startup:** The application automatically verifies database connectivity and applies pending EF Core migrations (`context.Database.Migrate()`) upon booting.
+
+---
+
+## 🐳 Docker & CI/CD Pipeline
+
+- **Containerization:** The backend includes a multi-stage `Dockerfile` utilizing lightweight Alpine/Ubuntu Linux images (`mcr.microsoft.com/dotnet/sdk:8.0` and `aspnet:8.0`), making it deployment-ready for platforms like Render or AWS.
+- **Continuous Integration (GitHub Actions):** A `.github/workflows/dotnet-ci.yml` pipeline automatically triggers on pushes and PRs to the `main` branch. It sets up the .NET 8 SDK, restores dependencies, and builds the solution to ensure no breaking changes are introduced.
+
+---
 
 ## 🚀 Getting Started (Local Development)
 
-Follow these comprehensive steps to set up the FashionShop project locally. The instructions cover cloning the repository, configuring environment variables, setting up the database, and running both the backend and frontend servers.
+Follow these comprehensive steps to set up the FashionShop project locally.
 
 ### 📋 Prerequisites
 
 Before you begin, ensure you have the following installed on your local machine:
 - **[Node.js](https://nodejs.org/en/download/)** (v18.x or higher)
 - **[.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)**
-- **[PostgreSQL](https://www.postgresql.org/download/)** (You can use a local instance or a cloud provider like [Neon](https://neon.tech/))
+- **[PostgreSQL](https://www.postgresql.org/download/)** (Or use a cloud provider like [Neon](https://neon.tech/))
 - **[Git](https://git-scm.com/downloads)**
 
 ### 1️⃣ Clone the Repository
@@ -126,7 +142,7 @@ Before you begin, ensure you have the following installed on your local machine:
 First, clone the project to your local machine and navigate into the project directory:
 
 ```bash
-git clone [https://github.com/hoangdinh-IT/FashionShop.git]
+git clone https://github.com/hoangdinh-IT/FashionShop.git
 cd FashionShop
 ```
 
@@ -142,14 +158,12 @@ cd FashionShop.Backend/FashionShop.API
 
 #### 2. Configure Environment Variables:
 
-- Create a file named appsettings.Development.json in the root of the FashionShop.API directory.
-
-- Copy the structure below and fill in your actual credentials (DO NOT commit your real credentials to Git):
+Create or update appsettings.json (or appsettings.Development.json). Fill in your actual credentials (DO NOT commit your real credentials to Git):
 
 ```bash
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=FashionShopLocal;Username=postgres;Password=YourPassword;"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=FashionShopDb;Username=postgres;Password=YourPassword;"
   },
   "Jwt": {
     "Key": "Your_Super_Secret_Key_Here_Minimum_32_Chars",
@@ -157,32 +171,27 @@ cd FashionShop.Backend/FashionShop.API
     "Audience": "https://localhost:5173",
     "DurationInMinutes": 60
   },
+  "Google": {
+    "ClientId": "your-google-client-id.apps.googleusercontent.com"
+  },
   "Cloudinary": {
     "CloudName": "your_cloud_name",
     "ApiKey": "your_api_key",
     "ApiSecret": "your_api_secret"
   },
-  "EmailSettings": {
-    "SenderName": "Fashion Shop Support",
+  "BrevoSettings": {
+    "ApiKey": "your_brevo_api_key",
     "SenderEmail": "your.email@gmail.com",
-    "Password": "your_app_password",
-    "Host": "smtp.gmail.com",
-    "Port": 587
-  }
+    "SenderName": "Fashion Shop Support"
+  },
+  "AllowedHosts": "*"
 }
 ```
 
-#### 3. Apply Database Migrations:
-
-Run the following command to generate the database schema based on Entity Framework Core configurations:
+#### 3. Run the API Server:
 
 ```bash
-dotnet ef database update
-```
-
-#### 4. Run the API Server:
-
-```bash
+dotnet restore
 dotnet run
 ```
 
@@ -198,9 +207,7 @@ cd FashionShop.Web
 
 #### 2. Configure Environment Variables:
 
-- Create a .env.local file in the root of the FashionShop.Web directory.
-
-- Add the local backend API URL for Vite to proxy requests:
+Create a .env file in the root of the FashionShop.Web directory by copying .env.example:
 
 ```bash
 VITE_API_URL=https://localhost:7187/api
